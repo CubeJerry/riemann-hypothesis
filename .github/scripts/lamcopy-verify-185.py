@@ -30,8 +30,14 @@ def main(args):
             identity=client.current_identity(root)
             if identity['toolchain']!=TOOLCHAIN or identity['manifest_sha256']!=approved.DEPENDENCIES:raise ValueError('source does not match approved 4.37 toolchain and dependencies')
             identities[sha]=identity
+        protected_absent=[]
         for name in ['lakefile.toml','lake-manifest.json','lean-toolchain',*PROTECTED]:
-            if(base/name).read_bytes()!=(candidate/name).read_bytes():raise ValueError('changed protected/config input: '+name)
+            before,after=base/name,candidate/name
+            if not before.exists() and not after.exists() and name.startswith('comparator/'):
+                protected_absent.append(name)
+                continue
+            if before.read_bytes()!=after.read_bytes():raise ValueError('changed protected/config input: '+name)
+        report['protected_paths_absent_in_both_revisions']=protected_absent
         version=subprocess.check_output(['lean','--version'],text=True).strip()
         if not version.startswith(f'Lean (version {approved.VERSION},')or approved.COMMIT not in version:raise ValueError('wrong stock Lean: '+version)
         tc=Path(subprocess.check_output(['lean','--print-prefix'],text=True).strip())
@@ -90,8 +96,11 @@ def main(args):
                 for path in job['base']:Path(path).mkdir(parents=True,exist_ok=True)
                 job['base']=['/work/project/'+str(Path(path).relative_to(project))for path in job['base']]
                 job['file']='/work/cache/'+str(Path(job['file']).relative_to(cache))
-            # Official package sources/artifacts are read-only: fail on a missing output.
-            sandbox=ci.sandbox(tc,project,packages,cache,result,control,1)
+            # Lake --rehash writes hash sidecars; use private dependency copies.
+            private=ci.private_package_builds(project,packages,work/'dependency-builds')
+            budget()
+            sandbox=ci.sandbox(tc,project,packages,cache,result,control,1,private)
+            sandbox=sandbox[:-2]+['--setenv','LEAN_ABORT_ON_PANIC','1']+sandbox[-2:]
             if warm:subprocess.run(sandbox+['/opt/lean/bin/leantar','--jobs','1','-f','-x','-j','-'],input=json.dumps(warm),text=True,env=ci.trusted_env(),check=True,timeout=900)
             command=sandbox+['/opt/lean/bin/lake','--packages',overrides,'--rehash','build']
             item=run(command+['+'+m for m in targets],project,label+'-warm.log',ci.trusted_env());report['cases'][label]['warm_build']=item;save()
@@ -110,7 +119,7 @@ def main(args):
                     times.append(item['wall_seconds'])
                 source=project/'src'/(target.replace('.','/')+'.lean');olean=project/'.lake/build/lib/lean'/(target.replace('.','/')+'.olean')
                 report['cases'][label]['modules'][target]={'direct_import_count':len(quick.imports(source)),'project_ancestor_count':len(quick.dependency_closure(project,[target],maximum=20000))-1,'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'olean_bytes':olean.stat().st_size,'build_seconds':times,'median_seconds':statistics.median(times)};save()
-            ci.validate_packages(project,packages);report['cases'][label]['status']='touched_targets_and_consumer_pass';save();shutil.rmtree(work)
+            ci.verify_private_packages(project,packages,private);ci.validate_packages(project,packages);report['cases'][label]['status']='touched_targets_and_consumer_pass';save();shutil.rmtree(work)
         report['status']='scoped_verification_pass'
     except BaseException as error:
         report.update(status='failed_or_resource_limited',error=f'{type(error).__name__}: {error}');(out/'exception.txt').write_text(traceback.format_exc());raise
