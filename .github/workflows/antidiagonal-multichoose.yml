@@ -1,0 +1,70 @@
+name: Antidiagonal tuple verification
+on:
+  push:
+    branches: [verify/antidiagonal-multichoose]
+    paths: [.github/workflows/antidiagonal-multichoose.yml, .github/scripts/antidiagonal-multichoose.py]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - lane: '4.36.0'
+            base: c592e91eb8f41bfd149227c09460fae0c17bf3c5
+            head: 2e35f39fc127f3277c45451c1ca616afdd1dd4aa
+            mathlib: fc4f59e577feb1a4956671bc04ac18aaaf8cd842
+          - lane: '4.37.0-rc1'
+            base: 9c9f665ed79ce0fa8da61bd803b7a4bf1ad62ed0
+            head: fbdeda10f93874fd0c1b95683edcbb0c94750148
+            mathlib: 31ce06eaadf4a200c0e1407c5f10953cf606b8f8
+    env:
+      LEAN_NUM_THREADS: '1'
+      LAKE_ARTIFACT_CACHE: 'false'
+      ELAN_TOOLCHAIN: leanprover/lean4:v${{ matrix.lane }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          path: harness
+          sparse-checkout: .github/scripts/antidiagonal-multichoose.py
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ matrix.head }}
+          path: source
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Install locked Lean toolchain and fetch official Mathlib cache
+        working-directory: source
+        shell: bash
+        env:
+          MATHLIB_CACHE_GET_URL: https://cache.mathlib.org/mathlib4
+          BASE: ${{ matrix.base }}
+        run: |
+          git fetch --depth=1 origin "$BASE"
+          curl --proto '=https' --tlsv1.2 -fsSL --retry 3 https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          export PATH="$HOME/.elan/bin:$PATH"
+          printf '%s\n' "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          elan toolchain install "$ELAN_TOOLCHAIN"
+          ulimit -n 65536
+          lake exe mathlib/cache get
+      - name: Benchmark changed modules and rebuild both direct callers
+        working-directory: source
+        env:
+          BENCH_OUTPUT: ${{ runner.temp }}/antidiagonal-verification
+          BASE: ${{ matrix.base }}
+          HEAD: ${{ matrix.head }}
+          MATHLIB: ${{ matrix.mathlib }}
+        run: python3 ../harness/.github/scripts/antidiagonal-multichoose.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: antidiagonal-multichoose-${{ matrix.lane }}
+          path: ${{ runner.temp }}/antidiagonal-verification
+          if-no-files-found: warn
+          retention-days: 14
