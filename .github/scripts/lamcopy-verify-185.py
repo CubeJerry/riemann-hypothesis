@@ -3,8 +3,9 @@
 import argparse,hashlib,importlib.util,json,os,shutil,statistics,subprocess,time,traceback
 from pathlib import Path
 from types import SimpleNamespace
-BASE='2ef232d2992c67d457089833b7ec9e0c262f9370'
-HEAD='c5cb0b2863059dc0c7144fc41aa09e7d0c6b12c6'
+BASE='9c9f665ed79ce0fa8da61bd803b7a4bf1ad62ed0'
+CACHE_REV='2ef232d2992c67d457089833b7ec9e0c262f9370'
+HEAD='77e1f070c61c78f9b2d80fb34d38351129946d2e'
 TOOLCHAIN='leanprover/lean4:v4.37.0-rc1'
 PREFIX='Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.'
 TARGETS=[PREFIX+x for x in ['CopyAll','RingSpecNormalisedCharacterEq','LamCopy','ExportTieMove']]
@@ -64,23 +65,23 @@ def main(args):
             (out/(label+'-closure.txt')).write_text('\n'.join(cone)+'\n')
         save();budget();public=state/'baseline-cache';public.mkdir()
         # Use the source-bound successful #185 receipt, not active 4.36 baseline globals.
-        raw=client.fetch(f'ci/revisions/{BASE}.json',client.MAX_RECEIPT)
+        raw=client.fetch(f'ci/revisions/{CACHE_REV}.json',client.MAX_RECEIPT)
         if raw is None:raise ValueError('exact #185 cache receipt is unavailable')
         receipt=client.matching_record(raw,identities[BASE])
-        if receipt is None or receipt['candidate_head']!=BASE:raise ValueError('receipt is not a successful build of the exact #185 source/configuration')
+        if receipt is None or receipt['candidate_head']!=CACHE_REV:raise ValueError('receipt is not a successful build of the exact #185 source/configuration')
         mapping,rows=client.validated_blobs(receipt,identities[BASE])
         filtered=[row for row in rows if row[0]in selected]
         scoped='"2026-03-17"\n'+''.join(json.dumps([row[1],row[2]])+'\n'for row in filtered)
         (public/'selected-outputs.jsonl').write_text(scoped)
         write(out/'public-receipt.json',receipt)
-        report['cache']={'revision':BASE,'map_sha256':receipt['map_sha256'],'manifest_sha256':receipt['module_manifest_sha256'],'selected_project_modules':len(selected),'available_cached_inputs':len(filtered),'fresh_dependency_proof_check':False};save();budget()
+        report['cache']={'revision':CACHE_REV,'map_sha256':receipt['map_sha256'],'manifest_sha256':receipt['module_manifest_sha256'],'selected_project_modules':len(selected),'available_cached_inputs':len(filtered),'fresh_dependency_proof_check':False};save();budget()
         deps=state/'dependencies';deps.mkdir();(deps/'src').mkdir();(deps/'.lake').mkdir()
         for name in ['lakefile.toml','lake-manifest.json','lean-toolchain']:shutil.copyfile(base/name,deps/name)
         env=prep.clean_env();env.update(ELAN_TOOLCHAIN=TOOLCHAIN,MATHLIB_CACHE_GET_URL='https://cache.mathlib.org/mathlib4',LEAN_NUM_THREADS='1',LEAN_ABORT_ON_PANIC='1')
         report['mathlib_cache']=run(['lake','exe','mathlib/cache','get'],deps,'mathlib-cache.log',env);save()
         if report['mathlib_cache']['exit_code']:raise RuntimeError('official Mathlib cache failed')
         packages=deps/'.lake/packages';ci.validate_packages(base,packages);budget()
-        cache_env={**env,'LAKE_CACHE_DIR':str(public)}
+        cache_env={**env,'LAKE_CACHE_DIR':str(public),'LAKE_CONFIG':str(deps/'lakefile.toml')}
         report['project_cache']=run(['lake','-q','cache','get',str(public/'selected-outputs.jsonl'),'--repo',client.REPOSITORY],deps,'project-cache.log',cache_env);save()
         if report['project_cache']['exit_code']:raise RuntimeError('scoped stock Lake artifact download failed')
         report['cache']['compressed_bytes']=sum(p.stat().st_size for p in(public/'artifacts').iterdir());save()

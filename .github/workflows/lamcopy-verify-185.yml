@@ -36,7 +36,7 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: leanprover-community/riemann-hypothesis
-          ref: 2ef232d2992c67d457089833b7ec9e0c262f9370
+          ref: 9c9f665ed79ce0fa8da61bd803b7a4bf1ad62ed0
           path: baseline
           persist-credentials: false
           fetch-depth: 1
@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: CubeJerry/riemann-hypothesis
-          ref: c5cb0b2863059dc0c7144fc41aa09e7d0c6b12c6
+          ref: 77e1f070c61c78f9b2d80fb34d38351129946d2e
           path: candidate
           persist-credentials: false
           fetch-depth: 1
