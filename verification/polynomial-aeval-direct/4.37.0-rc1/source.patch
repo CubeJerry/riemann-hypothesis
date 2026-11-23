@@ -1,0 +1,216 @@
+diff --git a/src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean b/src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean
+index df9ba5d02d..dac876e953 100644
+--- a/src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean
++++ b/src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean
+@@ -2,7 +2,7 @@ module
+ 
+ public import Formalism.SharpRestriction.LevelLetterCocycles.DownSlotProposition
+ public import Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.ModelFPfB
+-public import Lemmata.PowerMembership.PowMem
++public import Mathlib.Algebra.Polynomial.AlgebraMap
+ import Mathlib.Algebra.Order.Floor.Extended
+ import Mathlib.Algebra.Order.Floor.Semifield
+ import Mathlib.Algebra.Order.Interval.Basic
+@@ -55,7 +55,7 @@ section Gen
+ theorem aeval_mem_of_stable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
+     (S : Submodule R M) (f : Module.End R M) (hf : ∀ v ∈ S, f v ∈ S) (P : Polynomial R) {v : M}
+     (hv : v ∈ S) : Polynomial.aeval f P v ∈ S := by
+-  first | exact Bl.PowerMembership.goal1 .. | (apply Bl.PowerMembership.goal1 <;> assumption) | (intros; apply Bl.PowerMembership.goal1 <;> assumption) | (apply @Bl.PowerMembership.goal1 <;> assumption) | (intros; apply @Bl.PowerMembership.goal1 <;> assumption) | (apply @Bl.PowerMembership.goal1 <;> first | assumption | infer_instance) | exact @Bl.PowerMembership.goal1 R M ‹_› ‹_› ‹_› S f hf P v hv | exact @Bl.PowerMembership.goal1 R M ‹_› ‹_› ‹_› S f hf P v | exact @Bl.PowerMembership.goal1 R M ‹_› ‹_› ‹_› S f hf P | exact @Bl.PowerMembership.goal1 R M ‹_› ‹_› ‹_› S f hf | exact @Bl.PowerMembership.goal1 R M ‹_› ‹_› ‹_› S f | exact @Bl.PowerMembership.goal1 R M ‹_› ‹_› ‹_› S | exact @Bl.PowerMembership.goal1 R M ‹_› ‹_› ‹_› | exact @Bl.PowerMembership.goal1 R M ‹_› ‹_› | exact @Bl.PowerMembership.goal1 R M ‹_› | exact @Bl.PowerMembership.goal1 R M | exact @Bl.PowerMembership.goal1 R
++  exact Polynomial.aeval_apply_smul_mem_of_le_comap hv P f (fun _ hx => hf _ hx)
+ 
+ theorem aeval_comm {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M] (f : Module.End R M)
+     (P : Polynomial R) (v : M) : Polynomial.aeval f P (f v) = f (Polynomial.aeval f P v) := by
+diff --git a/src/Lemmata/PowerApplication/PowApp.lean b/src/Lemmata/PowerApplication/PowApp.lean
+deleted file mode 100644
+index 5c5b80e7c8..0000000000
+--- a/src/Lemmata/PowerApplication/PowApp.lean
++++ /dev/null
+@@ -1,68 +0,0 @@
+-module
+-
+-public import Mathlib.Algebra.Polynomial.AlgebraMap
+-public import Mathlib.Basic.Complex.Basic
+-import Mathlib.Algebra.Order.Floor.Extended
+-import Mathlib.Algebra.Order.Floor.Semifield
+-import Mathlib.Algebra.Order.Interval.Basic
+-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+-import Mathlib.Analysis.SpecialFunctions.Bernstein
+-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+-import Mathlib.Combinatorics.Enumerative.DyckWord
+-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+-import Mathlib.Data.NNRat.Floor
+-import Mathlib.Data.Nat.Choose.Multinomial
+-import Mathlib.Geometry.Euclidean.Volume.Basic
+-import Mathlib.NumberTheory.Chebyshev
+-import Mathlib.NumberTheory.Height.NumberField
+-import Mathlib.NumberTheory.Height.Projectivization
+-import Mathlib.NumberTheory.LucasLehmer
+-import Mathlib.NumberTheory.SelbergSieve
+-import Mathlib.RingTheory.Radical.NatInt
+-import Mathlib.Tactic.Echelon.Zsqrtd
+-import Mathlib.Tactic.Inclusion.Extension.Core.Core
+-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+-import Mathlib.Tactic.NormNum.Irrational
+-import Mathlib.Tactic.NormNum.IsCoprime
+-import Mathlib.Tactic.NormNum.IsSquare
+-import Mathlib.Tactic.NormNum.LegendreSymbol
+-import Mathlib.Tactic.NormNum.ModEq
+-import Mathlib.Tactic.NormNum.NatFib
+-import Mathlib.Tactic.NormNum.NatLog
+-import Mathlib.Tactic.NormNum.NatSqrt
+-import Mathlib.Tactic.NormNum.Ordinal
+-import Mathlib.Tactic.NormNum.Parity
+-import Mathlib.Tactic.NormNum.Prime
+-import Mathlib.Tactic.NormNum.RealSqrt
+-import Mathlib.Tactic.TypeStar
+-import Mathlib.Topology.Sheaves.Init
+-
+-@[expose] public section
+-
+-open Polynomial Finset
+-
+-namespace Bl.PowerApplication
+-
+-variable {Y : Type*} [AddCommGroup Y] [Module ℂ Y]
+-
+-private theorem pow_app {T : Module.End ℂ Y} {z : ℂ} {f : Y} (hf : T f = z • f) (n : ℕ) :
+-    (T ^ n) f = z ^ n • f := by
+-  induction n with
+-  | zero => simp
+-  | succ n ih => rw [pow_succ', Module.End.mul_apply, ih, map_smul, hf, smul_smul, pow_succ]
+-
+-theorem goal1 {T : Module.End ℂ Y} {z : ℂ} {f : Y} (hf : T f = z • f) (p : ℂ[X]) :
+-    aeval T p f = p.eval z • f := by
+-  induction p using Polynomial.induction_on' with
+-  | add p q hp hq => rw [map_add (f := _), LinearMap.add_apply, hp, hq, eval_add, add_smul]
+-  | monomial n a =>
+-    rw [aeval_monomial, Module.End.mul_apply, pow_app hf, Module.algebraMap_end_apply,
+-      smul_smul, eval_monomial]
+-
+-end Bl.PowerApplication
+diff --git a/src/Lemmata/PowerMembership/PowMem.lean b/src/Lemmata/PowerMembership/PowMem.lean
+deleted file mode 100644
+index d40d717647..0000000000
+--- a/src/Lemmata/PowerMembership/PowMem.lean
++++ /dev/null
+@@ -1,75 +0,0 @@
+-module
+-
+-public import Mathlib.Algebra.Polynomial.AlgebraMap
+-import Mathlib.Algebra.Order.Floor.Extended
+-import Mathlib.Algebra.Order.Floor.Semifield
+-import Mathlib.Algebra.Order.Interval.Basic
+-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+-import Mathlib.Analysis.SpecialFunctions.Bernstein
+-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+-import Mathlib.Combinatorics.Enumerative.DyckWord
+-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+-import Mathlib.Data.NNRat.Floor
+-import Mathlib.Data.Nat.Choose.Multinomial
+-import Mathlib.Geometry.Euclidean.Volume.Basic
+-import Mathlib.NumberTheory.Chebyshev
+-import Mathlib.NumberTheory.Height.NumberField
+-import Mathlib.NumberTheory.Height.Projectivization
+-import Mathlib.NumberTheory.LucasLehmer
+-import Mathlib.NumberTheory.SelbergSieve
+-import Mathlib.RingTheory.Radical.NatInt
+-import Mathlib.Tactic.Echelon.Zsqrtd
+-import Mathlib.Tactic.Inclusion.Extension.Core.Core
+-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+-import Mathlib.Tactic.Lemma
+-import Mathlib.Tactic.NormNum.Irrational
+-import Mathlib.Tactic.NormNum.IsCoprime
+-import Mathlib.Tactic.NormNum.IsSquare
+-import Mathlib.Tactic.NormNum.LegendreSymbol
+-import Mathlib.Tactic.NormNum.ModEq
+-import Mathlib.Tactic.NormNum.NatFib
+-import Mathlib.Tactic.NormNum.NatLog
+-import Mathlib.Tactic.NormNum.NatSqrt
+-import Mathlib.Tactic.NormNum.Ordinal
+-import Mathlib.Tactic.NormNum.Parity
+-import Mathlib.Tactic.NormNum.Prime
+-import Mathlib.Tactic.NormNum.RealSqrt
+-import Mathlib.Topology.Sheaves.Init
+-
+-@[expose] public section
+-
+-universe u_1 u_2
+-
+-namespace Bl.PowerMembership
+-
+-private lemma powMem {R : Type u_1} {M : Type u_2} [CommRing R] [AddCommGroup M] [Module R M]
+-    (S : Submodule R M) (f : Module.End R M) (hf : ∀ v : M, v ∈ S → f v ∈ S) (n : ℕ) :
+-    ∀ {v : M}, v ∈ S → (f ^ n) v ∈ S := by
+-  induction n with
+-  | zero => intro v hv; simpa using hv
+-  | succ n ih => intro v hv; rw [pow_succ']; exact hf _ (ih hv)
+-
+-theorem goal1 :
+-  ∀ {R : Type u_1} {M : Type u_2} [inst : CommRing.{u_1} R] [inst_1 : AddCommGroup.{u_2} M]
+-  [inst_2 : Module.{u_1, u_2} R M] (S : Submodule.{u_1, u_2} R M) (f : Module.End.{u_1, u_2} R M),
+-  (∀ (v : M),
+-      Membership.mem.{u_2, u_2} S v → Membership.mem.{u_2, u_2} S (DFunLike.coe.{u_2 + 1, u_2 + 1, u_2 + 1} f v)) →
+-    ∀ (P : Polynomial.{u_1} R) {v : M},
+-      Membership.mem.{u_2, u_2} S v →
+-        Membership.mem.{u_2, u_2} S
+-          (DFunLike.coe.{u_2 + 1, u_2 + 1, u_2 + 1}
+-            (DFunLike.coe.{max (u_2 + 1) (u_1 + 1), u_1 + 1, u_2 + 1} (Polynomial.aeval.{u_1, u_2} f) P) v) := by
+-  intro R M _ _ _ S f hf P v hv
+-  induction P using Polynomial.induction_on' with
+-  | add p q hp hq => rw [map_add (f := _), LinearMap.add_apply]; exact S.add_mem hp hq
+-  | monomial n a =>
+-    rw [Polynomial.aeval_monomial, Module.End.mul_apply, Module.algebraMap_end_apply]
+-    exact S.smul_mem a (powMem S f hf n hv)
+-
+-end Bl.PowerMembership
+diff --git a/src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean b/src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean
+index 9a332e13bb..fd91d61220 100644
+--- a/src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean
++++ b/src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean
+@@ -2,7 +2,6 @@ module
+ 
+ public import Mathlib.Basic.Complex.Basic
+ public import Mathlib.LinearAlgebra.Lagrange
+-public import Lemmata.PowerApplication.PowApp
+ import Mathlib.Algebra.Order.Floor.Extended
+ import Mathlib.Algebra.Order.Floor.Semifield
+ import Mathlib.Algebra.Order.Interval.Basic
+@@ -74,7 +73,7 @@ theorem dc_mem_cplxPts {B : Finset ℝ} {z : ℂ} : z ∈ dc_cplxPts B ↔ ∃ b
+ 
+ theorem dc_aeval_eigen {T : Module.End ℂ Y} {z : ℂ} {f : Y} (hf : T f = z • f) (p : ℂ[X]) :
+     aeval T p f = p.eval z • f := by
+-  first | exact Bl.PowerApplication.goal1 .. | (apply Bl.PowerApplication.goal1 <;> assumption) | (intros; apply Bl.PowerApplication.goal1 <;> assumption)
++  exact Module.End.aeval_apply_of_mem_apply_eq_smul hf
+ 
+ theorem dc_X_sub_mul_basis {s : Finset ℂ} {z : ℂ} (hz : z ∈ s) :
+     (X - C z) * Lagrange.basis s id z = C (Lagrange.nodalWeight s id z) * Lagrange.nodal s id := by
+@@ -85,15 +84,8 @@ theorem dc_X_sub_mul_basis {s : Finset ℂ} {z : ℂ} (hz : z ∈ s) :
+ variable {T : Module.End ℂ Y} {S : Submodule ℂ Y} {B : Finset ℝ}
+ 
+ theorem dc_aeval_mem (hT : ∀ f ∈ S, T f ∈ S) (p : ℂ[X]) : ∀ f ∈ S, aeval T p f ∈ S := by
+-  induction p using Polynomial.induction_on' with
+-  | add p q hp hq => intro f hf; simpa using S.add_mem (hp f hf) (hq f hf)
+-  | monomial k a =>
+-    intro f hf
+-    simp only [aeval_monomial, Module.End.mul_apply, Module.algebraMap_end_apply]
+-    refine S.smul_mem _ ?_
+-    induction k with
+-    | zero => simpa using hf
+-    | succ k ih => rw [pow_succ', Module.End.mul_apply]; exact hT _ ih
++  intro f hf
++  exact Polynomial.aeval_apply_smul_mem_of_le_comap hf p T (fun _ hx => hT _ hx)
+ 
+ theorem dc_basis_eigen (hP : ∀ f ∈ S, aeval T (Lagrange.nodal (dc_cplxPts B) id) f = 0) {z : ℂ}
+     (hz : z ∈ dc_cplxPts B) : ∀ f ∈ S, T (aeval T (Lagrange.basis (dc_cplxPts B) id z) f) =

@@ -1,0 +1,1888 @@
+⚠ [7565/7630] Built Lemmata.PowerApplication.PowApp (751ms)
+warning: src/Lemmata/PowerApplication/PowApp.lean:58:32: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Lemmata/PowerApplication/PowApp.lean:65:24: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+⚠ [7628/7800] Built ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA (1.3s)
+warning: src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean:77:10: Unused tactic linter: `exact Bl.PowerApplication.goal1 ..` does not change the goal.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean:77:80: Unused tactic linter: `<;>` can be replaced with `;`.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean:77:98: Unused tactic linter: `(intros; apply Bl.PowerApplication.goal1 <;> assumption)` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean:77:98: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean:77:80: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean:92:31: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean:96:34: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean:103:22: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean:122:21: `if_true` has been deprecated: Use `ite_true` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵t̵r̵u̵e̵i̲t̲e̲_̲t̲r̲u̲e̲
+warning: src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean:129:43: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean:136:61: `Module.End.one_apply` has been deprecated: Use `one_apply_eq_self` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : One F} [self : IsOneApplyEqSelf F]
+    (x : α), 1 x = x
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M] (x : M), 1 x = x
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.one_apply` to `one_apply_eq_self x`).
+warning: src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean:157:31: `if_true` has been deprecated: Use `ite_true` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵t̵r̵u̵e̵i̲t̲e̲_̲t̲r̲u̲e̲
+warning: src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean:173:31: `if_false` has been deprecated: Use `ite_false` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵f̵a̵l̵s̵e̵i̲t̲e̲_̲f̲a̲l̲s̲e̲
+warning: src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean:149:26: Variable name `hT` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hT
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean:213:20: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean:244:38: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/ReciprocityTheory/ReductiveGroups/DiscreteSeries/TensorRepresentations/DecompA.lean:244:71: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+⚠ [7794/8040] Replayed Formalism.SatakeDualWeyl.Statement
+warning: src/Formalism/SatakeDualWeyl/Statement.lean:77:0: automatically included section variable(s) unused in theorem `Formalism.UG.cT_one`:
+  [Fintype n]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype n] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [8316/8532] Replayed ReciprocityTheory.GaloisValuations.SeparatedDvrSecondCohomologyMem
+warning: src/ReciprocityTheory/GaloisValuations/SeparatedDvrSecondCohomologyMem.lean:88:0: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.mem_riemannRochSpace_iff_regularAt_everywhere`:
+  [TopologicalSpace G]
+  [TopologicalSpace M]
+  [IsTopologicalAddGroup M]
+  [ContinuousConstSMul R M]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [TopologicalSpace G] [TopologicalSpace M] [IsTopologicalAddGroup M] [ContinuousConstSMul R M] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/ReciprocityTheory/GaloisValuations/SeparatedDvrSecondCohomologyMem.lean:103:8: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.amitsur_d0_apply`:
+  [TopologicalSpace G]
+  [TopologicalSpace M]
+  [IsTopologicalAddGroup M]
+  [ContinuousConstSMul R M]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [TopologicalSpace G] [TopologicalSpace M] [IsTopologicalAddGroup M] [ContinuousConstSMul R M] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/ReciprocityTheory/GaloisValuations/SeparatedDvrSecondCohomologyMem.lean:107:0: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.mem_coboundaries1`:
+  [TopologicalSpace G]
+  [TopologicalSpace M]
+  [IsTopologicalAddGroup M]
+  [ContinuousConstSMul R M]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [TopologicalSpace G] [TopologicalSpace M] [IsTopologicalAddGroup M] [ContinuousConstSMul R M] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/ReciprocityTheory/GaloisValuations/SeparatedDvrSecondCohomologyMem.lean:142:8: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.d1_apply`:
+  [TopologicalSpace G]
+  [TopologicalSpace M]
+  [IsTopologicalAddGroup M]
+  [ContinuousConstSMul R M]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [TopologicalSpace G] [TopologicalSpace M] [IsTopologicalAddGroup M] [ContinuousConstSMul R M] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/ReciprocityTheory/GaloisValuations/SeparatedDvrSecondCohomologyMem.lean:164:0: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.dn_apply`:
+  [TopologicalSpace G]
+  [TopologicalSpace M]
+  [IsTopologicalAddGroup M]
+  [ContinuousConstSMul R M]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [TopologicalSpace G] [TopologicalSpace M] [IsTopologicalAddGroup M] [ContinuousConstSMul R M] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/ReciprocityTheory/GaloisValuations/SeparatedDvrSecondCohomologyMem.lean:325:22: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/ReciprocityTheory/GaloisValuations/SeparatedDvrSecondCohomologyMem.lean:337:34: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+⚠ [8320/8532] Replayed ReciprocityTheory.GaloisValuations.ContinuousConstSMulQuotient
+warning: src/ReciprocityTheory/GaloisValuations/ContinuousConstSMulQuotient.lean:85:36: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/ReciprocityTheory/GaloisValuations/ContinuousConstSMulQuotient.lean:125:17: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/ReciprocityTheory/GaloisValuations/ContinuousConstSMulQuotient.lean:226:38: `continuous_subtype_val` has been deprecated: Use `continuous_subtypeVal` instead
+
+Hint: Replace the deprecated name:
+  continuous_subtype_̵v̵V̲al
+warning: src/ReciprocityTheory/GaloisValuations/ContinuousConstSMulQuotient.lean:230:0: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.continuous_mkQ`:
+  [IsTopologicalAddGroup M]
+  [ContinuousConstSMul R M]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [IsTopologicalAddGroup M] [ContinuousConstSMul R M] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/ReciprocityTheory/GaloisValuations/ContinuousConstSMulQuotient.lean:233:4: Unused tactic linter: `exact continuous_coinduced_rng` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/ReciprocityTheory/GaloisValuations/ContinuousConstSMulQuotient.lean:233:4: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+⚠ [8408/8532] Replayed ReciprocityTheory.GaloisValuations.GlobalA
+warning: src/ReciprocityTheory/GaloisValuations/GlobalA.lean:74:2: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+warning: src/ReciprocityTheory/GaloisValuations/GlobalA.lean:202:2: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+⚠ [8442/8532] Replayed ReciprocityTheory.GaloisValuations.GlobalB
+warning: src/ReciprocityTheory/GaloisValuations/GlobalB.lean:183:0: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.smul_valuation_lt_one_iff`:
+  [NumberField F]
+  [IsAlgClosure F Ω]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [NumberField F] [IsAlgClosure F Ω] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/ReciprocityTheory/GaloisValuations/GlobalB.lean:195:0: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.valuation_le_one_intCl`:
+  [IsAlgClosure F Ω]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [IsAlgClosure F Ω] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/ReciprocityTheory/GaloisValuations/GlobalB.lean:254:0: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.continuousSMul_intCl`:
+  [NumberField F]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [NumberField F] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [8444/8532] Replayed ReciprocityTheory.GaloisValuations.Global
+warning: src/ReciprocityTheory/GaloisValuations/Global.lean:75:0: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.mem_Dec`:
+  [NumberField F]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [NumberField F] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/ReciprocityTheory/GaloisValuations/Global.lean:100:0: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.mul_inv_apply`:
+  [NumberField F]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [NumberField F] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/ReciprocityTheory/GaloisValuations/Global.lean:153:0: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.cyc_eq_map_cycZ`:
+  [NumberField F]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [NumberField F] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/ReciprocityTheory/GaloisValuations/Global.lean:159:0: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.continuous_cycZ`:
+  [NumberField F]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [NumberField F] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/ReciprocityTheory/GaloisValuations/Global.lean:195:0: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.isClosed_NS`:
+  [NumberField F]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [NumberField F] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/ReciprocityTheory/GaloisValuations/Global.lean:206:0: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.continuous_toGS`:
+  [NumberField F]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [NumberField F] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/ReciprocityTheory/GaloisValuations/Global.lean:214:58: `continuous_subtype_val` has been deprecated: Use `continuous_subtypeVal` instead
+
+Hint: Replace the deprecated name:
+  continuous_subtype_̵v̵V̲al
+warning: src/ReciprocityTheory/GaloisValuations/Global.lean:226:31: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  S̵e̵t̵.̵m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵S̲e̲t̲.̲m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+warning: src/ReciprocityTheory/GaloisValuations/Global.lean:233:35: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  S̵e̵t̵.̵m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵S̲e̲t̲.̲m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+warning: src/ReciprocityTheory/GaloisValuations/Global.lean:218:0: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.unramOutside_iff`:
+  [NumberField F]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [NumberField F] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/ReciprocityTheory/GaloisValuations/Global.lean:247:0: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.not_valuation_lt_one_of_isPlaceOver`:
+  [NumberField F]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [NumberField F] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/ReciprocityTheory/GaloisValuations/Global.lean:265:20: `HasEnoughRootsOfUnity.exists_primitiveRoot` has been deprecated: Use `HasEnoughRootsOfUnity.exists_isPrimitiveRoot` instead
+
+Hint: Replace the deprecated name:
+  HasEnoughRootsOfUnity.exists_p̵i̲s̲P̲rimitiveRoot
+warning: src/ReciprocityTheory/GaloisValuations/Global.lean:289:0: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.eq_of_isPlaceOver`:
+  [NumberField F]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [NumberField F] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/ReciprocityTheory/GaloisValuations/Global.lean:327:2: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+warning: src/ReciprocityTheory/GaloisValuations/Global.lean:329:2: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+warning: src/ReciprocityTheory/GaloisValuations/Global.lean:445:29: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  S̵e̵t̵.̵m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵S̲e̲t̲.̲m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+warning: src/ReciprocityTheory/GaloisValuations/Global.lean:453:48: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  S̵e̵t̵.̵m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵S̲e̲t̲.̲m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+warning: src/ReciprocityTheory/GaloisValuations/Global.lean:467:67: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  S̵e̵t̵.̵m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵S̲e̲t̲.̲m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+⚠ [8446/8532] Replayed ReciprocityTheory.Hypotheses.GalCohDefs
+warning: src/ReciprocityTheory/Hypotheses/GalCohDefs.lean:138:0: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.ContAction.comp'`:
+  [TopologicalSpace R]
+  [DiscreteTopology R]
+  [DiscreteTopology M]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [TopologicalSpace R] [DiscreteTopology R] [DiscreteTopology M] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [8450/8532] Replayed ReciprocityTheory.Hypotheses.GalCoh
+warning: src/ReciprocityTheory/Hypotheses/GalCoh.lean:118:0: automatically included section variable(s) unused in theorem `ReciprocityTheory.Gal.continuous_locFam`:
+  [IsAlgClosure F Ω]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [IsAlgClosure F Ω] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [8452/8532] Replayed Formalism.GaloisCohomology.Statement
+warning: src/Formalism/GaloisCohomology/Statement.lean:192:62: `continuous_subtype_val` has been deprecated: Use `continuous_subtypeVal` instead
+
+Hint: Replace the deprecated name:
+  continuous_subtype_̵v̵V̲al
+warning: src/Formalism/GaloisCohomology/Statement.lean:211:64: `continuous_subtype_val` has been deprecated: Use `continuous_subtypeVal` instead
+
+Hint: Replace the deprecated name:
+  continuous_subtype_̵v̵V̲al
+⚠ [8468/8532] Replayed Formalism.WeaklyAdmissibleFiltrations.Statement
+warning: src/Formalism/WeaklyAdmissibleFiltrations/Statement.lean:304:0: automatically included section variable(s) unused in theorem `Formalism.WeaklyAdmissibleFiltrations.LatHom.post_B1T`:
+  [TopologicalSpace G]
+  [ContinuousAdd V]
+  [ContinuousConstSMul LL V]
+  [ContinuousAdd V']
+  [ContinuousConstSMul LL V']
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [TopologicalSpace
+  G] [ContinuousAdd V] [ContinuousConstSMul LL V] [ContinuousAdd V'] [ContinuousConstSMul LL V'] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/Formalism/WeaklyAdmissibleFiltrations/Statement.lean:488:22: `TensorProduct.induction_on` has been deprecated: Use `TensorProduct.inductionOn` instead
+
+Note: The updated constant has a different type:
+  ∀ {R : Type u_1} [inst : CommSemiring R] {M : Type u_5} {N : Type u_6} [inst_1 : AddCommMonoid M]
+    [inst_2 : AddCommMonoid N] [inst_3 : Module R M] [inst_4 : Module R N] {motive : M ⊗[R] N → Prop} (z : M ⊗[R] N),
+    (∀ (x : M) (y : N), motive (x ⊗ₜ[R] y)) → (∀ (x y : M ⊗[R] N), motive x → motive y → motive (x + y)) → motive z
+instead of
+  ∀ {R : Type u_1} [inst : CommSemiring R] {M : Type u_5} {N : Type u_6} [inst_1 : AddCommMonoid M]
+    [inst_2 : AddCommMonoid N] [inst_3 : Module R M] [inst_4 : Module R N] {motive : M ⊗[R] N → Prop} (z : M ⊗[R] N),
+    motive 0 →
+      (∀ (x : M) (y : N), motive (x ⊗ₜ[R] y)) → (∀ (x y : M ⊗[R] N), motive x → motive y → motive (x + y)) → motive z
+⚠ [8470/8532] Replayed Formalism.WeaklyAdmissibleFiltrations.StatementPC
+warning: src/Formalism/WeaklyAdmissibleFiltrations/StatementPC.lean:105:15: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  S̵e̵t̵.̵m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵S̲e̲t̲.̲m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+warning: src/Formalism/WeaklyAdmissibleFiltrations/StatementPC.lean:109:15: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  S̵e̵t̵.̵m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵S̲e̲t̲.̲m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+⚠ [8570/8739] Replayed Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DataNLoc.lean:189:22: `continuous_subtype_val` has been deprecated: Use `continuous_subtypeVal` instead
+
+Hint: Replace the deprecated name:
+  continuous_subtype_̵v̵V̲al
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DataNLoc.lean:992:18: `dif_pos` has been deprecated: Use `dite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  d̵i̵f̵_̵p̵o̵s̵d̲i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+⚠ [8574/8739] Replayed Formalism.SharpRestriction.LevelLetterCocycles.DataN
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DataN.lean:653:11: Variable name `i` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _i
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DataN.lean:654:11: Variable name `i` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _i
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DataN.lean:780:14: Variable name `b` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _b
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DataN.lean:782:14: Variable name `b` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _b
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DataN.lean:797:21: Variable name `Q` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _Q
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DataN.lean:797:42: Variable name `ψ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _ψ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DataN.lean:805:21: Variable name `ψ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _ψ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DataN.lean:831:13: Variable name `j` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _j
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DataN.lean:831:21: Variable name `b` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _b
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DataN.lean:831:34: Variable name `Q` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _Q
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DataN.lean:831:55: Variable name `ψ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _ψ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DataN.lean:910:14: Variable name `v` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _v
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8601/8739] Replayed Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.SpanNatCastLeComap
+warning: src/Development/AutomorphicArithmetic/IntegralCasts/CrystallinePeriods/SpanNatCastLeComap.lean:116:8: This simp argument is unused:
+  Ideal.mem_comap
+
+Hint: Omit it from the simp argument list.
+  [apply] simp
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8605/8739] Replayed Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.Embedding
+warning: src/Development/AutomorphicArithmetic/IntegralCasts/CrystallinePeriods/Embedding.lean:109:0: automatically included section variable(s) unused in theorem `Reformulated.AutPerF.charZero_wittVector`:
+  [PerfectRing k p]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [PerfectRing k p] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [8639/8739] Replayed Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.Action
+warning: src/Development/AutomorphicArithmetic/IntegralCasts/CrystallinePeriods/Action.lean:103:19: This simp argument is unused:
+  mul_smul
+
+Hint: Omit it from the simp argument list.
+  [apply] simp
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8719/8739] Replayed Formalism.HermitianLattices.StatementMaj
+warning: src/Formalism/HermitianLattices/StatementMaj.lean:85:0: automatically included section variable(s) unused in theorem `Formalism.HermitianLatticesTheory.fcoord_add`:
+  [StarRing K]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [StarRing K] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/Formalism/HermitianLattices/StatementMaj.lean:93:0: automatically included section variable(s) unused in theorem `Formalism.HermitianLatticesTheory.fcoord_zero`:
+  [NumberField K]
+  [StarRing K]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [NumberField K] [StarRing K] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [8777/8939] Replayed Formalism.LocalRingCardinality.DataCD
+warning: src/Formalism/LocalRingCardinality/DataCD.lean:69:15: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  S̵e̵t̵.̵m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵S̲e̲t̲.̲m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+warning: src/Formalism/LocalRingCardinality/DataCD.lean:77:15: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  S̵e̵t̵.̵m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵S̲e̲t̲.̲m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+⚠ [8781/8939] Replayed Formalism.SharpRestriction.LevelLetterCocycles.DeltaInvariantLattices
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DeltaInvariantLattices.lean:86:22: `continuous_subtype_val` has been deprecated: Use `continuous_subtypeVal` instead
+
+Hint: Replace the deprecated name:
+  continuous_subtype_̵v̵V̲al
+⚠ [8789/8939] Replayed Formalism.SharpRestriction.LevelLetterCocycles.LiftingTheory
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:486:44: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:490:51: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:494:47: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:498:47: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:502:59: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:508:51: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:512:57: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:516:51: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:520:44: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:524:50: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:528:49: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:532:49: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:536:45: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:540:51: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:548:7: `continuous_subtype_val` has been deprecated: Use `continuous_subtypeVal` instead
+
+Hint: Replace the deprecated name:
+  continuous_subtype_̵v̵V̲al
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:544:50: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:591:38: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:595:38: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:599:38: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:607:7: `continuous_subtype_val` has been deprecated: Use `continuous_subtypeVal` instead
+
+Hint: Replace the deprecated name:
+  continuous_subtype_̵v̵V̲al
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:603:38: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:610:38: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:614:38: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LiftingTheory.lean:617:38: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8793/8939] Replayed ReciprocityTheory.BasicDefinitions.AdRep
+warning: src/ReciprocityTheory/BasicDefinitions/AdRep.lean:58:19: Variable name `a` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _a
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/ReciprocityTheory/BasicDefinitions/AdRep.lean:58:21: Variable name `b` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _b
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/ReciprocityTheory/BasicDefinitions/AdRep.lean:60:21: Variable name `x` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _x
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/ReciprocityTheory/BasicDefinitions/AdRep.lean:64:19: Variable name `a` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _a
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/ReciprocityTheory/BasicDefinitions/AdRep.lean:64:21: Variable name `b` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _b
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/ReciprocityTheory/BasicDefinitions/AdRep.lean:66:21: Variable name `x` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _x
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8795/8939] Replayed Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LocCoh.lean:149:10: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M] (f g : End R M)
+    (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LocCoh.lean:149:10: This simp argument is unused:
+  Module.End.mul_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8801/8939] Replayed Formalism.SharpRestriction.LevelLetterCocycles.LocalSituation
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LocalSituation.lean:263:15: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  S̵e̵t̵.̵m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵S̲e̲t̲.̲m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LocalSituation.lean:269:15: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  S̵e̵t̵.̵m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵S̲e̲t̲.̲m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LocalSituation.lean:263:15: This simp argument is unused:
+  Set.mem_setOf_eq
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [map_add (f := _), ha g hg, hb g hg]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LocalSituation.lean:269:15: This simp argument is unused:
+  Set.mem_setOf_eq
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [map_smul, hx g hg]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LocalSituation.lean:377:12: `simp` already closes the goal
+
+Hint: Use `simp` instead of `simpa`:
+  [apply] simp
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/LocalSituation.lean:373:18: Variable name `h` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _h
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8803/8939] Replayed Formalism.SharpRestriction.LevelLetterCocycles.ElementDenominator
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/ElementDenominator.lean:117:7: `continuous_subtype_val` has been deprecated: Use `continuous_subtypeVal` instead
+
+Hint: Replace the deprecated name:
+  continuous_subtype_̵v̵V̲al
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/ElementDenominator.lean:120:9: `continuous_subtype_val` has been deprecated: Use `continuous_subtypeVal` instead
+
+Hint: Replace the deprecated name:
+  continuous_subtype_̵v̵V̲al
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/ElementDenominator.lean:161:112: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8809/8939] Replayed Formalism.LagrangeIdealLifts.CocyclePolynomialDivision.Graded
+warning: src/Formalism/LagrangeIdealLifts/CocyclePolynomialDivision/Graded.lean:126:44: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/LagrangeIdealLifts/CocyclePolynomialDivision/Graded.lean:140:57: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/LagrangeIdealLifts/CocyclePolynomialDivision/Graded.lean:141:6: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/LagrangeIdealLifts/CocyclePolynomialDivision/Graded.lean:155:57: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/LagrangeIdealLifts/CocyclePolynomialDivision/Graded.lean:194:72: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/LagrangeIdealLifts/CocyclePolynomialDivision/Graded.lean:195:6: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+⚠ [8817/8939] Replayed Formalism.WindowSums.AnnihilatorPolynomials.ZpowVal
+warning: src/Formalism/WindowSums/AnnihilatorPolynomials/ZpowVal.lean:64:73: `Prime.not_unit` has been deprecated: Use `Prime.not_isUnit` instead
+
+Hint: Replace the deprecated name:
+  n̵o̵t̵_̵u̵n̵i̵t̵n̲o̲t̲_̲i̲s̲U̲n̲i̲t̲
+warning: src/Formalism/WindowSums/AnnihilatorPolynomials/ZpowVal.lean:69:73: `Prime.not_unit` has been deprecated: Use `Prime.not_isUnit` instead
+
+Hint: Replace the deprecated name:
+  n̵o̵t̵_̵u̵n̵i̵t̵n̲o̲t̲_̲i̲s̲U̲n̲i̲t̲
+warning: src/Formalism/WindowSums/AnnihilatorPolynomials/ZpowVal.lean:76:17: `Prime.not_unit` has been deprecated: Use `Prime.not_isUnit` instead
+
+Hint: Replace the deprecated name:
+  n̵o̵t̵_̵u̵n̵i̵t̵n̲o̲t̲_̲i̲s̲U̲n̲i̲t̲
+warning: src/Formalism/WindowSums/AnnihilatorPolynomials/ZpowVal.lean:96:58: `Prime.not_unit` has been deprecated: Use `Prime.not_isUnit` instead
+
+Hint: Replace the deprecated name:
+  n̵o̵t̵_̵u̵n̵i̵t̵n̲o̲t̲_̲i̲s̲U̲n̲i̲t̲
+warning: src/Formalism/WindowSums/AnnihilatorPolynomials/ZpowVal.lean:161:14: `emultiplicity_zero` has been deprecated: Use `emultiplicity_zero_right` instead
+
+Hint: Replace the deprecated name:
+  emultiplicity_zero_̲r̲i̲g̲h̲t̲
+⚠ [8831/8939] Replayed Formalism.LagrangeIdealLifts.CocyclePolynomialDivision.UClaim
+warning: src/Formalism/LagrangeIdealLifts/CocyclePolynomialDivision/UClaim.lean:65:35: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/LagrangeIdealLifts/CocyclePolynomialDivision/UClaim.lean:69:20: `Module.End.one_apply` has been deprecated: Use `one_apply_eq_self` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : One F} [self : IsOneApplyEqSelf F]
+    (x : α), 1 x = x
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M] (x : M), 1 x = x
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.one_apply` to `one_apply_eq_self x`).
+warning: src/Formalism/LagrangeIdealLifts/CocyclePolynomialDivision/UClaim.lean:72:21: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/LagrangeIdealLifts/CocyclePolynomialDivision/UClaim.lean:170:8: Unused tactic linter: `exact
+  DiscreteValuationRing.eq_unit_mul_pow_irreducible hc PadicInt.irreducible_p` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/LagrangeIdealLifts/CocyclePolynomialDivision/UClaim.lean:171:8: Unused tactic linter: `exact ⟨_, _, PadicInt.unitCoeff_spec hc⟩` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/LagrangeIdealLifts/CocyclePolynomialDivision/UClaim.lean:170:8: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/LagrangeIdealLifts/CocyclePolynomialDivision/UClaim.lean:171:8: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/LagrangeIdealLifts/CocyclePolynomialDivision/UClaim.lean:208:27: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/LagrangeIdealLifts/CocyclePolynomialDivision/UClaim.lean:224:27: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/LagrangeIdealLifts/CocyclePolynomialDivision/UClaim.lean:225:6: `Module.End.one_apply` has been deprecated: Use `one_apply_eq_self` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : One F} [self : IsOneApplyEqSelf F]
+    (x : α), 1 x = x
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M] (x : M), 1 x = x
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.one_apply` to `one_apply_eq_self x`).
+⚠ [8845/8939] Replayed Formalism.FrobeniusContraction.FrobeniusContractionProofs.LenBound
+warning: src/Formalism/FrobeniusContraction/FrobeniusContractionProofs/LenBound.lean:92:4: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+⚠ [8849/8939] Replayed Formalism.PadicSubsetSums.StableGradedCounts.ARCReuse
+warning: src/Formalism/PadicSubsetSums/StableGradedCounts/ARCReuse.lean:94:77: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/PadicSubsetSums/StableGradedCounts/ARCReuse.lean:108:30: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/PadicSubsetSums/StableGradedCounts/ARCReuse.lean:108:52: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/PadicSubsetSums/StableGradedCounts/ARCReuse.lean:114:42: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+⚠ [8867/8939] Replayed Formalism.SharpRestriction.LevelLetterCocycles.CrystallineLiftingBounds
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/CrystallineLiftingBounds.lean:115:38: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/CrystallineLiftingBounds.lean:119:38: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/CrystallineLiftingBounds.lean:123:38: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/CrystallineLiftingBounds.lean:131:7: `continuous_subtype_val` has been deprecated: Use `continuous_subtypeVal` instead
+
+Hint: Replace the deprecated name:
+  continuous_subtype_̵v̵V̲al
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/CrystallineLiftingBounds.lean:127:38: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/CrystallineLiftingBounds.lean:134:38: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/CrystallineLiftingBounds.lean:143:38: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/CrystallineLiftingBounds.lean:146:38: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8877/8939] Replayed Formalism.GaussValuationBounds.GaussValueContraction.PhiIterXProof
+warning: src/Formalism/GaussValuationBounds/GaussValueContraction/PhiIterXProof.lean:109:2: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+warning: src/Formalism/GaussValuationBounds/GaussValueContraction/PhiIterXProof.lean:131:66: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: src/Formalism/GaussValuationBounds/GaussValueContraction/PhiIterXProof.lean:131:91: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+⚠ [8883/8939] Replayed Formalism.GaussValuationBounds.GaussValueContraction.ScaledPowMemSpanCeil
+warning: src/Formalism/GaussValuationBounds/GaussValueContraction/ScaledPowMemSpanCeil.lean:72:4: `push_neg` has been deprecated. Prefer using `push Not` instead.
+If you'd rather continue using `push_neg` in your project, you can implement it as follows:
+```
+open Lean.Parser.Tactic in
+macro "push_neg" cfg:optConfig loc:(location)? : tactic =>
+  `(tactic| push $cfg:optConfig Not $[$loc]?)
+```
+⚠ [8893/8939] Replayed Formalism.CoboundaryTransfers.GammaStableTransfers.TorsionKilledCriterionHolds
+warning: src/Formalism/CoboundaryTransfers/GammaStableTransfers/TorsionKilledCriterionHolds.lean:116:60: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/CoboundaryTransfers/GammaStableTransfers/TorsionKilledCriterionHolds.lean:214:49: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/CoboundaryTransfers/GammaStableTransfers/TorsionKilledCriterionHolds.lean:233:6: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/CoboundaryTransfers/GammaStableTransfers/TorsionKilledCriterionHolds.lean:234:28: `Module.End.one_apply` has been deprecated: Use `one_apply_eq_self` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : One F} [self : IsOneApplyEqSelf F]
+    (x : α), 1 x = x
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M] (x : M), 1 x = x
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.one_apply` to `one_apply_eq_self x`).
+⚠ [8895/8939] Replayed Formalism.CoboundaryTransfers.GammaStableTransfers.DiffOneSmulOfTower
+warning: src/Formalism/CoboundaryTransfers/GammaStableTransfers/DiffOneSmulOfTower.lean:107:25: Unused tactic linter: `done` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/CoboundaryTransfers/GammaStableTransfers/DiffOneSmulOfTower.lean:110:25: Unused tactic linter: `done` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/CoboundaryTransfers/GammaStableTransfers/DiffOneSmulOfTower.lean:107:25: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/CoboundaryTransfers/GammaStableTransfers/DiffOneSmulOfTower.lean:110:25: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/CoboundaryTransfers/GammaStableTransfers/DiffOneSmulOfTower.lean:116:25: Unused tactic linter: `done` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/CoboundaryTransfers/GammaStableTransfers/DiffOneSmulOfTower.lean:116:25: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/CoboundaryTransfers/GammaStableTransfers/DiffOneSmulOfTower.lean:152:6: Unused tactic linter: `rw [algebra_compatible_smul A r t, map_smul, ← algebra_compatible_smul A r]` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/CoboundaryTransfers/GammaStableTransfers/DiffOneSmulOfTower.lean:157:6: Unused tactic linter: `rw [algebra_compatible_smul A r t, map_smul, ← algebra_compatible_smul A r]` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/CoboundaryTransfers/GammaStableTransfers/DiffOneSmulOfTower.lean:152:6: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/CoboundaryTransfers/GammaStableTransfers/DiffOneSmulOfTower.lean:157:6: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+⚠ [8901/8939] Replayed Formalism.ResultantValuation.ResultantAdjugateProofs.Window
+warning: src/Formalism/ResultantValuation/ResultantAdjugateProofs/Window.lean:145:11: `emultiplicity_zero` has been deprecated: Use `emultiplicity_zero_right` instead
+
+Hint: Replace the deprecated name:
+  emultiplicity_zero_̲r̲i̲g̲h̲t̲
+⚠ [8903/8939] Replayed Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.GrothendieckTopDegree
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/GrothendieckTopDegree.lean:219:24: Unused tactic linter: `simp [Formalism.CoboundaryTransfers.Hom.f2]` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/GrothendieckTopDegree.lean:219:24: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+⚠ [8919/8939] Replayed Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.LiftExistsSecondCase
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/LiftExistsSecondCase.lean:112:71: `Module.End.one_apply` has been deprecated: Use `one_apply_eq_self` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : One F} [self : IsOneApplyEqSelf F]
+    (x : α), 1 x = x
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M] (x : M), 1 x = x
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.one_apply` to `one_apply_eq_self x`).
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/LiftExistsSecondCase.lean:120:49: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/LiftExistsSecondCase.lean:177:31: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+⚠ [8921/8939] Replayed Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.UnitLemmaCaseALevelZero
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/UnitLemmaCaseALevelZero.lean:101:7: `Prime.not_unit` has been deprecated: Use `Prime.not_isUnit` instead
+
+Hint: Replace the deprecated name:
+  n̵o̵t̵_̵u̵n̵i̵t̵n̲o̲t̲_̲i̲s̲U̲n̲i̲t̲
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/UnitLemmaCaseALevelZero.lean:136:13: `Prime.not_unit` has been deprecated: Use `Prime.not_isUnit` instead
+
+Hint: Replace the deprecated name:
+  n̵o̵t̵_̵u̵n̵i̵t̵n̲o̲t̲_̲i̲s̲U̲n̲i̲t̲
+⚠ [8923/8939] Replayed Formalism.WindowSums.AnnihilatorPolynomials.EvalOneSmulDecomposition
+warning: src/Formalism/WindowSums/AnnihilatorPolynomials/EvalOneSmulDecomposition.lean:61:25: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/WindowSums/AnnihilatorPolynomials/EvalOneSmulDecomposition.lean:66:16: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/WindowSums/AnnihilatorPolynomials/EvalOneSmulDecomposition.lean:69:17: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+⚠ [8925/8939] Replayed Formalism.WindowSums.AnnihilatorPolynomials.Lagrange
+warning: src/Formalism/WindowSums/AnnihilatorPolynomials/Lagrange.lean:62:40: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/WindowSums/AnnihilatorPolynomials/Lagrange.lean:110:15: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+⚠ [8927/8939] Replayed Formalism.WindowSums.AnnihilatorPolynomials.WindowSum
+warning: src/Formalism/WindowSums/AnnihilatorPolynomials/WindowSum.lean:71:34: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  S̵e̵t̵.̵m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵S̲e̲t̲.̲m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+⚠ [8931/8939] Replayed Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.EtaleClosedPointLiftsSimpleRootsMonic
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/EtaleClosedPointLiftsSimpleRootsMonic.lean:167:39: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+⚠ [8932/8939] Replayed Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.ResidueQuotientHolds
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/ResidueQuotientHolds.lean:94:17: Unused tactic linter: `<;>` can be replaced with `;`.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/ResidueQuotientHolds.lean:94:17: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/ResidueQuotientHolds.lean:134:41: Unused tactic linter: `<;>` can be replaced with `;`.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/ResidueQuotientHolds.lean:136:41: Unused tactic linter: `<;>` can be replaced with `;`.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/ResidueQuotientHolds.lean:134:41: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/ResidueQuotientHolds.lean:136:41: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [8934/8939] Replayed Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.SecondDescentFreePartHolds
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/SecondDescentFreePartHolds.lean:98:8: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/SecondDescentFreePartHolds.lean:136:14: `emultiplicity_zero` has been deprecated: Use `emultiplicity_zero_right` instead
+
+Hint: Replace the deprecated name:
+  emultiplicity_zero_̲r̲i̲g̲h̲t̲
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/SecondDescentFreePartHolds.lean:154:8: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+⚠ [8940/8991] Replayed Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.TotallyRealRoots
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/TotallyRealRoots.lean:75:10: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/TotallyRealRoots.lean:83:14: `padicValNat.eq_zero_of_not_dvd` has been deprecated: Use `multiplicity_eq_zero_of_not_dvd` instead
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.eq_zero_of_not_dvd` to `multiplicity_eq_zero_of_not_dvd x`).
+
+Hint: Replace the deprecated name:
+  p̵a̵d̵i̵c̵V̵a̵l̵N̵a̵t̵.̵e̵q̵_̵z̵e̵r̵o̵_̵o̵f̵_̵n̵o̵t̵_̵d̵v̵d̵m̲u̲l̲t̲i̲p̲l̲i̲c̲i̲t̲y̲_̲e̲q̲_̲z̲e̲r̲o̲_̲o̲f̲_̲n̲o̲t̲_̲d̲v̲d̲
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/TotallyRealRoots.lean:91:10: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/TotallyRealRoots.lean:133:14: `sub_one_mul_padicValNat_factorial_lt_of_ne_zero` has been deprecated: Use `sub_one_mul_multiplicity_factorial_lt_of_ne_zero` instead
+
+Hint: Replace the deprecated name:
+  s̵u̵b̵_̵o̵n̵e̵_̵m̵u̵l̵_̵p̵a̵d̵i̵c̵V̵a̵l̵N̵a̵t̵_̵f̵a̵c̵t̵o̵r̵i̵a̵l̵_̵l̵t̵_̵o̵f̵_̵n̵e̵_̵z̵e̵r̵o̵s̲u̲b̲_̲o̲n̲e̲_̲m̲u̲l̲_̲m̲u̲l̲t̲i̲p̲l̲i̲c̲i̲t̲y̲_̲f̲a̲c̲t̲o̲r̲i̲a̲l̲_̲l̲t̲_̲o̲f̲_̲n̲e̲_̲z̲e̲r̲o̲
+⚠ [8942/8991] Replayed Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.Letters
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/Letters.lean:91:10: Unused tactic linter: `try` can be removed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+⚠ [8944/8991] Replayed Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.ResidueSeriesExpansionHolds
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/ResidueSeriesExpansionHolds.lean:66:8: `Ideal.span_mul_span'` has been deprecated: Use `Ideal.span_mul_span` instead
+
+Hint: Replace the deprecated name:
+  Ideal.span_mul_span'̵
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/ResidueSeriesExpansionHolds.lean:104:4: `push_neg` has been deprecated. Prefer using `push Not` instead.
+If you'd rather continue using `push_neg` in your project, you can implement it as follows:
+```
+open Lean.Parser.Tactic in
+macro "push_neg" cfg:optConfig loc:(location)? : tactic =>
+  `(tactic| push $cfg:optConfig Not $[$loc]?)
+```
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/ResidueSeriesExpansionHolds.lean:167:8: `Ideal.span_mul_span'` has been deprecated: Use `Ideal.span_mul_span` instead
+
+Hint: Replace the deprecated name:
+  Ideal.span_mul_span'̵
+info: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/ResidueSeriesExpansionHolds.lean:180:0: Error in Linarith.normalizeDenominatorsLHS: Expr.rewrite may not produce subgoals.
+⚠ [8948/8991] Replayed Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.SumVal
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/SumVal.lean:173:4: Unused tactic linter: `beta_reduce` does not change the goal.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/WachLatticeTwists/LagrangeExtensionCocycles/ExtensionCocycleProofs/SumVal.lean:194:4: Unused tactic linter: `beta_reduce` does not change the goal.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+⚠ [8956/8991] Replayed Formalism.WeaklyAdmissibleFiltrations.CrystallineStableLifts.ExLattice
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/ExLattice.lean:72:4: `simp` already closes the goal
+
+Hint: Use `simp` instead of `simpa`:
+  [apply] simp
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8958/8991] Replayed Formalism.WeaklyAdmissibleFiltrations.CrystallineStableLifts.TrivCrys
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/TrivCrys.lean:86:20: `TensorProduct.induction_on` has been deprecated: Use `TensorProduct.inductionOn` instead
+
+Note: The updated constant has a different type:
+  ∀ {R : Type u_1} [inst : CommSemiring R] {M : Type u_5} {N : Type u_6} [inst_1 : AddCommMonoid M]
+    [inst_2 : AddCommMonoid N] [inst_3 : Module R M] [inst_4 : Module R N] {motive : M ⊗[R] N → Prop} (z : M ⊗[R] N),
+    (∀ (x : M) (y : N), motive (x ⊗ₜ[R] y)) → (∀ (x y : M ⊗[R] N), motive x → motive y → motive (x + y)) → motive z
+instead of
+  ∀ {R : Type u_1} [inst : CommSemiring R] {M : Type u_5} {N : Type u_6} [inst_1 : AddCommMonoid M]
+    [inst_2 : AddCommMonoid N] [inst_3 : Module R M] [inst_4 : Module R N] {motive : M ⊗[R] N → Prop} (z : M ⊗[R] N),
+    motive 0 →
+      (∀ (x : M) (y : N), motive (x ⊗ₜ[R] y)) → (∀ (x y : M ⊗[R] N), motive x → motive y → motive (x + y)) → motive z
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/TrivCrys.lean:100:8: automatically included section variable(s) unused in theorem `_private.Formalism.WeaklyAdmissibleFiltrations.CrystallineStableLifts.TrivCrys.0.Formalism.WeaklyAdmissibleFiltrations.trivCrysCoord_tmul`:
+  [FiniteDimensional Qp LL]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional Qp LL] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/TrivCrys.lean:106:20: `TensorProduct.induction_on` has been deprecated: Use `TensorProduct.inductionOn` instead
+
+Note: The updated constant has a different type:
+  ∀ {R : Type u_1} [inst : CommSemiring R] {M : Type u_5} {N : Type u_6} [inst_1 : AddCommMonoid M]
+    [inst_2 : AddCommMonoid N] [inst_3 : Module R M] [inst_4 : Module R N] {motive : M ⊗[R] N → Prop} (z : M ⊗[R] N),
+    (∀ (x : M) (y : N), motive (x ⊗ₜ[R] y)) → (∀ (x y : M ⊗[R] N), motive x → motive y → motive (x + y)) → motive z
+instead of
+  ∀ {R : Type u_1} [inst : CommSemiring R] {M : Type u_5} {N : Type u_6} [inst_1 : AddCommMonoid M]
+    [inst_2 : AddCommMonoid N] [inst_3 : Module R M] [inst_4 : Module R N] {motive : M ⊗[R] N → Prop} (z : M ⊗[R] N),
+    motive 0 →
+      (∀ (x : M) (y : N), motive (x ⊗ₜ[R] y)) → (∀ (x y : M ⊗[R] N), motive x → motive y → motive (x + y)) → motive z
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/TrivCrys.lean:120:20: `TensorProduct.induction_on` has been deprecated: Use `TensorProduct.inductionOn` instead
+
+Note: The updated constant has a different type:
+  ∀ {R : Type u_1} [inst : CommSemiring R] {M : Type u_5} {N : Type u_6} [inst_1 : AddCommMonoid M]
+    [inst_2 : AddCommMonoid N] [inst_3 : Module R M] [inst_4 : Module R N] {motive : M ⊗[R] N → Prop} (z : M ⊗[R] N),
+    (∀ (x : M) (y : N), motive (x ⊗ₜ[R] y)) → (∀ (x y : M ⊗[R] N), motive x → motive y → motive (x + y)) → motive z
+instead of
+  ∀ {R : Type u_1} [inst : CommSemiring R] {M : Type u_5} {N : Type u_6} [inst_1 : AddCommMonoid M]
+    [inst_2 : AddCommMonoid N] [inst_3 : Module R M] [inst_4 : Module R N] {motive : M ⊗[R] N → Prop} (z : M ⊗[R] N),
+    motive 0 →
+      (∀ (x : M) (y : N), motive (x ⊗ₜ[R] y)) → (∀ (x y : M ⊗[R] N), motive x → motive y → motive (x + y)) → motive z
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/TrivCrys.lean:154:2: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+⚠ [8960/8991] Replayed Formalism.WeaklyAdmissibleFiltrations.CrystallineStableLifts.ExistsPeriodRingDataHolds
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/ExistsPeriodRingDataHolds.lean:89:17: `if_true` has been deprecated: Use `ite_true` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵t̵r̵u̵e̵i̲t̲e̲_̲t̲r̲u̲e̲
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/ExistsPeriodRingDataHolds.lean:125:8: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/ExistsPeriodRingDataHolds.lean:126:8: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/ExistsPeriodRingDataHolds.lean:148:6: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/ExistsPeriodRingDataHolds.lean:191:53: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/ExistsPeriodRingDataHolds.lean:220:71: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/ExistsPeriodRingDataHolds.lean:223:36: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+⚠ [8962/8991] Replayed Formalism.WeaklyAdmissibleFiltrations.CrystallineStableLifts.Galois
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/Galois.lean:73:42: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M] (f g : End R M)
+    (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/Galois.lean:112:22: `TensorProduct.induction_on` has been deprecated: Use `TensorProduct.inductionOn` instead
+
+Note: The updated constant has a different type:
+  ∀ {R : Type u_1} [inst : CommSemiring R] {M : Type u_5} {N : Type u_6} [inst_1 : AddCommMonoid M]
+    [inst_2 : AddCommMonoid N] [inst_3 : Module R M] [inst_4 : Module R N] {motive : M ⊗[R] N → Prop} (z : M ⊗[R] N),
+    (∀ (x : M) (y : N), motive (x ⊗ₜ[R] y)) → (∀ (x y : M ⊗[R] N), motive x → motive y → motive (x + y)) → motive z
+instead of
+  ∀ {R : Type u_1} [inst : CommSemiring R] {M : Type u_5} {N : Type u_6} [inst_1 : AddCommMonoid M]
+    [inst_2 : AddCommMonoid N] [inst_3 : Module R M] [inst_4 : Module R N] {motive : M ⊗[R] N → Prop} (z : M ⊗[R] N),
+    motive 0 →
+      (∀ (x : M) (y : N), motive (x ⊗ₜ[R] y)) → (∀ (x y : M ⊗[R] N), motive x → motive y → motive (x + y)) → motive z
+⚠ [8964/8991] Replayed Formalism.WeaklyAdmissibleFiltrations.CrystallineStableLifts.WachCol
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/WachCol.lean:114:28: This simp argument is unused:
+  map_add (f := _)
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [key, Function.prod, map_sub, map_neg, neg_smul, LinearMap.add_apply]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/WachCol.lean:114:55: This simp argument is unused:
+  map_neg
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [key, Function.prod, map_add (f := _), map_sub, neg_smul, LinearMap.add_apply]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/WachCol.lean:114:64: This simp argument is unused:
+  neg_smul
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [key, Function.prod, map_add (f := _), map_sub, map_neg, LinearMap.add_apply]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/WachCol.lean:114:74: This simp argument is unused:
+  LinearMap.add_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [key, Function.prod, map_add (f := _), map_sub, map_neg, neg_smul]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/WachCol.lean:112:6: Unused tactic linter: `(cases W; simp_all [LinearMap.ext_iff])` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/WachCol.lean:113:6: Unused tactic linter: `(cases W; simp_all [LinearMap.ext_iff, eq_comm])` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/WachCol.lean:114:95: Unused tactic linter: `<;>` can be replaced with `;`.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/WachCol.lean:112:6: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/WachCol.lean:113:6: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/WeaklyAdmissibleFiltrations/CrystallineStableLifts/WachCol.lean:114:95: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [8982/8991] Replayed Formalism.SharpRestriction.LevelLetterCocycles.FrobeniusPowUniformizerFactorisation
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:349:52: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:353:52: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:722:0: automatically included section variable(s) unused in theorem `Formalism.MainNotions.LiftingTheory.GammaEquationHypotheses.p_ne`:
+  [Algebra O A]
+  [IsScalarTower O A D]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Algebra O A] [IsScalarTower O A D] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:728:0: automatically included section variable(s) unused in theorem `Formalism.MainNotions.LiftingTheory.GammaEquationHypotheses.v_pow_mul`:
+  [Algebra O A]
+  [IsScalarTower O A D]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Algebra O A] [IsScalarTower O A D] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:732:0: automatically included section variable(s) unused in theorem `Formalism.MainNotions.LiftingTheory.GammaEquationHypotheses.β_N`:
+  [Algebra O A]
+  [IsScalarTower O A D]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Algebra O A] [IsScalarTower O A D] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:735:0: automatically included section variable(s) unused in theorem `Formalism.MainNotions.LiftingTheory.GammaEquationHypotheses.Ppow_N`:
+  [Algebra O A]
+  [IsScalarTower O A D]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Algebra O A] [IsScalarTower O A D] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:740:0: automatically included section variable(s) unused in theorem `Formalism.MainNotions.LiftingTheory.GammaEquationHypotheses.g_N`:
+  [Algebra O A]
+  [IsScalarTower O A D]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Algebra O A] [IsScalarTower O A D] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:812:0: automatically included section variable(s) unused in theorem `Formalism.MainNotions.LiftingTheory.GammaEquationHypotheses.reps`:
+  [Algebra O A]
+  [IsScalarTower O A D]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Algebra O A] [IsScalarTower O A D] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:824:0: automatically included section variable(s) unused in theorem `Formalism.MainNotions.LiftingTheory.GammaEquationHypotheses.congrP`:
+  [Algebra O A]
+  [IsScalarTower O A D]
+  H
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Algebra O A] [IsScalarTower O A D] H in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:831:0: automatically included section variable(s) unused in theorem `Formalism.MainNotions.LiftingTheory.GammaEquationHypotheses.P0`:
+  [Algebra O A]
+  [IsScalarTower O A D]
+  H
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Algebra O A] [IsScalarTower O A D] H in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:1690:24: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:1693:24: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:1704:24: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:1708:22: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:1784:55: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:2069:0: automatically included section variable(s) unused in theorem `Formalism.MainNotions.LiftingTheory.desc_mem_ImF_of_cls`:
+  [Module Qp V']
+  [IsScalarTower Qp LL V']
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Module Qp V'] [IsScalarTower Qp LL V'] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:2081:0: automatically included section variable(s) unused in theorem `Formalism.MainNotions.LiftingTheory.desc_cls_mem_of_ImF`:
+  [Module Qp V']
+  [IsScalarTower Qp LL V']
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Module Qp V'] [IsScalarTower Qp LL V'] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:2522:0: automatically included section variable(s) unused in theorem `Formalism.MainNotions.LiftingTheory.tr_toLL_smul`:
+  [TopologicalSpace LL]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [TopologicalSpace LL] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:2528:0: automatically included section variable(s) unused in theorem `Formalism.MainNotions.LiftingTheory.tr_nat_smul`:
+  [TopologicalSpace LL]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [TopologicalSpace LL] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:2917:12: `padicValNat.eq_zero_of_not_dvd` has been deprecated: Use `multiplicity_eq_zero_of_not_dvd` instead
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.eq_zero_of_not_dvd` to `multiplicity_eq_zero_of_not_dvd x`).
+
+Hint: Replace the deprecated name:
+  p̵a̵d̵i̵c̵V̵a̵l̵N̵a̵t̵.̵e̵q̵_̵z̵e̵r̵o̵_̵o̵f̵_̵n̵o̵t̵_̵d̵v̵d̵m̲u̲l̲t̲i̲p̲l̲i̲c̲i̲t̲y̲_̲e̲q̲_̲z̲e̲r̲o̲_̲o̲f̲_̲n̲o̲t̲_̲d̲v̲d̲
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:3035:22: `TensorProduct.induction_on` has been deprecated: Use `TensorProduct.inductionOn` instead
+
+Note: The updated constant has a different type:
+  ∀ {R : Type u_1} [inst : CommSemiring R] {M : Type u_5} {N : Type u_6} [inst_1 : AddCommMonoid M]
+    [inst_2 : AddCommMonoid N] [inst_3 : Module R M] [inst_4 : Module R N] {motive : M ⊗[R] N → Prop} (z : M ⊗[R] N),
+    (∀ (x : M) (y : N), motive (x ⊗ₜ[R] y)) → (∀ (x y : M ⊗[R] N), motive x → motive y → motive (x + y)) → motive z
+instead of
+  ∀ {R : Type u_1} [inst : CommSemiring R] {M : Type u_5} {N : Type u_6} [inst_1 : AddCommMonoid M]
+    [inst_2 : AddCommMonoid N] [inst_3 : Module R M] [inst_4 : Module R N] {motive : M ⊗[R] N → Prop} (z : M ⊗[R] N),
+    motive 0 →
+      (∀ (x : M) (y : N), motive (x ⊗ₜ[R] y)) → (∀ (x y : M ⊗[R] N), motive x → motive y → motive (x + y)) → motive z
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:3154:4: `IsAdicComplete.le_jacobson_bot` has been deprecated: Use `IsAdicComplete.le_jacobson` instead
+
+Note: The updated constant has a different type:
+  ∀ {R : Type u_1} [inst : CommRing R] (I : Ideal R) [IsAdicComplete I R], I ≤ Ring.jacobson R
+instead of
+  ∀ {R : Type u_1} [inst : CommRing R] (I : Ideal R) [IsAdicComplete I R], I ≤ ⊥.jacobson
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:3157:14: `Ideal.mem_jacobson_bot` has been deprecated: Use `Ring.mem_jacobson_iff` instead
+
+Note: The updated constant has a different type:
+  ∀ {R : Type u} [inst : CommRing R] {x : R}, x ∈ Ring.jacobson R ↔ ∀ (y : R), IsUnit (x * y + 1)
+instead of
+  ∀ {R : Type u} [inst : CommRing R] {x : R}, x ∈ ⊥.jacobson ↔ ∀ (y : R), IsUnit (x * y + 1)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mem_jacobson_bot` to `Ring.mem_jacobson_iff x`).
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:3754:45: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:3758:44: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:3762:45: Variable name `F` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _F
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:4148:31: `padicValNat.eq_zero_of_not_dvd` has been deprecated: Use `multiplicity_eq_zero_of_not_dvd` instead
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.eq_zero_of_not_dvd` to `multiplicity_eq_zero_of_not_dvd x`).
+
+Hint: Replace the deprecated name:
+  p̵a̵d̵i̵c̵V̵a̵l̵N̵a̵t̵.̵e̵q̵_̵z̵e̵r̵o̵_̵o̵f̵_̵n̵o̵t̵_̵d̵v̵d̵m̲u̲l̲t̲i̲p̲l̲i̲c̲i̲t̲y̲_̲e̲q̲_̲z̲e̲r̲o̲_̲o̲f̲_̲n̲o̲t̲_̲d̲v̲d̲
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/FrobeniusPowUniformizerFactorisation.lean:4250:8: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+⚠ [8986/8991] Replayed Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.ModelFPfB
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/ModelFPfB.lean:76:20: `TensorProduct.induction_on` has been deprecated: Use `TensorProduct.inductionOn` instead
+
+Note: The updated constant has a different type:
+  ∀ {R : Type u_1} [inst : CommSemiring R] {M : Type u_5} {N : Type u_6} [inst_1 : AddCommMonoid M]
+    [inst_2 : AddCommMonoid N] [inst_3 : Module R M] [inst_4 : Module R N] {motive : M ⊗[R] N → Prop} (z : M ⊗[R] N),
+    (∀ (x : M) (y : N), motive (x ⊗ₜ[R] y)) → (∀ (x y : M ⊗[R] N), motive x → motive y → motive (x + y)) → motive z
+instead of
+  ∀ {R : Type u_1} [inst : CommSemiring R] {M : Type u_5} {N : Type u_6} [inst_1 : AddCommMonoid M]
+    [inst_2 : AddCommMonoid N] [inst_3 : Module R M] [inst_4 : Module R N] {motive : M ⊗[R] N → Prop} (z : M ⊗[R] N),
+    motive 0 →
+      (∀ (x : M) (y : N), motive (x ⊗ₜ[R] y)) → (∀ (x y : M ⊗[R] N), motive x → motive y → motive (x + y)) → motive z
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/ModelFPfB.lean:83:20: `TensorProduct.induction_on` has been deprecated: Use `TensorProduct.inductionOn` instead
+
+Note: The updated constant has a different type:
+  ∀ {R : Type u_1} [inst : CommSemiring R] {M : Type u_5} {N : Type u_6} [inst_1 : AddCommMonoid M]
+    [inst_2 : AddCommMonoid N] [inst_3 : Module R M] [inst_4 : Module R N] {motive : M ⊗[R] N → Prop} (z : M ⊗[R] N),
+    (∀ (x : M) (y : N), motive (x ⊗ₜ[R] y)) → (∀ (x y : M ⊗[R] N), motive x → motive y → motive (x + y)) → motive z
+instead of
+  ∀ {R : Type u_1} [inst : CommSemiring R] {M : Type u_5} {N : Type u_6} [inst_1 : AddCommMonoid M]
+    [inst_2 : AddCommMonoid N] [inst_3 : Module R M] [inst_4 : Module R N] {motive : M ⊗[R] N → Prop} (z : M ⊗[R] N),
+    motive 0 →
+      (∀ (x : M) (y : N), motive (x ⊗ₜ[R] y)) → (∀ (x y : M ⊗[R] N), motive x → motive y → motive (x + y)) → motive z
+⚠ [8988/8991] Built Lemmata.PowerMembership.PowMem (740ms)
+warning: src/Lemmata/PowerMembership/PowMem.lean:72:35: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M]
+    (f g : Module.End R M) (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Lemmata/PowerMembership/PowMem.lean:59:35: Variable name `inst` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _inst
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Lemmata/PowerMembership/PowMem.lean:59:61: Variable name `inst_1` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _inst_1
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: src/Lemmata/PowerMembership/PowMem.lean:60:3: Variable name `inst_2` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _inst_2
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8990/8991] Built Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable (1.8s)
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:10: Unused tactic linter: `exact Bl.PowerMembership.goal1 ..` does not change the goal.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:96: Unused tactic linter: `(intros; apply Bl.PowerMembership.goal1 <;> assumption)` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:154: Unused tactic linter: `(apply @Bl.PowerMembership.goal1 <;> assumption)` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:205: Unused tactic linter: `(intros; apply @Bl.PowerMembership.goal1 <;> assumption)` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:264: Unused tactic linter: `(apply @Bl.PowerMembership.goal1 <;>
+    first
+    | assumption
+    | infer_instance)` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:340: Unused tactic linter: `exact @Bl.PowerMembership.goal1 R M ‹_› ‹_› ‹_› S f hf P v hv` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:404: Unused tactic linter: `exact @Bl.PowerMembership.goal1 R M ‹_› ‹_› ‹_› S f hf P v` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:465: Unused tactic linter: `exact @Bl.PowerMembership.goal1 R M ‹_› ‹_› ‹_› S f hf P` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:524: Unused tactic linter: `exact @Bl.PowerMembership.goal1 R M ‹_› ‹_› ‹_› S f hf` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:581: Unused tactic linter: `exact @Bl.PowerMembership.goal1 R M ‹_› ‹_› ‹_› S f` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:635: Unused tactic linter: `exact @Bl.PowerMembership.goal1 R M ‹_› ‹_› ‹_› S` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:687: Unused tactic linter: `exact @Bl.PowerMembership.goal1 R M ‹_› ‹_› ‹_›` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:737: Unused tactic linter: `exact @Bl.PowerMembership.goal1 R M ‹_› ‹_›` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:783: Unused tactic linter: `exact @Bl.PowerMembership.goal1 R M ‹_›` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:825: Unused tactic linter: `exact @Bl.PowerMembership.goal1 R M` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:863: Unused tactic linter: `exact @Bl.PowerMembership.goal1 R` is never executed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:96: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:154: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:205: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:264: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:340: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:404: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:465: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:524: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:581: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:635: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:687: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:737: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:783: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:825: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:58:863: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:65:35: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M] (f g : End R M)
+    (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:65:57: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M] (f g : End R M)
+    (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:66:47: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M] (f g : End R M)
+    (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:67:6: `Module.End.mul_apply` has been deprecated: Use `mul_apply_eq_comp` instead
+
+Note: The updated constant has a different type:
+  ∀ {F : Type u_1} {α : outParam (Type u_2)} {inst : FunLike F α α} {inst_1 : Mul F} [self : IsMulApplyEqComp F]
+    (f g : F) (x : α), (f * g) x = f (g x)
+instead of
+  ∀ {R : Type u_1} {M : Type u_4} [inst : Semiring R] [inst_1 : AddCommMonoid M] [inst_2 : Module R M] (f g : End R M)
+    (x : M), (f * g) x = f (g x)
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.mul_apply` to `mul_apply_eq_comp x`).
+warning: src/Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/AevalMemOfStable.lean:105:20: `TensorProduct.induction_on` has been deprecated: Use `TensorProduct.inductionOn` instead
+
+Note: The updated constant has a different type:
+  ∀ {R : Type u_1} [inst : CommSemiring R] {M : Type u_5} {N : Type u_6} [inst_1 : AddCommMonoid M]
+    [inst_2 : AddCommMonoid N] [inst_3 : Module R M] [inst_4 : Module R N] {motive : M ⊗[R] N → Prop} (z : M ⊗[R] N),
+    (∀ (x : M) (y : N), motive (x ⊗ₜ[R] y)) → (∀ (x y : M ⊗[R] N), motive x → motive y → motive (x + y)) → motive z
+instead of
+  ∀ {R : Type u_1} [inst : CommSemiring R] {M : Type u_5} {N : Type u_6} [inst_1 : AddCommMonoid M]
+    [inst_2 : AddCommMonoid N] [inst_3 : Module R M] [inst_4 : Module R N] {motive : M ⊗[R] N → Prop} (z : M ⊗[R] N),
+    motive 0 →
+      (∀ (x : M) (y : N), motive (x ⊗ₜ[R] y)) → (∀ (x y : M ⊗[R] N), motive x → motive y → motive (x + y)) → motive z
+Build completed successfully (8991 jobs).

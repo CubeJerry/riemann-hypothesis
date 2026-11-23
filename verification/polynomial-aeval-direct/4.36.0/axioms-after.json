@@ -1,0 +1,17 @@
+{
+  "ReciprocityTheory.ChartRestriction.DS.dc_aeval_eigen": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "ReciprocityTheory.ChartRestriction.DS.dc_aeval_mem": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "Formalism.MainNotions.N.Ln34.UniversalLiftFrames.aeval_mem_of_stable": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ]
+}

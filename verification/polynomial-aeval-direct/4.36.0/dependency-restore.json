@@ -1,0 +1,2200 @@
+{
+  "pins": {
+    "manifest_sha256": "0289e5c3d13cebb1dc45eda64ad73571dcf94fbb5a2b5b1799bd22b8825f4d0a",
+    "map_sha256": "8a5c16ae8f3b4fdc5fba35171672f2154321c75087103eb2ef84cbdb26d2a9e9",
+    "revision": "d4663eed405af528c67a3b1213021373cf8c0a5c"
+  },
+  "header": {
+    "build_roots": {},
+    "input_fingerprint": "e326707a591cd877000a8c0c0aa43cea8cc21435a19fd4ccb45b9531473a2658",
+    "lakefile_sha256": "e12dd96eb155851de5107571dbfc959e5d9b230ead90331b4778b55b048590bb",
+    "manifest_sha256": "ee003c5c7a9b2b2a82a142b6633916661c07117199dd143d94d1af63910237df",
+    "map_sha256": "8a5c16ae8f3b4fdc5fba35171672f2154321c75087103eb2ef84cbdb26d2a9e9",
+    "modules": 149396,
+    "schema": 1,
+    "source_tree": "612386007adebbfa6651fdca9b1ab8f560ab2722",
+    "toolchain": "leanprover/lean4:v4.36.0"
+  },
+  "artifacts": [
+    [
+      "Development.AutomorphicArithmetic.CrystallineRing.Acris0",
+      "465458440e22b960",
+      "e2f50071def817b0.ltar",
+      "706b856528b3ad0536dfce536f5e48ad2457583f6a446dc7d8699e4bbf9ae932"
+    ],
+    [
+      "Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.JumpSets",
+      "4f97110c06626969",
+      "533786133baf9def.ltar",
+      "e36085803cdb2dad17dfbf18f513f61e31a04949bf2d8b77cac85b964bd97030"
+    ],
+    [
+      "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.Action",
+      "7e91ffa1cade8224",
+      "8918dc69485d0040.ltar",
+      "01c92447fecf80dc4eb898abd1c82a969c53f1daf044056f693b81e39df89433"
+    ],
+    [
+      "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.DeRham",
+      "d55c146a6ca95dc2",
+      "7864541615860464.ltar",
+      "d80ac976c93674ee56667dd6114b4e1631581df28046178588504da2e3688566"
+    ],
+    [
+      "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.DeRhamMap",
+      "d76cb99e89ad4d1f",
+      "28706af8bbf4f0eb.ltar",
+      "3cadd47b482541dc9f57faf06bb771e8086ad158957334c648ee8b2ebadbb0fe"
+    ],
+    [
+      "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.Embedding",
+      "6ae7e83db7fdda59",
+      "bc27165039a5bedf.ltar",
+      "ded2102baaa0ee68946af3b73f857d7d51318a3d7d11dfe23c088bb7d71cec03"
+    ],
+    [
+      "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.EqZeroOfPMulEqZero",
+      "e28b6d051cbe928f",
+      "bf238be04b542f62.ltar",
+      "75b0c1f0f00b5c5a0819d2a085a0893c1508b907037b5e7dc1c06926bd2683fc"
+    ],
+    [
+      "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.ExistsFactorialMulEqPow",
+      "dd6880557be6a3da",
+      "11b8deff7f84496d.ltar",
+      "433de9541d4ba313ab6db9561507203944ea41963d79121c2265c0f2028c94d9"
+    ],
+    [
+      "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.Kernel",
+      "6f7aca334485d6d2",
+      "0610aff973330410.ltar",
+      "84311cc5a56e6b29c75591832459b4acbac511d2a258496d44c3d9bb88ddfc1a"
+    ],
+    [
+      "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.Section",
+      "fd9da09a93de5cb5",
+      "896b1f549937a3a5.ltar",
+      "44abadacea2f6750fa17bad4d9ef6f618fe843c297e4aed53facf09ffcbc322f"
+    ],
+    [
+      "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.SpanNatCastLeComap",
+      "4b452b1cfa09b0d6",
+      "68541b61afaf2248.ltar",
+      "4865a4170c935292365eff7bcc84ee36764bd544e3c2a7be0cc3dd33588aa796"
+    ],
+    [
+      "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.TruncLogEqOfPowEqZero",
+      "244ed0e791e2c99d",
+      "f8f10e021d0ac174.ltar",
+      "12265b2e1a18ee2543c16e37eaa17f4f75f03314f1bb4d5018fdf7e0a0f4d4e8"
+    ],
+    [
+      "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.UniformContinuousConstSMulOfIsIsometricSMul",
+      "15eaf98951e0eafb",
+      "3293b9744df3161d.ltar",
+      "ead3d0217fd1291ff764ad57636df53053e0fe246c7221678f318fec7da98dd4"
+    ],
+    [
+      "Formalism.CoboundaryTransfers.GammaStableTransfers.DiffOneSmulOfTower",
+      "2370dba5fd022d1a",
+      "983aaf172486203c.ltar",
+      "c83c0d0129b9c800c63a6170f414c37ba56b007ca2d3a0717042626eece75ad3"
+    ],
+    [
+      "Formalism.CoboundaryTransfers.GammaStableTransfers.GammaStableOfGammaQUnitHolds",
+      "f2c38842bacfa96f",
+      "e54f2dda84bf9fa9.ltar",
+      "132635d248ea27a2068d827b251efe8fde30ed1b0d5698a46f5c975316bc25a9"
+    ],
+    [
+      "Formalism.CoboundaryTransfers.GammaStableTransfers.MemCoboundariesOfIsOneCoboundary",
+      "6a5ba6c363796ce4",
+      "18c74de27e7d5f61.ltar",
+      "dd33c28a8ebf79543140d2a0ff567174f0919e681b89228f6875ad161fd1bdee"
+    ],
+    [
+      "Formalism.CoboundaryTransfers.GammaStableTransfers.TorsionKilledCriterionHolds",
+      "943d25e3c0c93e82",
+      "bd8b27a2f8dca330.ltar",
+      "0628df57099676c35df33eb37f1fa4cdc3bae2c9e197af948f907c5339c6e322"
+    ],
+    [
+      "Formalism.CoboundaryTransfers.GammaStableTransfers.Transfer",
+      "235b711283fea0fa",
+      "c96e1253d890ef93.ltar",
+      "edad7fbf1e68c2524c58205d8ed6396548fdff12f0849ac7230c21a094bee5af"
+    ],
+    [
+      "Formalism.CoboundaryTransfers.Statement",
+      "8ae31ec49c7f1b38",
+      "8ef5a93a87bafd6d.ltar",
+      "534138d5c47b46bde68314ce6b6ce7a6da51c965c41a567709d8220b05652b2f"
+    ],
+    [
+      "Formalism.CoboundaryTransfers.StatementAPI",
+      "0c0b5e370f14a1aa",
+      "084c8e066110d426.ltar",
+      "36b385f1662ee0703a3d6ecf1c23911365acfb6fb399277589d6f80eb8ef57e8"
+    ],
+    [
+      "Formalism.CoboundaryTransfers.StatementBridge",
+      "c4c86011df7c31ec",
+      "75b9ac1a6e51a950.ltar",
+      "d9c224b2eb7742b950d0960399c1834e1538cf07ff5a277286e499b74c14f4e3"
+    ],
+    [
+      "Formalism.CoboundaryTransfers.StatementTransfer",
+      "7d04b9c0d80a9312",
+      "38d17df8251af550.ltar",
+      "f91273d846ac9d90410b45ee01db42c5d368f1d5499d00a45ec19135957a813c"
+    ],
+    [
+      "Formalism.CoboundaryTransfers.WachBridges",
+      "6cbcedaaa936df7f",
+      "e8c0e6a2b4a3bd59.ltar",
+      "4f39b697d4dda32c21af0435d9eb1ee95a218c08c4ad07da23f2bc0e90bacf68"
+    ],
+    [
+      "Formalism.ConjugateSelfDual.Statement",
+      "56561bf2fe3849d7",
+      "4c6e1453f3fd43a7.ltar",
+      "24a6d2e54f0ade754d8c9bcdf912929e2f5370898c847ed2aab9dd873dc41dba"
+    ],
+    [
+      "Formalism.CorankShare.StatementFR",
+      "f431ece3d685d008",
+      "a6c402bf6d5ddbdd.ltar",
+      "cc509898af6b941316a7b5d348bf6004ff17dbccfaa0e2356e9da3f12b9d9ae9"
+    ],
+    [
+      "Formalism.CyclotomicNorms.StatementI",
+      "eec6f155fd207077",
+      "ca22bb0e667634fb.ltar",
+      "b1a869c73bdeca4c63565f1cba19cd73efe09cd8e3caefd1c52ebf1348bb81c8"
+    ],
+    [
+      "Formalism.CyclotomicNorms.StatementT",
+      "2a0be096c46ed498",
+      "e9eb426ce68c6264.ltar",
+      "8688ee1379db52e945f18671c2b6ec4524d1b19aad1faf73929fe135a045cc58"
+    ],
+    [
+      "Formalism.CyclotomicNorms.StatementTW",
+      "22184db8969e2fa6",
+      "abf214f6c9c38ec1.ltar",
+      "e4d2194a89005290d068ac3a6aa6a473ddd24fdbe09e9f6194e2936846e6c9f2"
+    ],
+    [
+      "Formalism.EisensteinCokernelLengths.CokernelLengthBoundOfLifts",
+      "e4c5af92f478ff6e",
+      "a3fcb594d1b9d151.ltar",
+      "e95852cb4b55f388d8544caba494212bb5b466ecb04906e456b4aa9ecaf84a45"
+    ],
+    [
+      "Formalism.EisensteinCokernelLengths.FactorialValuationBounds.FactorialValuationBoundsProofFact",
+      "f9a3dbb32411b907",
+      "9e9a571ef10b98c1.ltar",
+      "c1cbfcaccf8cfb8c3cc289583bd778783740a3dc3cadb7af652c157417455b52"
+    ],
+    [
+      "Formalism.EisensteinCokernelLengths.FactorialValuationBounds.LagrangeIdealSgProof",
+      "aacce6b518bee413",
+      "54f3e63743799cd9.ltar",
+      "3e2099a4ee8d51fa5b297e54c325884842b582d88de3b21fb87f1aa1bbe4ab1d"
+    ],
+    [
+      "Formalism.EisensteinCokernelLengths.FactorialValuationBounds.ToolsB",
+      "288c4ea615458c29",
+      "f2a9497b662e2a9e.ltar",
+      "f47a6a0e9f0b94dffca0f2a01ab1a3d989e331963db7ee68edac3a81c4f28b23"
+    ],
+    [
+      "Formalism.EisensteinCokernelLengths.StatementLIFTV",
+      "6975ddb1e4848392",
+      "188e55dabdc01349.ltar",
+      "1399a090bb1ac8d17c6857ef343f12d529fdc6ebee0f95b2b15b73503632d6ba"
+    ],
+    [
+      "Formalism.FockGram.StatementHerm",
+      "17987d6b7da686c8",
+      "5ff04718693c4710.ltar",
+      "dadb895d02f26fc61c249d416a91ef4c1d14a67de784dc2340039446ea486801"
+    ],
+    [
+      "Formalism.FockGram.StatementLat",
+      "fb670750333dff7f",
+      "ff1347dd054d5d72.ltar",
+      "81fac71053bc06fe823508c2acd2f1ad8dfff5c714180fbad605387f36c9aeb5"
+    ],
+    [
+      "Formalism.FrobeniusContraction.FrobeniusContractionProofs.ContractBij",
+      "4ace1bed5f542bfc",
+      "bae2af52681e7606.ltar",
+      "0f3d6104bb5c347b6ca0e0dce6dbb46df539027bcb51d91a75074fb92f01a2b3"
+    ],
+    [
+      "Formalism.FrobeniusContraction.FrobeniusContractionProofs.LenBound",
+      "b49f1cdf41db00da",
+      "565a05a7048a1b67.ltar",
+      "b785350805c9dda690e4862801d527379aaf5d818be41276f9e3d3e3e7bf3e56"
+    ],
+    [
+      "Formalism.FrobeniusContraction.HighestWeightResidueAvoids",
+      "5e69edf922c99944",
+      "858653320b0280e5.ltar",
+      "a25feea19baea983d18e8c3c9e98ae00fcc157227c0d7e72fcc80b664a93ef02"
+    ],
+    [
+      "Formalism.FrobeniusContraction.Statement",
+      "cdd33f45ecb2ad3b",
+      "a9dbe6450e7b1ac7.ltar",
+      "4533826d70653242f5029283a87cfcdbcb66906f1355af81e17c3d453316c2a9"
+    ],
+    [
+      "Formalism.FrobeniusContraction.StatementTop",
+      "2c16f155b558fb21",
+      "7b4bc11c407d905c.ltar",
+      "7dd873c11c00ea8b59b133311814cb0762c99f6353f394da905ab0497c74e466"
+    ],
+    [
+      "Formalism.FrobeniusOrbits.DiscrMaximalRealCyclotomic",
+      "defb201b19a888b3",
+      "ff5917ade15330e1.ltar",
+      "ba2024f9ea5744dc7f853990b3bc43aff74436f2dfa8e9558bd9215e33c43144"
+    ],
+    [
+      "Formalism.FrobeniusOrbits.FrobeniusOrbitsProofs.ConjReal",
+      "d0b6e735b2237a86",
+      "69310209a1164496.ltar",
+      "4275406864c00ddd522d59fc2d6cbbc0fc15d9840fcb3a30bd46612b2f17f6cc"
+    ],
+    [
+      "Formalism.FrobeniusOrbits.FrobeniusOrbitsProofs.FrobMulInertia",
+      "833e6fbf521b3853",
+      "e60582dc12d9ea42.ltar",
+      "c3a7abe1ead27fb6cac83cbc6033ef7d9c6cac33a52b8e47308bd54062b133de"
+    ],
+    [
+      "Formalism.FrobeniusOrbits.FrobeniusOrbitsProofs.Galois",
+      "cefa49b4828af6cb",
+      "5680e121e3ee5a18.ltar",
+      "d47972b885d03b7ce9e660a6a2153b2521534eba0483e8a1dc49d48354782641"
+    ],
+    [
+      "Formalism.FrobeniusOrbits.FrobeniusOrbitsProofs.RealCyclotomicSubfield",
+      "0dd9770c349aa61a",
+      "fdf77dadf070508a.ltar",
+      "5b479c5afc45bf58568d0193abdf93d7230834965f628da72d7524644066000c"
+    ],
+    [
+      "Formalism.FrobeniusOrbits.HostDiffSupport",
+      "b501794fa014c729",
+      "54fd4dc5e1eda8c5.ltar",
+      "ee1dbdc50c74c35ca96a66cf02478cc3a1ef9b12167d081f63b732a99bb0fcab"
+    ],
+    [
+      "Formalism.FrobeniusOrbits.HostOrbitsPlaces",
+      "a497161b5bbc9d56",
+      "2e421ebdb8979c37.ltar",
+      "4c3a47ea5cd6b93399d4cbbc59d23522f3b402eab42c9211d83ad6be82e4f174"
+    ],
+    [
+      "Formalism.FrobeniusOrbits.HostThickExists",
+      "b030796d001ae8c1",
+      "09f89d2ede0d1129.ltar",
+      "7b837fedcf180243caaf7276ddd8706677b2a35e4e67f2d293fdaf93f6162eb9"
+    ],
+    [
+      "Formalism.FrobeniusOrbits.RealSubfieldLeCompositum",
+      "a9a47f6d5676261b",
+      "1cac1714a6981f51.ltar",
+      "1636f772d9011c16e98dbb4b723caa1694497e0e6f88bada6a91d527ed24f06e"
+    ],
+    [
+      "Formalism.FrobeniusOrbits.Statement",
+      "55a7c1a3d3004eb1",
+      "eb8ea055409faa57.ltar",
+      "35dc01616fa44bb1055546e031f3b7ad18e65ae4931f7599eb1f673b6a925230"
+    ],
+    [
+      "Formalism.GaloisCohomology.LocalTateDualityK",
+      "c11104e850d864a2",
+      "7c7591d9f4ae69c4.ltar",
+      "8126069c486784934f22f8f05c5f6d9d0ca2794062bd2bd0ac72dec33b966d82"
+    ],
+    [
+      "Formalism.GaloisCohomology.Statement",
+      "87410eea63747554",
+      "4ac9469998d45198.ltar",
+      "1dd3b811627b76de86be1457b4a2414b035668d3db08cb6752b282e363ea2375"
+    ],
+    [
+      "Formalism.GaloisCohomology.StatementLoc",
+      "4f3c5b2e1ecb5067",
+      "94a0db32ca4c1643.ltar",
+      "e7ae941e0c45ed49a1c35cc17178256292db2c51a91a41de1fd3e6a312e64813"
+    ],
+    [
+      "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.AltNotSolvable",
+      "572be05b44167e35",
+      "289e28a5b84e021c.ltar",
+      "a65001e6fa53b6b9deb093c3ff1d13e685df3b85520a0061c7fcea2d77000e4b"
+    ],
+    [
+      "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.IrredOf",
+      "e78566ff500bde21",
+      "9da1cddaf63a42bf.ltar",
+      "58f53cd4ccc8736986ecc6626cd012f44361641bd527dadac93fe665fbd8d1d0"
+    ],
+    [
+      "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.JordanPrime",
+      "c24c3ad2fd064ff8",
+      "03026a190f638944.ltar",
+      "ec38960e10997a3ab287a58b2d0fb7d94d2adf941e30061cb395c9219f8f3d97"
+    ],
+    [
+      "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.LemmaAOf",
+      "465b1525bdaac1de",
+      "716811d82cb2fcb8.ltar",
+      "655f7910ff69f7b070382a9a79aa04be7b6c9b22c8889f5191a0a5be297e7c67"
+    ],
+    [
+      "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.NoSolvableOf",
+      "bafb6d3b6c43a931",
+      "4094f155851a2988.ltar",
+      "9d9f95b0f0df7b8caa6bb0154109925523c3d6c6bbdf14eed39572f3ff4b8456"
+    ],
+    [
+      "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.OneNonUnit",
+      "b8e42651d9cc25bc",
+      "4539a0025c56859b.ltar",
+      "2d3c28a04fffffc86d6d8687517bd3ed38545a1a6aa179da774c159050933779"
+    ],
+    [
+      "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.OrbitSubSum",
+      "9e91a6b83f594487",
+      "d1df1baf5cc1b8ae.ltar",
+      "7306471dd51c390a2dc52c65c39136fab09821fe231e70572226019c93349357"
+    ],
+    [
+      "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.PermSubSumInv",
+      "815245abbb3a82bb",
+      "2eb82621fcd978d7.ltar",
+      "ff33d170f670effa633795259a1e1e7828e60f0355c57412109397f62a9c9f09"
+    ],
+    [
+      "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.PowerPCycle",
+      "9a99d97aa2114217",
+      "f2d7516c4e8e9a0f.ltar",
+      "0a1caf4a923cd727c6357c5b4c7877d35dd8361d6ee037c1508cdaf978b219df"
+    ],
+    [
+      "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.PrimitiveOfPCycle",
+      "067fb7013a06eb6c",
+      "33e74c0e2af4b1dd.ltar",
+      "8ba462b42e1d1fc6b4faad5308466bb5857ca8e9a5897301dbf166532c02441f"
+    ],
+    [
+      "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.RestrictRoots",
+      "aad10024b3776fad",
+      "0f203da7e76a2d28.ltar",
+      "34360627bf00ef74ad3961e412fabbefdfe62218a694667afedd877ce66e85ec"
+    ],
+    [
+      "Formalism.GaloisIrreducibility.NoSolvableOf",
+      "46a7a53b4299af3b",
+      "c4b42378066a76d7.ltar",
+      "3f73a44dea5a086070dbb9ff355bf68cfbc8d929ca7decd94452c1d741bab5a9"
+    ],
+    [
+      "Formalism.GaloisIrreducibility.NoSolvableTransitive",
+      "b1c598488022efaf",
+      "8dfa627e1d675104.ltar",
+      "55874429af2ae7d4a46bda3a0dc02e1f261fb0f361531fabe408d2e0beb5cc1c"
+    ],
+    [
+      "Formalism.GaloisIrreducibility.Statement",
+      "7f8a61bfef49853b",
+      "a2530a341a4dd385.ltar",
+      "347d8511c2f490baa045e76e319c2b28b72033b723c06ce3c607a1c9444c7b00"
+    ],
+    [
+      "Formalism.GaussValuationBounds.GaussUnit",
+      "dc4f7a74224ab12d",
+      "d7413e7eab66beb1.ltar",
+      "c61b04c1a760fd68a4f66d701bc81f8153a4ce7b9416fb348e079bf4826cb7f8"
+    ],
+    [
+      "Formalism.GaussValuationBounds.GaussValueContraction.GaussBasic",
+      "606bcd9b8dabf4d5",
+      "0a59ec7a663fb751.ltar",
+      "3cb1123e403c37c9232fddd625febae420eb493fe8b20dd05622396fb9ffcd38"
+    ],
+    [
+      "Formalism.GaussValuationBounds.GaussValueContraction.GaussMul",
+      "f1b9d42f8f47a333",
+      "b2cbf08c50cd3807.ltar",
+      "dfee6715ae88196f50eb4dca01ba8972c95eddebca53547732608782d8c4c777"
+    ],
+    [
+      "Formalism.GaussValuationBounds.GaussValueContraction.GaussValueContractionProofFactBis",
+      "feb1483d344d4b50",
+      "02a6ba24128357ca.ltar",
+      "928120dd193e35d621633bfe307f4162a7e73410b028f40edc87f895231309b4"
+    ],
+    [
+      "Formalism.GaussValuationBounds.GaussValueContraction.KapBoundProof",
+      "d301178318d9f860",
+      "918964085257e5e7.ltar",
+      "d3ffe4100728fb228c09929f31245ecd003955940cc5d7af43399f600de5d397"
+    ],
+    [
+      "Formalism.GaussValuationBounds.GaussValueContraction.PhiIterXProof",
+      "7a105a3ae8441d29",
+      "0715f389344b0418.ltar",
+      "8862b64704871ccdf2dfaa5ba94f85c8a398b68b5fee5ae4cc5dbe22e4533624"
+    ],
+    [
+      "Formalism.GaussValuationBounds.GaussValueContraction.ScaledPowMemSpanCeil",
+      "62114a192e50961a",
+      "613d3f3108f1129f.ltar",
+      "265eafa850c23efa345ae7e3cf140a212ea7aba208335ba080b254b991255bbe"
+    ],
+    [
+      "Formalism.GaussValuationBounds.GaussValueContraction.TruncationExponentBounds",
+      "ba67c21461d4be84",
+      "de972e5f084d396a.ltar",
+      "9c9b83bc1dda28e551f06376642f80bc86b2e27755c5bba645d06d6de53f96e6"
+    ],
+    [
+      "Formalism.GaussValuationBounds.KapBound3",
+      "ae422a18ebbe83b3",
+      "de4d8cc0076402ba.ltar",
+      "c172571aab391f327acbf26d5873ea7ea49b39603829d0a227025cd9522a668b"
+    ],
+    [
+      "Formalism.GaussValuationBounds.Statement",
+      "41c2caed8ab50c44",
+      "8d179021531f50a8.ltar",
+      "6cfe898b38bbcbb79602b2ec281834a5a42a892568aa7a80e6af2a1bb2262d40"
+    ],
+    [
+      "Formalism.GelfandTransference.EnergyIdentity",
+      "03006b0cf147aec7",
+      "a31e7251a5222dd7.ltar",
+      "996435ae05699e4930de8e6a42c3ac076952aabd98b88fb84b8f0bf75824b1cb"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.DualWeylDominanceOf",
+      "473ec97a47a1e0e2",
+      "aedd3d06168e9360.ltar",
+      "e873ccaa254c22d669af2a010a740af6d539e2bc4825767b2d0a0f49726ba7ec"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FinalB",
+      "6223d63dbff648da",
+      "609753154883c45f.ltar",
+      "43694734f971b4b1abd0a8b9d0b257a6d4ea4e17597a1bd52ab67ca51f25c8d6"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FinalC",
+      "f51166109ad45146",
+      "16de7418bd19f0bc.ltar",
+      "4543cbecf66aaf225337f92d74bfc3a5a05c5c6751b3dc005061868f635f8f8c"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.BideterminantDominance",
+      "01f65f9b11c10b93",
+      "11e8a1a2c37e85b2.ltar",
+      "d4e3e0484f6a5d78f91b82bda19a6fe75982fc3cdb575dc5c13c7c6abd56ed31"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.BideterminantMem",
+      "c3ff1f397304dadb",
+      "21f658f623673061.ltar",
+      "bedeb0717775d78486ea1b4fb3162a03980409139effaff879985578148a915f"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.ClosedEqNabla",
+      "64b575a2786920e3",
+      "ebf5d080431c7942.ltar",
+      "a9ae8b69f35cfce3d46d2fd81c0e0bb00c7d3a97aacf9e49774c97b5ceb11db9"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.ColLexInitMinor",
+      "e4eeca5b41097209",
+      "08c116d24f3c9975.ltar",
+      "1c246c0d4243c522d1c18b41ba04c28aa5c3e402a5862cb4461f4208580dd1d8"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.ColSums",
+      "b66963eb6ca0d831",
+      "d95cad45eaaa1c5a.ltar",
+      "b3d7fd8f23cc37ad59c850a6cd0f6538147fabe4883171736f596c6ed031c1e1"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.ColumnLexBideterminant",
+      "1707200949e33fed",
+      "15c482b2e7ac522f.ltar",
+      "7c234b24163d19bdd6dbd6bb98c613f4ff85f7119ee44ad493b4e37f93340a4c"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.CompDeg",
+      "e5500b3c8992c366",
+      "aad9b7d925493375.ltar",
+      "b4d16467df1c57434af7c93c16982b865726bd6160090f2c11c2079556d15c05"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DomPow",
+      "c48ccee96ad9cda1",
+      "aa69c2f28d318dd2.ltar",
+      "83058224bde4fd62abd04af40c36736306c5aa6f45d200fa6311d35ff1de0781"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylDominanceOf",
+      "7b9ec4949fd7df7b",
+      "163e9e90f09e538d.ltar",
+      "4c6718fff5ffc301bb8aff51a917c28ce679e0b4c1c5951f13bfd8ad30841982"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylIntRat",
+      "561d681f62d78dea",
+      "b11a3d838f8a315d.ltar",
+      "3a28ba6dda3d568e1d58ee39a9a4106717409be97896988aa6f2dd90b84f4c5c"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylMap",
+      "713e1fe90b74c689",
+      "4bc3765e3ca191fe.ltar",
+      "26c38cda928f12eaf450d50bc752b1db348761e1cba2e83cfe77d820d0bb1b3b"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylMul",
+      "a8a06373d9d1f5cb",
+      "546ad8ad450eddac.ltar",
+      "aacb89a6a2e6ef13cc4b56fa8166520cfd8c1745af7676e71a05ea290995536f"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylNonDom",
+      "c121e61c695c7280",
+      "cedc3907ce3ff399.ltar",
+      "cdc33c905b038ff479eee0086cbc2eb3b9775e992f3f070e0d1613da629c6aab"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylPoint",
+      "238983678274a7a7",
+      "e62a45594fbcf661.ltar",
+      "3d95d2e17c88634d0ed2da8aa0caa2901d254f54c109fb412a902529cb92fec7"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylRowGraded",
+      "bae2ee1c5420cb2b",
+      "79ac62affce0efb9.ltar",
+      "2c92e4767d9d12abf5c586a47f1a25ae98c1974e210ee8788d15374cf5021857"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylRowStable",
+      "2afda9f35e1ae5c5",
+      "2f95ae16591391a9.ltar",
+      "f0dbd64f769048a5a56d595858f53c40d7f8e0617965724d48e802fd5d2ffec7"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylSat",
+      "1a106c9e66bfbef0",
+      "b058300eca12ac83.ltar",
+      "5d08d733a55b9bfa6d93deb7e9b79f2ee5173a06f06b6fc96bd28f1007e27815"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.EvalDeg",
+      "8c6c726994c3d3cd",
+      "b0f345d6f979968c.ltar",
+      "93ee9cf42c5a3094f6cd3c80c7f79ec5107a2dd295ee16b56680f8372e9b4790"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.FockDiagBound",
+      "f7a5814799be3fd9",
+      "68f57e9a2321032a.ltar",
+      "07cb192ef00c8cbb24021c6518a432ce0577e196c5b1f1a9500f2be6ccef0c0d"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.FockHerm",
+      "46c75faed615531e",
+      "2f80bbdd7c2c9203.ltar",
+      "30d7e1891cfa78edf47e02246caae22c840235d3c52556c818ca7168362a1b2a"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.FockPos",
+      "f4056a0b2001f034",
+      "3e8f5143a3ff6c3b.ltar",
+      "c5bbe5a426191cc09367d509ab2c6328d5f98b3dcb01d54c148aea66c9385499"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.FockQBilin",
+      "f963ce9f588bfa36",
+      "1b73cdf398c7bd3b.ltar",
+      "3b27c2f64f987999df5a47c0470033eadff7f050b5db2a75762d2ff46038ead1"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.FockQPos",
+      "9e469a7aec5f5672",
+      "e58fb7402baf044b.ltar",
+      "b08bf43c616a09a132c827712c70022c03ed9cbdf7c5888682862eb0048e4a44"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.FockQRowDivAdj",
+      "35ae68210e01ba5f",
+      "79548601cc0d2d94.ltar",
+      "dcaaee4a8daac4b486dc776a1f8492683822c78cfdffeee06c07a7205a96afc0"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.FockRowAdj",
+      "fa89160a34adde91",
+      "074330445bbd54fa.ltar",
+      "bba11a8c95634c0d3b06935b06398af7db93a6a61e4c22c4f3f24018a899c4f8"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.FockSubAdj",
+      "62e3558f72623712",
+      "4c3c28f94468ecb0.ltar",
+      "0a708921e941ba38a6ec959032179a76b5d1c87088286f1fc68bd00d912065da"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.FockWeightOrth",
+      "7897db8ee69d73a4",
+      "b46d4067fac4a050.ltar",
+      "1aca4d8ef88c1b85fe03ffa91192790105ea0795bd53f5d749e950f36c25221f"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.HWInClosed",
+      "5ebe33f8b32d5524",
+      "c5ff024c0c186636.ltar",
+      "42ea201c7a959ea3762b82572d7ef51caf94cf13cdb3cc592278f05b36a3a969"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.HWLine",
+      "11704d24e8fde80a",
+      "ae78ae4f37151638.ltar",
+      "017d13aa806df2adecb3926c3a4784247182109a5ef86472c0bed2024055e31d"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.HWLineTall",
+      "de41ca800ae2e534",
+      "286e13eee0bb20d4.ltar",
+      "d99818da90a4894add32766bb383996518a06194e48b30c8bbd1d5b2cfaa9760"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.HWRaise",
+      "a158e1a4f729f92e",
+      "6388b4a841835100.ltar",
+      "81d6d7e2c107215d8385c22b76d6865497c851c5c80a6c13b7f2c4b7aa6e44d5"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.HWRowWeight",
+      "4a6b9800e0258ae4",
+      "819062b9f875da9f.ltar",
+      "dfc182748a87e833cee372925f8140c168427763da0481e5660d57a69c48be68"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.HighestWeightVectorNeZero",
+      "5bcc27c0c3932f01",
+      "3debf4994111aca2.ltar",
+      "773626f4a5c1bd91fea007e8ff89242e9079b6375fb510d2ae96a851f3b6c799"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LBidetLemmas",
+      "e37157d762823616",
+      "47dbb13a82a24324.ltar",
+      "c0910b8defce4dcd94032489bdfa2c6fc7e8d670836a8f5a11406449de5a7827"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LBidetMinor",
+      "37d66bb86938a8ab",
+      "a90825be47a7bc67.ltar",
+      "ba2637d763dd956e9992480e3cb01a662b264d2185c741f5f6290dbb22fb4fff"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LBidetdomLemmas",
+      "de4709adf449c3e8",
+      "41320f8b843fce22.ltar",
+      "304f4fff14f7f59c9889c525c0a5a467ce803a485932f94a7fad5bb4eda1fe01"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LCassemLemmas",
+      "6ea17c1ce077b181",
+      "c30f0c658fa80d83.ltar",
+      "8c4cbb5b50ac33f8813007a6a998714d2bea66ac9042869bcf3f39404a06303c"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LCcompLemmas",
+      "ba4b2258e5c7440e",
+      "59a9702c3566d079.ltar",
+      "e3a7e273ea1b1f9677060bc4db8529408982b9e27a8724a3eb813df4acdbe400"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LCdegLemmas",
+      "37d49579f87ee92d",
+      "5bf7660e227a471b.ltar",
+      "0dea16dca880d7c2382fe5eeba4e37650995b76a2e66170a2549411430eed618"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LClosedeqLemmas",
+      "9d322f66f82f0381",
+      "741acff003309e14.ltar",
+      "126d5935dc2848546edc638e5d1e832c7df73bbba90119791acc8e952928ee4f"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LCpeelLemmas",
+      "a542ee800662b311",
+      "5e762e4634a3a5a6.ltar",
+      "eb813e5f14166132db7e52a4a6303c230ed5a68f88f36cac871bda1c9d9b523a"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LCpleadLemmas",
+      "d5b47a856ae6fa93",
+      "3a83173d884e30e6.ltar",
+      "b0592cdf904261cce5f6f5b101ec3ee36d776df93244cedc3b35055b6f77839f"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LCssytLemmas",
+      "e8cc95e3d1299dfb",
+      "054eac75517c2608.ltar",
+      "ac535c34e7bfe3a4fbbc8c1dd790f39731ca0cb835bf4732d49c3f0ff2dc8f46"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LFockbLemmas",
+      "7ed28257ade25911",
+      "d31b53baf4f62b10.ltar",
+      "bb71f491033d69778b7a08e5eb87a47fadb65d130377bad092de4ffbbdca394e"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LFockqLemmas",
+      "3a3981af81a3f304",
+      "fef821a40816232f.ltar",
+      "2259c3018da79b04f5a57ef168ce34c8434a4697c97855967c458fe16d26485c"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LFocksLemmas",
+      "8cc10785e40bbae0",
+      "2238bbc1bf16d36b.ltar",
+      "fc3c249b57f6e7803530e26f72abbedfd37c199812aa16ccd1101fde3331649e"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LGradedLemmas",
+      "70b04b0ae06b011e",
+      "88da563746d841c0.ltar",
+      "ed69c33ddc1082f594c05511607edcbf96e822a387cf699414af6431d4d49db3"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LHwinLemmas",
+      "e8990314b054ff8f",
+      "d2ad7ce02662c444.ltar",
+      "42ab95a88bdc87dd69003a1c738c9da9676a3f2c44b3605e9ef6cacce3f1dbb3"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LHwlineLemmas",
+      "1a6574960e630cd5",
+      "8aec7b011d57cdfa.ltar",
+      "bbdc26ec093c7ec9c681e56cb2d50c0ec88b03a4eabbfc5d62594925cd707250"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LHwrowLemmas",
+      "711b361e4064fce3",
+      "9cac7a9f2e1f5bf5.ltar",
+      "9824d99b2d15dd022c6accdcdcd90d1c749de92803538b1f29f92dc2cf239e8d"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LNondomLemmas",
+      "c4f85e92b7b8ee3e",
+      "0412c2ccac5f23e4.ltar",
+      "077a8a15bd3a175cb29a5476e9e2361fa7452ab27159cd549e551fbd09771cc3"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LRowdivLemmas",
+      "f26ac8d9fc3e73d6",
+      "259d5be9024999bb.ltar",
+      "e91f853d57a9eb510ac5b51be911725f9c261ece86bc2191c2dacf22b2018ea2"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LRowstLemmas",
+      "ab558578c43de623",
+      "19cb600b25d73758.ltar",
+      "0d718894c8697eb08d1d12d4e475b52ff54958dbc53884ebaf64cc9ee41b9d5a"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LSatLemmas",
+      "fd834ea6cc8f0ec8",
+      "46ac681558b04eba.ltar",
+      "c4bd33e5b8d5ab918e222a9ebdac9d8dad01b0c1add506a049ad1ef32d1e63ec"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LeadComp",
+      "f6e6b9ad23283694",
+      "76e5c997d8f66241.ltar",
+      "3b6af5d4089a4c3b582afcb535a96481f8aa2d1fc99ddb836da46bbf994641bf"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LeadInterlaced",
+      "7ba7724c7e46fcfc",
+      "4ed0fa60d10181b0.ltar",
+      "58a211c88f3b82487a1d1d9b9cadc97372be3a2d646f7789fa47585a475071e6"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.MinorExpLt",
+      "5367116f5da5c4f8",
+      "347540b1488d75c3.ltar",
+      "8d0b0855d5cae471f5c735cdfd271d4a8e25bcc70e4c678803fecec97ce4d429"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.PeelDecomp",
+      "2f350627f5fc07a9",
+      "609011eb59e7697d.ltar",
+      "4fa391414f2feccfe55b68a92c5d3a97cf327666e54b2d2a51e38c4d44647e89"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.PeelDegBound",
+      "ca344d49f1358fdb",
+      "120add9fd35c20cd.ltar",
+      "e7e2323fc95666ab464d21708e00b42647e31440e194eed666cddc2c401dd697"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.PeelHomog",
+      "ff995a5216ae2fae",
+      "1e31b77f28c078aa.ltar",
+      "336382ada6e202fc81658cfa0a1468bae3c114ebd7ba5124c467a9b727059ffe"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.PeelLead",
+      "b07371298852841c",
+      "cced3efff82619fc.ltar",
+      "10789763cfdc100d6f1ab7af32f09984d61e631797d935f7607ac92db00c5a80"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.RowDivClosedGraded",
+      "4731623260b08b11",
+      "c0817a4951bb88e8.ltar",
+      "12a44a0b675b5d41b52c9ce898cb8f4415f9798232c84eb954cb3dde2a3d800e"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.RowDivStable",
+      "24936387c6590c4a",
+      "d4259ffeab9e7f62.ltar",
+      "4df1e7cc87102491a4c1e2697078673c40d3f999ad36f6bc33b3b85d7aa56e6f"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.RowNuSum",
+      "d49c6d07ac2ac578",
+      "a10c6cea0fad6883.ltar",
+      "adcb5705c16f531a15fcc130c1615a39677c6e5237f235e340284c9e9ff02006"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.SMSAssembly",
+      "0a5b95392b0e4391",
+      "d38dbd35f8038cc7.ltar",
+      "26029b55cd7baa0c63ecadf6c0208dc7ae0e0359b2540c20ad8cc1287347a752"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.SSYTExists",
+      "f35da7b412507d06",
+      "800f27a6f0686c58.ltar",
+      "54fc656a3cf089baf5168a61978c1c181632ec6b3320508da97cd2defe4b19c9"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.SSYTPeel",
+      "52db03ae038056dc",
+      "5ad51de068519c72.ltar",
+      "e5e7b13e53980dc0a6f961bda0e4dab7dc5c54554231a303e063d2067347324a"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.StandardMonomialSpanOf",
+      "9b390f3855117d74",
+      "3e6249c258ec322d.ltar",
+      "57d88ea117e5cb71dbe69d15c1d2e0c16a3cbfa40b86bd267f2a0069699b2531"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.SumIcoTsubTelescope",
+      "b3b74a0885516b51",
+      "a0e4b035b5668265.ltar",
+      "ad98e525af6044f955b915c7b2405dabcd5fbf21b7617b287b2ead6c8ce29d67"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.TwoColumn",
+      "c246ac376b28fb9a",
+      "d8a30cbef71d3940.ltar",
+      "76a9a8109293d1f9b6c77e61202b434e702c38614d72662bb2204e1a33caf4af"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.WeylEqNablaQ",
+      "e02ffe5b5b618407",
+      "01cbefdce114a893.ltar",
+      "cc5136671a3b747308874b0b1262bbb7f48efb4b4336d8dd8a93c6b6f7307c3b"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.WeylLeDual",
+      "6a5bb79fe151cadf",
+      "90e9587be0bbc33a.ltar",
+      "f6fc683fd320afaf0868ebd38178c1ab02c34829f5f8994ee1f41a1a14b1370e"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.WeylRationalOf",
+      "be7c85ed124efbba",
+      "2fb2e7f6b3208cde.ltar",
+      "1437ce53bba656686cb1c6b0e24c11d9892707483a0244d4bab295c45a737b17"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.FockSpaceTableaux.WeylRowDivStable",
+      "2cb4654e447cef3f",
+      "6de1fa6f50c27e6a.ltar",
+      "71797c809648ef0e3e17519943596f3855fc2c7e2f00073edcc2aea1ef4a012a"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.StatementA",
+      "78232e5f5972ee5c",
+      "12cbc4bbd62d275c.ltar",
+      "9b9fe5df3a0ac749a49c2fe0a7b4a4089e0be58f2c34e71c5dbee6cef9ba8720"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.StatementB",
+      "84e1c0e48d176f0f",
+      "7faeac21a051336b.ltar",
+      "c9ec2e3dde09f1adb774c619efee76e5ef9786a1c327145fe4007223af4b0d38"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.StatementC",
+      "bf96f07e410e14d5",
+      "80dac6a568cabeaa.ltar",
+      "d51c5f67ce84a552fa5964e5f7ccb43f5540bb2f9eadb8bf1ee076567f12eb31"
+    ],
+    [
+      "Formalism.GradedWeylDivisibility.StatementD",
+      "f661d9f0e486f23a",
+      "709faa8afac4ac0f.ltar",
+      "9f922848fb885f443b1212178b15bdc7b51d1635a286249e0de8a8c893c2c05e"
+    ],
+    [
+      "Formalism.HarderNarasimhan.QuotRealize",
+      "a6c0c7cbcc4549e6",
+      "094f4cb2ad0c5dcd.ltar",
+      "88a9aa494e1fedea71ff81041f00390a079fbb2d0e182a15b8f541aa6a6d71d7"
+    ],
+    [
+      "Formalism.HarderNarasimhan.Statement",
+      "5295ec75f121b577",
+      "4700c04afcb6b4c4.ltar",
+      "cd056253c9b298daf41b27d08a78a07d9c8832c5f37fe20e702da14aca6eec14"
+    ],
+    [
+      "Formalism.HarderNarasimhan.StatementPl",
+      "7b4ad0df8b20d94e",
+      "4831cf85aea06ccf.ltar",
+      "e6fe7e55d7c3c8c3696543fd5c7f75df542aa6e873d0e040453066fc70ed2249"
+    ],
+    [
+      "Formalism.HermitianLattices.DefsCS",
+      "4bcf9036b42a225f",
+      "0d1d436223955714.ltar",
+      "1e2e14d3b72941d341154af016422881572d377c946c36124c50ccd63bab3639"
+    ],
+    [
+      "Formalism.HermitianLattices.StatementLat",
+      "e468c0534b42b4a0",
+      "1f816317d7e4b64b.ltar",
+      "d28d0d6f2127b9299c69f967b110721cc79bbcef7092493093ed15c56be4ec8f"
+    ],
+    [
+      "Formalism.HermitianLattices.StatementMaj",
+      "58d649f18b11217a",
+      "8a24f37476f5798b.ltar",
+      "a1c874b2e6364932382a66b377e4e8d4e6ee41197720ee78493aa164a162d6f7"
+    ],
+    [
+      "Formalism.HermitianLattices.StatementMass",
+      "e8215a3fb9708bc6",
+      "3302eaad9317a8c9.ltar",
+      "6f9350a7f35126f883bf9fc9f934cc5329ae0897310f35123badb4e0a785c4ff"
+    ],
+    [
+      "Formalism.HermitianLattices.StatementTheta",
+      "510f9abcaffb48bd",
+      "2dae3fda847bfe71.ltar",
+      "2de9952d1381ec81fa44ddc38f469cc9cb458204ec6594b3f5da9e6e7888d386"
+    ],
+    [
+      "Formalism.LagrangeIdealLifts.CocyclePolynomialDivision.Graded",
+      "2e9cea53c029a597",
+      "4c48bc3e99a57695.ltar",
+      "da769aa0b45a26b615082ea20684cd75b4863206ebc4f814f565e34b9315fc8c"
+    ],
+    [
+      "Formalism.LagrangeIdealLifts.CocyclePolynomialDivision.LagrangeIdeal",
+      "17b36debf764e09c",
+      "9e478c38a5742bcf.ltar",
+      "419f18f7fe4ecf35798931f82098fb83e98fca08e800127ff35501c51dcd20a9"
+    ],
+    [
+      "Formalism.LagrangeIdealLifts.CocyclePolynomialDivision.LagrangeIdealCyc",
+      "97a6f9f43325f9b6",
+      "162ae5dc480a83ea.ltar",
+      "34acbbcdb96f8ce83c0b45a1de885409eb8613f360bb6bafdef6f6399d70c16f"
+    ],
+    [
+      "Formalism.LagrangeIdealLifts.CocyclePolynomialDivision.UChase",
+      "8e8e8a4d4d439a2c",
+      "b06965bb297a4e30.ltar",
+      "0d7d4f9e268f5083ebe5f4c2d1f7a3d778269591b9e8e00472b7534f96ffa2d5"
+    ],
+    [
+      "Formalism.LagrangeIdealLifts.CocyclePolynomialDivision.UClaim",
+      "470c0bd9db16e001",
+      "b608d535b0db4388.ltar",
+      "88faa90cd49a932acbe23cb8496f520125ed89fdd86e2935765523beb58d8a79"
+    ],
+    [
+      "Formalism.LagrangeIdealLifts.LiftLagrangeIdealInt",
+      "72e580434d0d853c",
+      "ac89487d529313c4.ltar",
+      "698d78cde764628bee57f9b20fa3dccb6eb36e019fc68feaf7d8241f499c68ec"
+    ],
+    [
+      "Formalism.LagrangeIdealLifts.Statement",
+      "795d68d395749bb7",
+      "9c46a748a0084e50.ltar",
+      "f394af963657580d4bbc952261d05aab228325d552d31e889a3f2b7ce816e213"
+    ],
+    [
+      "Formalism.LatticeSlopes.Statement",
+      "1ef1da77a3afcd28",
+      "ba41502b48cdb801.ltar",
+      "10f0749cd2242cda35d11b9c688ba01ef8edd4da4d47c32e8766ee1580b56743"
+    ],
+    [
+      "Formalism.LatticeTheta.Statement",
+      "ae234bb9567ee423",
+      "77f5be317f5887bc.ltar",
+      "4a777e838b5ce59116509f63ba79a2618345a3e3b841023b04728d7e7986854a"
+    ],
+    [
+      "Formalism.LocalRingCardinality.AdicCompletionLocal.InstIsAdicCompleteOCSpanSingletonSetCast",
+      "40a7e109ff8e0105",
+      "f3b3f3e7bc043023.ltar",
+      "6ad0361d7bc0f516ffd24751f76fe6e830421d578622c401ffc053552dfa4e1b"
+    ],
+    [
+      "Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied",
+      "f9bfde13dd85b83c",
+      "b765b876326bcb30.ltar",
+      "4444b3bde3c1b4545365caad522a23f8b7ced3126eca1ba127f7a189fe3a82c2"
+    ],
+    [
+      "Formalism.LocalRingCardinality.DataArith",
+      "b230fee104f3034a",
+      "3d389ca0bc7e2ea5.ltar",
+      "5cc852ca030fb159caf0ffc925e3a80b88b2a7957763d420d3dd971bb42ba427"
+    ],
+    [
+      "Formalism.LocalRingCardinality.DataCD",
+      "8438f1ed57981c3d",
+      "58c0e3b6238067c3.ltar",
+      "218638143f9ad3e00a3618d123c6d2e1ecb5b082ea7e4a82adf5faf3d3365dd7"
+    ],
+    [
+      "Formalism.LocalRingCardinality.DataCoeff",
+      "49393a008f66649d",
+      "14e2766a2579a9b1.ltar",
+      "5464572752cc209c9b1c7ae2883692d32efd97a7d009158a143364fed318f695"
+    ],
+    [
+      "Formalism.LocalRingCardinality.DataForms",
+      "6783a8684cbbd3de",
+      "a5da3e38e76786f0.ltar",
+      "10f4e6ab083f1a118f96bdbfbc9a94882bb25f8ba07946a728a40c1d9b7d17b3"
+    ],
+    [
+      "Formalism.LocalRingCardinality.DataHost",
+      "d1c64b313fc66a7a",
+      "e98646ad929ceb77.ltar",
+      "dd21d29b14d5ca7cae8a38023031f9d12a4d5243ddac0697b300c160d33d645c"
+    ],
+    [
+      "Formalism.LocalRingCardinality.DataJet",
+      "bbab7af872df9ad5",
+      "020e8898d693112f.ltar",
+      "8e586572e9cc4fd7cb39c0d169f3e1a17c7da9c068bbe6634d7e61b8aa0760ae"
+    ],
+    [
+      "Formalism.LocalRingCardinality.DataKernels",
+      "c04a622f41829506",
+      "1ade6d4db62c67a9.ltar",
+      "ee8afc5120df46f066e0326637cb067611b76d2c41bcd5ad90566c4e65cd2518"
+    ],
+    [
+      "Formalism.LocalRingCardinality.DataRows",
+      "34d2c4ddf0301751",
+      "bc6c0699cc237a6c.ltar",
+      "62190f214c865657e8680d224dc81ec2732fc1da25abe47d3214660b0c682906"
+    ],
+    [
+      "Formalism.LocalRingCardinality.DataSpaces",
+      "90262a238ef18955",
+      "edf53b5c043a0c44.ltar",
+      "770d2efa2920723eb2934581478f8173536b34d20934b276ef9ec7fe59fe8601"
+    ],
+    [
+      "Formalism.LocalRingCardinality.Params",
+      "2a7f58e36cc3a0ce",
+      "3cf22473495d05c9.ltar",
+      "6ffc39663fa2abeda8efe20e8396bc513aa4da181c60ef93dbb1af83311a8023"
+    ],
+    [
+      "Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow",
+      "973dc58cafa15db7",
+      "52d26f28e8601156.ltar",
+      "dfdb667511545240b29e46c3bc6e62bf1b408cf6cc0ddbf94bcea2108e60c170"
+    ],
+    [
+      "Formalism.PadicSubsetSums.CentralIdempotents.CentralIdempotentIntegral",
+      "45c1ae1845bfdd79",
+      "684f419697e3caf9.ltar",
+      "b91c8a9c67305e4d03dbca375608a496b181b56509c763061a0b18f11f4a3b52"
+    ],
+    [
+      "Formalism.PadicSubsetSums.CentralIdempotents.WindowSums",
+      "3bfb4e1af1061e2d",
+      "181a54d7706f18c4.ltar",
+      "828c97d44f62868fb3ad08ab65293d71cc76e410e44f6009b8ed82378e285291"
+    ],
+    [
+      "Formalism.PadicSubsetSums.StableGradedCounts.ARCReuse",
+      "2c9abf2a5537f6cf",
+      "4a01fbab375aafbe.ltar",
+      "9224d7ade1533fb6be406f4cd8ab91f02de273c5c1d06a2d9ddcdfd40036b173"
+    ],
+    [
+      "Formalism.PadicSubsetSums.StableGradedCounts.LiftingTheExponent",
+      "b08a60c3e25a0358",
+      "e638774048409be3.ltar",
+      "8a8e765ffb39fe6b00f089b4e430faafa3fd4db3b708bbacf22ffe377e033972"
+    ],
+    [
+      "Formalism.PadicSubsetSums.StableGradedCounts.PadicValCardGL",
+      "a3053fa08d0a282a",
+      "d562e231f9e7ad96.ltar",
+      "764c9667ada0a173a7cbe4d1028a81a30302e5fe5d491156c505fc9097afbf92"
+    ],
+    [
+      "Formalism.PadicSubsetSums.StableGradedCounts.TWCentralIdempotentIntegral",
+      "cfbf94ec388c35fb",
+      "d8325e9dc4c827e3.ltar",
+      "c74d978011b2b9aba632b11f20e4c0f5d9ad06334f67a7d5f0a718947f715e32"
+    ],
+    [
+      "Formalism.RealPlaceAnalysis.FockPairGl",
+      "2d9c165341eedf5f",
+      "9d45e0a839f09823.ltar",
+      "fc078f51e94b2632b52339008395ec34e765ebc912b0ce43178494e0fec8ada3"
+    ],
+    [
+      "Formalism.RealPlaceAnalysis.RealPlaceTaylor.ProdFactorialSupportSubSingle",
+      "a6aaade1adee08b2",
+      "7f68fe456d545750.ltar",
+      "f1a21ef8c2ab86bd5e38bc7362b40435a1277630af957e7f48824d1addc82bd7"
+    ],
+    [
+      "Formalism.RealPlaceAnalysis.StatementA",
+      "8cb3e1c6c39569d1",
+      "609b54e031346db1.ltar",
+      "0358788eba8131fa7d759bde0c81e8043211181781f7711ed52ee7b1a05a3c29"
+    ],
+    [
+      "Formalism.ResultantValuation.ResultantAdjugateProofs.Laplace",
+      "93911c76cdbbe965",
+      "ddc8a2180ca47104.ltar",
+      "448946d42c41af652a3123c8f7b5152bbd08672f003a82622499602a61c642d9"
+    ],
+    [
+      "Formalism.ResultantValuation.ResultantAdjugateProofs.Window",
+      "9dad7080e822e0b1",
+      "370f6a67824f7b53.ltar",
+      "5a1105ddff0d6cadfad6c1d0cbb6c6d8a0cdd233a766484da60ec6db1d0e67da"
+    ],
+    [
+      "Formalism.ResultantValuation.ResultantConjugate",
+      "4753c1a90ffc29ff",
+      "721c24aeaf701409.ltar",
+      "2f6f3f5798b349b7cfe201693a3464829b31b6231bea22a40c8cf4a83b7df68f"
+    ],
+    [
+      "Formalism.ResultantValuation.WindowValuation",
+      "bfec73341e1cf233",
+      "c61fc3e2f7afa913.ltar",
+      "d19ac031abe8e7ae48d91dd5fc3a936308c9ac01f20751f67c08c123f7a57659"
+    ],
+    [
+      "Formalism.SatakeDualWeyl.Statement",
+      "a2de12affb0299b0",
+      "50f0fb5d97cbc2fc.ltar",
+      "23a385ab125cef63a3f9d832ecdbc1258edc3b0c6248dfbcc155012c5b8dc45f"
+    ],
+    [
+      "Formalism.SatakeDualWeyl.StatementW",
+      "2ca0fb1b13658f0b",
+      "0310465cd8ee84f2.ltar",
+      "e02051cfcf37f5db8cf06da8130dbe6958b5866e8b9ad778a6c7939a7bcf3f72"
+    ],
+    [
+      "Formalism.SharpRestriction.CuspSpanNormBounds.DataS",
+      "733ecfe10277805a",
+      "0cfecdd3de3332e9.ltar",
+      "922cd556ede45eb4d558665e689d0cb281fcf55a37976063ec0b5a70ba9dfd18"
+    ],
+    [
+      "Formalism.SharpRestriction.CuspSpanNormBounds.FractionFieldToGenericStalkAlgebraMapEq",
+      "2ebeed2ab2932e80",
+      "7771ad729c2b4e0f.ltar",
+      "3c9d706d4ab40282ec857259245ace015e85219e0d9c98faa71acbc4ed13764e"
+    ],
+    [
+      "Formalism.SharpRestriction.CuspSpanNormBounds.Point",
+      "ed6e9d12a21b232d",
+      "96e971dad6dca799.ltar",
+      "6ac1de5eb6c1d0305d8c55d7aa67257061d28ba8144d5ad73f86e4f00c2902a1"
+    ],
+    [
+      "Formalism.SharpRestriction.CuspSpanNormBounds.PsiEDef",
+      "e32a6c5144f9902a",
+      "18a0cc8e4faa52b9.ltar",
+      "58fc62ba32f65c37654b53780fcae82e58ac5679f6303be2c0cb02467461f6ce"
+    ],
+    [
+      "Formalism.SharpRestriction.GrowthBounds.DataG",
+      "f167bfc7e8ded35e",
+      "184ea251cf8d99fa.ltar",
+      "2bfa4fa18481d93954544e24553009430567f5ed2e7f1996f194cb5b329110ec"
+    ],
+    [
+      "Formalism.SharpRestriction.GrowthBounds.UnramifiedQuadraticSetting",
+      "6630be0d19669627",
+      "6554934bd21eb30a.ltar",
+      "7b24581dab471dd1f858c491c6b4b4275c9a421c494e75766078df458652334c"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.BaseChangePreservesUnitaryOf",
+      "0ab9fcebdcdd69bf",
+      "9ea8571d32927b78.ltar",
+      "733650d70b24f57ed87e8be79cce0ea33e9b082fc5a6f42fc9026e02acb75e93"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.CrystallineLiftingBounds",
+      "5e31946e1e867ec6",
+      "e245d4e5c2aaa6db.ltar",
+      "fd518d0359f3fa9faba89c3d8e16d7354bcc4bfc8644c3e0b38b1e2f501fa18e"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.DataN",
+      "63de2ab56baa133d",
+      "d3ccde7e551751de.ltar",
+      "fde6ba0e8a9e38deaa1f283af75ae47ef8d82c1cc4e7d1ec4f9a920e8ad346d2"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc",
+      "6de6c67c3d5d68ab",
+      "2d233e05e8ab1448.ltar",
+      "735f7da5ca832b22998ce9a01f50512a9ce5137cf6b498c0ed2f835dff623b36"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.DdRFull",
+      "9cac5b8c07a399e8",
+      "4116758c60dab21f.ltar",
+      "caffd8c58df520a0053b4db3cd5b9aac2883aec89f73ae6a276eeb486204a901"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.DeltaInvariantLattices",
+      "62353e70716fdb07",
+      "54aa169c1f619417.ltar",
+      "6804f371a0aa17e0bbc05f6be936b1a3dca47b3ca9755dd88e724ac68d958277"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.DownSlotProposition",
+      "1d969de914eba491",
+      "331085f66a87b7f4.ltar",
+      "3fb84c345f24398c82910f461e8f82fbdc83bf3f1c7d21621078676435a1742c"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalEndApply",
+      "4d35a7216dab9a45",
+      "619b16061e87e20d.ltar",
+      "58b0f3ace2538ecef2a78a192efb4bc90d3bbbc0015b800e92ad06316be81f7d"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.Imports",
+      "6904bd16f25c3ce9",
+      "91d7d9bd0b0e0304.ltar",
+      "228ab41cba2998418622ef4e9acc58874dc3812623875aebbc2a80a12ca98581"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.LevConstOfEv",
+      "f6558b563ca0611d",
+      "c900b2f9e462be76.ltar",
+      "93c84f743056cfab77d9d2a1052a9349929cb783a7e6bfa27468a4cdb679b95b"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.ModelFPfA",
+      "68fc2439f97d9c39",
+      "9ceb3590b07f7a82.ltar",
+      "2feb926c78edd6a6eb86a929465c6beb4464871a398790fedb244560b8545d6c"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.ModelFPfB",
+      "28bb347248012153",
+      "349d9565394c9387.ltar",
+      "5c1ea06939c75736dcea6fea3958713f5e0a670473ffd46e087a018e275a8330"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.ModelQPfA",
+      "c95ee9c370ff39c0",
+      "0e7a2a0a63f4bf88.ltar",
+      "5c647efac4d9f68699f90860d727fb5e53575f2cd0b0c60b721239466ee561c4"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.ElementDenominator",
+      "4ab4691d8bf7d3fa",
+      "2da2e7f9edefad91.ltar",
+      "767e7a4e763472fe6d8949b3d5907293867fe014178895411a59fe37c6e1ce0d"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.ExpansionFormAll",
+      "3756e13addc7101f",
+      "cbb01d17cfc9a15e.ltar",
+      "ea3da9657992f2b906445e09c40b14b6bbf632d28fe472a8cac3bc8d7a195b7c"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.FirstFrameStepImplication",
+      "101498fae3abf73f",
+      "2e650e1eb5b905eb.ltar",
+      "a48907380aac49811ae9160fbbede1eb6c28a359818d8225d9d4945eea3bc9dc"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.FrobeniusPowUniformizerFactorisation",
+      "5033697aa5316974",
+      "e17e912dae195204.ltar",
+      "f3652ec9aef2adb1e65f881fa9b567ec3379d34e08f7cfa1d46fe3a3bc6c6eed"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.GammaSemisimpleLocalOfConsequences",
+      "0aac6868f5e3c9ed",
+      "48541c49b64037af.ltar",
+      "104cc35d6afad00b153f7051d091039157b2500b9f6a004552a5e25c22706b8d"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.LamPS",
+      "7f9ce42325da5456",
+      "0570f5a41e4b25d3.ltar",
+      "e94b7cef09baf6a9a627d83b4cdc2ebda2281b801f55f5e533637e36e83d91ce"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.LiftingTheoremOfExplicit",
+      "2696ebdde1257b6e",
+      "7591d3bc2a5e21d1.ltar",
+      "7413560f9cf409b4a7568fbe1fc568356a846d462da4216441960459312c710e"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.LiftingTheory",
+      "d7843fb34ad12355",
+      "d8101d90ebb9062d.ltar",
+      "98299d93e66c6b7502f15dff3ae821c2a9940fbcdf09ff8965d55bdc9978f028"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.LocCoh",
+      "118185c71590cc6d",
+      "0c27ed92757a0c30.ltar",
+      "db09e933439dccd138c1c6bb6bd412bf4768ece54f19b40d6ffd821b3383c0ad"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.LocalFormOfThreeInputs",
+      "e5dd8c0901a5e1f6",
+      "dfb6c6f1c71d3c85.ltar",
+      "3969089a174a60d65481b3e3fa7d51181df9c9a5c4c470bf11a1fae9d2b8431d"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.LocalSituation",
+      "7aeeea5aee4fc760",
+      "6436224d4e2d51dc.ltar",
+      "c945d076d85344c766e9fa8734b9da89814c063bbbc7423289494ef2dda905c1"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.LocalTheoremOfGoodExtensions",
+      "4e28f6e45db46da2",
+      "1f6a77a7b5356783.ltar",
+      "3b30f0b050677f3bb90fe2b5bcbf1d8c6a36fe62d5923ecbce8d761082d19fd5"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.MapCompZero",
+      "cc1dda8ecb30a761",
+      "4aa1210e46c2596a.ltar",
+      "7994d4fe12c5cd11ef09c15175ff1a58b139fd024b51d1c478e99d415b05f4dd"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.MixedPositionHypothesis",
+      "e5d122508401ce23",
+      "ca62309dedd429d2.ltar",
+      "177a61976fdf05c78a9cbdd9ee4d209aa6337c76a881e7d1bd3dcad7205a8c45"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.ModelKStep",
+      "983c9108c81b3b05",
+      "f095051958262bfd.ltar",
+      "113d33e21876a9bd0be42aa1b8b813015138efb43e604999f3768c9044c56310"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.SecondPropositionHypothesis",
+      "7716950700ad5283",
+      "2175871fd460d831.ltar",
+      "3ccc20ddb76edf0f14cc55d673597136d40f7600d25fbb48ef770eefe27d5f60"
+    ],
+    [
+      "Formalism.SharpRestriction.LevelLetterCocycles.UsedLocalConclusion",
+      "24c6ca89a9ce514d",
+      "408edbf583684ea8.ltar",
+      "8171e39a6cb72fc5979973a661c5ebe3fab3cd7015db22ba3fb1233638a1fb0a"
+    ],
+    [
+      "Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.ConjEMemHostFIff",
+      "025f96dd7ef298c7",
+      "6c80381b291fe327.ltar",
+      "658c223749a04511fe16808a6a0f54c8b926e0607241b79146e75e1322997f64"
+    ],
+    [
+      "Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.ZsmulGeneratorEqZeroOfProjection",
+      "6bb60b46fab99306",
+      "78059f83900c9d18.ltar",
+      "5d40f8379b14e740829bae444d15524607005937ab72ad29144b18528735052e"
+    ],
+    [
+      "Formalism.SubspaceCounting.GoodOrbitIntervalTileCondition",
+      "5b72056c298fe23d",
+      "2abeb7a50b8b700c.ltar",
+      "2e26a21390f28946590b09de9a44211d483c2b2cea9d09011017de70a33503cc"
+    ],
+    [
+      "Formalism.SubspaceCounting.Statement",
+      "19b23b3c4f62276f",
+      "23a343dce501c90f.ltar",
+      "96920e4e14f1dc2c36822736d7a1f0fe11b871ec5463f2deffb6d2ea36d5cd05"
+    ],
+    [
+      "Formalism.SubspaceCounting.StatementB",
+      "a0f7fedabe69c804",
+      "59c7f5ee58166ef9.ltar",
+      "3a3552057f5b46cdfa4225a0bd5437e0724713f174640c434c8ef46c25aed801"
+    ],
+    [
+      "Formalism.TameInertiaTowers.CentralOrderTwo.ConjEqInvOfPowEqOne",
+      "8bdf1f10b26ebc10",
+      "c1f0f7e986e3bb76.ltar",
+      "b98ead9bd4db1e6b4a807505191363051b3372d5836ecfb7a667a23b3710ff87"
+    ],
+    [
+      "Formalism.TameInertiaTowers.CentralOrderTwo.DecompositionSubgroupIndex",
+      "d31da207763a0125",
+      "04d431a1f4c11e79.ltar",
+      "2e946d89ba2ae1848983216ca5d6da41ff6051154d9246c457ba3a44119da51d"
+    ],
+    [
+      "Formalism.TameInertiaTowers.CentralOrderTwo.Galois",
+      "7792d3698b706a5f",
+      "5053d177ba64c5d7.ltar",
+      "d18cdeb027cc68e033a1801bb39a168be0557c02b80b3bd09998f8d78bf46ba6"
+    ],
+    [
+      "Formalism.TameInertiaTowers.CentralOrderTwo.Groups",
+      "4424c3ae8f1b3f8e",
+      "69304a7035cc1708.ltar",
+      "44689bc964b67b2a6592bedb931d6e4fdfd8a42fa960656efeee46f293f1a9df"
+    ],
+    [
+      "Formalism.TameInertiaTowers.CentralOrderTwo.MemDecompositionSubgroupIff",
+      "6740e54d577b3ea0",
+      "dc95b9179342eaa8.ltar",
+      "4c1ea254d6bacbd71304fc02ad8ab886244dcc300146f9ba5ddf3aa57a12ac08"
+    ],
+    [
+      "Formalism.TameInertiaTowers.CentralOrderTwo.NegOneNeOneUnitsZmodFour",
+      "5c8860edc728ec05",
+      "7ed8613bccfac4c2.ltar",
+      "0e899604639cccde84f50c4a360567cab1bb47e8df0a718861a4d72ff3701891"
+    ],
+    [
+      "Formalism.TameInertiaTowers.CentralOrderTwo.NormalOrderTwoCentral",
+      "a1f830c90142d7da",
+      "bc52e70f28f52d52.ltar",
+      "06599b2c2434117b98aa28a9ed427d6a2252632156ed8079588daae842f8549b"
+    ],
+    [
+      "Formalism.TameInertiaTowers.CentralOrderTwo.OddEqOneOfSubOneMem",
+      "e76cb37071b17463",
+      "1009db289b62329b.ltar",
+      "9a8d7a1d0f7540695b494ec9964a371b85844d980efa0e417281a77b64bfe6ee"
+    ],
+    [
+      "Formalism.TameInertiaTowers.CentralOrderTwo.OrderOfThreeUnitsTwoPow",
+      "1c84bd2f68a1d56b",
+      "6e82cb7b8ee9d3a6.ltar",
+      "6b3e0c6be4dc1988a912f56e82598ad72ed81be24334f7d7660e58ff947bb9b0"
+    ],
+    [
+      "Formalism.TameInertiaTowers.CentralOrderTwo.TwoAdic",
+      "fb9280d0ab2703c2",
+      "dd79550ff2cc5f5c.ltar",
+      "f63b4445a7659111d437035030735c5523a3af52611e12e23b964d969589c082"
+    ],
+    [
+      "Formalism.TameInertiaTowers.InvLength",
+      "6d2da8de19d37850",
+      "06f7f3c75e0ea5e2.ltar",
+      "15dcb814a00d994a96400704ed3a43715613e9c711ceb613d4755dff81132707"
+    ],
+    [
+      "Formalism.TameInertiaTowers.StatementField",
+      "f090478e62243a72",
+      "b03d2761bf7788d4.ltar",
+      "4a88dec34560e79328ca49adff7948d45ea65ed860dd30366980f393f54491c3"
+    ],
+    [
+      "Formalism.TameInertiaTowers.StatementGroup",
+      "cd059a054ba7b04f",
+      "7eca66a9e2c73b8c.ltar",
+      "330b74734fbc53946f3af2374c0bb4f2d77f6fd01a6bb3550f4557e156f43c29"
+    ],
+    [
+      "Formalism.TameInertiaTowers.TowerFieldFoundations",
+      "015c6329aa49b27c",
+      "936ab99d699db7fb.ltar",
+      "06777b9166b1291d1f0c90dc6af71920c5e2f82368bc68aebe410ead9541f6a1"
+    ],
+    [
+      "Formalism.ThetaLiftIndependence.Statement",
+      "7ecdf4d01f45cacb",
+      "cb235d60abbfe294.ltar",
+      "3c4615f9154e92b4ff4a23029e48c9ba7b3503ee54e4da122e4a449e6b8dfd10"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.DualWByLettersExtended",
+      "e1de2c4e61d3518d",
+      "80836d0e4414a1c0.ltar",
+      "90ca1af67061fab802f4e99d10492fd7743b33133a5315757f66a2d61bc0ecd4"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.EtaleClosedPointLiftsSimpleRootsMonic",
+      "c33ed6f5982742bd",
+      "0d40379798e982d6.ltar",
+      "a0e66de6bf8d3a6bc5db28c311e523fe13b2c45f0ec51a448df403c1c82c11a0"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.GrothendieckTopDegree",
+      "455ebc07e7c14dbb",
+      "bb78a94d7cc7906e.ltar",
+      "8c1a7351f6a62a26f7f874b167590ed69583933658787e89fdcb7888ae0eb503"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.Letters",
+      "254103340fc07b68",
+      "0a1b3d008ebb55ba.ltar",
+      "6dfdad69f841639deac04d2a067db27df2236284c36359ca7dd8136fc4be2e54"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.LiftExistsSecondCase",
+      "42ee81a4afff588f",
+      "e3c9227efadf0bca.ltar",
+      "329cd7316634c3e91a8aa743755a7361a6fac0064674bfdb972325500f1f3f1c"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.MemSpanOfFrobeniusMemSpan",
+      "67e876c91f4bc870",
+      "4071d9f5f2047c2a.ltar",
+      "1d131dff7871811cc023da7acdd105cf0c2a039077c333bea130c213b7115cd2"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.PhiOnto",
+      "67eb4c3e0f666612",
+      "4c112e0faaa8dadc.ltar",
+      "ffd8139f3a5d8e2591a90e60c787d7291d467911b7a535677f05f527167dfb6b"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.ResidueQuotientHolds",
+      "ed7ae3f0bf25523e",
+      "81aa3985ac0451b3.ltar",
+      "bf11804e0e35b7daebf8ada86aeb42625ff7c799bbdb126fdaeb1f09988b9bcf"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.ResidueSeriesExpansionHolds",
+      "20736191d827a921",
+      "472322a0e0f105c0.ltar",
+      "318b63c7ae8a56661258302b6b623d9a139eb7ad53075919cfc69bfc92bf3fb3"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.SecondDescentFreePartHolds",
+      "8120b3ba01e7109f",
+      "31730ee8859a6081.ltar",
+      "9438cfdb38a978a7afb39ed5fa9adc7a26d53870b928f15e1328cd52565aafeb"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.SecondDescentStatementHolds",
+      "64407657f3875867",
+      "4848836c792074d3.ltar",
+      "90c3a6d06ef2426d85786abca56695cd1d26f9128e8af7d564e5eeee43921f70"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.SizeBoundSecondCase",
+      "7ff39e5741f69c11",
+      "1d4034023e25a39d.ltar",
+      "1ab7f8d1090c6b1ac5107e9e4026d15f717fced8003c99590fffe1ed605dd22a"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.SumVal",
+      "754579618d4911e4",
+      "c1705a69f91805b2.ltar",
+      "e76e974266535a3d8074e78787a3e19ae2a7e6f8f6c416ded7a32272052ac349"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.TotallyRealRoots",
+      "84d23ced78736d99",
+      "81926689cfe4a687.ltar",
+      "7fd399b5411cbf0c7672527606ac7391f7ced83a8d9416767a272550d3432e74"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.UnitLemmaCaseALevelZero",
+      "05913e0d1dc22ea3",
+      "9daea98308a95872.ltar",
+      "47148956d433aa186dfe59e6295ec8d254ffee447d728497a88f89d5f2200121"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.UnitLemmaPrimeExtensionHolds",
+      "02aabad1fe2a7bce",
+      "0b83f2da668cf8dd.ltar",
+      "35a875c3775fd5d97dac53e659e4ff60c043b3c62d23b08ffc42db4d77f886a0"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.StatWPrimeExt",
+      "8cef0d2aaedf575e",
+      "e50f625ebc4cf472.ltar",
+      "6270030cfff9c1d718949df24e3620f1fac2722ca002850a6a2f97eb3bcc0abf"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.Statement",
+      "bd35491dff48a6f8",
+      "a4ac7be3837c7adc.ltar",
+      "6f4e171ee602b148be38587e7f237cdf4d96276d91edc2e17d2fa99035d7d392"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.StatementLetters",
+      "16be674fb89729e8",
+      "db4f3e0e7186a399.ltar",
+      "b8d386e4e06809c45357128d23cee517930f10c0b258456a6ac0974e5faacc11"
+    ],
+    [
+      "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.StatementTop",
+      "5f1ce61e71c931bd",
+      "cbea3ffff6058ffb.ltar",
+      "c1cd7eadcb27f9951e5106eda24503843f940f62d2d7e0bbe6e9b18aed42800a"
+    ],
+    [
+      "Formalism.WachModuleLifts.StatementW",
+      "e13349390b313672",
+      "14d70b0da9d0124f.ltar",
+      "c584557b5a0b68d9035e99c35830968fbf64d6d764ba01bcc52bbfe0411e1325"
+    ],
+    [
+      "Formalism.WeaklyAdmissibleFiltrations.CocyclesFunctorial",
+      "7a9f51f0fe7a2bcd",
+      "dacdcd9072373d03.ltar",
+      "be272bc5b752c21316898f9fad3aa561f6bcc86eef5df687f1b631f4a25654c5"
+    ],
+    [
+      "Formalism.WeaklyAdmissibleFiltrations.CrystallineStableLifts.DPotCrisStableAndExistsPotentiallyCrystallineDat",
+      "74006ed394fd5cd4",
+      "15cd10b7833c7d23.ltar",
+      "d0f7d394bfc8df1f3557baca597dc79801953df32873012667f57c409d8b3783"
+    ],
+    [
+      "Formalism.WeaklyAdmissibleFiltrations.CrystallineStableLifts.ExLattice",
+      "9b6b3c379902b3d5",
+      "e25bab94b0925602.ltar",
+      "c22aea43bd3b31cadc25a90594513cfe83ddbcda51636b7ed4920efa08b7583a"
+    ],
+    [
+      "Formalism.WeaklyAdmissibleFiltrations.CrystallineStableLifts.ExistsPeriodRingDataHolds",
+      "697ea0ae0a433db9",
+      "7a369f323c1fdf45.ltar",
+      "fa2e4de0c3c35c94bc0656d8339bbccfb5faa5109d58263d654aca5c881d62c1"
+    ],
+    [
+      "Formalism.WeaklyAdmissibleFiltrations.CrystallineStableLifts.Galois",
+      "ea07e25ddb14680b",
+      "66f10853d88ff18d.ltar",
+      "abcc57af79e818935ec32c03d1d7c7c569edee35800a0faee95db087bea5c420"
+    ],
+    [
+      "Formalism.WeaklyAdmissibleFiltrations.CrystallineStableLifts.TrivCrys",
+      "366fe77fadc5ff90",
+      "780145ec7adfa77d.ltar",
+      "7c583ebaa72ecf5c71e0c360a993ab9c38224b2f0e026d15113ed2f6ca54d269"
+    ],
+    [
+      "Formalism.WeaklyAdmissibleFiltrations.CrystallineStableLifts.WachCol",
+      "2112454805c77086",
+      "30f2ebd3037bac7f.ltar",
+      "98cb5811cfeab44be1053d6a236e219fa334a005cc7273ab5d1014465e341be5"
+    ],
+    [
+      "Formalism.WeaklyAdmissibleFiltrations.PhtGalois",
+      "87ab20baa7e03cdc",
+      "52824fac50789662.ltar",
+      "1b018aea6be7ecb66917cc0ee5921f5b3a2f45d7444ab4ad0ea2cfb94d87add1"
+    ],
+    [
+      "Formalism.WeaklyAdmissibleFiltrations.Statement",
+      "e7d8c912c8d81ab6",
+      "4ef7f20945174f4b.ltar",
+      "d47d19c61e432ef9fb73c7889f0f1b53f26684978322d9c5cec9096d38ad8267"
+    ],
+    [
+      "Formalism.WeaklyAdmissibleFiltrations.StatementPC",
+      "8da0d30f315c5fe2",
+      "7b3fcb5fadc58237.ltar",
+      "6c42536deae2f634efc7673b25fefca3b9de0cbd2f42dc1dabc6dde3dfa820db"
+    ],
+    [
+      "Formalism.WeaklyAdmissibleFiltrations.StatementTor",
+      "d95f7476cd8ee0b5",
+      "1235600157e2327a.ltar",
+      "ef356f74dc12444ca6dc676a1bbc4982e555028007d5c4c641c81a2607e00ecf"
+    ],
+    [
+      "Formalism.WindowSums.AnnihilatorPolynomials.DistinctTerms",
+      "9498df247c6187be",
+      "4a44018af3aa6609.ltar",
+      "1d2dfe3fdd48850653917fdcb461d32447ef1baea9aba8334a7b6e7aca92f53d"
+    ],
+    [
+      "Formalism.WindowSums.AnnihilatorPolynomials.EvalOneSmulDecomposition",
+      "d966ad1e219ee3e0",
+      "e5384d05c35df216.ltar",
+      "fccc89851da83111fa4c784f7ae7148fee3ec88bd826e7546fad9e3be1e9554c"
+    ],
+    [
+      "Formalism.WindowSums.AnnihilatorPolynomials.Lagrange",
+      "dc1a5e2b54dfb161",
+      "009b25e25d6f03a8.ltar",
+      "e89b06456f4b6e35f1ada1cf7ef3a2a68ce0b23c859be6d54138f6c3963a7161"
+    ],
+    [
+      "Formalism.WindowSums.AnnihilatorPolynomials.ValProd",
+      "25df7063213650b4",
+      "e3438b93c920816b.ltar",
+      "6fcd7865c99c3d14711f4c915e4e8122332e1898e1dc36843159bc038264e5fd"
+    ],
+    [
+      "Formalism.WindowSums.AnnihilatorPolynomials.WindowSum",
+      "708ce12fe34fb118",
+      "8e09ae92a476eeb5.ltar",
+      "6ccb7ed08bfb12f2eafced2f0518b0f536d0b3007eb8667a8737f2d0440adb9d"
+    ],
+    [
+      "Formalism.WindowSums.AnnihilatorPolynomials.ZpowVal",
+      "a7c0d38895de894c",
+      "998f5382f1d06e30.ltar",
+      "7b06c99fbdbe2e6ce36596074ee281bc420b9cc08063362a5fa1918c8d30f16e"
+    ],
+    [
+      "Formalism.WindowSums.PowerSeriesRelationList",
+      "cc95274228c1b412",
+      "822ff70ee5157870.ltar",
+      "0256bc4e1d0f030f858ca8251741fe69f6e252d7d50a0a3cf0be15ac6da314f2"
+    ],
+    [
+      "Formalism.WindowSums.Statement",
+      "eebce1fd775088c1",
+      "b975e75233302016.ltar",
+      "04d656904f596961d681a74b63209b10681af0dd577a0b985755881afef7ca37"
+    ],
+    [
+      "Lemmata.FirstBlockLemmaE.Imports",
+      "ea6e92ad36f2e5f6",
+      "01397a0ed1832126.ltar",
+      "c5d4bd9189c6dce7b25ef7326be7c4d3d1b0585dbfad72d515f9ffd657c3816c"
+    ],
+    [
+      "Lemmata.GeneralBFactRightTerForm.Imports",
+      "0b4e2a741ae1d957",
+      "d418f247e85b8674.ltar",
+      "b14afc0cd2bc53bc1743a4c5a9de8c389b6057d74bc99073f08def452bb7081f"
+    ],
+    [
+      "ReciprocityTheory.BasicDefinitions.AdRep",
+      "707e871d3acdfc96",
+      "9aa85fdc779d3033.ltar",
+      "fe6f83c01676091c17cd5f743fcec3cc26db740ab4b15e740ddfcc54d5db106b"
+    ],
+    [
+      "ReciprocityTheory.BasicDefinitions.ExistsUnique",
+      "1b675e091e164bf3",
+      "36205743b2c50a23.ltar",
+      "752bebe8939049e1eac441e0c2f9dd0daf9a2358095569298c4bb9de84e14393"
+    ],
+    [
+      "ReciprocityTheory.GaloisValuations.ContinuousConstSMulQuotient",
+      "3b35c198a769f41d",
+      "7876f70eec378621.ltar",
+      "a691d85f4f45292d78a1730ea962b9a40d9df2200e36a63feabd15195e1f8b0a"
+    ],
+    [
+      "ReciprocityTheory.GaloisValuations.Global",
+      "6d9e4979f3db7514",
+      "cf0a5f0eb41ce659.ltar",
+      "0c51c73651ccfd5a1b99352c1391e557f42c8e72785cc2048a02ac9e4912ee1a"
+    ],
+    [
+      "ReciprocityTheory.GaloisValuations.GlobalA",
+      "9d7ef852b7575b54",
+      "7c92fd1640a1f5e1.ltar",
+      "ef6e9202bd8c82213a63dc550db9fa94e2521795ef367d16bd79844993bf9ced"
+    ],
+    [
+      "ReciprocityTheory.GaloisValuations.GlobalB",
+      "a46f1bd0fcff1bc4",
+      "85bbf7058995888b.ltar",
+      "dfc9270f77f945c905489f24089cb3ec5ab1e4b2bdb33a8596829e0428fe6fb4"
+    ],
+    [
+      "ReciprocityTheory.GaloisValuations.SeparatedDvrSecondCohomologyMem",
+      "19f4ebffb2fa8338",
+      "c0d8dbc6413ebee4.ltar",
+      "21227e6b67de14cf70b8851176230274fac525a0a8f5518eb8c6348c37b9ed43"
+    ],
+    [
+      "ReciprocityTheory.Hypotheses.GalCoh",
+      "ce5432c631239c3c",
+      "904fe4b6f2369df6.ltar",
+      "2ec5ac874f07b455478e9545fa1ad97fa658b40055dbeb209f64db5033373fd6"
+    ],
+    [
+      "ReciprocityTheory.Hypotheses.GalCohDefs",
+      "325e9902c611d49d",
+      "6fa4e99b37edc47a.ltar",
+      "aa587c5efed7c3c616904986efb45b6c4046d9a7680f834cf0333c8f88a08b45"
+    ]
+  ],
+  "source_blobs": {
+    "Development.AutomorphicArithmetic.CrystallineRing.Acris0": "ed80d21c176f3f9b8e77a9e38b1bbae64f8309ff",
+    "Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.JumpSets": "bb6c0957adfa0ddd8dca79300d27e8adb9313ac8",
+    "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.Action": "262e46dc101514717c43f0b33f8a7a17f96bbab7",
+    "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.DeRham": "e112f1be1de0f468f2be6d15e4ce664df1cd31bb",
+    "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.DeRhamMap": "6bb611f3b8917ff1802afcc6894560c740155f73",
+    "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.Embedding": "1609bbf82c7da915ff47e21b66442c911b0dd17f",
+    "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.EqZeroOfPMulEqZero": "0c3f4f3d40781ddcdd4e0360ca0b5f4f0afa4ce3",
+    "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.ExistsFactorialMulEqPow": "c50ac716604d131137bb68ec3ceb4887dff21c3f",
+    "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.Kernel": "7be6b4fb0bd52ce195232f19c9fec4b2a30ec169",
+    "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.Section": "f8e5c7f4e4b002e1c9d2e28833a40cc127d72e3a",
+    "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.SpanNatCastLeComap": "fe9fb237a099f2eaa9e451d184bde2eab5f055b2",
+    "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.TruncLogEqOfPowEqZero": "7ec0f9ef8bdd17c23627cc1b95efc9b593e2e2fb",
+    "Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.UniformContinuousConstSMulOfIsIsometricSMul": "a7f2484bacb088e805aa71337ca599f0aaa90666",
+    "Formalism.CoboundaryTransfers.GammaStableTransfers.DiffOneSmulOfTower": "bece1f37ac7cccd79fbb95612424751a0705e597",
+    "Formalism.CoboundaryTransfers.GammaStableTransfers.GammaStableOfGammaQUnitHolds": "633add0b26554a80afe89d104dddbfc221823f3e",
+    "Formalism.CoboundaryTransfers.GammaStableTransfers.MemCoboundariesOfIsOneCoboundary": "74e9dbc43e9b8e8128372d693f0e41ae025162b9",
+    "Formalism.CoboundaryTransfers.GammaStableTransfers.TorsionKilledCriterionHolds": "d7e06b4f135a5ca5ea252b920665c890571f307e",
+    "Formalism.CoboundaryTransfers.GammaStableTransfers.Transfer": "1694c265b1b2a4bec644e791cce50362223db3c4",
+    "Formalism.CoboundaryTransfers.Statement": "cc10253d41ecb71e9e31a03dcade899a228f7e2c",
+    "Formalism.CoboundaryTransfers.StatementAPI": "8989e883bf0043219ed6d59b762bc9029a6b552c",
+    "Formalism.CoboundaryTransfers.StatementBridge": "5a40c87fec0f2c35edf73d4163013f6da681ceaf",
+    "Formalism.CoboundaryTransfers.StatementTransfer": "972d4a8de85abf691c2035fc30be9b696714a182",
+    "Formalism.CoboundaryTransfers.WachBridges": "8f08ac86fa050090f09e9684ff4b0a7d72a7acc3",
+    "Formalism.ConjugateSelfDual.Statement": "f2c3570da84691253b90b87cf53501ddc5e93b50",
+    "Formalism.CorankShare.StatementFR": "6c2f5ca6b05883a3a1479ba9d97e4c5ef33ea2e3",
+    "Formalism.CyclotomicNorms.StatementI": "cbf104d6c7dea18d1d5b98730f7cf1c11ac392a4",
+    "Formalism.CyclotomicNorms.StatementT": "6449c24380a4eebf66e011093aed3dda6fdafb5d",
+    "Formalism.CyclotomicNorms.StatementTW": "0981d1c78500f8f0a9dec9bc90b16e02ea90b88b",
+    "Formalism.EisensteinCokernelLengths.CokernelLengthBoundOfLifts": "508b3b81cd920badb20263182a0879e9d6bcdbaf",
+    "Formalism.EisensteinCokernelLengths.FactorialValuationBounds.FactorialValuationBoundsProofFact": "6bd20d23c41942009582beb42e8d471d1c3e3857",
+    "Formalism.EisensteinCokernelLengths.FactorialValuationBounds.LagrangeIdealSgProof": "04a536b760eb85f6ce33a140dd28e220513fb8f2",
+    "Formalism.EisensteinCokernelLengths.FactorialValuationBounds.ToolsB": "2ee4473841197ae2b2f85b8d4c4074a1b397c31e",
+    "Formalism.EisensteinCokernelLengths.StatementLIFTV": "11ee0c2ea9031813d49a4313009350d543e3022c",
+    "Formalism.FockGram.StatementHerm": "9f2118588b55fede13becba2c2bbefe13a268059",
+    "Formalism.FockGram.StatementLat": "65430e3912a0a199f2f57edea0857c5c91a629f1",
+    "Formalism.FrobeniusContraction.FrobeniusContractionProofs.ContractBij": "fa6f07613d8f8405eba7d9b99fa02307717ce04c",
+    "Formalism.FrobeniusContraction.FrobeniusContractionProofs.LenBound": "becd94dae3cae84774fddc31064c8644dcd2e8c8",
+    "Formalism.FrobeniusContraction.HighestWeightResidueAvoids": "a0c349b01f0bfbec26d612c01463c4958b6eba2c",
+    "Formalism.FrobeniusContraction.Statement": "f0976ef3052724d7d315c5e4efe4caadb5f1403b",
+    "Formalism.FrobeniusContraction.StatementTop": "fb237d082f1ccbc7d68cf6d8200390d25cb5e8c3",
+    "Formalism.FrobeniusOrbits.DiscrMaximalRealCyclotomic": "d2b3e2fc88c019aa544d4f160f66c02b25407fda",
+    "Formalism.FrobeniusOrbits.FrobeniusOrbitsProofs.ConjReal": "73e94e50c51aa87f3fae6522d97ead0aee28d199",
+    "Formalism.FrobeniusOrbits.FrobeniusOrbitsProofs.FrobMulInertia": "37a1775dea1bf1c71396f2ed4ade2840b9bd4a12",
+    "Formalism.FrobeniusOrbits.FrobeniusOrbitsProofs.Galois": "52300964f45eb74ffa00bcaefad552114fd6cbe0",
+    "Formalism.FrobeniusOrbits.FrobeniusOrbitsProofs.RealCyclotomicSubfield": "5d359c5633e934af6ccfa42f4568a120d7746d00",
+    "Formalism.FrobeniusOrbits.HostDiffSupport": "b6ad11ef758a36acb1d4a3d611bcd3d131d09369",
+    "Formalism.FrobeniusOrbits.HostOrbitsPlaces": "6829d6e711bad5a4618d65f6bb74cc2aaf36eddf",
+    "Formalism.FrobeniusOrbits.HostThickExists": "f7857092176b3ca9f20b439fbc2ea53c2571c83f",
+    "Formalism.FrobeniusOrbits.RealSubfieldLeCompositum": "a195df183954c34b5d00f8237054b640b2760cbb",
+    "Formalism.FrobeniusOrbits.Statement": "fee2c2df1a434c11751c30c2a831d498aa15c64b",
+    "Formalism.GaloisCohomology.LocalTateDualityK": "fe12d91f0e9b3f13e51a47a29adc899e64959f7e",
+    "Formalism.GaloisCohomology.Statement": "9b79f4fcda5428d419030871f1650780eec32669",
+    "Formalism.GaloisCohomology.StatementLoc": "d26d63b2b20482c5c49edbf524f2eb7752e517b0",
+    "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.AltNotSolvable": "c9e2b25026e2411e3c0423d722eb347cb6be1aef",
+    "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.IrredOf": "6117dc19ed9d638a03f5da397732700ae3ce8ed4",
+    "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.JordanPrime": "fd3e14269c98f362eccc4898ca53cf7d7e7582b6",
+    "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.LemmaAOf": "92298fc0d9f30eb5bd6ef3e5c197f09bdc8d0fb3",
+    "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.NoSolvableOf": "9c7243ea0d53aacf28bf38e3c18c6c92c6fff352",
+    "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.OneNonUnit": "f5ab845cd8af966b96b7c58f89a9be13427514d8",
+    "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.OrbitSubSum": "85792df9bcd4d3a336cd79671fa78236659ee9be",
+    "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.PermSubSumInv": "8cf62a80ca4af00cb5629fcaa1b910d6b2c74b38",
+    "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.PowerPCycle": "1ece1915faec5d01c122801ab949f0f3e4fb409b",
+    "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.PrimitiveOfPCycle": "3e7c5f157115e78c5ba2681ad212b1f07d76c943",
+    "Formalism.GaloisIrreducibility.GaloisIrreducibilityProofs.RestrictRoots": "e853f8ba2aba712f9249b1ff06d2c33f70c709a0",
+    "Formalism.GaloisIrreducibility.NoSolvableOf": "301360690b82596f19aea2bca6e6a2c4866ed4b3",
+    "Formalism.GaloisIrreducibility.NoSolvableTransitive": "29a27cfea17df0b70f384f0ea652849cfb653c65",
+    "Formalism.GaloisIrreducibility.Statement": "c4d82e48b65bb730e0c9471570ab0f4f4801b39b",
+    "Formalism.GaussValuationBounds.GaussUnit": "2ac35413a7897662e9b3030a26878fdad6ff8d9b",
+    "Formalism.GaussValuationBounds.GaussValueContraction.GaussBasic": "4e05f0deb00b583546b66d5f8eb22cc1b3362ab4",
+    "Formalism.GaussValuationBounds.GaussValueContraction.GaussMul": "7a5947cecfaa0627e7ba45ce327c31458517b482",
+    "Formalism.GaussValuationBounds.GaussValueContraction.GaussValueContractionProofFactBis": "369596179a4acb8557db28036a6bbb0625fe6d64",
+    "Formalism.GaussValuationBounds.GaussValueContraction.KapBoundProof": "8e0b97b66b4d2b0433c431179f70b6dc2abccefd",
+    "Formalism.GaussValuationBounds.GaussValueContraction.PhiIterXProof": "008c7676eaf83ae9b720d364aacbca56be916067",
+    "Formalism.GaussValuationBounds.GaussValueContraction.ScaledPowMemSpanCeil": "c22ebc2218677a1d10cbe2b10655dd73cfa7a8fd",
+    "Formalism.GaussValuationBounds.GaussValueContraction.TruncationExponentBounds": "bdf85f367f39a5c4244ed49c04fb7d5a06d702eb",
+    "Formalism.GaussValuationBounds.KapBound3": "7f4233cf2b4e817424f6dca934faf28bdbfeb190",
+    "Formalism.GaussValuationBounds.Statement": "f7cee146fa52f0ceec8b676e9356313a9694e5a9",
+    "Formalism.GelfandTransference.EnergyIdentity": "44bd5b1373414194ca2c5305af50b571eff6c10f",
+    "Formalism.GradedWeylDivisibility.DualWeylDominanceOf": "7b9df8ede8ee098da93f4134cfffc3da63364079",
+    "Formalism.GradedWeylDivisibility.FinalB": "07761d117a5a797802dc9082b74867de1bb2d55a",
+    "Formalism.GradedWeylDivisibility.FinalC": "eefc63c1d3d1a536298221ef53ada79c70b0bd89",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.BideterminantDominance": "2ebcc4c9458c09cbb09219dfd918086044001ba4",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.BideterminantMem": "063f67d0d7d8dfaee4565ed4b7c1724bb4373ba0",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.ClosedEqNabla": "284e786d0dadfd963fa2ce3e44fc85a3dd3260e8",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.ColLexInitMinor": "266dd210b2871324a40ac75d02b2a51c9dbb4fb9",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.ColSums": "5b8e01a4a69025add95a0ebd3d3856d361463872",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.ColumnLexBideterminant": "084e06e3b3b90e89da772b63171696e6d519d519",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.CompDeg": "dd6bce7dbd0710a11abf22ee80664cb8f8712539",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DomPow": "2e9da190073506fee5b1577b8f72b6988f71068b",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylDominanceOf": "2caad466a2df61678fab650c3bd04b3c2750f8a8",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylIntRat": "8c2c39ea98d582ca96f39ab47c71f8c049ae8853",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylMap": "13250f4dfd6237b8de17e52b787183150aa0c7d9",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylMul": "954a631b4ebec33681f3123207d0dd6d26938cec",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylNonDom": "c4a68a94801f97c370ec116269cd381c147c4d5c",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylPoint": "cb30c2017759eafcdb9696e46df6c288d548ab71",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylRowGraded": "23d720850dafe34cc9ecf02d9a0196c76b587683",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylRowStable": "07b38cba635c48ed0b909b0db48d1aeeee15773f",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylSat": "04dc8c68442111354b79ca1196697e81b51f6de5",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.EvalDeg": "4b5c74846641275039123443a2902497e288c03d",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.FockDiagBound": "9438f9251f90cb22d2adf09b5f2c0f3b30dd21cb",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.FockHerm": "14a3988c59e9b9605e22f9db33b971110213dd8c",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.FockPos": "bb681212f2f5b78dbef5bb9cb93623c485d4b153",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.FockQBilin": "629a4a7f9816a53cf8fee2926381107385ae764e",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.FockQPos": "2645cd42885afeeb0882669a3f0d5c02eb95f931",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.FockQRowDivAdj": "73543ddafe6e9f1043aa125280e07d1c074fc936",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.FockRowAdj": "dad650b7e661617b35d8186e162a8ca214e3a66d",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.FockSubAdj": "5361370593df6bbea5f9b8b44327b2a4a24e734e",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.FockWeightOrth": "b3da559191e980b1f0c8b371c44e5649f7c755c0",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.HWInClosed": "c8467614e1719ad535d128fbc60231679e3cbd86",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.HWLine": "80fd5d7fba2751ec30894cb062339596f3de74f8",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.HWLineTall": "3c3c55884bcbc8f5859aac0cc9978ce060ad059d",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.HWRaise": "94bb21505e6a27abd18935ef5756dd29a86a952e",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.HWRowWeight": "6a32cdfb7c8cc327c112ba3c5406ed431122b981",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.HighestWeightVectorNeZero": "c99025ca26dec3a8aac837626a4d26fd6e307c57",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LBidetLemmas": "74c6aa4fb76a79385f40b64ff36a8d908ea02d57",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LBidetMinor": "80ee93fec09dedd3d636f2603da42d08ccd90acc",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LBidetdomLemmas": "3eeac67308605c2d631d9cebac02f642d94b4a86",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LCassemLemmas": "a3f6d583e9f54fb29462c6cf8b95189141209880",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LCcompLemmas": "a2f602274934c4188deac1062bf69132e649691e",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LCdegLemmas": "2102a7a37e31bef432d5664f9de5d407d3a0268d",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LClosedeqLemmas": "66f65726f16f79414db1676630d1d191c53024bf",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LCpeelLemmas": "cc9c308d70a84ef87f68407ff9323743f9b5d61c",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LCpleadLemmas": "3ee6b28225fc7112f8b8640ab07dfef4c88e96d2",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LCssytLemmas": "39be2e6f92e29485f1bff38962105e92556b252c",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LFockbLemmas": "ad28e94833bb876a5a8b65ecaa7597969b59b6a3",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LFockqLemmas": "30455c025dc17141dcec9d4df979d87267d1270c",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LFocksLemmas": "fabc506ad7228d14aaa891f39f3c921fd49e4323",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LGradedLemmas": "87c5cb3f0c0c898c49ddfd2d214b3297c3d45de1",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LHwinLemmas": "900b343ed2cc115cf8c8134d74b434842254469a",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LHwlineLemmas": "178143ea21fde753679673784b2670222b6d1853",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LHwrowLemmas": "c9faa41791ad5fdc85bbb4d279475503a6a7309b",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LNondomLemmas": "e3b03a6375d5c972f18f3f10c520d6f37f32d44f",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LRowdivLemmas": "84ed492bcbafe2b1d5dbc4880dd8cfa7ba628eb5",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LRowstLemmas": "9b1ac021d892e927e8fdcf7824e8f04156db368a",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LSatLemmas": "a08dd6174e7b00f93b8288e87a42df16245dfe8c",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LeadComp": "673443cad0a20624722efaa4a58205752caca633",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.LeadInterlaced": "2046d5222b024ca763b2db35deb0b237670725ea",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.MinorExpLt": "bf0f816220d470e945859f3fd6b544f90ee3b039",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.PeelDecomp": "dadbea514d0137e7085aeb0cf7fcbb6600e4d3b8",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.PeelDegBound": "425a607befc0a3ddaecca0ee728054f418f9f2ad",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.PeelHomog": "b223ca944acce11e11048f4f363b561cc22293db",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.PeelLead": "893dc4eda302b9734733117a6d88ee178894903c",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.RowDivClosedGraded": "c922e0a84a7cebea10737938e58f31a36a50c665",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.RowDivStable": "c00832d901bf05326b77d7b03b0b12b7f09e07f7",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.RowNuSum": "9255bf5ca4c885d5098fae2238a859164b2b9ff2",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.SMSAssembly": "6353d668a24a98b9efa560d403bf765067d6e6ee",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.SSYTExists": "be7732c74d6cbd3884d131f33f6f84590cbad953",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.SSYTPeel": "a239245f39f103bccd96fe606137fe4018bf96f1",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.StandardMonomialSpanOf": "beed8d547226b6c9c5a3d22690e02c52e436a121",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.SumIcoTsubTelescope": "b5e7de3b6bc6fb81351c8cdb5e8b9d8f0ee373d8",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.TwoColumn": "bb45bf090bab3536fa55c810dc4a6183dd31a682",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.WeylEqNablaQ": "89304837275dd30ebfad080d67040b1fe753da74",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.WeylLeDual": "83a4123550e48bc291eb87f073c3c66aa53b0ed4",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.WeylRationalOf": "605fa443a5a44faf59f314017fb215d218cceaf7",
+    "Formalism.GradedWeylDivisibility.FockSpaceTableaux.WeylRowDivStable": "d3af9a9ab4527710a2275ad5f06c934f27d827ea",
+    "Formalism.GradedWeylDivisibility.StatementA": "18876a880b42776224b719ae57bc8556b37bef8b",
+    "Formalism.GradedWeylDivisibility.StatementB": "18f33de0ad5ba5fe692828ac78dcebca8b38a6b6",
+    "Formalism.GradedWeylDivisibility.StatementC": "e807f1fbce61fd59b5aa352fae272fcfb5ebb446",
+    "Formalism.GradedWeylDivisibility.StatementD": "93ed946b3cd60796a61e28aae7315c64cb34600d",
+    "Formalism.HarderNarasimhan.QuotRealize": "c77dd966772eee3e8e22a8067ad854e4a374a0ae",
+    "Formalism.HarderNarasimhan.Statement": "1123b70d332df1d86e7a669e268f0ab6ebcbf6aa",
+    "Formalism.HarderNarasimhan.StatementPl": "74fc3f4ea2a12b6706a3fc2c5e49c2e4bbe3a892",
+    "Formalism.HermitianLattices.DefsCS": "3d4725d1ce5336b63694c628bbe1077da057f626",
+    "Formalism.HermitianLattices.StatementLat": "ad22a96cca515319c7be6dedf9a1b544803a05a5",
+    "Formalism.HermitianLattices.StatementMaj": "2e1f49cd1952884d73e67f45d4992e58b4aa0552",
+    "Formalism.HermitianLattices.StatementMass": "78dd6f336b30db465ce557679b4dc93aad7082d6",
+    "Formalism.HermitianLattices.StatementTheta": "52784803bd6665f553fd6a4974fc50f25fd6b0cc",
+    "Formalism.LagrangeIdealLifts.CocyclePolynomialDivision.Graded": "6fe2ebd4f938cf6848b25bd7adbf28844aa46e7b",
+    "Formalism.LagrangeIdealLifts.CocyclePolynomialDivision.LagrangeIdeal": "94525ed231e27f8a522383cfb8cd3bde982d0757",
+    "Formalism.LagrangeIdealLifts.CocyclePolynomialDivision.LagrangeIdealCyc": "78bd5486dc811360e71e34d7f4b4513850b9e557",
+    "Formalism.LagrangeIdealLifts.CocyclePolynomialDivision.UChase": "7b25fba126cdc7f6be4598ff7694ef82be84dda4",
+    "Formalism.LagrangeIdealLifts.CocyclePolynomialDivision.UClaim": "3703fa3615e618260d4f6782435d6a29318c4d0d",
+    "Formalism.LagrangeIdealLifts.LiftLagrangeIdealInt": "351c71ca7a515a7e17d9ed25df346a1aa7c34981",
+    "Formalism.LagrangeIdealLifts.Statement": "7ef42b57b4ce3e5dc85df3186b715774191ad074",
+    "Formalism.LatticeSlopes.Statement": "bc9eee4f604887c37ebf81973c4ce7e02f7901d5",
+    "Formalism.LatticeTheta.Statement": "0896989ea19f9a260ec062fd5d560ee1c1f006bc",
+    "Formalism.LocalRingCardinality.AdicCompletionLocal.InstIsAdicCompleteOCSpanSingletonSetCast": "8c8b6b6fdc4e156fba20543730a16e4be3c7f8b8",
+    "Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied": "1590c32f74b1d0712acf53ad513567613285156c",
+    "Formalism.LocalRingCardinality.DataArith": "93ed48a8941bcb59fada32a78a5dea323f39a9a1",
+    "Formalism.LocalRingCardinality.DataCD": "a217bbdb6bb6861f10b94d27025fedb6709fddcc",
+    "Formalism.LocalRingCardinality.DataCoeff": "d3958fb0ac163c44cddd1de8e7eefbcff06a190b",
+    "Formalism.LocalRingCardinality.DataForms": "639513ff84f6922d41b39b682909e59b569bb26e",
+    "Formalism.LocalRingCardinality.DataHost": "922ba884bd4632b6f57370db60e1a7a10f15c2bd",
+    "Formalism.LocalRingCardinality.DataJet": "d9c8dca9d64f8f7e56be97834b0ee75ef4d9ba38",
+    "Formalism.LocalRingCardinality.DataKernels": "474cdd19306115b1b157ce8c4defcc5671c18ff5",
+    "Formalism.LocalRingCardinality.DataRows": "e6295c64d975a542ee6bca35be82ddd9dad12521",
+    "Formalism.LocalRingCardinality.DataSpaces": "2983e336f6a7a3afdc40e0ad3bb97acba086ad94",
+    "Formalism.LocalRingCardinality.Params": "958b1120b998a1583313401367ccdee17ba29518",
+    "Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow": "f32166c36a0fcabea3ca5984ebab907d1f560e5f",
+    "Formalism.PadicSubsetSums.CentralIdempotents.CentralIdempotentIntegral": "5768d650c89cb34689e7973c1ca34e5dad23ac83",
+    "Formalism.PadicSubsetSums.CentralIdempotents.WindowSums": "bee0fe28489512a9eaac2259d2ba9b3bd3d7e0f0",
+    "Formalism.PadicSubsetSums.StableGradedCounts.ARCReuse": "cc77493a1466061cdfacbe40526fdd44257ad481",
+    "Formalism.PadicSubsetSums.StableGradedCounts.LiftingTheExponent": "47c0cd7dc9ac3d16fa949b5fbb207cbe7ac9a0fb",
+    "Formalism.PadicSubsetSums.StableGradedCounts.PadicValCardGL": "985eeae58904ea3cc2eca2857e9d65eca5f44e1d",
+    "Formalism.PadicSubsetSums.StableGradedCounts.TWCentralIdempotentIntegral": "909b006e4b8e28e9ac2efe730613df53117e4a6b",
+    "Formalism.RealPlaceAnalysis.FockPairGl": "bf991a22daac3ceb54fec2e423b26dc526621552",
+    "Formalism.RealPlaceAnalysis.RealPlaceTaylor.ProdFactorialSupportSubSingle": "685cec210a1dd750e0a8d541f3cf1460fa099345",
+    "Formalism.RealPlaceAnalysis.StatementA": "8437e4bd07e4c1156a61909f003e7ff51b15a97c",
+    "Formalism.ResultantValuation.ResultantAdjugateProofs.Laplace": "e566a240fb3614103b0cb0f96bcc438883a55ed4",
+    "Formalism.ResultantValuation.ResultantAdjugateProofs.Window": "3a472892557a0daa0b48902dc77b263ed385a79c",
+    "Formalism.ResultantValuation.ResultantConjugate": "aba52e7cd772558d397dda9c17f95fc5a23b28ed",
+    "Formalism.ResultantValuation.WindowValuation": "0bae1891b9f94de90231096cc81aee2b15453089",
+    "Formalism.SatakeDualWeyl.Statement": "11a189fb6464a85aa4e84a861261a3c98b8f5ae8",
+    "Formalism.SatakeDualWeyl.StatementW": "d05f98b95881c6af3e6a8df2777bea9e0613e62b",
+    "Formalism.SharpRestriction.CuspSpanNormBounds.DataS": "09ebbf8cec0a9e872c6b17dce98dc3a44816caff",
+    "Formalism.SharpRestriction.CuspSpanNormBounds.FractionFieldToGenericStalkAlgebraMapEq": "1d83b1ef973fb91f5d837600a762d2f03fe0b0a5",
+    "Formalism.SharpRestriction.CuspSpanNormBounds.Point": "a77648631570d5b3ff4c357cf2787bef375437f0",
+    "Formalism.SharpRestriction.CuspSpanNormBounds.PsiEDef": "ae5acb80e26d5e493d9de9ab1be04861885b1bad",
+    "Formalism.SharpRestriction.GrowthBounds.DataG": "f16a6127a0d0e77074c3cb164e90df977b7d7418",
+    "Formalism.SharpRestriction.GrowthBounds.UnramifiedQuadraticSetting": "2e373bad407b664e001cbfe6ee988be51c633e4a",
+    "Formalism.SharpRestriction.LevelLetterCocycles.BaseChangePreservesUnitaryOf": "0f4c81abacfed87fb9f9ac356a03049b0b04ec4f",
+    "Formalism.SharpRestriction.LevelLetterCocycles.CrystallineLiftingBounds": "b1fe2197fe7b2cbbab8aefc290ca383b07925e26",
+    "Formalism.SharpRestriction.LevelLetterCocycles.DataN": "ff74c28a16007530ca971ec2fb608db0ac46bea8",
+    "Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc": "ec72043e8b2bc931385e570ab2cf97fe2ee9a0a9",
+    "Formalism.SharpRestriction.LevelLetterCocycles.DdRFull": "51fbaf186cdc2ca8172c9eae07a171229b5f8ac8",
+    "Formalism.SharpRestriction.LevelLetterCocycles.DeltaInvariantLattices": "2aeb563f13de5bb8494e6f021c484b84518a356d",
+    "Formalism.SharpRestriction.LevelLetterCocycles.DownSlotProposition": "0b76d1270befe4d305629d9465aa0d1131599336",
+    "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalEndApply": "d7200556687fd8c1206eb12cd225ea980da379ac",
+    "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.Imports": "abce68550b69fbf451754524c937ea7fdddd34db",
+    "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.LevConstOfEv": "226ec89405e84e9ca5fc1a1dfe9e50398938e1cb",
+    "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.ModelFPfA": "6cc5d72aefb455fa64eca430a398d6e51f299950",
+    "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.ModelFPfB": "d8102b824b5de5c48f0b0b7a52c0ee9206b0f450",
+    "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.ModelQPfA": "76cfd775b02f7c63518a28bfa216619f7ca0b9d5",
+    "Formalism.SharpRestriction.LevelLetterCocycles.ElementDenominator": "09683308ef446147f49d361d9d7973db81ded282",
+    "Formalism.SharpRestriction.LevelLetterCocycles.ExpansionFormAll": "fbf1c6e50f6d5ee555303a0993091f533b0aba28",
+    "Formalism.SharpRestriction.LevelLetterCocycles.FirstFrameStepImplication": "d5e9e632d05b681d9334d13f575896c88de81a4b",
+    "Formalism.SharpRestriction.LevelLetterCocycles.FrobeniusPowUniformizerFactorisation": "05e78e3f281fffd5c8af6ad0c85b72180681320d",
+    "Formalism.SharpRestriction.LevelLetterCocycles.GammaSemisimpleLocalOfConsequences": "69a532a10cdd59a1964bac462b7254c571b06117",
+    "Formalism.SharpRestriction.LevelLetterCocycles.LamPS": "b229d8597feb7578ec534f4275a13788c4e87d7a",
+    "Formalism.SharpRestriction.LevelLetterCocycles.LiftingTheoremOfExplicit": "1ef5292cab73a63581e7f8fd31e02b84082dfe11",
+    "Formalism.SharpRestriction.LevelLetterCocycles.LiftingTheory": "713fb303b5cdc32660f4325032bd2703b515a683",
+    "Formalism.SharpRestriction.LevelLetterCocycles.LocCoh": "113cac287dbc4b1243c435429341edda28e3134a",
+    "Formalism.SharpRestriction.LevelLetterCocycles.LocalFormOfThreeInputs": "eea54d9c80a871cec779cb4c6f3b8be80c2fb2eb",
+    "Formalism.SharpRestriction.LevelLetterCocycles.LocalSituation": "7aa80d0f3f48839f7408bcdc425cb69f6270f263",
+    "Formalism.SharpRestriction.LevelLetterCocycles.LocalTheoremOfGoodExtensions": "1f914c5e2d5c4b8da32c1c736db1598b4eb76fa3",
+    "Formalism.SharpRestriction.LevelLetterCocycles.MapCompZero": "c4e7a0df2b1384e2cda9ec46d0c562cf9b070b1c",
+    "Formalism.SharpRestriction.LevelLetterCocycles.MixedPositionHypothesis": "cb5eca7671e04f548b47cbb118c52bc5f91a1df7",
+    "Formalism.SharpRestriction.LevelLetterCocycles.ModelKStep": "65079d6e56084d1001410c717c11eb4996cc4ece",
+    "Formalism.SharpRestriction.LevelLetterCocycles.SecondPropositionHypothesis": "57e314a6dac8ec65eeaa200755ea73b068396a20",
+    "Formalism.SharpRestriction.LevelLetterCocycles.UsedLocalConclusion": "28b11b9f76683ff0b7fc5d8548dd46ee3736134a",
+    "Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.ConjEMemHostFIff": "0faa9df9ed674e6e32d9ee76f9c43a5c0b03299e",
+    "Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.ZsmulGeneratorEqZeroOfProjection": "7023c470c5c3d18c795cc8f769e554445dff3939",
+    "Formalism.SubspaceCounting.GoodOrbitIntervalTileCondition": "dd27ad4fd86e4eda71d51a7f2feeffcc605c221a",
+    "Formalism.SubspaceCounting.Statement": "8201c9ef703143e70635a26d6289a1a99682c045",
+    "Formalism.SubspaceCounting.StatementB": "074a668254e639aff43fc39f72559bd598129a94",
+    "Formalism.TameInertiaTowers.CentralOrderTwo.ConjEqInvOfPowEqOne": "ab4a43723b22fa9741b169969f702f29391630cb",
+    "Formalism.TameInertiaTowers.CentralOrderTwo.DecompositionSubgroupIndex": "7609004d920b24fbe9d4f35a275828325d4f2129",
+    "Formalism.TameInertiaTowers.CentralOrderTwo.Galois": "9ba4541a9acbdf4d0b765ae5367e81ff19f1dd75",
+    "Formalism.TameInertiaTowers.CentralOrderTwo.Groups": "1aeb0a765eae8f2091d600e70d9cea157e0b746f",
+    "Formalism.TameInertiaTowers.CentralOrderTwo.MemDecompositionSubgroupIff": "262e7e34e97406593c773fdce068719947715b25",
+    "Formalism.TameInertiaTowers.CentralOrderTwo.NegOneNeOneUnitsZmodFour": "5cdf71ad396bea0c89934c76ab6b56f275484c2b",
+    "Formalism.TameInertiaTowers.CentralOrderTwo.NormalOrderTwoCentral": "5ae02bbff569cc81429aeda5288a89f209eb212b",
+    "Formalism.TameInertiaTowers.CentralOrderTwo.OddEqOneOfSubOneMem": "c56807358b7d58ca453b38f36caf9d95171da024",
+    "Formalism.TameInertiaTowers.CentralOrderTwo.OrderOfThreeUnitsTwoPow": "cf936399084888caa77323d7ec5279522b80d193",
+    "Formalism.TameInertiaTowers.CentralOrderTwo.TwoAdic": "2173bf14adad58cd2c63546e0dd11e37f0c7fb91",
+    "Formalism.TameInertiaTowers.InvLength": "d5a6d9bd8abacbff681dec72ed633aeaffa1674b",
+    "Formalism.TameInertiaTowers.StatementField": "eaf8a919c8d6b0bd24bd1286a80c2da9444f86e2",
+    "Formalism.TameInertiaTowers.StatementGroup": "99c63b2f0bc7688702d4f66a7db04665900d2798",
+    "Formalism.TameInertiaTowers.TowerFieldFoundations": "c291cbeb56190a5281b7334e90068bb8fd81edf7",
+    "Formalism.ThetaLiftIndependence.Statement": "136298e85f770d96be1d5cfcaf2ae9cfdaa2fbb1",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.DualWByLettersExtended": "658c528a2def1d52e00b646988c009b655e7e32a",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.EtaleClosedPointLiftsSimpleRootsMonic": "bd05f902452938b1067c7dd6332a5482748b4b09",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.GrothendieckTopDegree": "15c001d80a1abb6a415c92d41da54590862ba7ec",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.Letters": "a47e6192619acd4eeecd68b029bea3101e2313f2",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.LiftExistsSecondCase": "7ccdcfd204519a8b0678e9b9c6237723a2983cb5",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.MemSpanOfFrobeniusMemSpan": "bc1c78f58e265ed6cecb1473e315d97e6f245dd8",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.PhiOnto": "7688bd8e5fc73eeb0fad3adbb438b0ddb8099693",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.ResidueQuotientHolds": "cc0113d9c79f894cfa88b91d6b2e2205fd92462d",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.ResidueSeriesExpansionHolds": "988076671e5ab8b22b03eb436eeecb544275e6f9",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.SecondDescentFreePartHolds": "b372e0e7cd535932a07a596f38a7187edb8a1817",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.SecondDescentStatementHolds": "504978709baea3e427f7dfae66ac7a9266dd5ff4",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.SizeBoundSecondCase": "9dae84ddc3789047d44d2bce387caa51a599cb97",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.SumVal": "430e7dd0921b4884be22bc10ac9e709b60e46b18",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.TotallyRealRoots": "09bbdfa2104fecc881dcebc0e407b06ca35b3f7a",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.UnitLemmaCaseALevelZero": "28202170b32e13e0902b61364ebed9bb36bedf43",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.UnitLemmaPrimeExtensionHolds": "282d5b1f495aacc754c6c5c00072aa9007d19766",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.StatWPrimeExt": "394570fbe5b3ffdc778228c3b691f4ef9cbac900",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.Statement": "a266b3de4926412f6984ce2be92b56aaa866b9f9",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.StatementLetters": "57ea98aa7b875683997e5ec3b79d57998001de1c",
+    "Formalism.WachLatticeTwists.LagrangeExtensionCocycles.StatementTop": "abbd0a569c4ae996f47286bf152d919579c61f99",
+    "Formalism.WachModuleLifts.StatementW": "dd5e4c3f3f478f9eb2569614bed8213b15095bc7",
+    "Formalism.WeaklyAdmissibleFiltrations.CocyclesFunctorial": "2706d45b48d0e2de2a16faa24164d55effeaa5f9",
+    "Formalism.WeaklyAdmissibleFiltrations.CrystallineStableLifts.DPotCrisStableAndExistsPotentiallyCrystallineDat": "ff7abd57d67a919dfb0cd43da4c7ca01e8ea2efd",
+    "Formalism.WeaklyAdmissibleFiltrations.CrystallineStableLifts.ExLattice": "8b36d8b11b4a342fb7ff97b2320069cd17ae165d",
+    "Formalism.WeaklyAdmissibleFiltrations.CrystallineStableLifts.ExistsPeriodRingDataHolds": "816387d806b33b2a2e4c9814ca55fc323080316e",
+    "Formalism.WeaklyAdmissibleFiltrations.CrystallineStableLifts.Galois": "44d35967114a601e89b822084a2186ba7f92c6e6",
+    "Formalism.WeaklyAdmissibleFiltrations.CrystallineStableLifts.TrivCrys": "c40045c313b8d2f3de972d206fbaee00f797fb42",
+    "Formalism.WeaklyAdmissibleFiltrations.CrystallineStableLifts.WachCol": "3e1b425b9a1df1a419ab430e7903a9ea360f2977",
+    "Formalism.WeaklyAdmissibleFiltrations.PhtGalois": "ac6f68fa592229d79d83e0c2a5688a9bad63098c",
+    "Formalism.WeaklyAdmissibleFiltrations.Statement": "4b75d77e885fd2f89f76c3512b7b3049a3a6dae9",
+    "Formalism.WeaklyAdmissibleFiltrations.StatementPC": "a2a1435b717068ec224b0abade3677986c6339e0",
+    "Formalism.WeaklyAdmissibleFiltrations.StatementTor": "9ea1f557e03e3a380c77795beec6ac140200283c",
+    "Formalism.WindowSums.AnnihilatorPolynomials.DistinctTerms": "05f741cf2a392be6fdb13352e2f87944ef4d68b8",
+    "Formalism.WindowSums.AnnihilatorPolynomials.EvalOneSmulDecomposition": "67594f877411fb9568c2074f8550a084d05bb973",
+    "Formalism.WindowSums.AnnihilatorPolynomials.Lagrange": "a74daf9168016cb5b5d1377e81ecb59a1b00bc21",
+    "Formalism.WindowSums.AnnihilatorPolynomials.ValProd": "c3905cab6b234dde8b738f3a08de1893292ced98",
+    "Formalism.WindowSums.AnnihilatorPolynomials.WindowSum": "89d9144979185a74b2319b1967993078089a1fcf",
+    "Formalism.WindowSums.AnnihilatorPolynomials.ZpowVal": "7ea9f4c87b0a65b3457ccd2e1ab2df769c20230c",
+    "Formalism.WindowSums.PowerSeriesRelationList": "afe2d1af1c634c4b2f7500c7ea54384817d755a5",
+    "Formalism.WindowSums.Statement": "adf453d1af3cd690297874f14036bcf26213f069",
+    "Lemmata.FirstBlockLemmaE.Imports": "3ef7827d713d34018fa4002c3c363bb01b5a8b02",
+    "Lemmata.GeneralBFactRightTerForm.Imports": "d25d07df1485f57437d1a63ecedf42e993ca23db",
+    "ReciprocityTheory.BasicDefinitions.AdRep": "e36feed3b79985df0e02cfb8ff61afce3a62b51a",
+    "ReciprocityTheory.BasicDefinitions.ExistsUnique": "b112172f8f6c1644ab43f378d99eb9285ab1e095",
+    "ReciprocityTheory.GaloisValuations.ContinuousConstSMulQuotient": "6c44b954fa3e8795269e1b87f70dea84cf1174e2",
+    "ReciprocityTheory.GaloisValuations.Global": "510f369594b4652bcc7f43150420f9bae0e1695e",
+    "ReciprocityTheory.GaloisValuations.GlobalA": "b97c3e758503e9d98ffced6a9f74d2238b520725",
+    "ReciprocityTheory.GaloisValuations.GlobalB": "ed8c93955fcf98d16cc4a939cb01ce7212531ba4",
+    "ReciprocityTheory.GaloisValuations.SeparatedDvrSecondCohomologyMem": "5e4cb39a95be8f2f1d7eb5fef391fb956aac140e",
+    "ReciprocityTheory.Hypotheses.GalCoh": "f4f1d222525e8f3e0df76e897210c4f50a014871",
+    "ReciprocityTheory.Hypotheses.GalCohDefs": "19592b41d0c8cca1fbb26ee43bfe21a1fafe1537"
+  },
+  "target_artifacts_restored": false
+}

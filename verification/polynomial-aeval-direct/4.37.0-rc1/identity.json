@@ -1,0 +1,28 @@
+{
+  "base": "c900e67c2fcd1fdb041685820bbd2b867fbc5a4b",
+  "head": "5de976dfd04ebedcac15ba640c700116c536e9ca",
+  "mathlib": "31ce06eaadf4a200c0e1407c5f10953cf606b8f8",
+  "lean": "Lean (version 4.37.0-rc1, x86_64-unknown-linux-gnu, commit 0b77e12952ad39077d80d8bd6b66d601f225c321, Release)",
+  "lake": "Lake version 5.0.0-src+0b77e12 (Lean version 4.37.0-rc1)",
+  "protected_sha256": {
+    "src/Challenge.lean": "a3cebbf30be6b9268a0ed413c9bbc256dfa9f4bfa04f1a75f144d135da5e21a5",
+    "src/Statements.lean": "3ab58a3af2384def08e6f71531c33939a83a1408e31ac5b0e75bf4afa488a463",
+    "comparator.json": "8ea890e6ccda9cf3983ada343af18a41d12542036875a3936e7925ed5b1582ff",
+    "lean-toolchain": "f11739c25d1640e2b3fda8a98af6d64e97d7b2b1c99840535587a9079b3afee7",
+    "lake-manifest.json": "6b5ad855ab2f8544071569928d1b84e8e6be14636e7b2809e7ccabb3937934ee",
+    "lakefile.toml": "8672b307e6ff65f6d3ffcd33f18b30bc2a7f4212cd4d931c78a9337a8c49580d"
+  },
+  "package_heads": {
+    "mathlib": "31ce06eaadf4a200c0e1407c5f10953cf606b8f8",
+    "plausible": "0d8633efc105d6b15b59a8103614ae0291ee8827",
+    "LeanSearchClient": "146200e1ecbf7397e361475b5c0905adc5fe0670",
+    "importGraph": "cf947504529b8e2ee114e852133d13e4ac923e9b",
+    "proofwidgets": "197b8bdfd8bbfea6dff6ac04170a710b231c3aaa",
+    "aesop": "637fdbb8689a3387a82568b07355231f892144d7",
+    "Qq": "ad0c9f87cfe7b41b93446472004724a1646a22f4",
+    "batteries": "87486d547af639cb39c01f0d2f8025aa47d7dde1",
+    "Cli": "c830de39b67d5d447d854a4e390fff9bb0a9c897"
+  },
+  "full_Main_Challenge_build": "NOT RUN",
+  "comparator": "NOT RUN"
+}

@@ -1,0 +1,14 @@
+ReciprocityTheory.ChartRestriction.DS.dc_aeval_eigen.{u_1} {Y : Type u_1} [AddCommGroup Y] [Module ℂ Y]
+  {T : Module.End ℂ Y} {z : ℂ} {f : Y} (hf : T f = z • f) (p : Polynomial ℂ) :
+  ((Polynomial.aeval T) p) f = Polynomial.eval z p • f
+'ReciprocityTheory.ChartRestriction.DS.dc_aeval_eigen' depends on axioms: [propext, Classical.choice, Quot.sound]
+ReciprocityTheory.ChartRestriction.DS.dc_aeval_mem.{u_1} {Y : Type u_1} [AddCommGroup Y] [Module ℂ Y]
+  {T : Module.End ℂ Y} {S : Submodule ℂ Y} (hT : ∀ f ∈ S, T f ∈ S) (p : Polynomial ℂ) (f : Y) :
+  f ∈ S → ((Polynomial.aeval T) p) f ∈ S
+'ReciprocityTheory.ChartRestriction.DS.dc_aeval_mem' depends on axioms: [propext, Classical.choice, Quot.sound]
+Formalism.MainNotions.N.Ln34.UniversalLiftFrames.aeval_mem_of_stable.{u_1, u_2} {R : Type u_1} {M : Type u_2}
+  [CommRing R] [AddCommGroup M] [Module R M] (S : Submodule R M) (f : Module.End R M) (hf : ∀ v ∈ S, f v ∈ S)
+  (P : Polynomial R) {v : M} (hv : v ∈ S) : ((Polynomial.aeval f) P) v ∈ S
+'Formalism.MainNotions.N.Ln34.UniversalLiftFrames.aeval_mem_of_stable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

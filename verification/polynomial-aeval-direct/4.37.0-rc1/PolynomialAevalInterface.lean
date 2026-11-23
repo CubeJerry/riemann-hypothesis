@@ -1,0 +1,8 @@
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA
+import Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable
+#check ReciprocityTheory.ChartRestriction.DS.dc_aeval_eigen
+#print axioms ReciprocityTheory.ChartRestriction.DS.dc_aeval_eigen
+#check ReciprocityTheory.ChartRestriction.DS.dc_aeval_mem
+#print axioms ReciprocityTheory.ChartRestriction.DS.dc_aeval_mem
+#check Formalism.MainNotions.N.Ln34.UniversalLiftFrames.aeval_mem_of_stable
+#print axioms Formalism.MainNotions.N.Ln34.UniversalLiftFrames.aeval_mem_of_stable

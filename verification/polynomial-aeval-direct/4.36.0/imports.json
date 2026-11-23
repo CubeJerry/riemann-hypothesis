@@ -1,0 +1,38 @@
+{
+  "before": {
+    "modules": {
+      "Lemmata.PowerApplication.PowApp": {
+        "direct_imports": 1,
+        "source_mathlib_closure": 8713
+      },
+      "Lemmata.PowerMembership.PowMem": {
+        "direct_imports": 1,
+        "source_mathlib_closure": 8713
+      },
+      "ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA": {
+        "direct_imports": 2,
+        "source_mathlib_closure": 8713
+      },
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable": {
+        "direct_imports": 4,
+        "source_mathlib_closure": 8713
+      }
+    },
+    "direct_imports": 8,
+    "source_mathlib_closure": 8713
+  },
+  "after": {
+    "modules": {
+      "ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA": {
+        "direct_imports": 1,
+        "source_mathlib_closure": 8713
+      },
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable": {
+        "direct_imports": 4,
+        "source_mathlib_closure": 8713
+      }
+    },
+    "direct_imports": 5,
+    "source_mathlib_closure": 8713
+  }
+}

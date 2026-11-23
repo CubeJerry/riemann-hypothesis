@@ -1,0 +1,330 @@
+[
+  {
+    "run": 0,
+    "warmup": true,
+    "side": "before",
+    "command": [
+      "lake",
+      "--no-cache",
+      "--rehash",
+      "build",
+      "+ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA",
+      "+Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable"
+    ],
+    "wall_seconds": 22.184,
+    "built_modules": [
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable",
+      "Lemmata.PowerApplication.PowApp",
+      "Lemmata.PowerMembership.PowMem",
+      "ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA"
+    ],
+    "artifacts": {
+      "Lemmata.PowerApplication.PowApp": {
+        "olean": 19960,
+        "private": 74808,
+        "server": 1080
+      },
+      "Lemmata.PowerMembership.PowMem": {
+        "olean": 20616,
+        "private": 58464,
+        "server": 3272
+      },
+      "ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA": {
+        "olean": 107168,
+        "private": 485128,
+        "server": 6928
+      },
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable": {
+        "olean": 352568,
+        "private": 515568,
+        "server": 12128
+      }
+    },
+    "unit_artifacts": {
+      "olean": 500312,
+      "private": 1133968,
+      "server": 23408
+    }
+  },
+  {
+    "run": 0,
+    "warmup": true,
+    "side": "after",
+    "command": [
+      "lake",
+      "--no-cache",
+      "--rehash",
+      "build",
+      "+ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA",
+      "+Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable"
+    ],
+    "wall_seconds": 17.053,
+    "built_modules": [
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable",
+      "ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA"
+    ],
+    "artifacts": {
+      "ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA": {
+        "olean": 106904,
+        "private": 464504,
+        "server": 4952
+      },
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable": {
+        "olean": 352520,
+        "private": 516248,
+        "server": 2896
+      }
+    },
+    "unit_artifacts": {
+      "olean": 459424,
+      "private": 980752,
+      "server": 7848
+    }
+  },
+  {
+    "run": 1,
+    "warmup": false,
+    "side": "before",
+    "command": [
+      "lake",
+      "--no-cache",
+      "--rehash",
+      "build",
+      "+ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA",
+      "+Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable"
+    ],
+    "wall_seconds": 20.757,
+    "built_modules": [
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable",
+      "Lemmata.PowerApplication.PowApp",
+      "Lemmata.PowerMembership.PowMem",
+      "ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA"
+    ],
+    "artifacts": {
+      "Lemmata.PowerApplication.PowApp": {
+        "olean": 19960,
+        "private": 74808,
+        "server": 1080
+      },
+      "Lemmata.PowerMembership.PowMem": {
+        "olean": 20616,
+        "private": 58464,
+        "server": 3272
+      },
+      "ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA": {
+        "olean": 107168,
+        "private": 485128,
+        "server": 6928
+      },
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable": {
+        "olean": 352568,
+        "private": 515568,
+        "server": 12128
+      }
+    },
+    "unit_artifacts": {
+      "olean": 500312,
+      "private": 1133968,
+      "server": 23408
+    }
+  },
+  {
+    "run": 1,
+    "warmup": false,
+    "side": "after",
+    "command": [
+      "lake",
+      "--no-cache",
+      "--rehash",
+      "build",
+      "+ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA",
+      "+Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable"
+    ],
+    "wall_seconds": 16.642,
+    "built_modules": [
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable",
+      "ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA"
+    ],
+    "artifacts": {
+      "ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA": {
+        "olean": 106904,
+        "private": 464504,
+        "server": 4952
+      },
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable": {
+        "olean": 352520,
+        "private": 516248,
+        "server": 2896
+      }
+    },
+    "unit_artifacts": {
+      "olean": 459424,
+      "private": 980752,
+      "server": 7848
+    }
+  },
+  {
+    "run": 2,
+    "warmup": false,
+    "side": "after",
+    "command": [
+      "lake",
+      "--no-cache",
+      "--rehash",
+      "build",
+      "+ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA",
+      "+Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable"
+    ],
+    "wall_seconds": 16.434,
+    "built_modules": [
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable",
+      "ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA"
+    ],
+    "artifacts": {
+      "ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA": {
+        "olean": 106904,
+        "private": 464504,
+        "server": 4952
+      },
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable": {
+        "olean": 352520,
+        "private": 516248,
+        "server": 2896
+      }
+    },
+    "unit_artifacts": {
+      "olean": 459424,
+      "private": 980752,
+      "server": 7848
+    }
+  },
+  {
+    "run": 2,
+    "warmup": false,
+    "side": "before",
+    "command": [
+      "lake",
+      "--no-cache",
+      "--rehash",
+      "build",
+      "+ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA",
+      "+Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable"
+    ],
+    "wall_seconds": 20.448,
+    "built_modules": [
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable",
+      "Lemmata.PowerApplication.PowApp",
+      "Lemmata.PowerMembership.PowMem",
+      "ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA"
+    ],
+    "artifacts": {
+      "Lemmata.PowerApplication.PowApp": {
+        "olean": 19960,
+        "private": 74808,
+        "server": 1080
+      },
+      "Lemmata.PowerMembership.PowMem": {
+        "olean": 20616,
+        "private": 58464,
+        "server": 3272
+      },
+      "ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA": {
+        "olean": 107168,
+        "private": 485128,
+        "server": 6928
+      },
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable": {
+        "olean": 352568,
+        "private": 515568,
+        "server": 12128
+      }
+    },
+    "unit_artifacts": {
+      "olean": 500312,
+      "private": 1133968,
+      "server": 23408
+    }
+  },
+  {
+    "run": 3,
+    "warmup": false,
+    "side": "before",
+    "command": [
+      "lake",
+      "--no-cache",
+      "--rehash",
+      "build",
+      "+ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA",
+      "+Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable"
+    ],
+    "wall_seconds": 20.545,
+    "built_modules": [
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable",
+      "Lemmata.PowerApplication.PowApp",
+      "Lemmata.PowerMembership.PowMem",
+      "ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA"
+    ],
+    "artifacts": {
+      "Lemmata.PowerApplication.PowApp": {
+        "olean": 19960,
+        "private": 74808,
+        "server": 1080
+      },
+      "Lemmata.PowerMembership.PowMem": {
+        "olean": 20616,
+        "private": 58464,
+        "server": 3272
+      },
+      "ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA": {
+        "olean": 107168,
+        "private": 485128,
+        "server": 6928
+      },
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable": {
+        "olean": 352568,
+        "private": 515568,
+        "server": 12128
+      }
+    },
+    "unit_artifacts": {
+      "olean": 500312,
+      "private": 1133968,
+      "server": 23408
+    }
+  },
+  {
+    "run": 3,
+    "warmup": false,
+    "side": "after",
+    "command": [
+      "lake",
+      "--no-cache",
+      "--rehash",
+      "build",
+      "+ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA",
+      "+Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable"
+    ],
+    "wall_seconds": 16.442,
+    "built_modules": [
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable",
+      "ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA"
+    ],
+    "artifacts": {
+      "ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.DecompA": {
+        "olean": 106904,
+        "private": 464504,
+        "server": 4952
+      },
+      "Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable": {
+        "olean": 352520,
+        "private": 516248,
+        "server": 2896
+      }
+    },
+    "unit_artifacts": {
+      "olean": 459424,
+      "private": 980752,
+      "server": 7848
+    }
+  }
+]
