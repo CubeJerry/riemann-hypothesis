@@ -1,0 +1,98 @@
+name: LamCopy scoped verification
+run-name: LamCopy before and after on Lean 4.36.0
+on:
+  push:
+    branches: [verify/lamcopy-20261123]
+    paths:
+      - .github/workflows/lamcopy-verify.yml
+      - .github/scripts/lamcopy-verify.py
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: lamcopy-scoped-verification
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+    env:
+      ELAN_TOOLCHAIN: leanprover/lean4:v4.36.0
+      LEAN_NUM_THREADS: '1'
+      LEAN_ABORT_ON_PANIC: '1'
+    steps:
+      - name: Check out the verification harness
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          path: harness
+          persist-credentials: false
+          sparse-checkout: .github/scripts/lamcopy-verify.py
+          sparse-checkout-cone-mode: false
+      - name: Check out exact upstream baseline
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: leanprover-community/riemann-hypothesis
+          ref: c592e91eb8f41bfd149227c09460fae0c17bf3c5
+          path: baseline
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Check out exact candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: CubeJerry/riemann-hypothesis
+          ref: acb08b84d95e0f40647acb5bfdfab6696365cbf0
+          path: candidate
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Prepare official Lean and unprivileged sandbox
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/lamcopy-results" "$RUNNER_TEMP/lamcopy-bin"
+          df -h "$RUNNER_TEMP"
+          if ! command -v bwrap >/dev/null; then
+            mkdir "$RUNNER_TEMP/lamcopy-bwrap"
+            cd "$RUNNER_TEMP/lamcopy-bwrap"
+            apt-get download bubblewrap
+            dpkg-deb -x ./bubblewrap_*.deb extracted
+            cp extracted/usr/bin/bwrap "$RUNNER_TEMP/lamcopy-bin/bwrap"
+            export PATH="$RUNNER_TEMP/lamcopy-bin:$PATH"
+            printf '%s\n' "$RUNNER_TEMP/lamcopy-bin" >> "$GITHUB_PATH"
+          fi
+          bwrap --unshare-all --ro-bind / / -- /usr/bin/true
+          curl --proto '=https' --tlsv1.2 -fsSL --retry 3 https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          printf '%s\n' "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0
+      - name: Verify cached dependencies and rebuild source targets
+        shell: bash
+        run: |
+          set -euo pipefail
+          ulimit -n 65536
+          python3 harness/.github/scripts/lamcopy-verify.py --base baseline --candidate candidate --output "$RUNNER_TEMP/lamcopy-results" --state "$RUNNER_TEMP/lamcopy-work"
+      - name: Upload evidence including failures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: lamcopy-lean-4.36-evidence
+          path: ${{ runner.temp }}/lamcopy-results
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Explain verification scope
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path(os.environ['RUNNER_TEMP'])/'lamcopy-results/result.json'
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a')as out:
+              print('## LamCopy scoped diagnostic',file=out)
+              print('Exact pins; cached dependencies; stock Lake source target rebuilds.',file=out)
+              print('No complete Main/Challenge build or Comparator result is claimed.',file=out)
+              if p.exists():
+                  r=json.loads(p.read_text());print('```json',file=out)
+                  print(json.dumps({k:r.get(k)for k in ['status','error','base_sha','candidate_sha','elapsed_seconds']},indent=2),file=out)
+                  print('```',file=out)
+              else: print('Preparation failed before verification; inspect job logs.',file=out)
+          PY
