@@ -10,7 +10,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: lamcopy-185-scoped-verification
+  group: lamcopy-185-scoped-verification-${{ github.sha }}
   cancel-in-progress: false
 jobs:
   verify:
