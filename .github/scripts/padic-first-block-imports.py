@@ -170,7 +170,28 @@ def main():
                 )
                 assert len({sample["olean_bytes"] for sample in data["samples"]}) == 1
             path.write_bytes(sources["after"][module])
+        result["consumer_builds"] = {}
+        for importer in result["direct_project_importers"]:
+            name = ".".join(Path(importer).relative_to("src").with_suffix("").parts)
+            result["consumer_builds"][name] = compile_target(name, "after", 0, output)
         result["status"] = "passed"
+        summary = {
+            "status": result["status"],
+            "lean_version": result["lean_version"],
+            "cpu": result["cpu"],
+            "targets": {
+                module: {variant: {
+                    "direct": len(data["direct_imports"]),
+                    "mathlib": data["reachable_mathlib_modules"],
+                    "wall_seconds": data["median_wall_seconds"],
+                    "olean_bytes": data["samples"][0]["olean_bytes"],
+                    "warnings": data["samples"][0]["warnings"],
+                } for variant, data in versions.items()}
+                for module, versions in result["targets"].items()
+            },
+            "consumer_builds": result["consumer_builds"],
+        }
+        print("BENCHMARK_RESULT", json.dumps(summary), flush=True)
     except Exception as error:
         result.update(status="failed", error=str(error))
         raise
