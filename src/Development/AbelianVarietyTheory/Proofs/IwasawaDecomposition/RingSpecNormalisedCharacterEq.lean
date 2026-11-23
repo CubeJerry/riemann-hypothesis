@@ -2,7 +2,7 @@ module
 
 public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StrictHenselianAcyclic
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.SignAtBasePlaceEqEmbedding
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CopyAll
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NoFormsOff
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PlaceModelImp
 
@@ -17,21 +17,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 set_option synthInstance.maxHeartbeats 400000
 
 namespace GlobalTheory.HeightCounting.SideCopy
-
-structure CopyAll (D D' : D7) (ι : D.what₂.LL →+* D'.what₂.LL) (e : ↥D'.LL0 ≃+* ↥D.LL0) : Prop where
-  cp : CopyTw D D' ι e
-  jL : HEq D.ntw.jL D'.ntw.jL
-  s2 : HEq D.ntw.s2 D'.ntw.s2
-  lamG : HEq D.ntw.lamG D'.ntw.lamG
-  Xv : HEq D.ntw.Xv D'.ntw.Xv
-  qs : HEq D.ntw.qs D'.ntw.qs
-  pl : HEq D.naut.plGw D'.naut.plGw
-
-structure SameFrame {D D' : D7} (cf : CharFrame D) (cf' : CharFrame D') : Prop where
-  mu0 : HEq cf.mu0 cf'.mu0
-  eta : HEq cf.eta cf'.eta
-  del : HEq cf.del cf'.del
-  del' : HEq cf.del' cf'.del'
 
 structure RingPart (D : D7) (cf : CharFrame D) (low : Finset ℕ) where
   twF : TwFrameC D
