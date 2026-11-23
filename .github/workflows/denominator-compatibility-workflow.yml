@@ -1,0 +1,93 @@
+name: Denominator compatibility verification
+on:
+  push:
+    branches: [verify/localization-span-denominators]
+    paths: [.github/workflows/denominator-compatibility-workflow.yml, .github/scripts/denominator-compatibility-harness.py]
+permissions:
+  contents: read
+jobs:
+  verify:
+    if: github.repository == 'CubeJerry/riemann-hypothesis'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      LEAN_NUM_THREADS: '1'
+      LEAN_ABORT_ON_PANIC: '1'
+      LAKE_RESTORE_ARTIFACTS: 'false'
+      LAKE_ARTIFACT_CACHE: 'false'
+      ELAN_TOOLCHAIN: leanprover/lean4:v4.36.0
+      BASE: 4f5b851cae6872352482cec54ae6f85ff9bae2c5
+      HEAD: c76ccd9231db91a362173d33dcd68caf1230fa9a
+      MATHLIB: fc4f59e577feb1a4956671bc04ac18aaaf8cd842
+      LEAN_COMMIT: 611c117bfaf7b7ae1cfcf246ce6fba31e8f509e9
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          path: harness
+          sparse-checkout: .github/scripts/denominator-compatibility-harness.py
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: c76ccd9231db91a362173d33dcd68caf1230fa9a
+          path: source
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Install locked Lean toolchain and fetch the 42 required Mathlib roots
+        working-directory: source
+        shell: bash
+        env:
+          MATHLIB_CACHE_GET_URL: https://cache.mathlib.org/mathlib4
+          BENCH_OUTPUT: ${{ runner.temp }}/denominator-compatibility
+        run: |
+          git fetch --depth=1 origin "$BASE"
+          curl --proto '=https' --tlsv1.2 -fsSL --retry 3 https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          export PATH="$HOME/.elan/bin:$PATH"
+          printf '%s\n' "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          elan toolchain install "$ELAN_TOOLCHAIN"
+          ulimit -n 65536
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          import re
+          import subprocess
+
+          paths = [
+              'src/Lemmata/GeneralBFactThirdBisAlt/Imports.lean',
+              'src/Lemmata/GeneralBFactSecondBisAlt/Imports.lean',
+          ]
+          roots = set()
+          for revision in [os.environ['BASE'], os.environ['HEAD']]:
+              for path in paths:
+                  source = subprocess.check_output(['git', 'show', f'{revision}:{path}'], text=True)
+                  header, marker, _ = source.partition('@[expose] public section')
+                  assert marker, (revision, path, 'missing expected header terminator')
+                  for line in header.splitlines():
+                      line = line.strip()
+                      if not line or line == 'module':
+                          continue
+                      match = re.fullmatch(r'(?:public )?import (Mathlib(?:\.[\w]+)+)', line)
+                      assert match, (revision, path, 'unexpected header line', line)
+                      roots.add(match.group(1))
+          assert len(roots) == 42, (len(roots), sorted(roots))
+          report = Path(os.environ['BENCH_OUTPUT'])
+          report.mkdir(parents=True, exist_ok=True)
+          (report / 'mathlib-cache-roots.txt').write_text('\n'.join(sorted(roots)) + '\n')
+          subprocess.run(['lake', 'exe', 'mathlib/cache', 'get', *sorted(roots)], check=True)
+          PY
+      - name: Benchmark two changed modules and replay their compiled interfaces
+        working-directory: source
+        shell: bash
+        env:
+          BENCH_OUTPUT: ${{ runner.temp }}/denominator-compatibility
+        run: |
+          ulimit -n 65536
+          python3 ../harness/.github/scripts/denominator-compatibility-harness.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: denominator-compatibility-4.36.0
+          path: ${{ runner.temp }}/denominator-compatibility
+          if-no-files-found: warn
+          retention-days: 14
