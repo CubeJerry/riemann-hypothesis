@@ -22,7 +22,6 @@ jobs:
             head: ec124be69ca08455e8fd9bd64f3cc8a34231e0e1
             mathlib: 31ce06eaadf4a200c0e1407c5f10953cf606b8f8
     env:
-      BENCH_OUTPUT: ${{ runner.temp }}/padic-import-bench
       ELAN_TOOLCHAIN: leanprover/lean4:v${{ matrix.lane }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -55,6 +54,7 @@ jobs:
       - name: Build and profile the three changed modules
         working-directory: source
         env:
+          BENCH_OUTPUT: ${{ runner.temp }}/padic-import-bench
           BASE: ${{ matrix.base }}
           HEAD: ${{ matrix.head }}
           MATHLIB: ${{ matrix.mathlib }}
@@ -63,6 +63,6 @@ jobs:
         if: always()
         with:
           name: padic-first-block-imports-${{ matrix.lane }}
-          path: ${{ env.BENCH_OUTPUT }}
+          path: ${{ runner.temp }}/padic-import-bench
           if-no-files-found: warn
           retention-days: 14
