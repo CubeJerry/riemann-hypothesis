@@ -1,0 +1,266 @@
+{
+  "4.36.0": {
+    "status": "scoped_verification_pass",
+    "base_sha": "c592e91eb8f41bfd149227c09460fae0c17bf3c5",
+    "candidate_sha": "acb08b84d95e0f40647acb5bfdfab6696365cbf0",
+    "lean_version": "Lean (version 4.36.0, x86_64-unknown-linux-gnu, commit 611c117bfaf7b7ae1cfcf246ce6fba31e8f509e9, Release)",
+    "manifest_sha256": "ee003c5c7a9b2b2a82a142b6633916661c07117199dd143d94d1af63910237df",
+    "protected_files_unchanged": [
+      "src/Challenge.lean",
+      "src/Statements.lean",
+      "comparator.json",
+      "export-targets.txt",
+      "comparator/FormalConjecturesChallenge.lean",
+      "comparator/formal-conjectures.json",
+      "comparator/formal-conjectures-export-targets.txt"
+    ],
+    "elapsed_seconds": 2640.491998666,
+    "full_build": false,
+    "comparator_run": false,
+    "run_id": 45131872717,
+    "artifact_zip_sha256": "4a84d61128a92eac395160ae134f37a1f88032152f53891b73c654ae21a2e08f",
+    "cases": {
+      "before": {
+        "project_closure_count": 13571,
+        "modules": {
+          "Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RingSpecNormalisedCharacterEq": {
+            "direct_import_count": 5,
+            "project_ancestor_count": 13143,
+            "source_sha256": "16ea2e7141cb134f608a9a78a734b5ecdf23ba5cee3472eedffca9c464a3556d",
+            "olean_bytes": 461512,
+            "build_seconds": [
+              127.83067057900007
+            ],
+            "median_seconds": 127.83067057900007,
+            "lake_reported_seconds": [
+              "26s"
+            ]
+          },
+          "Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LamCopy": {
+            "direct_import_count": 3,
+            "project_ancestor_count": 13144,
+            "source_sha256": "6d62b98551dbf795cec1de0e7c6bc50a7fd0558ead0048deb3c779a215f8e7fc",
+            "olean_bytes": 20488,
+            "build_seconds": [
+              159.03141694500027,
+              156.32922626000027,
+              156.83107719600002
+            ],
+            "median_seconds": 156.83107719600002,
+            "lake_reported_seconds": [
+              "64s",
+              "64s",
+              "63s"
+            ]
+          },
+          "Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExportTieMove": {
+            "direct_import_count": 11,
+            "project_ancestor_count": 13570,
+            "source_sha256": "184b79c9db4b2b0d1102bda3be99483bbbefebf6d918f1846e7a121eaf73c073",
+            "olean_bytes": 355088,
+            "build_seconds": [
+              109.27729511100006
+            ],
+            "median_seconds": 109.27729511100006,
+            "lake_reported_seconds": [
+              "10s"
+            ]
+          }
+        }
+      },
+      "after": {
+        "project_closure_count": 13572,
+        "modules": {
+          "Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CopyAll": {
+            "direct_import_count": 1,
+            "project_ancestor_count": 3256,
+            "source_sha256": "cf428eea8ec47346f7ae1bdd0aa972694b7ffc1a0597f050a5e2e750d57f8d40",
+            "olean_bytes": 95600,
+            "build_seconds": [
+              56.16947966299995
+            ],
+            "median_seconds": 56.16947966299995,
+            "lake_reported_seconds": [
+              "3.6s"
+            ]
+          },
+          "Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RingSpecNormalisedCharacterEq": {
+            "direct_import_count": 5,
+            "project_ancestor_count": 13144,
+            "source_sha256": "39a1bc3e3595d25b1b52db87e1f1037148858db93d1f3e618fbf642c2f38a985",
+            "olean_bytes": 404496,
+            "build_seconds": [
+              108.77624073299921
+            ],
+            "median_seconds": 108.77624073299921,
+            "lake_reported_seconds": [
+              "14s"
+            ]
+          },
+          "Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LamCopy": {
+            "direct_import_count": 3,
+            "project_ancestor_count": 3259,
+            "source_sha256": "314d95d5cfb831d54a3108cf3a033f743e0f216d1ba420c407f7ae72b82e7f99",
+            "olean_bytes": 20536,
+            "build_seconds": [
+              102.27483068899983,
+              96.97578127999986,
+              98.27448403300059
+            ],
+            "median_seconds": 98.27448403300059,
+            "lake_reported_seconds": [
+              "51s",
+              "47s",
+              "48s"
+            ]
+          },
+          "Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExportTieMove": {
+            "direct_import_count": 11,
+            "project_ancestor_count": 13571,
+            "source_sha256": "184b79c9db4b2b0d1102bda3be99483bbbefebf6d918f1846e7a121eaf73c073",
+            "olean_bytes": 355088,
+            "build_seconds": [
+              107.27704593099952
+            ],
+            "median_seconds": 107.27704593099952,
+            "lake_reported_seconds": [
+              "9.0s"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "4.37.0-rc1": {
+    "status": "scoped_verification_pass",
+    "base_sha": "9c9f665ed79ce0fa8da61bd803b7a4bf1ad62ed0",
+    "candidate_sha": "4902a2ece0f1b8058752b5a4d3b853e675de52f0",
+    "lean_version": "Lean (version 4.37.0-rc1, x86_64-unknown-linux-gnu, commit 0b77e12952ad39077d80d8bd6b66d601f225c321, Release)",
+    "manifest_sha256": "6b5ad855ab2f8544071569928d1b84e8e6be14636e7b2809e7ccabb3937934ee",
+    "protected_files_unchanged": [
+      "src/Challenge.lean",
+      "src/Statements.lean",
+      "comparator.json",
+      "export-targets.txt",
+      "comparator/FormalConjecturesChallenge.lean",
+      "comparator/formal-conjectures.json",
+      "comparator/formal-conjectures-export-targets.txt"
+    ],
+    "elapsed_seconds": 1402.308593197,
+    "full_build": false,
+    "comparator_run": false,
+    "run_id": 45134044951,
+    "artifact_zip_sha256": "bbf3d99451570c7c0d140309bb6c5f5f4c9eaa79c4d55f0861c3cbbda77b04f1",
+    "cases": {
+      "before": {
+        "project_closure_count": 3594,
+        "modules": {
+          "Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RingSpecNormalisedCharacterEq": {
+            "direct_import_count": 35,
+            "project_ancestor_count": 1913,
+            "source_sha256": "7d48de0b5ed5979ce9e9098b924ba635541fd22280e9d42748ffbdfda8b5059f",
+            "olean_bytes": 470136,
+            "build_seconds": [
+              41.37209198599999
+            ],
+            "median_seconds": 41.37209198599999,
+            "lake_reported_seconds": [
+              "13s"
+            ]
+          },
+          "Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LamCopy": {
+            "direct_import_count": 37,
+            "project_ancestor_count": 2144,
+            "source_sha256": "67a89feb2846f56275132fb7b5919ab76930d30c079fba3369835d59edc8ce75",
+            "olean_bytes": 26688,
+            "build_seconds": [
+              85.476702445,
+              88.07320102099993,
+              87.77743387999999
+            ],
+            "median_seconds": 87.77743387999999,
+            "lake_reported_seconds": [
+              "59s",
+              "59s",
+              "59s"
+            ]
+          },
+          "Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExportTieMove": {
+            "direct_import_count": 43,
+            "project_ancestor_count": 3593,
+            "source_sha256": "e27a749da6e4e477ebe46555b113aa16f83fa256f09368185135d439cb7738ed",
+            "olean_bytes": 360712,
+            "build_seconds": [
+              39.87305106000008
+            ],
+            "median_seconds": 39.87305106000008,
+            "lake_reported_seconds": [
+              "5.7s"
+            ]
+          }
+        }
+      },
+      "after": {
+        "project_closure_count": 3595,
+        "modules": {
+          "Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CopyAll": {
+            "direct_import_count": 1,
+            "project_ancestor_count": 1779,
+            "source_sha256": "cf428eea8ec47346f7ae1bdd0aa972694b7ffc1a0597f050a5e2e750d57f8d40",
+            "olean_bytes": 96768,
+            "build_seconds": [
+              30.034945151999864
+            ],
+            "median_seconds": 30.034945151999864,
+            "lake_reported_seconds": [
+              "2.4s"
+            ]
+          },
+          "Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RingSpecNormalisedCharacterEq": {
+            "direct_import_count": 35,
+            "project_ancestor_count": 1914,
+            "source_sha256": "a91f1109ebb9441f2963e2efa2dcd35ff44d4428fe820fcc4ec73e069b4ad796",
+            "olean_bytes": 412168,
+            "build_seconds": [
+              45.77334187799988
+            ],
+            "median_seconds": 45.77334187799988,
+            "lake_reported_seconds": [
+              "12s"
+            ]
+          },
+          "Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LamCopy": {
+            "direct_import_count": 16,
+            "project_ancestor_count": 1782,
+            "source_sha256": "45c68f489ff182ce2dc7b01220653b276d0876d4806700077dbebbf0d7d72916",
+            "olean_bytes": 23752,
+            "build_seconds": [
+              72.57309553999994,
+              71.675926721,
+              72.77401403099998
+            ],
+            "median_seconds": 72.57309553999994,
+            "lake_reported_seconds": [
+              "49s",
+              "46s",
+              "46s"
+            ]
+          },
+          "Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExportTieMove": {
+            "direct_import_count": 43,
+            "project_ancestor_count": 3594,
+            "source_sha256": "e27a749da6e4e477ebe46555b113aa16f83fa256f09368185135d439cb7738ed",
+            "olean_bytes": 360712,
+            "build_seconds": [
+              39.271111223999924
+            ],
+            "median_seconds": 39.271111223999924,
+            "lake_reported_seconds": [
+              "6.0s"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
