@@ -5,7 +5,7 @@ from pathlib import Path
 from types import SimpleNamespace
 BASE='9c9f665ed79ce0fa8da61bd803b7a4bf1ad62ed0'
 CACHE_REV='2ef232d2992c67d457089833b7ec9e0c262f9370'
-HEAD='77e1f070c61c78f9b2d80fb34d38351129946d2e'
+HEAD='4902a2ece0f1b8058752b5a4d3b853e675de52f0'
 TOOLCHAIN='leanprover/lean4:v4.37.0-rc1'
 PREFIX='Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.'
 TARGETS=[PREFIX+x for x in ['CopyAll','RingSpecNormalisedCharacterEq','LamCopy','ExportTieMove']]

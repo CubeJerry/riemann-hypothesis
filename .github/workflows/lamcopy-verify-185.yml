@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: CubeJerry/riemann-hypothesis
-          ref: 77e1f070c61c78f9b2d80fb34d38351129946d2e
+          ref: 4902a2ece0f1b8058752b5a4d3b853e675de52f0
           path: candidate
           persist-credentials: false
           fetch-depth: 1
