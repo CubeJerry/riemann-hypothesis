@@ -71,8 +71,11 @@ def main(args):
             (project/'.lake/packages').mkdir(parents=True);overrides=ci.package_overrides(project,control)
             opts=SimpleNamespace(baseline_manifest=public/'modules.jsonl.gz',baseline_manifest_sha256=prep.MANIFEST_SHA,baseline_map=public/'outputs.jsonl',baseline_cache=public)
             _,warm,_=ci.baseline(opts,project,cache,modules=set(cone))
-            # Official package sources/artifacts are read-only: fail on a missing output.
-            sandbox=ci.sandbox(tc,project,packages,cache,result,control,1)
+            # Lake --rehash writes hash sidecars; use private dependency copies.
+            private=ci.private_package_builds(project,packages,work/'dependency-builds')
+            budget()
+            sandbox=ci.sandbox(tc,project,packages,cache,result,control,1,private)
+            sandbox=sandbox[:-2]+['--setenv','LEAN_ABORT_ON_PANIC','1']+sandbox[-2:]
             if warm:subprocess.run(sandbox+['/opt/lean/bin/leantar','--jobs','1','-f','-x','-j','-'],input=json.dumps(warm),text=True,env=ci.trusted_env(),check=True,timeout=900)
             command=sandbox+['/opt/lean/bin/lake','--packages',overrides,'--rehash','build']
             item=run(command+['+'+m for m in targets],project,label+'-warm.log',ci.trusted_env());report['cases'][label]['warm_build']=item;save()
@@ -91,7 +94,7 @@ def main(args):
                     times.append(item['wall_seconds'])
                 source=project/'src'/(target.replace('.','/')+'.lean');olean=project/'.lake/build/lib/lean'/(target.replace('.','/')+'.olean')
                 report['cases'][label]['modules'][target]={'direct_import_count':len(quick.imports(source)),'project_ancestor_count':len(quick.dependency_closure(project,[target],maximum=20000))-1,'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'olean_bytes':olean.stat().st_size,'build_seconds':times,'median_seconds':statistics.median(times)};save()
-            ci.validate_packages(project,packages);report['cases'][label]['status']='touched_targets_and_consumer_pass';save();shutil.rmtree(work)
+            ci.verify_private_packages(project,packages,private);ci.validate_packages(project,packages);report['cases'][label]['status']='touched_targets_and_consumer_pass';save();shutil.rmtree(work)
         report['status']='scoped_verification_pass'
     except BaseException as error:
         report.update(status='failed_or_resource_limited',error=f'{type(error).__name__}: {error}');(out/'exception.txt').write_text(traceback.format_exc());raise
