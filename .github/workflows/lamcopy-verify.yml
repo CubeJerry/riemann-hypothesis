@@ -21,6 +21,10 @@ jobs:
       LEAN_NUM_THREADS: '1'
       LEAN_ABORT_ON_PANIC: '1'
     steps:
+      - name: Use Python 3.12 for the repository verification helpers
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
       - name: Check out the verification harness
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
