@@ -1,0 +1,81 @@
+name: Benchmark graded valuation imports
+on:
+  push:
+    branches: [verify/ereal-infimum]
+    paths: [.github/workflows/ereal-infimum.yml]
+permissions:
+  contents: read
+jobs:
+  benchmark:
+    if: github.repository == 'CubeJerry/riemann-hypothesis'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - base: d27f71347abceb76cd37dc8a5fccbe556ec2be90
+            pin: 31ce06eaadf4a200c0e1407c5f10953cf606b8f8
+          - base: 4f5b851cae6872352482cec54ae6f85ff9bae2c5
+            pin: fc4f59e577feb1a4956671bc04ac18aaaf8cd842
+    env:
+      LEAN_NUM_THREADS: '1'
+      LEAN_ABORT_ON_PANIC: '1'
+      LAKE_ARTIFACT_CACHE: 'false'
+      MATHLIB_CACHE_GET_URL: https://cache.mathlib.org/mathlib4
+      CANDIDATE: 8f32201d63ba34155101923201e0c3dc5108ab81
+      MODULE: Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
+      PIN: ${{ matrix.pin }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ matrix.base }}
+          persist-credentials: false
+      - name: Install the pinned toolchain
+        run: |
+          curl -fsSL --retry 3 https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan.sh"
+          sh "$RUNNER_TEMP/elan.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(cat lean-toolchain)"
+      - name: Build and benchmark the two versions
+        shell: bash
+        run: |
+          ulimit -n 65536
+          git fetch --depth=1 origin "$CANDIDATE"
+          python3 - <<'PY'
+          import hashlib, json, os, re, statistics, subprocess, time
+          from pathlib import Path
+          mod=os.environ['MODULE']
+          rel=Path(*mod.split('.'))
+          src=Path('src')/rel.with_suffix('.lean')
+          base=src.read_bytes()
+          new=subprocess.check_output(['git','show',f"{os.environ['CANDIDATE']}:{src}"])
+          assert subprocess.check_output(['git','hash-object',str(src)],text=True).strip()=='65db958047d73a5ac3bfb5c8b4ce1ffc7810f4fa'
+          assert next(p['rev'] for p in json.loads(Path('lake-manifest.json').read_bytes())['packages'] if p['name']=='mathlib')==os.environ['PIN']
+          roots=sorted(set(re.findall(rb'^(?:public )?import (Mathlib\.[\w.]+)$',base+b'\n'+new,re.M)))
+          subprocess.run(['lake','exe','mathlib/cache','get',*[m.decode() for m in roots]],check=True)
+          assert subprocess.check_output(['git','-C','.lake/packages/mathlib','rev-parse','HEAD'],text=True).strip()==os.environ['PIN']
+          print(subprocess.check_output(['lean','--version'],text=True),flush=True)
+          os.sched_setaffinity(0,{min(os.sched_getaffinity(0))})
+          art=Path('.lake/build/lib/lean')/rel
+          setup=Path('.lake/build/ir')/rel.with_suffix('.setup.json')
+          rows=[]
+          for i in range(5):
+              for rev in (['base','patch'] if i%2==0 else ['patch','base']):
+                  src.write_bytes(base if rev=='base' else new)
+                  art.with_suffix('.trace').unlink(missing_ok=True)
+                  t=time.perf_counter()
+                  res=subprocess.run(['lake','--no-cache','build','+'+mod],stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
+                  elapsed=time.perf_counter()-t
+                  if res.returncode:
+                      print(res.stdout);res.check_returncode()
+                  if i and re.findall(r'Built ([\w.]+) \(',res.stdout)!=[mod]:
+                      raise RuntimeError(res.stdout)
+                  imports=json.loads(setup.read_bytes())['importArts']
+                  row={'round':i,'version':rev,'seconds':round(elapsed,3),'direct':len(re.findall(rb'^(?:public )?import ',src.read_bytes(),re.M)),'imported':len(imports),'mathlib':sum(m.startswith('Mathlib.') for m in imports),'olean':art.with_suffix('.olean').stat().st_size}
+                  rows.append(row)
+                  print(json.dumps(row),flush=True)
+          for rev in ['base','patch']:
+              print('MEDIAN',rev,statistics.median(r['seconds'] for r in rows if r['round'] and r['version']==rev),flush=True)
+          subprocess.run(['lake','env','leanchecker','--verbose',mod],check=True)
+          PY
