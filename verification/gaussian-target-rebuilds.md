@@ -64,4 +64,4 @@ Both downstream targets built successfully.
 Build completed successfully (7923 jobs).
 ```
 
-The isolated `lake build Challenge` run exceeded six minutes on this host. The repository-wide `Main` build and comparator are deferred to upstream batch verification.
+A fresh `Challenge` rebuild exceeded six minutes. Restoring cached `Challenge` artifacts for the identical source, Lean toolchain, Lake configuration and dependency manifest allowed `lake --no-cache build Challenge` to complete. The four measured modules and both downstream modules were rebuilt from source. The repository-wide `Main` build and comparator are deferred to upstream batch verification.
