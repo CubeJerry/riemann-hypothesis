@@ -1,5 +1,5 @@
 from pathlib import Path
-import json,os,re,resource,subprocess,time
+import json,os,re,resource,shutil,subprocess,time
 repo=Path.cwd()
 base='d27f71347abceb76cd37dc8a5fccbe556ec2be90'
 modules=['GroundTheory.GlobalFields.TateThesis.'+x for x in ['Gaussian','GaussianComplex','GaussianComplexFourier','GaussianSchwartz']]
@@ -11,6 +11,9 @@ for v in versions.values():
 subprocess.run(['lake','exe','mathlib/cache','get',*[r.decode() for r in sorted(roots)]],check=True)
 pin=subprocess.check_output(['git','-C','.lake/packages/mathlib','rev-parse','HEAD'],text=True).strip()
 assert pin=='31ce06eaadf4a200c0e1407c5f10953cf606b8f8'
+print(subprocess.check_output(['lean','--version'],text=True),flush=True)
+print('Mathlib',pin,flush=True)
+os.sched_setaffinity(0,{min(os.sched_getaffinity(0))})
 def install(rev):
  for m,p in paths.items():p.write_bytes(versions[rev][m])
 def run(m,rev,trial):
@@ -24,6 +27,9 @@ def run(m,rev,trial):
  proc.check_returncode()
  if trial:
   assert re.findall(r'Built (\S+) \(',proc.stdout)==[m]
+ if trial==0:
+  out=Path('gaussian-exports')/rev;out.mkdir(parents=True,exist_ok=True)
+  shutil.copyfile(art.with_suffix('.olean'),out/(mod.name+'.olean'))
  imports=json.loads((Path('.lake/build/ir')/mod.with_suffix('.setup.json')).read_bytes())['importArts']
  data=dict(rev=rev,trial=trial,module=mod.name,elapsed=elapsed,cpu=b.ru_utime+b.ru_stime-a.ru_utime-a.ru_stime,imports=len(re.findall(rb'^(?:public )?import ',p.read_bytes(),re.M)),closure=len(imports),olean=art.with_suffix('.olean').stat().st_size,private=art.with_suffix('.olean.private').stat().st_size)
  print('MEASUREMENT',json.dumps(data),flush=True);return data
@@ -35,3 +41,5 @@ for trial in range(0,6):
   Path('gaussian-results.json').write_text(json.dumps(rows,indent=2))
 install('patch')
 for m in modules:subprocess.run(['lake','env','leanchecker',m],check=True)
+
+subprocess.run(['lean','--run','.github/scripts/gaussian-exports.lean','gaussian-exports/base','gaussian-exports/patch',*[m.split('.')[-1] for m in modules]],check=True)
