@@ -77,5 +77,12 @@ jobs:
                   print(json.dumps(row),flush=True)
           for rev in ['base','patch']:
               print('MEDIAN',rev,statistics.median(r['seconds'] for r in rows if r['round'] and r['version']==rev),flush=True)
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              print('| Revision | Median rebuild (s) | Direct imports | Loaded modules | Public .olean (bytes) |', file=summary)
+              print('|---|---:|---:|---:|---:|', file=summary)
+              for rev in ['base','patch']:
+                  sample=[r for r in rows if r['round'] and r['version']==rev]
+                  r=sample[0]
+                  print(f"| {rev} | {statistics.median(x['seconds'] for x in sample):.3f} | {r['direct']} | {r['imported']} | {r['olean']} |",file=summary)
           subprocess.run(['lake','env','leanchecker','--verbose',mod],check=True)
           PY
