@@ -10,8 +10,10 @@ Each pair is a forced `lake --no-cache build +Formalism.LocalToGlobal.Projective
 - 4.37.0-rc1 / `31ce06e` took 60.3 → 26.3 s, 32.2 → 45.3 s, 45.8 → 74.3 s, 281.0 → 41.4 s.
 - 4.36.0 / `fc4f59e` took 673.5 → 40.3 s, 572.6 → 104.0 s.
 
-Wall times varied on the shared host. Both runs improved on the requested 4.36 pin. On upstream’s 4.37 pin the revision was faster in two of four pairs. Both versions load fewer modules and emit smaller compiled files.
+Wall times varied on the shared host. Both runs improved on the requested 4.36 pin. On upstream’s 4.37 pin the revision was faster in two of four pairs. The single theorem used 970 → 200 elaboration heartbeats on 4.37, measured with `#count_heartbeats` in the same import environment for each proof.
 
 The changed module passed `lake build` on both pins. A comparison of the two sets of `.olean` files matched names, universe parameters and types for all 17 public declarations on each pin, as well as the bodies of all public definitions. The direct importer `IntDerApply` built on upstream’s pin, and `leanchecker` replayed the changed module. `lake build Challenge` passed using its cached artifact after matching its source, build settings and all 9,133 import records.
+
+For the changed theorem, stock Comparator reported success for statement comparison and the permitted-axiom check. Its kernel subprocesses could not start because this host denies Bubblewrap’s network-namespace setup. Lean’s default kernel, Lean paranoid and nanoda each accepted the same revised export when run directly.
 
 The patch merges cleanly with upstream `0e40c084`. Full `lake build Main Challenge` and project-wide `lake comparator` remain pending.
