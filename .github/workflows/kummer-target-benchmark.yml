@@ -59,8 +59,14 @@ jobs:
                   if name.startswith("Mathlib"):
                       mathlib.add(name)
                   return
-              for dep in imports.findall(source(name).read_text()):
-                  visit(dep)
+              sources = [source(name).read_text()]
+              if name in targets:
+                  patch_path = str(source(name).relative_to(root))
+                  sources.append(subprocess.check_output(
+                      ["git", "show", os.environ["CANDIDATE"] + ":" + patch_path], text=True))
+              for body in sources:
+                  for dep in imports.findall(body):
+                      visit(dep)
               order.append(name)
           for name in targets:
               visit(name)
