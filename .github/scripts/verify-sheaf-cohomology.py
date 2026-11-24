@@ -15,7 +15,7 @@ def visit(m):
  seen.add(m);s=git('show',base+':src/'+m.replace('.','/')+'.lean').decode()
  for k in re.findall(r'^(?:public |meta )*import ([\w.]+)$',s,re.M):
   if k.startswith('Mathlib.'):roots.add(k)
-  else:visit(k)
+  elif k.split('.')[0] in ('Development','Formalism','GroundTheory','Lemmata','ReciprocityTheory','CompanionTheory','PositivityTheory','Supplements'):visit(k)
 for m in [mod(p) for p in paths]+goals:visit(m)
 sp.run(['lake','exe','mathlib/cache','get',*sorted(roots)],check=True)
 rows=[]; report=Path(os.environ['GITHUB_STEP_SUMMARY'])
