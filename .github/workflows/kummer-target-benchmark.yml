@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 75
     env:
-      CANDIDATE: 6a2cf081aeb8a0929ae801c40e8c33e90922a452
+      CANDIDATE: a30d07efc89ebdbcc4fa3bc6880993d6e6e18183
       LEAN_NUM_THREADS: '1'
       LEAN_ABORT_ON_PANIC: '1'
       LAKE_ARTIFACT_CACHE: 'false'
@@ -46,7 +46,7 @@ jobs:
           
           root = Path.cwd()
           prefix = "Development.EtaleCohomology.KummerTheory."
-          targets = [prefix + s for s in ("BockCut", "DerDictPf", "NatLESPf")]
+          targets = [prefix + s for s in ("BockCut", "NatLESPf", "DerDictPf")]
           imports = re.compile(r"^(?:(?:public|private|meta|all)\s+)*import\s+(?:all\s+)?([\w.']+)", re.M)
           source = lambda name: root / "src" / (name.replace(".", "/") + ".lean")
           order, mathlib = [], set()
@@ -95,11 +95,23 @@ jobs:
                   output.unlink(missing_ok=True)
                   output.with_suffix(".trace").unlink(missing_ok=True)
                   start = time.monotonic()
-                  subprocess.run(["lake", "--no-cache", "build", "+" + name], check=True)
+                  build = subprocess.run(["lake", "--no-cache", "build", "+" + name], text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                  print(build.stdout, flush=True)
+                  build.check_returncode()
                   elapsed = time.monotonic() - start
-                  print("MEASURE", label, name, round(elapsed, 2), len(imports.findall(source(name).read_text())), output.stat().st_size, flush=True)
-          measure("base")
-          subprocess.run(["git", "restore", "--source=" + os.environ["CANDIDATE"], "--",
-                          *[str(source(n).relative_to(root)) for n in targets]], check=True)
-          measure("patch")
+                  job = re.search(r"Built " + re.escape(name) + r" \(([\d.]+)(ms|s)\)", build.stdout)
+                  assert job, name
+                  setup = json.loads((root / ".lake/build/ir" / rel.with_suffix(".setup.json")).read_text())
+                  print("MEASURE", json.dumps({"label": label, "module": name,
+                      "lake_wall_seconds": round(elapsed, 3),
+                      "target_seconds": float(job[1]) / (1000 if job[2] == "ms" else 1),
+                      "direct_imports": len(imports.findall(source(name).read_text())),
+                      "import_closure": len(setup["importArts"]), "olean_bytes": output.stat().st_size,
+                      "private_bytes": output.with_suffix(".olean.private").stat().st_size}), flush=True)
+          for number, label in enumerate(("base", "patch", "patch", "base", "base", "patch"), 1):
+              revision = "HEAD" if label == "base" else os.environ["CANDIDATE"]
+              subprocess.run(["git", "restore", "--source=" + revision, "--",
+                              *[str(source(n).relative_to(root)) for n in targets]], check=True)
+              measure(f"{number}-{label}")
+          subprocess.run(["lake", "--no-cache", "build", "Challenge"], check=True)
           PY
