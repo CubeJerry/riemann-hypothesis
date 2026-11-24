@@ -1,0 +1,101 @@
+name: Measure Kummer cohomology modules
+on: [create, push]
+permissions:
+  contents: read
+jobs:
+  benchmark:
+    if: github.repository == 'CubeJerry/riemann-hypothesis' && github.ref_name == 'bench/kummer-targets-20261124'
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    env:
+      CANDIDATE: 6a2cf081aeb8a0929ae801c40e8c33e90922a452
+      LEAN_NUM_THREADS: '1'
+      LEAN_ABORT_ON_PANIC: '1'
+      LAKE_ARTIFACT_CACHE: 'false'
+      MATHLIB_CACHE_GET_URL: https://cache.mathlib.org/mathlib4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: a28ad7ec8b9f5ff4ec448fe210d3ac57aacfffe1
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Install the pinned Lean toolchain
+        shell: bash
+        run: |
+          curl --fail --silent --show-error --location https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          git fetch --depth=1 origin "$CANDIDATE"
+      - name: Build base and patch against the same cached dependencies
+        shell: bash
+        run: |
+          python3 -u - <<'PY'
+          from pathlib import Path
+          import concurrent.futures
+          import importlib.util
+          import json
+          import os
+          import re
+          import subprocess
+          import time
+          
+          root = Path.cwd()
+          prefix = "Development.EtaleCohomology.KummerTheory."
+          targets = [prefix + s for s in ("BockCut", "DerDictPf", "NatLESPf")]
+          imports = re.compile(r"^(?:(?:public|private|meta|all)\s+)*import\s+(?:all\s+)?([\w.']+)", re.M)
+          source = lambda name: root / "src" / (name.replace(".", "/") + ".lean")
+          order, mathlib = [], set()
+          seen = set()
+          def visit(name):
+              if name in seen:
+                  return
+              seen.add(name)
+              if not source(name).is_file():
+                  if name.startswith("Mathlib"):
+                      mathlib.add(name)
+                  return
+              for dep in imports.findall(source(name).read_text()):
+                  visit(dep)
+              order.append(name)
+          for name in targets:
+              visit(name)
+          subprocess.run(["lake", "exe", "mathlib/cache", "get", *sorted(mathlib)], check=True)
+          spec = importlib.util.spec_from_file_location("rh_cache", "scripts/ci-cache-get.py")
+          ci = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(ci)
+          identity = ci.current_identity(root)
+          receipt = ci.find_record(root, identity)
+          if receipt is None:
+              raise RuntimeError("No CI receipt for base")
+          _, hashes, modules = ci.validated_blobs(receipt, identity)
+          modules = [m for m in modules if m[0] in order and m[0] not in targets]
+          assert {m[0] for m in modules} == set(order) - set(targets)
+          cache = Path(os.environ["RUNNER_TEMP"]) / "module-cache"
+          (cache / "artifacts").mkdir(parents=True)
+          def download(mod):
+              _, _, artifact = mod
+              data = ci.fetch(f"artifacts/{ci.REPOSITORY}/{artifact[:-5]}.art")
+              assert data and ci.digest(data) == hashes[artifact], artifact
+              (cache / "artifacts" / artifact).write_bytes(data)
+          with concurrent.futures.ThreadPoolExecutor(max_workers=10) as pool:
+              list(pool.map(download, modules))
+          jobs = ci.unpack_jobs(root, cache, modules)
+          lean = Path(subprocess.check_output(["elan", "which", "lean"], text=True).strip())
+          subprocess.run([lean.with_name("leantar"), "--jobs", "2", "-f", "-x", "-j", "-"],
+                         input=json.dumps(jobs), text=True, check=True)
+          def measure(label):
+              for name in targets:
+                  rel = Path(*name.split("."))
+                  output = root / ".lake/build/lib/lean" / rel.with_suffix(".olean")
+                  output.unlink(missing_ok=True)
+                  output.with_suffix(".trace").unlink(missing_ok=True)
+                  start = time.monotonic()
+                  subprocess.run(["lake", "--no-cache", "build", "+" + name], check=True)
+                  elapsed = time.monotonic() - start
+                  print("MEASURE", label, name, round(elapsed, 2), len(imports.findall(source(name).read_text())), output.stat().st_size, flush=True)
+          measure("base")
+          subprocess.run(["git", "restore", "--source=" + os.environ["CANDIDATE"], "--",
+                          *[str(source(n).relative_to(root)) for n in targets]], check=True)
+          measure("patch")
+          subprocess.run(["lake", "--no-cache", "build", "Challenge"], check=True)
+          PY
