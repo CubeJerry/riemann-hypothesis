@@ -113,7 +113,7 @@ theorem complexFourier_pow_mul_gaussian (n : ℕ) :
     have e : (fun z : ℂ ↦ z * (z ^ n * Complex.exp (-2 * π * (‖z‖ : ℂ) ^ 2))) =
         fun z ↦ z ^ (n + 1) * Complex.exp (-2 * π * (‖z‖ : ℂ) ^ 2) := by
       funext z
-      rw [pow_succ', mul_assoc]
+      rw [pow_succ' z n, mul_assoc z]
     rw [e] at key
     apply mul_left_cancel₀ (a := (-4 * π * I : ℂ)) (by
       simp [ofReal_ne_zero.mpr Real.pi_ne_zero, I_ne_zero])
@@ -131,7 +131,8 @@ theorem complexFourier_conj (f : ℂ → ℂ) (w : ℂ) :
   congr 1
   funext z
   simp [Circle.smul_def, Real.fourierChar_apply, ← exp_conj, map_ofNat, neg_re, mul_re, ofReal_sub, ofReal_mul]
-  congr 2 <;> try ring <;> simp
+  ring_nf
+  simp
 
 theorem conj_cexp_neg_two_pi_norm_sq (z : ℂ) :
     conj (Complex.exp (-2 * π * (‖z‖ : ℂ) ^ 2)) = Complex.exp (-2 * π * (‖z‖ : ℂ) ^ 2) := by

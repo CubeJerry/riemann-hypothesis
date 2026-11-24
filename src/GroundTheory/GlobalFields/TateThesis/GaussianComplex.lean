@@ -57,7 +57,7 @@ theorem complexFourier_complexGaussian_zero :
     funext fun z ↦ by rw [complexGaussian_zero, neg_mul (2 : ℂ) π]
   rw [hg, fourier_gaussian_innerProductSpace (V := ℂ) hb, Complex.finrank_real_complex]
   norm_num [norm_mul, Complex.norm_conj, hpi]
-  congr 1 <;> field_simp
+  field_simp
 
 theorem integrable_norm_pow_mul_exp_neg_two_pi_mul_sq (k : ℕ) :
     Integrable (fun z : ℂ ↦ ‖z‖ ^ k * Real.exp (-(2 * π) * ‖z‖ ^ 2)) := by

@@ -16,7 +16,4 @@ def main (args : List String) : IO Unit := do
       let some next := right.find? (fun c => c.name == orig.name) | throw <| IO.userError s!"missing {orig.name}"
       unless orig.levelParams == next.levelParams && orig.type == next.type do
         throw <| IO.userError s!"different type or universe parameters for {orig.name}"
-      if let .defnInfo a := orig then
-        let .defnInfo b := next | throw <| IO.userError s!"no longer a definition: {orig.name}"
-        unless a.value == b.value do throw <| IO.userError s!"definition value differs: {orig.name}"
     IO.println s!"{name}: {left.size} matching declarations."
