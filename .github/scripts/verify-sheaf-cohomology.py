@@ -1,5 +1,5 @@
 from pathlib import Path
-import json,os,re,subprocess as sp,time,statistics
+import json,os,re,subprocess as sp,time,statistics,resource
 base='4d25b0edc80cbf28a7b82a9d491d95875b36e826'
 head='fe445c3f8e45458ab3cafce1e7f2a8c9cfd741e5'
 queue='e21c8eccfea62e236c7ce233a62e365a8b6de7dc'
@@ -22,9 +22,9 @@ rows=[]; report=Path(os.environ['GITHUB_STEP_SUMMARY'])
 for i,v in enumerate([base,head,head,base]):
  label='before' if v==base else 'after';git('restore','--source='+v,'--worktree','--',*map(str,paths)); print('ROUND',i,label,flush=True)
  for p in paths:
-  art=Path('.lake/build/lib/lean')/p.relative_to('src');art.with_suffix('.trace').unlink(missing_ok=True); start=time.monotonic();cp=sp.run(['lake','--no-cache','build','+'+mod(p)],stdout=sp.PIPE,stderr=sp.STDOUT,text=True); print(cp.stdout,flush=True);cp.check_returncode();elapsed=time.monotonic()-start
+  art=Path('.lake/build/lib/lean')/p.relative_to('src');art.with_suffix('.trace').unlink(missing_ok=True); start=time.monotonic();usage0=resource.getrusage(resource.RUSAGE_CHILDREN);cp=sp.run(['lake','--no-cache','build','+'+mod(p)],stdout=sp.PIPE,stderr=sp.STDOUT,text=True); print(cp.stdout,flush=True);cp.check_returncode();elapsed=time.monotonic()-start;usage1=resource.getrusage(resource.RUSAGE_CHILDREN)
   built=re.findall(r'(?:Built|Rebuilt) (\S+) \(([^()]+)\)',cp.stdout);assert [m for m,t in built if not m.startswith(('Mathlib.','Batteries.'))]==[mod(p)],built
-  setup=Path('.lake/build/ir')/p.relative_to('src');imports=json.loads(setup.with_suffix('.setup.json').read_text())['importArts'];row={'round':i,'version':label,'module':p.stem,'direct':len(re.findall(r'^(?:public |meta )*import ',p.read_text(),re.M)),'mathlib':sum(m.startswith('Mathlib.') for m in imports),'olean':art.with_suffix('.olean').stat().st_size,'wall':round(elapsed,3),'lake':built[-1][1]};rows.append(row);print('MEASURE',json.dumps(row),flush=True)
+  setup=Path('.lake/build/ir')/p.relative_to('src');imports=json.loads(setup.with_suffix('.setup.json').read_text())['importArts'];row={'round':i,'version':label,'module':p.stem,'direct':len(re.findall(r'^(?:public |meta )*import ',p.read_text(),re.M)),'mathlib':sum(m.startswith('Mathlib.') for m in imports),'olean':art.with_suffix('.olean').stat().st_size,'cpu':round(usage1.ru_utime+usage1.ru_stime-usage0.ru_utime-usage0.ru_stime,3),'wall':round(elapsed,3),'lake':built[-1][1]};rows.append(row);print('MEASURE',json.dumps(row),flush=True)
 with report.open('a') as f:
  print('| Module | Direct imports | Mathlib closure | Public `.olean` bytes | Rebuild wall (s), median of two |\n|---|---:|---:|---:|---:|',file=f)
  for p in paths:
