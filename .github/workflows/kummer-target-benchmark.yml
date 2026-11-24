@@ -1,5 +1,7 @@
 name: Measure Kummer cohomology modules
-on: [create, push]
+on:
+  push:
+    branches: [bench/kummer-targets-20261124]
 permissions:
   contents: read
 jobs:
@@ -97,5 +99,4 @@ jobs:
           subprocess.run(["git", "restore", "--source=" + os.environ["CANDIDATE"], "--",
                           *[str(source(n).relative_to(root)) for n in targets]], check=True)
           measure("patch")
-          subprocess.run(["lake", "--no-cache", "build", "Challenge"], check=True)
           PY
