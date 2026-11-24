@@ -38,7 +38,8 @@ theorem realGaussian_eq_ofReal (x : ℝ) :
   simp [realGaussian, ofReal_exp]
 
 theorem fourier_realGaussian : 𝓕 realGaussian = realGaussian := by
-  simpa only [realGaussian, mul_one, one_cpow, div_one, one_mul] using
+  unfold realGaussian
+  simpa only [mul_one, one_cpow, div_one, one_mul] using
     (fourier_gaussian_pi (b := 1) (by simp))
 
 theorem integrable_realGaussian : Integrable realGaussian := by
