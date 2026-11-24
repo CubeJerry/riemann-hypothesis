@@ -1,0 +1,37 @@
+name: Verify the Tate thesis Gaussian proofs
+on:
+  push:
+    branches: [verify/tate-gaussian-integrals]
+permissions:
+  contents: read
+jobs:
+  benchmark:
+    if: github.repository == 'CubeJerry/riemann-hypothesis'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    env:
+      LEAN_NUM_THREADS: '1'
+      LEAN_ABORT_ON_PANIC: '1'
+      LAKE_ARTIFACT_CACHE: 'false'
+      MATHLIB_CACHE_GET_URL: https://cache.mathlib.org/mathlib4
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Prepare the pinned toolchain
+        run: |
+          git fetch --depth=1 origin d27f71347abceb76cd37dc8a5fccbe556ec2be90
+          curl -fsSL --retry 3 https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan.sh"
+          sh "$RUNNER_TEMP/elan.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(cat lean-toolchain)"
+      - name: Build both revisions and compare forced target rebuilds
+        run: |
+          ulimit -n 65536
+          python3 .github/scripts/gaussian-benchmark.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: gaussian-results
+          path: gaussian-results.json
+          if-no-files-found: ignore
