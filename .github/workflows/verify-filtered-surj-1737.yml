@@ -1,0 +1,41 @@
+name: Verify FilteredSurj PR 1737
+on:
+  push:
+    branches: [verify/filtered-surj-1737-20261125]
+    paths: [.github/workflows/verify-filtered-surj-1737.yml]
+permissions:
+  contents: read
+jobs:
+  target-build:
+    if: github.repository == 'CubeJerry/riemann-hypothesis'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    env:
+      LEAN_NUM_THREADS: '2'
+      LEAN_ABORT_ON_PANIC: '1'
+      LAKE_ARTIFACT_CACHE: 'false'
+      LAKE_RESTORE_ARTIFACTS: 'false'
+      MATHLIB_CACHE_GET_URL: https://cache.mathlib.org/mathlib4
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Install pinned Lean toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -fsSL --retry 3 https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Fetch dependencies for the target only
+        run: |
+          ulimit -n 65536
+          lake exe mathlib/cache get \
+            Mathlib.Algebra.Group.Subgroup.Map \
+            Mathlib.Order.Filter.AtTopBot.Defs \
+            Mathlib.Order.Filter.AtTopBot.Basic \
+            Mathlib.Algebra.Group.Subgroup.Ker \
+            Mathlib.Tactic.Choose
+      - name: Compile FilteredSurj and imported modules
+        run: |
+          ulimit -n 65536
+          lake build GroundTheory.LocalFields.FilteredSurj
