@@ -213,8 +213,10 @@ lemma exists_isSectionLift_coordSection {s : ι → N.H0 R}
   -- correctly, and `(s a).val i` divides the unit `(s j).val i`
   have h_frame : (N.mul (L.pull F.left).inv).IsFrame fun (i, a) ↦ (s a).val i := by
     have h_sec (j : ι) : N.IsSection (s j).val := isSection_val (s j)
-    simp_all [IsSection, IsRegularOn, IsFrame]
-    grind
+    simp_all only [IsSection, IsRegularOn, IsFrame, mul_opens, inv_opens, pull_opens, landsIn_inf,
+      landsIn_preimage, implies_true, mul_transition, Pi.mul_apply, inv_transition, pull_transition,
+      PointFn.pull, and_imp, Prod.forall, true_and]
+    grind only [= IsUnit.mul_iff]
   obtain ⟨Φ, hΦ_frame, hΦ_eq⟩ := exists_isPullbackVia F (fun (i, a) ↦ (s a).val i) h_frame
   refine ⟨Φ, ⟨fun (i, a) ↦ (s a).val i, hΦ_frame, hΦ_eq⟩, fun j ↦ H0_ext fun {i} h₁ h₂ ↦
     h₁.ext_of_dominant (𝟙 _) h₂ (L.pull F.left) ?_⟩
