@@ -752,9 +752,6 @@ private lemma heckeFun_iwahoriDoubleCoset_mul {F : Type} [Field F] [NumberField 
   simp only [hs, ht, hx, mul_mem, heckeFun_iwahoriDoubleCoset_eq_iwahoriDegree_smul, map_smul,
     compactMean_mem_levelSpace, compactMean_diagGL_compactMean_diagGL, smul_smul, h_deg]
 
--- Keeps definitional checks from unfolding the finite sums.
-seal Finset.univ in
-attribute [-simp] mem_levelSpace exists_const MonoidHom.coe_comp in
 /-- Base change keeps an Iwahori eigencharacter. Let `E'/E` be a step with `E'` containing a
 primitive `5040`-th root of unity (`HasPrimitiveRoot5040`). Let `w = u.below E` be split (`hw`) with
 `μ` trivial at `w` (`hμ_loc`), and let `u` be the only place above `w` (`h_unique`), split (`hu`).
@@ -825,7 +822,14 @@ lemma exists_baseChange_isIwahoriEigen
       rw [← Submodule.mem_bot ℂ, ← h0, Submodule.mem_inf, mem_heckeGenEigenspace]
       refine ⟨⟨hf_level, fun a ↦ ?_⟩, hfW⟩
       rw [Module.End.mem_maxGenEigenspace]
-      exact ⟨1, by simp [a.prop, h_dom, hf_level, hf_eigen, mul_smul]⟩
+      have hNa : localNorm E u ∘ a.val ∈ dominantTorus := (h_dom _ a.val).mpr a.prop
+      refine ⟨1, ?_⟩
+      change heckeFun (localFormRep (stdSpace E m) κ hw).ρ proIwahori
+          ((iwahoriDoubleCoset (localNorm E u ∘ a.val)).indicator 1) f -
+        (iwahoriDegree a.val * (torusChar θ (localNorm E u ∘ a.val) : ℂ)) • f = 0
+      rw [heckeFun_iwahoriDoubleCoset_eq_iwahoriDegree_smul hNa hf_level, hf_eigen _ hNa,
+        mul_smul, sub_eq_zero]
+      simp [iwahoriDegree]
     · exact (mem_heckeGenEigenspace.mp (Submodule.mem_inf.mp hx).1).2 _
   case eigen =>
     -- Cancel `iwahoriDegree t ≠ 0`; the character `torusChar θ (localNorm E u ∘ ·)` is that of the
