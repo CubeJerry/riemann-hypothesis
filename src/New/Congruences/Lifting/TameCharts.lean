@@ -491,6 +491,15 @@ lemma exists_normal_fixer_index_coprime {p e : ℕ} [hp : ThePrime p] {f : ℕ+}
   exact ⟨U, fun g ↦ by rw [mem_U, mem_V, fixes_roots_iff_fixesLambda], U_normal, .of_dvd_left hm
     ((hp.out.coprime_iff_not_dvd.2 (hp.out.not_dvd_mul hf hN)).symm.pow_left m)⟩
 
+/-- A chart is given by constants `W(𝔽_{p^f})`, an exponent `e` and an element `ϖ^♭` of the tilt of
+`O_{ℂ_p}`, with coordinate `z = [ϖ^♭]`. If `ϖ ^ e = p`, some chart with the given `f` and `e` has
+a `ϖ^♭` that untilts to `ϖ`. -/
+lemma exists_chart_untilt_varpiFlat_eq {p e : ℕ} [ThePrime p] (f : ℕ+) {ϖ : OC} (hϖ : ϖ ^ e = p) :
+    ∃ c : Chart, c.f = f ∧ c.e = e ∧ c.varpiFlat.untilt = ϖ := by
+  obtain ⟨_, -, charts⟩ := exists_chart_of_pow_mul_eq_neg f (x := ϖ) (e := e) (-1) (by simp [hϖ])
+  obtain ⟨c, hc_f, -, hc_untilt, hc_e, -⟩ := charts (-1) (by simp)
+  exact ⟨c, hc_f, hc_e, hc_untilt⟩
+
 /-- Inertia is transitive on towers of roots of `p`: if `ϖ^♭` of a chart `c` (with coordinate
 `z = [ϖ^♭]`) and `x` both untilt to `e`-th roots of `p`, an element of inertia maps `z` to `[x]`. -/
 lemma exists_inertia_smul_z_eq_teichmuller {p : ℕ} [ThePrime p] (c : Chart)
@@ -555,8 +564,7 @@ lemma exists_tameChart {p e : ℕ} [hp : ThePrime p] [Γ : GroupOverGp p]
   obtain ⟨a, ha⟩ := (HasEnoughRootsOfUnity.of_dvd (flatFq f) he).prim
   obtain ⟨U, hU, U_normal, index_coprime⟩ := exists_normal_fixer_index_coprime hf he hϖ
   obtain ⟨ϖ', h_coe, hϖ'⟩ := exists_coe_eq_of_pow_eq_p (NeZero.ne e) hϖ
-  obtain ⟨_, -, charts⟩ := exists_chart_of_pow_mul_eq_neg f (x := ϖ') (e := e) (-1) (by simp [hϖ'])
-  obtain ⟨c, rfl, -, h_untilt, rfl, -⟩ := charts (-1) (by simp)
+  obtain ⟨c, rfl, rfl, h_untilt⟩ := exists_chart_untilt_varpiFlat_eq f hϖ'
   have hc_untilt_pow : c.varpiFlat.untilt ^ c.e = p := h_untilt ▸ hϖ'
   have mem_U {g : Gp p} : g ∈ U ↔ c.FixesThetaZ g :=
     (hU g).trans (and_congr_right' (by simp [c.z_eq_teichmuller, h_untilt, h_coe, Subtype.ext_iff]))
