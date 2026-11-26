@@ -188,6 +188,7 @@ lemma exists_integral_multiple_eval_one {A A' B C : (PadicAlgCl ℓ)[X]} (hB : B
   have h_diff_one : ‖(A - A').eval 1‖ < 1 :=
     norm_eval_one_lt_one (norm_coeff_lt_one_of_mul_monic hB h_prod)
   have hA_one : 1 ≤ ‖A.eval 1‖ := by
+    -- the two norms differ, so the norm of the sum is their maximum
     have h := norm_add_eq_max_of_norm_ne_norm (h_diff_one.trans_le hA'_one).ne'
     rw [← eval_add, add_sub_cancel] at h
     exact h ▸ le_max_of_le_left hA'_one
