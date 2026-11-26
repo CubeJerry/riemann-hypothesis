@@ -420,6 +420,7 @@ lemma New.exists_valuative_arc_of_isDenseFamily {S : Scheme} {ι : Type} [IsLoca
   · -- `φ` is local, so the closed point goes to the closed point.
     have h_local : maximalIdeal O ≤ (maximalIdeal v.valuationSubring).comap φ :=
       fun y hy ↦ hp_le (h_max_le hy)
+    -- in `local_hom_tfae`, item 4 (`maximalIdeal ≤ comap`) implies item 1 (`IsLocalHom`)
     have : IsLocalHom φ := ((local_hom_tfae φ).out 4 1).1 h_local
     exact (congrArg (S.fromSpecStalk s) Spec_closedPoint).trans fromSpecStalk_closedPoint
 
