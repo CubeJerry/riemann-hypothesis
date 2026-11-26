@@ -718,15 +718,9 @@ lemma M_pow_denominatorExponent_sq_mul_le_exp :
   have h_size : 2 * (e * log D.M) + (D.b + 2 * (a + (D.b +
       card D.Φ * (D.halfGap * ((2 * D.m : ℕ) * (card D.FlatIndex : ℝ)))) + D.b +
       (D.b + log D.chosenGroupOrder))) ≤ D.f * D.m * D.b * D.logB ^ 2 := by
-    -- `scale_arith` does not split the nested `max` of the default proof, and the kernel cannot
-    -- check `grind` with the large numerals of `scale_inequalities'`: derive small ones for `grind`.
     simpa [ha, he, hL, D.t_eq_five_mul_r, card_firstFactorIndex j, add_assoc] using
       D.le_of_hasLogBound (by
-        obtain ⟨⟨h64, -, -, -⟩, hc, hLX, hX, hX₁, -⟩ := New.Data.scale_inequalities' D
-        have hcL : 1000 * P.constantBound ≤ Real.log D.logB := by linarith
-        have hXX₁ : 1000 * D.logX ≤ D.logX₁ := by linarith
-        have hX₁B : 1000 * D.logX₁ ≤ D.logB := by linarith
-        clear hc hX hX₁
+        obtain ⟨h64, hcL, hLX, hXX₁, hX₁B⟩ := D.scale_inequalities_thousand
         simp only [Bool.false_eq_true, ↓reduceIte, Nat.cast_ofNat]
         grind)
   have h_flat_pos : 0 < card D.FlatIndex := Fintype.card_pos

@@ -175,6 +175,14 @@ lemma scale_inequalities' :
     6 * log D.logX₁ ≤ log D.logB :=
   ⟨le_constantBound, D.scale_inequalities⟩
 
+/-- Bounds between consecutive logarithmic scales, with coefficients small enough for `grind`
+in estimates involving nested maxima. -/
+lemma scale_inequalities_thousand :
+    64 ≤ P.constantBound ∧ 1000 * P.constantBound ≤ log D.logB ∧
+    100 * log D.logB ≤ D.logX ∧ 1000 * D.logX ≤ D.logX₁ ∧ 1000 * D.logX₁ ≤ D.logB := by
+  obtain ⟨⟨h64, -, -, -⟩, hc, hL, hX, hX₁, -⟩ := D.scale_inequalities'
+  exact ⟨h64, by linarith, hL, by linarith, by linarith⟩
+
 /-- `scale_arith D` proves a linear inequality between exponents of the data `D` from
 `New.Data.scale_inequalities'`: it reduces `if true` and `if false`, splits `max` and `min` and
 calls `linarith`. Since Lean 4.37, the kernel can no longer check `grind` proofs over `ℝ` with
