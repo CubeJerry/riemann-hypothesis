@@ -63,17 +63,17 @@ section OscillatorDefs
 
 open Matrix Fintype Fock MvPolynomial Finset GlModule
 
-private theorem oscRaise_eq {R : Type} (η : R → ℤˣ) (a : R) :
+variable {R C ι : Type} [Fintype C] [DecidableEq C] [Fintype ι]
+
+private theorem oscRaise_eq (η : R → ℤˣ) (a : R) :
     TauCeti.oscRaise ℂ (fun i ↦ η i = 1) a = raiseOp η a := by
   ext P
   by_cases h : η a = 1 <;> simp [raiseOp, h]
 
-private theorem oscLower_eq {R : Type} (η : R → ℤˣ) (a : R) :
+private theorem oscLower_eq (η : R → ℤˣ) (a : R) :
     TauCeti.oscLower ℂ (fun i ↦ η i = 1) a = lowerOp η a := by
   ext P
   by_cases h : η a = 1 <;> simp [lowerOp, h]
-
-variable {R C ι : Type} [DecidableEq R] [Fintype C] [DecidableEq C] [Fintype ι]
 
 /-- The raising operators of the Fock model for the signs `η` commute: `raiseOp η a` is
 multiplication by `X a` if `η a = 1` and `-∂ a` otherwise. -/
@@ -88,6 +88,8 @@ theorem Fock.lowerOp_comm (η : R → ℤˣ) (a b : R) (P : MvPolynomial R ℂ) 
     lowerOp η a (lowerOp η b P) = lowerOp η b (lowerOp η a P) := by
   simpa only [oscLower_eq, mul_apply_eq_comp] using
     DFunLike.congr_fun (TauCeti.commute_oscLower (K := ℂ) (p := fun i ↦ η i = 1) a b).eq P
+
+variable [DecidableEq R]
 
 /-- The commutator of the lowering operator `lowerOp η a` (`∂ a` or `X a`, by the sign `η a`) with
 the raising operator `raiseOp η b` (`X b` or `-∂ b`) is the identity if `a = b`, and zero if not. -/

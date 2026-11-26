@@ -34,12 +34,12 @@ jobs:
           lake exe mathlib/cache get
           python3 scripts/tauceti-cache-get.py
           python3 scripts/ci-cache-get.py
-      - name: Compile each changed module
+      - name: Compile the three changed modules and the downstream Casimir comparison
         run: |
           git restore --source="$GITHUB_SHA" -- src
           git diff --check
           result=0
-          for target in Lib.PadicHodge.TateSen Lib.DiscreteSeries.Theta.FockDualPair Lib.General.Measure.QuadricDisintegration; do
+          for target in Lib.PadicHodge.TateSen Lib.DiscreteSeries.Theta.FockDualPair Lib.General.Measure.QuadricDisintegration Lib.DiscreteSeries.Theta.CasimirComparison; do
             echo "::group::$target"
             lake build "$target" || result=1
             echo "::endgroup::"
