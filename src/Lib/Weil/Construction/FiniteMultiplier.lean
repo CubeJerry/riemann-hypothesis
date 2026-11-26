@@ -1,6 +1,12 @@
 module
 
-public import Lib.Adelic.Adeles.LocalFactors
+public import Lib.Adelic.Adeles.IdeleModulus
+public import Lib.Adelic.Unitary.ComponentsAndBlockSums
+public import Lib.Weil.Construction.WeilData
+import Lib.Adelic.Adeles.LocalFactors
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.General.LinearAlgebra.HermiteForm
+import Lib.General.Measure.HaarNormalisation
 
 /-!
 # Finite Heisenberg datum, its lattice vacuum and the finite multiplier
@@ -149,7 +155,7 @@ def _root_.New.stdLattice (E ι : Type*) [Field E] [NumberField E] :
 
 /-- The character `z ↦ ψf (j α ᾱ z)` of the finite adeles, with complex values. -/
 def selfDualAddChar : AddChar (𝔸f E) ℂ :=
-  coeHom.compAddChar ((ψf E).mulShift (algebraMap E (𝔸f E) j * α.1 * star α.1))
+  coeHom.compAddChar ((ψf E).mulShift (algebraMap E (𝔸f E) j * α.val * star α.val))
 
 variable {E ι}
 
@@ -168,7 +174,7 @@ lemma norm_selfDualAddChar (z : 𝔸f E) : ‖selfDualAddChar E z‖ = 1 := norm
 
 @[fun_prop]
 lemma continuous_selfDualAddChar : Continuous (selfDualAddChar E) :=
-  continuous_ψf.subtype_val.comp (continuous_const_mul _)
+  continuous_ψf.subtypeVal.comp (continuous_const_mul _)
 
 /-- Let E be a CM field with Weil data (ȷ = −ȷ̄, finite idele α). Let ψ₀ = `selfDualAddChar E` be
 the complex character z ↦ ψ_f(ȷαᾱz) of the finite adeles. Then ψ₀(z̄) = ψ₀(−z) for every finite
@@ -188,9 +194,9 @@ lemma forall_selfDualAddChar_mul_eq_one_iff (z : 𝔸f E) :
   obtain ⟨-, -, -, t, -, h_val, h_gen⟩ :=
     exists_reduction_and_idele_generator (I := differentIdeal ℤ (𝓞 E)) differentIdeal_ne_bot
   refine (h_gen _).trans ?_
-  set c : 𝔸f E := algebraMap E (𝔸f E) j * α.1 * star α.1
+  set c : 𝔸f E := algebraMap E (𝔸f E) j * α.val * star α.val
   have h_dual (w : FinPlace E) : Valued.v (c w) =
-      WithZero.exp (multiplicity w.1 (differentIdeal ℤ (𝓞 E)) : ℤ) := WeilData.self_dual w
+      WithZero.exp (multiplicity w.asIdeal (differentIdeal ℤ (𝓞 E)) : ℤ) := WeilData.self_dual w
   -- At each place `w` the valuations of `t` and of `c = j α ᾱ` cancel.
   have h_unit (w : FinPlace E) : Valued.v (t.val w) * Valued.v (c w) = 1 := by
     rw [h_val, h_dual, ← WithZero.exp_add, neg_add_cancel, WithZero.exp_zero]
@@ -225,7 +231,7 @@ lemma selfDualAddChar_congr {a b o : 𝔸f E} (t : 𝔸f E) (ho : o ∈ Ô E)
 /-! ### The vacuum and the Heisenberg datum -/
 
 /-- For a finite adelic vector x, the complex number ψ₀(c₀ x* x / 2). It equals ψ_f(−y* y / 4) at
-y = αx (`New.stdLattice.semichar_eq_ψf`) and is a sign on the lattice Ô^ι. -/
+y = αx and is a sign on the lattice Ô^ι. -/
 def semichar (x : ι → 𝔸f E) : ℂ := selfDualAddChar E (traceOneAdele * half * star x ⬝ᵥ x)
 
 lemma isOfFinOrder_semichar (x : ι → 𝔸f E) : IsOfFinOrder (semichar x) := by
@@ -556,12 +562,6 @@ def denominatorIdele (x : (𝔸f E)ˣ) : (𝔸f E)ˣ where
   val_inv := by grind [idem_compl, idem_mul_self, Units.inv_mul]
   inv_val := by grind [idem_compl, idem_mul_self, Units.inv_mul]
 
-/-- The inverse of the denominator of `x` is `1` where `x` is integral and `x` elsewhere. -/
-lemma coe_inv_denominatorIdele (x : (𝔸f E)ˣ) :
-    (denominatorIdele x)⁻¹.val =
-      idem {w : FinPlace E | v (x.val w) ≤ 1} + idem {w : FinPlace E | v (x.val w) ≤ 1}ᶜ * x.val :=
-      rfl
-
 /-- The valuation of the denominator of `x` at `w` is the inverse of `max 1 |x_w|`. -/
 lemma v_denominatorIdele (x : (𝔸f E)ˣ) (w : FinPlace E) :
     v ((denominatorIdele x).val w) = (max 1 (v (x.val w)))⁻¹ := by
@@ -586,7 +586,7 @@ lemma isSaturating_diagGL (d : ι → (𝔸f E)ˣ) :
       mul_inv_le_one_of_le₀ (le_max_right _ _) zero_le
     simpa [v_denominatorIdele] using h_le
   · rw [← map_inv, coe_diagGL, coe_diagGL, diagonal_mul_diagonal, diagonal_add]
-    exact congrArg diagonal (funext fun i ↦ coe_inv_denominatorIdele (d i))
+    rfl
 
 /-! ### The chosen saturating matrix -/
 
@@ -648,7 +648,7 @@ variable {E ι κ B : Type*} [Ring B] {S : Subring B} [Field E] [CMType E] [Fint
 character and |x| the idele norm. -/
 @[local simp]
 def chiAdelic : (𝔸 E)ˣ →* ℂ where
-  toFun x := υ.1 x * (↑√(ideleAbs x))⁻¹
+  toFun x := υ.val x * (↑√(ideleAbs x))⁻¹
   map_one' := by simp
   map_mul' := by simp [field]
 
@@ -697,32 +697,12 @@ theorem glMultiplier_mul_diagGL_mul (hk : k ∈ intGL ι (Ô E)) (hk' : k' ∈ i
     Units.ext (by simp)
   rw [glMultiplier_mul_of_mem _ hk hk', (isSaturating_diagGL d).glMultiplier_eq, h_det, map_prod]
 
-/-- Let `den x` be the denominator of a finite idele `x` (`New.denominatorIdele`). Then
-`χ_f (den x⁻¹) = χ_f x * χ_f (den x)` for `χ_f = υ |·|^(-1/2)`: this is the identity
-`max 0 μ = μ + max 0 (-μ)` for the orders `μ` of `x`. -/
-lemma chiFin_denominatorIdele_inv (x : (𝔸f E)ˣ) :
-    chiFin (denominatorIdele x⁻¹) = chiFin x * chiFin (denominatorIdele x) := by
-  refine (chiFin_congr fun w ↦ ?_).trans (chiFin.map_mul x (denominatorIdele x))
-  have h_inv : x⁻¹.val w = (x.val w)⁻¹ := map_units_inv (evalAt w) x
-  have h_ne : v (x.val w) ≠ 0 := by simpa using (x.isUnit.map (evalAt w)).ne_zero
-  have h_max : max 1 (v (x.val w))⁻¹ = (v (x.val w))⁻¹ * max 1 (v (x.val w)) := by
-    rw [mul_max, mul_one, inv_mul_cancel₀ h_ne, max_comm]
-  simp [v_denominatorIdele, h_inv, h_max, mul_comm]
-
 /-- The character `χ_f = υ |·|^(-1/2)` of the finite ideles turns the conjugation of `E` into
 complex conjugation, as `υ (star x)` is the inverse of `υ x` on the unit circle. -/
 lemma chiFin_star (x : (𝔸f E)ˣ) : chiFin (star x) = conj (chiFin x) := by
   have h_incl : finIdeleIncl (star x) = star (finIdeleIncl x) :=
     Units.ext (Prod.ext (star_one _).symm rfl)
   simp [chiFin, h_incl, chiAdelic, ← Circle.coe_inv_eq_conj, ← υ_star]
-
-/-- For a finite idele `x`, the value of `χ_f = υ |·|^(-1/2)` at the denominator
-(`New.denominatorIdele`) of `star x` is the complex conjugate of its value at the denominator of
-`x`. -/
-lemma chiFin_denominatorIdele_star (x : (𝔸f E)ˣ) :
-    chiFin (denominatorIdele (star x)) = conj (chiFin (denominatorIdele x)) := by
-  rw [← chiFin_star]
-  exact chiFin_congr fun w ↦ by simp only [v_denominatorIdele, Units.coe_star, v_star_apply]
 
 /-- For an invertible matrix `g` over the finite adeles of `E`, Δ_f(g⁻¹) = υ(det g)|det g|^(−1/2)
 Δ_f(g), where `chiFin` is the character x ↦ υ(x)|x|^(−1/2) with υ the splitting character of the
@@ -785,10 +765,10 @@ lemma glMultiplier_mul_of_map_evalAt_eq_one
   refine chiFin_congr fun w ↦ ?_
   have h_local {x y : GL ι (𝔸f E)} (hxy : x.map (evalAt w) = y.map (evalAt w)) :
       v ((saturatingElem x).val.val.det w) = v ((saturatingElem y).val.val.det w) := by
-    obtain ⟨u, hu⟩ : ∃ u : GL ι (𝔸f E), IsSaturating (Ô E).matrix y u := exists_isSaturating y
-    have h_sat : IsSaturating (LocInt w).matrix (x.map (evalAt w)) (u.map (evalAt w)) := by
-      simpa only [hxy] using hu.map_evalAt w
-    rw [h_sat.v_det_saturatingElem, (hu.map_evalAt w).v_det_saturatingElem]
+    have hx := (saturatingElem x).property.map_evalAt w
+    rw [hxy] at hx
+    simpa [← evalAt_apply, RingHom.map_det] using
+      hx.v_det_eq ((saturatingElem y).property.map_evalAt w)
   obtain hb | hb' := h_supp w
   · have h_comp : (b * b').map (evalAt w) = b'.map (evalAt w) := by rw [map_mul, hb, one_mul]
     simp [h_local h_comp, v_det_saturatingElem_eq_one hb]

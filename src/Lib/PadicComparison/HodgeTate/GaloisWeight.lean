@@ -1,6 +1,7 @@
 module
 
 public import Lib.PadicComparison.HodgeTate.Map
+import Lib.PadicHodge.PeriodRings.DeRhamPeriods
 
 /-!
 # Galois twists and the weight of the Hodge–Tate map
@@ -101,10 +102,23 @@ lemma thickeningOver.mulMu_twist [EmbeddedInQpBar p k] (g : Gp p) (c : PadicTest
   have h_sq : algebraMap Ainf c'.Thickening mu ^ 2 = 0 :=
     c'.ker_thickeningProj_sq.le (Ideal.pow_mem_pow c'.thetaGeneric_mu 2)
   rw [mulMu_thickeningProj, h_mu, h_tw]
-  -- On the right, lift the scalar to `c.Thickening` along `c.uniqueLift` and move it out of `mulMu`
-  -- by `mulMu_proj_mul`. `erw`: the thickening and the generic ring of `c'` are those of `c` only
-  -- up to unfolding the twist
-  erw [← c.thickeningProj_uniqueLift, mulMu_proj_mul, mulMu_thickeningProj, AlgHom.commutes]
+  -- Lift the scalar to the thickening and move it out of `mulMu`.
+  let χ := (cyclotomicGp g⁻¹).val
+  let z := algebraMap ℤ_[p] (PadicAlgCl p) χ
+  let lift : c'.Thickening := c.uniqueLift z
+  have h_proj : c'.thickeningProj lift = c.genericStructureMap z :=
+    c.thickeningProj_uniqueLift z
+  let m : c'.Thickening := mulMu c' (c'.thickeningProj x)
+  have h_mu_scalar : mulMu c' (c.genericStructureMap z * c.thickeningProj x) =
+      lift * m :=
+    (congrArg (fun s : c'.GenericRing ↦ mulMu c' (s * c'.thickeningProj x)) h_proj.symm).trans
+      (mulMu_proj_mul c' lift (c'.thickeningProj x))
+  refine Eq.trans ?_ h_mu_scalar.symm
+  refine Eq.trans ?_ (congrArg (fun y : c'.Thickening ↦ lift * y)
+    (mulMu_thickeningProj c' x)).symm
+  have h_lift : lift = algebraMap ℤ_[p] c'.Thickening χ :=
+    c.uniqueLift.commutes χ
+  rw [h_lift]
   simp [Algebra.smul_def, ← IsScalarTower.algebraMap_apply, h_sq]
   -- what remains is associativity, in rings that agree only up to unfolding the twist
   exact mul_assoc _ _ _
@@ -144,10 +158,9 @@ lemma HodgeTatePair.contractionPow_galTwist [EmbeddedInQpBar p k] (g : Gp p) (h 
   | zero =>
     -- both sides are the class of the projection to degree zero
     rw [contractionPow, map_homClass, pullbackAlong_pullbackAlong]
-    -- `erw`: the exterior algebras of `Index → baseAlg` and of `Index → X.test.GenericRing` carry
-    -- the same module structure only up to unfolding, so `homClass_comp` matches only with `erw`
-    erw [← homClass_comp]
-    rfl
+    -- The exterior algebras of `Index → baseAlg` and of `Index → X.test.GenericRing` carry
+    -- the same module structure only up to unfolding, so `homClass_comp` matches only up to that.
+    exact (homClass_comp ..).symm
   | succ h ih =>
     -- Move `twistForms g` past the class of the cocycle `contractionCocycle`, then use the
     -- induction hypothesis. The side goal, that `twistForms g` carries the twisted cocycle to
@@ -185,10 +198,9 @@ theorem hodgeTateMap_galois_twist
     (ht : algebraMap k (PadicAlgCl p) t = algebraMap ℤ_[p] (PadicAlgCl p) (cyclotomicGp g⁻¹).val) :
     let τ : genericOver ⋙ restrictAlg E k ⟶ PadicTest.twist g ⋙ genericOver ⋙ restrictAlg E k :=
       .mk fun (c : PadicTest) ↦
-      CommAlg.homOfRingHom (.id c.GenericRing) fun (z : E) ↦ by
-        symm
-        erw [c.genericStructureMap_twist, UniformSpace.Completion.algEquiv_smul_coe, hg]
-        rfl
+      CommAlg.homOfRingHom (.id c.GenericRing) fun (z : E) ↦
+        ((c.genericStructureMap_twist g _).trans (congrArg c.genericStructureMap
+          ((UniformSpace.Completion.algEquiv_smul_coe ..).trans (congrArg _ (hg z))))).symm
     restrictToPairs
         ((Comparison.of (PadicTest.twist g) (twistGenericCoeff g)).pull (whiskerRight τ N) n ξ :
         H (genericOver ⋙ restrictAlg E k ⋙ N) genericCoeff n) =
@@ -250,9 +262,11 @@ theorem hodgeTateMap_galois_twist
   calc
     _ = TotalH.comp α
         (TotalH.comp (TotalH.map (restrictAlong (galTwist g)) (restrictToPairs ξ)) β) := by
-      -- `erw`: after unfolding `restrictToPairs`, the classes live over `(restrictAlong F).obj G`
-      -- on one side and `F ⋙ G` on the other, which agree only up to unfolding
-      erw [map_of, of_comp_homClass, pullbackAlong_of]
+      -- The classes live over `(restrictAlong F).obj G` on one side and `F ⋙ G` on the other,
+      -- which agree only up to unfolding, so `M` is given and the lemmas are applied by unification
+      refine .trans ?_ ((pullbackAlong_of _).symm.trans (congrArg _
+        ((of_comp_homClass (M := (restrictAlong (galTwist g)).obj _) _).symm.trans
+          (congrArg (TotalH.comp · β) (map_of ..).symm))))
       simp [restrictToPairs, Comparison.pull, H.map, H.push, mapExactFunctor_mapExactFunctor,
         mapExtAddHom, Abelian.Ext.mapExactFunctor_comp, Abelian.Ext.mapExactFunctor_mk₀]
       congr 3 with : 2

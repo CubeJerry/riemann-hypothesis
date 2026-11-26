@@ -1,8 +1,21 @@
 module
 
-public import Lib.Adelic.Witt.WittTheorem
-public import Lib.DiscreteSeries.Haar.GramPolar
-public import Lib.General.Analysis.PackingAndSobolev
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.Topology.Algebra.Group.Units
+import Mathlib.Topology.ExtremallyDisconnected
+import Mathlib.Topology.Separation.CompletelyRegular
+import Mathlib.Topology.Separation.Connected
+import TauCeti.Topology.Instances.Matrix
+public import Lib.DiscreteSeries.Haar.CayleyChart
+public import Lib.DiscreteSeries.Haar.GramCoordinates
+import Lib.Adelic.Witt.WittTheorem
+import Lib.DiscreteSeries.Haar.GramPolar
+import Lib.General.Analysis.GaussianIntegral
+import Lib.General.Analysis.PackingAndSobolev
+import Lib.General.Measure.IntegralOperators
 
 /-!
 # Haar measure on U(J): U(n) has mass one, covering bounds for norm balls
@@ -323,8 +336,9 @@ instance isProbabilityMeasure_haarU :
       _ = ∫⁻ Y : Matrix n n ℂ, S.indicator 1 (gramCoords 1 Y) :=
           (lintegral_indicator ((continuous_gramCoords 1).measurable hS.measurableSet) _).symm
       _ = c * (1 * volume S) := by
-          simpa [hS.measurableSet, Set.univ_inter] using hW _ (measurable_one.indicator hS.measurableSet)
-            (support_indicator_subset.trans (by grind))
+          simpa [hS.measurableSet, Set.univ_inter] using
+            hW _ (measurable_one.indicator hS.measurableSet)
+              (support_indicator_subset.trans (by grind))
 
 /-- For all signs equal to one, the unitary group of the sign matrix `signMatrix 1`, which equals
 `1` by `signMatrix_one`, has total mass one. -/
@@ -399,7 +413,7 @@ theorem measure_ball_le_covering (ν : Measure S) [MeasurableMul S] [ν.IsMulRig
   have : Finite M := Set.Finite.to_subtype (by simpa using h_card.trans_lt ofReal_lt_top)
   have h_cover : {s : S | ‖f s‖ ≤ R} ⊆ ⋃ k : M, (· * (k : S)⁻¹) ⁻¹' B := by
     intro g hg
-    by_contra! h_not_mem
+    by_contra h_not_mem
     -- Otherwise `g` is far from all of `M`: `j (g k⁻¹) - 1 = (f g - f k) (j k * y)⁻¹`, and an
     -- element of `U J` has the norm of its inverse.
     have h_far (k : M) : IsFar ⟨g, hg⟩ k := (div_le_iff₀ (by positivity)).2 <|
@@ -419,8 +433,8 @@ theorem measure_ball_le_covering (ν : Measure S) [MeasurableMul S] [ν.IsMulRig
 
 /-- For a proper homomorphism `j` to `U J` and a measure `ν` that is finite on compact sets, the
 ball `‖j s - 1‖ ≤ R` in the operator norm has finite measure. -/
-lemma measure_ball_ne_top_of_isProperMap (ν : Measure S) [MeasurableMul S]
-    [ν.IsMulRightInvariant] {j : S →* U J} [TopologicalSpace S] [IsFiniteMeasureOnCompacts ν]
+lemma measure_ball_ne_top_of_isProperMap (ν : Measure S)
+    {j : S →* U J} [TopologicalSpace S] [IsFiniteMeasureOnCompacts ν]
     (hj : IsProperMap j) (R : ℝ) : ν {s : S | ‖(j s : Matrix n n ℂ) - 1‖ ≤ R} ≠ ⊤ := by
   have h_eq : {s : S | ‖(j s : Matrix n n ℂ) - 1‖ ≤ R} = j ⁻¹' Metric.closedBall 1 R :=
     Set.ext fun s ↦ (mem_closedBall_iff_norm (b := (j s : Matrix n n ℂ))).symm

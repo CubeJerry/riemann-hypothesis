@@ -1,10 +1,16 @@
 module
 
-public import Lib.Adelic.TraceFormula.OrbitalUnfolding
-public import New.Appendix.DiscreteSeries.PositionGroup
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.MeasureTheory.Integral.Pi
 public import New.Determinant.AuxiliaryForms.DeepLevelPoincarePeriod
 public import New.Determinant.AuxiliaryForms.PathData
-public import New.UpperBound.Objects.RowChain
+public import Lib.Adelic.AutomorphicForms.Cuspidality
+import Lib.Adelic.TraceFormula.OrbitalUnfolding
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import New.Appendix.DiscreteSeries.PositionGroup
+import New.OneLift.ComparisonOperator.ExchangeData
+import New.UpperBound.Objects.RowChain
 
 /-!
 # Vanishing of forms on Y₀ orthogonal to the deep level on Ỹ^0_0
@@ -188,7 +194,7 @@ lemma New.Exchange.HasDeepLevelSizes.pow_places_le_div
       exacts [by linarith, h_size.rank_pow_le, by linarith, by linarith]
     _ = β ^ ((1 + 2 * card n ^ 2 + 2 * A + (N + 2 * (3 * A))) * D.f + 2) := by ring
     _ ≤ β ^ (20 * A * (D.f + 1)) :=
-      pow_le_pow_right₀ (by linarith) (by nlinarith [Nat.mul_le_mul_right D.f exponent_le])
+      pow_le_pow_right₀ (by linarith) (by linarith [Nat.mul_le_mul_right D.f exponent_le])
     _ ≤ m := h_size.pow_le
 
 end
@@ -439,7 +445,7 @@ lemma New.Exchange.norm_realConv_translatedCoeff_le
       h_size.rank_sq_lt h_gap' (by positivity) x h_large (h_size.places_le.trans h_size.beta_le_m)
       (by linarith) ω α
   -- The positive volume `vol` of the level cancels.
-  simpa [slice, vol, measureReal_pos_of_isLevel, abs_of_pos, mul_assoc] using key
+  simpa [vol, measureReal_pos_of_isLevel, abs_of_pos, mul_assoc] using key
 
 /-- Let the parameter `l` have large gaps for `4 * A` (`HasLargeGap`), let `16 ≤ β` and
 `‖ω‖ ^ 2 ≤ β`. Then the norm of the kernel `dsKernel l r`, times

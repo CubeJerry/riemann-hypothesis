@@ -1,6 +1,13 @@
 module
 
-public import Lib.PadicHodge.Kisin.PeriodMatrixBasis
+import Mathlib.RingTheory.AdicCompletion.Completeness
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.PowerSeries.Inverse
+import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Lib.General.NumberTheory.CoefficientRings
+public import Lib.PadicHodge.Kisin.Bicommutant
+import Lib.PadicHodge.Kisin.PeriodMatrixBasis
 
 /-!
 # The radius lemma: after Frobenius a frame is a constant basis times a unit over A
@@ -50,14 +57,6 @@ variable {p : ℕ} [ThePrime p] {c : Chart} {d : Type} [Fintype d] [DecidableEq 
 associates). -/
 private lemma exists_E_dvd_xi_sub_p_mul : ∃ b : Ainf, c.E.val ∣ xi - p * b :=
   ⟨0, by simp [associated_E_xi, Associated.dvd]⟩
-
-/-- The identity `n - v_p(n!) + 2 = (n + 1 - v_p((n + 1)!)) + v_p(n + 1) + 1` of `p`-adic
-valuations, from `v_p((n + 1)!) = v_p(n + 1) + v_p(n!)` and `v_p((n + 1)!) ≤ n + 1`. -/
-private lemma sub_padicValNat_factorial_add_two_eq (n : ℕ) :
-    n - padicValNat p n ! + 2 = n + 1 - padicValNat p (n + 1)! + padicValNat p (n + 1) + 1 := by
-  grind [Nat.padicValNat_def, multiplicity_factorial_le, factorial, Nat.multiplicity_mul]
-
-private lemma coe_z_eq_seriesMap_X : (c.z : Ainf) = c.seriesMap X := rfl
 
 /-- If `tau` divides `E ^ h * a` in `BPlus`, for `a` in `Ainf`, then `tau` divides `a` in
 `Ainf`. -/
@@ -153,7 +152,7 @@ lemma exists_z_pow_eq {n N : ℕ} (h_le : c.e * n ≤ N) :
   -- `xi = p * Amax.xiDivP` in `Amax`, and `xi` divides the image of `z ^ e * (unit) + p`.
   have h_p_dvd_xi : (p : Amax) ∣ algebraMap Ainf Amax xi := ⟨Amax.xiDivP, p_mul_X.symm⟩
   have p_dvd : (p : Amax) ∣ algebraMap Ainf Amax c.z ^ c.e := by
-    simpa [(c.unitSeries.isUnit.map _).map, ← coe_z_eq_seriesMap_X] using
+    simpa [(c.unitSeries.isUnit.map _).map, z] using
       h_p_dvd_xi.trans (map_dvd (algebraMap Ainf Amax) c.associated_xi.dvd')
   obtain ⟨y, hy⟩ : (p : Amax) ^ n ∣ algebraMap Ainf Amax c.z ^ N := by grw [p_dvd, ← pow_mul, h_le]
   exact ⟨y, by simpa [← IsScalarTower.algebraMap_apply] using congrArg (algebraMap Amax BPlus) hy⟩
@@ -326,7 +325,7 @@ lemma exists_ev_eq_frobEnd_pow (ht_fixes : c.FixesThetaZ t)
   -- Successive approximation in powers of `ev X`, for which `BPlus` is separated as `z ∣ ev X`.
   have h_hausdorff : IsHausdorff (span {ev X}) BPlus := by
     refine ⟨fun x hx ↦ c.eq_zero_of_z_pow_dvd fun n ↦ ?_⟩
-    grw [hz, smodEq_span_pow_iff_dvd.mp (hx n), sub_zero]
+    grw [hz, (TauCeti.sModEq_span_singleton_pow_iff ..).mp (hx n), sub_zero]
   -- The family: `p ^ (n - v_p n! + 2) * φ ^ l (W' j)` for the rows `W'` over `S_B` such that
   -- `q • Y i - z ^ (n + 1) * W'` is a row over `Ainf`; row `i` of `W` is one, with `n = 0`.
   let Row : Type :=
@@ -351,7 +350,14 @@ lemma exists_ev_eq_frobEnd_pow (ht_fixes : c.FixesThetaZ t)
   set v : ℕ := padicValNat p (n + 1)
   let a : ℕ := n + 1 - padicValNat p (n + 1)!
   -- The exponents match because `v_p (n + 1)! = v + v_p n! ≤ n + 1`.
-  have h_exp : n - padicValNat p n ! + 2 = a + v + 1 := sub_padicValNat_factorial_add_two_eq n
+  have h_exp : n - padicValNat p n ! + 2 = a + v + 1 := by
+    dsimp only [a, v]
+    simp only [Nat.padicValNat_def]
+    have h1 : multiplicity p (n + 1)! = multiplicity p (n + 1) + multiplicity p n ! := by
+      rw [Nat.factorial_succ, Nat.multiplicity_mul n.succ_ne_zero n.factorial_ne_zero]
+    have h2 : multiplicity p (n + 1)! ≤ n + 1 := multiplicity_factorial_le (p := p) (n + 1)
+    have h3 : multiplicity p n ! ≤ n := multiplicity_factorial_le (p := p) n
+    omega
   refine ⟨C (p ^ a * (c.φ ^ l) (s j)), ⟨(n + 1, W'), hW', p ^ (v + 1) * q,
     p ^ (v + 1) • A + fun j ↦ c.z.val ^ (n + 1) * s j, fun j ↦ ?_⟩, ?_⟩
   · -- The new row is `p ^ (v + 1) • A + z ^ (n + 1) * s`, and `p ^ (v + 1) * W_row - s = z * W'`.

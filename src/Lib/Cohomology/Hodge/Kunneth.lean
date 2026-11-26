@@ -1,7 +1,13 @@
 module
 
-public import Lib.Cohomology.Hodge.DepthVanishing
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Lib.Cohomology.LerayHirsch
+public import Lib.Cohomology.Etale.RelativeChains
+public import Lib.Cohomology.Hodge.Site
+import Lib.Cohomology.Etale.DenseSubfunctors
+import Lib.Cohomology.Hodge.DepthVanishing
+import Lib.General.Algebra.CohomologyBaseChange
 
 /-!
 # Künneth formula: Hodge classes on X × X are sums of external products
@@ -161,7 +167,7 @@ lemma exists_basis_forms_lerayHirsch {k : Type} [Field k] (c : HodgeTest k) :
     have h_right : exteriorMap q.snd (c.formBasis T) = p.formBasis (T.map .inr) :=
       exteriorMap_formBasis q (.sumLexInr ..) hq T
     have h_disjoint : Disjoint (S.map .inl) (T.map .inr) := disjoint_map_inl_map_inr S T
-    have h_union : (S.map .inl).disjUnion (T.map .inr) h_disjoint = S.disjSum T := by aesop
+    have h_union : (S.map .inl).disjUnion (T.map .inr) h_disjoint = S.disjSum T := by tauto
     rw [h_left, h_right, ← h_union]
     exact ⟨_, ExteriorAlgebra.basis_mul_of_disjoint (I := p.Index) _ ⟨_, rfl⟩ ⟨_, rfl⟩ h_disjoint⟩
   choose ε hε using h_wedge

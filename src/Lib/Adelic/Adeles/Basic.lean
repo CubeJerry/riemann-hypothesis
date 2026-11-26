@@ -1,12 +1,20 @@
 module
 
-public import Lib.Base
 public import TauCeti.RingTheory.DedekindDomain.FiniteAdeleRing.Basic
-public import TauCeti.NumberTheory.NumberField.Countable
-public import TauCeti.RingTheory.DedekindDomain.Countable
 import TauCeti.RingTheory.DedekindDomain.AdicValuation.Completion
-public import TauCeti.RingTheory.DedekindDomain.AdicValuation.ResidueField
-public import TauCeti.RingTheory.DedekindDomain.FiniteAdeleRing.BorelSpace
+public import Mathlib.Algebra.Star.Subsemiring
+public import Mathlib.NumberTheory.NumberField.CMField
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
+import Mathlib.Topology.Algebra.Group.SubmonoidClosure
+import Mathlib.Topology.Algebra.Valued.LocallyCompact
+import Mathlib.Topology.UniformSpace.Uniformizable
+import TauCeti.NumberTheory.NumberField.Countable
+import TauCeti.RingTheory.DedekindDomain.AdicValuation.ResidueField
+import TauCeti.RingTheory.DedekindDomain.FiniteAdeleRing.BorelSpace
+public import Lib.Speed
 
 /-!
 # Finite adeles of number fields: topology, idempotents, functoriality and base change
@@ -129,9 +137,6 @@ abbrev LocInt : ValuationSubring (adicCompletion E w) := w.adicCompletionInteger
 
 instance : CommSemiring (LocInt w) := CommRing.toCommSemiring
 
--- The local ring structure, for the semiring structure that comes from the commutative ring one.
-instance : @IsLocalRing (LocInt w) CommRing.toCommSemiring.toSemiring := inferInstance
-
 /-- The residue field of the completion E_w of E at the finite place w. -/
 @[instance_reducible]
 def ResField : Type _ := IsLocalRing.ResidueField (LocInt w)
@@ -185,17 +190,19 @@ lemma singleAdele_of_ne {v w : FinPlace E} (hv : v ≠ w) (x : LocField w) : sin
   dite_eq_right hv
 
 variable (E) in
-/-- The subring Ô of finite adeles of E that are integral at every finite place. -/
-def Ô : Subring (𝔸f E) := ⨅ w : FinPlace E, (LocInt w).toSubring.comap (evalAt w)
+/-- The subring Ô of finite adeles of E that are integral at every finite place: Tau Ceti's
+integral adeles `FiniteAdeleRing.integralAdeles`, as a subring. -/
+def Ô : Subring (𝔸f E) := (FiniteAdeleRing.integralAdeles (𝓞 E) E).toSubring
 
 /-- A finite adele x is integral if and only if each of its components has valuation at most 1. -/
-lemma mem_Ô {x : 𝔸f E} : x ∈ Ô E ↔ ∀ w : HeightOneSpectrum (𝓞 E), v (x w) ≤ 1 := Subring.mem_iInf
+lemma mem_Ô {x : 𝔸f E} : x ∈ Ô E ↔ ∀ w : HeightOneSpectrum (𝓞 E), v (x w) ≤ 1 :=
+  FiniteAdeleRing.mem_integralAdeles.trans (forall_congr' fun _ ↦ mem_adicCompletionIntegers ..)
 
 /-- Reduction modulo w: the ring homomorphism from the integral finite adeles to the residue
 field at w. -/
 def reduceAt : Ô E →+* ResField w :=
   (residue (LocInt w)).comp
-    (((evalAt w).domRestrict (Ô E)).codRestrict (LocInt w) fun x ↦ mem_Ô.1 x.2 w)
+    (((evalAt w).domRestrict (Ô E)).codRestrict (LocInt w) fun x ↦ mem_Ô.1 x.property w)
 
 instance : MeasurableSpace (LocField w) := borel _
 
@@ -209,9 +216,6 @@ instance : BorelSpace (LocField w) := ⟨rfl⟩
 such as `(n → InfinitePlace E → ℂ) × (n → 𝔸f E)`, the instance term exceeds
 `synthInstance.maxSize`. -/
 instance : PolishSpace (𝔸f E) := inferInstance
-
-/-- Tau Ceti's local compactness, as a shortcut, for the same reason. -/
-instance : LocallyCompactSpace (𝔸f E) := inferInstance
 
 /-- Tau Ceti's second countability, as a shortcut, for the same reason. -/
 instance : SecondCountableTopology (𝔸f E) := inferInstance
@@ -281,7 +285,7 @@ variable {u : FinPlace K} {w : FinPlace L}
 `f : K → L` to a homomorphism of the completions at u and at w. -/
 def locMap (h : w.comap f = u) : adicCompletion K u →+* adicCompletion L w :=
   let := f.toAlgebra
-  have : w.1.LiesOver u.1 := .mk (congrArg HeightOneSpectrum.asIdeal h).symm
+  have : w.asIdeal.LiesOver u.asIdeal := .mk (congrArg HeightOneSpectrum.asIdeal h).symm
   -- `f` is uniformly continuous for the valuations at `u` and `w`, so it extends to the completions
   (equiv L w).symm.toRingHom.comp
     ((mapRingHom _ (uniformContinuous_algebraMap_liesOver K L u w).continuous).comp
@@ -318,8 +322,8 @@ lemma exists_v_locMap_eq_pow {u : FinPlace K} {w : FinPlace L} (hw : w.comap f =
   -- suffices to treat elements of `K`, which is dense in its completion.
   refine ⟨w.asIdeal.ramificationIdx (𝓞 K), (w.asIdeal.ramificationIdx_pos (𝓞 K)).ne',
     (denseRange_algebraMap K u).eq fun x : K ↦ ?_⟩
-  rw [locMap_algebraMap, v_algebraMap_eq_valuation, v_algebraMap_eq_valuation]
-  exact (valuation_liesOver L u w x).symm
+  simpa only [locMap_algebraMap, v_algebraMap_eq_valuation] using!
+    (valuation_liesOver L u w x).symm
 
 /-- The map of completions induced by a field homomorphism preserves and reflects integrality. -/
 @[simp] lemma v_locMap_le_one_iff {u : FinPlace K} {w : FinPlace L} (hw : w.comap f = u)
@@ -556,16 +560,6 @@ lemma residue_eq_iff_valuation_sub_lt_one {F Γ : Type*} [Field F] [LinearOrdere
 lemma isOpen_v_lt (γ : WithZero (Multiplicative ℤ)) : IsOpen {x : LocField w | v x < γ} :=
   isOpen_lt continuous_v (by fun_prop)
 
-/-- Every element `x` of `LocInt w`, the ring of integers of the completion of `E` at `w`, is
-approximated by algebraic integers `a` of `E` to any order: `a - x` has valuation `v` less than
-`exp n`, the image of the integer `n` in the value group. -/
-lemma exists_int_approx (x : LocInt w) (n : ℤ) :
-    ∃ a : 𝓞 E, v (algebraMap E (adicCompletion E w) a - x.val) < exp n := by
-  -- Tau Ceti approximates to order `exp (-m)` for natural `m`; take `m = (1 - n).toNat`.
-  obtain ⟨a, ha⟩ := exists_valued_sub_le (K := E) w x (1 - n).toNat
-  rw [Valuation.map_sub_swap] at ha
-  exact ⟨a, ha.trans_lt (exp_lt_exp.2 (by omega))⟩
-
 /-- Every element of the residue field at w is the residue of an algebraic integer of E. -/
 lemma algebraMap_ResField_surjective : Function.Surjective (algebraMap (𝓞 E) (ResField w)) :=
   residue_algebraMap_adicCompletionIntegers_surjective (K := E) w
@@ -601,19 +595,10 @@ deriving instance PolishSpace for LocField
 instance : Fact (∀ w : FinPlace E, IsOpen (LocInt w).carrier) :=
   ⟨fun w ↦ isOpen_integer (LocField w)⟩
 
-variable (E) in
-/-- `New.Ô E` has the same elements as Tau Ceti's integral finite adeles. -/
-lemma coe_Ô_eq_integralAdeles : (Ô E : Set (𝔸f E)) = FiniteAdeleRing.integralAdeles (𝓞 E) E :=
-  ext fun _ ↦ by
-    simp [mem_Ô, FiniteAdeleRing.mem_integralAdeles, HeightOneSpectrum.mem_adicCompletionIntegers]
+lemma isCompact_Ô : IsCompact (Ô E : Set (𝔸f E)) :=
+  FiniteAdeleRing.isCompact_integralAdeles (R := 𝓞 E) (K := E)
 
-lemma isCompact_Ô : IsCompact (Ô E : Set (𝔸f E)) := by
-  rw [coe_Ô_eq_integralAdeles]
-  exact FiniteAdeleRing.isCompact_integralAdeles (R := 𝓞 E) (K := E)
-
-lemma isOpen_Ô : IsOpen (Ô E : Set (𝔸f E)) := by
-  rw [coe_Ô_eq_integralAdeles]
-  exact FiniteAdeleRing.isOpen_integralAdeles (𝓞 E) E
+lemma isOpen_Ô : IsOpen (Ô E : Set (𝔸f E)) := FiniteAdeleRing.isOpen_integralAdeles (𝓞 E) E
 
 @[fun_prop]
 lemma continuous_evalAt : Continuous (evalAt w) := continuous_eval w
@@ -656,9 +641,9 @@ lemma exists_natCast_smul_mem_of_isCompact {M : Type*} [AddCommMonoid M] [Module
   -- `N • 1` come close to `0` for arbitrarily large `N`.
   have : CompactSpace (Ô E) := isCompact_iff_compactSpace.1 isCompact_Ô
   have h_cont : Continuous fun p : Ô E × M ↦ (p.1 : 𝔸f E) • p.2 := by fun_prop
-  have h_small : ∀ᶠ a : Ô E in nhds 0, ∀ x ∈ K, a.1 • x ∈ U :=
+  have h_small : ∀ᶠ a : Ô E in nhds 0, ∀ x ∈ K, a.val • x ∈ U :=
     hK.eventually_forall_of_forall_eventually fun x _ ↦ h_cont.tendsto' (0, x) 0 (by simp) hU
-  have h_freq : ∃ᶠ N : ℕ in .atTop, ∀ x ∈ K, (N • (1 : Ô E)).1 • x ∈ U :=
+  have h_freq : ∃ᶠ N : ℕ in .atTop, ∀ x ∈ K, (N • (1 : Ô E)).val • x ∈ U :=
     (mapClusterPt_zero_atTop_nsmul _).frequently h_small
   obtain ⟨N, hN, hN_mem⟩ := h_freq.forall_exists_of_atTop 1
   exact ⟨N, one_le_iff_ne_zero.1 hN, fun x hx ↦ by simpa using hN_mem x hx⟩
@@ -692,9 +677,9 @@ lemma exists_mem_nhds_isIntegral_sub_div {E : Type*} [Field E] [NumberField E] (
     mem_nhds_zero_finAdele_iff.mpr ⟨c, hc, fun z hz ↦ ⟨z, hz, rfl⟩⟩
   have hU : U ∈ nhds y₀ := (continuous_sub_right y₀).tendsto' y₀ 0 (sub_self y₀) h_zero
   refine ⟨U, hU, fun x x' ⟨z, hz, hx⟩ ⟨z', hz', hx'⟩ ↦ algebraMap_mem_Ô.mp ?_⟩
-  have h_diff : algebraMap E (𝔸f E) (x - x') = c * (z - z') := by simp [mul_sub, ← hx, ← hx']
   have h_mul : (c : 𝔸f E) * algebraMap E (𝔸f E) ((x - x') / c) = c * (z - z') := by
-    rw [← h_diff, ← map_natCast (algebraMap E (𝔸f E)), ← map_mul, mul_div_cancel₀ _ (mod_cast hc)]
+    rw [← map_natCast (algebraMap E (𝔸f E)), ← map_mul, mul_div_cancel₀ _ (mod_cast hc)]
+    simp [mul_sub, ← hx, ← hx']
   rw [(isUnit_natCast_finAdele hc).mul_left_cancel h_mul]
   exact sub_mem hz hz'
 
@@ -716,7 +701,9 @@ lemma exists_eq_mul_iff_v_le {x c : 𝔸f E} :
     mem_Ô.2 fun w ↦ (a w).property, ext _ _ fun w ↦ ?_⟩
   exact ((mul_comm _ _).trans (ha w)).symm
 
-instance : Algebra (𝓞 E) (Ô E) := ((algebraMap ..).codRestrict _ coe_mem_Ô).toAlgebra
+/-- The algebra structure of the subalgebra `FiniteAdeleRing.integralAdeles`. -/
+instance : Algebra (𝓞 E) (Ô E) :=
+  inferInstanceAs (Algebra (𝓞 E) (FiniteAdeleRing.integralAdeles (𝓞 E) E))
 
 @[simp]
 lemma coe_algebraMap_Ô (x : 𝓞 E) : (algebraMap (𝓞 E) (Ô E) x).val = ↑x := rfl
@@ -725,13 +712,8 @@ lemma coe_algebraMap_Ô (x : 𝓞 E) : (algebraMap (𝓞 E) (Ô E) x).val = ↑x
 
 /-- The algebraic integers of `E` are dense in `Ô E`, the ring of finite adeles that are integral at
 every finite place. -/
-lemma denseRange_algebraMap_Ô : DenseRange (algebraMap (𝓞 E) (Ô E)) := by
-  -- Both subrings carry the restriction of `algebraMap (𝓞 E) (𝔸f E)`.
-  have h := FiniteAdeleRing.denseRange_algebraMap_integralAdeles (𝓞 E) E
-  rw [DenseRange, Subtype.dense_iff, ← range_comp] at h ⊢
-  intro x hx
-  exact closure_mono (by rintro _ ⟨y, rfl⟩; exact ⟨y, rfl⟩)
-    (h ((Set.ext_iff.1 (coe_Ô_eq_integralAdeles E) x).1 hx))
+lemma denseRange_algebraMap_Ô : DenseRange (algebraMap (𝓞 E) (Ô E)) :=
+  FiniteAdeleRing.denseRange_algebraMap_integralAdeles (𝓞 E) E
 
 /-- For a nonzero algebraic integer a, every integral finite adele x (an element of the ring `Ô E`
 of finite adeles integral at every finite place) is congruent modulo a to an algebraic integer b. -/
@@ -849,7 +831,7 @@ lemma idem_apply : idem S w = if w ∈ S then 1 else 0 := rfl
 
 /-- The adele `idem S`, with components 1 and 0, is integral at every finite place. -/
 @[simp]
-lemma idem_mem_Ô : idem S ∈ Ô E := by aesop_cat
+lemma idem_mem_Ô : idem S ∈ Ô E := mem_Ô.2 fun w ↦ by by_cases hw : w ∈ S <;> simp [hw]
 
 open scoped Classical in
 /-- The integral adele `idem S`, with component 1 on the set of places `S` and 0 elsewhere, is sent

@@ -1,6 +1,12 @@
 module
 
-public import Lib.Cohomology.PointClass.LinearIndependence
+import Mathlib.RingTheory.PiTensorProduct
+public import Lib.Cohomology.Hodge.FixedPointFormula
+public import Lib.General.Geometry.ProjectiveSpace
+public import Lib.PadicComparison.HodgeTate.Map
+import Lib.Cohomology.Hodge.Kunneth
+import Lib.Cohomology.PointClass.LinearIndependence
+import Lib.General.Geometry.PointsOfProperSchemes
 
 /-!
 # Woods Hole (half of Atiyah–Bott): maps killed under λ_h on Hodge classes are h-null
@@ -141,7 +147,7 @@ Here `Φ t i z` is `z` pulled back along `(u i ∘ s_t, c)` (`New.Variety.scaled
 `s_t : (a, m) ↦ (a, t m)` on the square-zero extension `B ⊕ M` of a `k`-algebra `B`. -/
 lemma New.Variety.sum_mul_hodgeTateMap_scaledGraph_eq_zero {p : ℕ} {A : Type*} {E k : Type}
     {d h : ℕ} {I : Type} [CommRing A] [Field E] [CharZero E] [Algebra A E] [Field k]
-    [IsAlgClosed k] [EmbeddedInQpBar p k] [Algebra E k] {R : Subalgebra A E}
+    [EmbeddedInQpBar p k] [Algebra E k] {R : Subalgebra A E}
     {W Y : Over (Spec (CommRingCat.of R))} {u : I → (W ⟶ Y)} {b : I →₀ k}
     (hY_atlas : HasAtlas d (algPointsOf E (CommRingCat.of R) Y))
     (h_null : h ≤ d → ∀ q : ℕ, q ≤ d →

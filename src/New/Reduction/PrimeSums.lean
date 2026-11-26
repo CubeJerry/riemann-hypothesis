@@ -1,6 +1,9 @@
 module
 
-public import New.Reduction.Data.Sizes
+import Mathlib.Data.Rat.Cast.OfScientific
+public import New.Reduction.Data.AdmissibleData
+import New.Reduction.Data.LevelAndTwists
+import New.Reduction.Data.Sizes
 
 /-!
 # Prime sums: main amount, expected value and total remainder
@@ -51,8 +54,7 @@ lemma sum_lambdaKResidueClass_mul_posPart [NeZero q] (A : ℕ) {z : ℝ} (hz : 0
       A * (primeRemainder d q z + log z / q.totient + (logDerivMean d q 1).re) := by
   have hA : (A : ℝ) ≠ 0 := (hz.trans_le hzA).ne'
   rw [primeRemainder_eq_sum A hz hzA, ← sum_div]
-  field_simp
-  ring
+  field
 
 namespace Data
 

@@ -1,6 +1,8 @@
 module
 
 public import Lib.Weil.DualPair.FiniteAction
+import Lib.Weil.Construction.CanonicalTheta
+import Lib.Weil.DualPair.WeilAction
 
 /-!
 # Theta kernels of unitary pairs modulo an ideal: formal laws and seesaw identities
@@ -14,16 +16,14 @@ translations, seesaw identities, negation, passing to a smaller ideal and relabe
 
 ## Main definitions and results
 
-* `New.exists_conj_modKernel_eq_mul_modKernel_neg`, `New.exists_stdKernel_neg_left`: the complex
-  conjugate of a kernel is a kernel for the negated first space, up to a factor of modulus one.
+* `New.exists_conj_modKernel_eq_mul_modKernel_neg`: the complex conjugate of a kernel is a kernel
+  for the negated first space, up to a factor of modulus one.
 * `New.modKernel_mul_stdLevel_left`, `New.modKernel_mul_stdLevel_right`: right translation by the
   lattice stabiliser `New.stdLevel` acts on Ψ through its reduction `New.Modulus.reductionGL`, up to
   a scalar; `New.modDatum_factor`, `New.modKernel_factor`: passing to a smaller ideal.
 * `New.modKernel_block_right`, `New.modKernel_sum_right`, `New.modKernel_sum_left`,
   `New.Rows.modKernelStdSpace_block`: seesaw identities, the kernel of a direct sum at block
-  diagonal elements is a product; `New.stdKernel_sum_right`, `New.stdKernel_sum_left`: the same with
-  standard characters; `New.stdKernel` S T 𝔪 is `New.modKernel` S T (stdChar s) (stdChar s') 𝔪, with
-  s, s′ the signs of S, T.
+  diagonal elements is a product.
 
 Notions from other files:
 * `New.pairWeil`: The representation ω_{a,b}(g, h) = a(det h) b(det g)⁻¹ ω(`onHom` (g, h)); the
@@ -161,8 +161,8 @@ lemma pairWeil_modDatum_stdLevel (k : stdLevel E n) (k' : stdLevel E n')
   -- The pair is trivial at infinity, so it acts only on the finite datum: it replaces the lift of
   -- `Ψ` by its translate under `x ↦ k'⁻¹ x k` and scales the vacuum.
   rw [modDatum, pairWeil_integrated_fin,
-    pairWeil_schrodingerOp_of_mem 𝔪.isConjDisjoint_places k.2 k'.2, h_vac, map_smul, map_smul,
-    h_lift, modDatum]
+    pairWeil_schrodingerOp_of_mem 𝔪.isConjDisjoint_places k.property k'.property, h_vac, map_smul,
+    map_smul, h_lift, modDatum]
 
 /-- Let `modKernel S T a b 𝔪 Ψ P` be the theta kernel (g, h) ↦ θ(ω_{a,b}(g, h) f) on the adelic
 unitary groups of `S` and `T`, where the datum f is built from a function `Ψ` on n′ × n matrices

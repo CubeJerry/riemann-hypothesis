@@ -1,7 +1,9 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
 public import New.Determinant.Chain.NormOfChain
 public import New.Reduction.Lattices.TwistedLattice
+import New.Determinant.Chain.ChainNorms
 
 /-!
 # The target forms as a twisted lattice
@@ -106,11 +108,6 @@ are trivial. -/
 lemma normSqAt_targetLattice (y : D.targetForms) (σ : ℂ ≃+* ℂ) :
     D.targetLattice.normSqAt y σ = (D.Θ 1 y).normSqAt σ :=
   (normSqAt_eq_re_valueCoord (classAut_lastResidueLevel_eq_bot _) σ (D.Θ 1 y)).symm
-
-/-- The volume of the twisted lattice of target forms at `ϑ` is
-`chainDeterminant(ϑ) = det (Θ_ϑ* Θ_ϑ)`. -/
-lemma volume_targetLattice (ϑ : D.MFoldTwist) : D.targetLattice.volume ϑ = D.chainDeterminant ϑ :=
-  rfl
 
 /-- For every `m`-fold twist `ϑ`, the map `D.targetLattice.lift ϑ` is injective on the target forms
 `D.targetForms`. -/

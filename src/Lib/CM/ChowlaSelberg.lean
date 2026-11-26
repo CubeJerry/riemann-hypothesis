@@ -1,11 +1,19 @@
 module
 
-public import Lib.Analytic.EntireLFunction
+public import Mathlib.NumberTheory.Harmonic.ZetaAsymp
+import Mathlib.Algebra.GroupWithZero.Torsion
+import Mathlib.Algebra.Order.Monoid.Unbundled.Units
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.Topology.UniformSpace.Uniformizable
 public import Lib.CM.ConjugateCurve
-public import Lib.CM.Integrality.IsogenyIntegrality
-public import Lib.CM.KroneckerLimit
 public import Lib.ClassField.HeckeL.EulerProduct
-public import Lib.ClassField.Places.ValuationSubrings
+public import Lib.General.Algebra.AdicCompletion
+import Lib.Analytic.EntireLFunction
+import Lib.CM.Integrality.IsogenyIntegrality
+import Lib.CM.KroneckerLimit
+import Lib.ClassField.Places.ValuationSubrings
+import Lib.General.NumberTheory.EmbeddingsAndDifferent
 
 /-!
 # Odd class number, ζ_K = ζ·L(s, χ), theta functions with CM and Chowla–Selberg
@@ -173,7 +181,7 @@ lemma eulerFactor_mul_eq_prod_inv {p : ℕ} [hp : Fact p.Prime] {w J : FinPlace 
   obtain ⟨rfl, h_norm⟩ | ⟨hwq, hJq, h_span⟩ := h_split
   · -- Inert: one prime of norm `p ^ 2`, and the symbol is `-1`.
     have h_chi : chiK d p = -1 := by grind [hp.out.one_lt, lt_self_pow₀]
-    simp [h_chi, h_norm, sq, Complex.natCast_mul_natCast_cpow, ← mul_inv, ← mul_self_sub_mul_self]
+    simp [h_chi, h_norm, sq, Complex.natCast_mul_cpow, ← mul_inv, ← mul_self_sub_mul_self]
   obtain ⟨rfl, h_chi : chiK p p = 0⟩ | ⟨hp_ne, h_chi⟩ := chiK_cases d p
   · -- Ramified: `w * J` is a square, so `w = J`, as coprime factors of a square are squares.
     have h_sq : w.asIdeal * J.asIdeal = span {sqrtNegDInt p} ^ 2 := by
@@ -231,7 +239,7 @@ lemma eulerProd_one_eq_zeta_mul {s : ℝ} (hs : 1 < s) :
       ← h_above]
   -- The fibre over `p` is `{w, J}`.
   have h_fibre_prod : HasProd
-      (fun v : {v // below v = ⟨p, hp⟩} ↦ ((1 : ℂ) - v.1.q ^ (-s : ℂ))⁻¹)
+      (fun v : {v // below v = ⟨p, hp⟩} ↦ ((1 : ℂ) - v.val.q ^ (-s : ℂ))⁻¹)
       (∏ v ∈ {w, J}, ((1 : ℂ) - v.q ^ (-s : ℂ))⁻¹) :=
     (Equiv.subtypeEquivRight h_fibre).hasProd_iff.2 (Finset.hasProd {w, J} _)
   simpa [h_char, h_factor] using h_fibre_prod
@@ -620,8 +628,7 @@ lemma CMLattice.sum_kronecker_terms {E : ClassGroup (𝓞 (QuadField d)) → CML
     push_cast
     field [classNumber_ne_zero, hd_pos.ne']
   rw [chowlaSelbergConst, ← hL, h_log, ofReal_re]
-  field_simp [classNumber_ne_zero]
-  ring
+  field [classNumber_ne_zero]
 
 /-- There are fractional ideals of `K`, one in each ideal class, whose product is `(1)`. -/
 lemma QuadField.exists_mk_eq_and_prod_eq_one :

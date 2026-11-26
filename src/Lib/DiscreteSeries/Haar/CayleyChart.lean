@@ -1,5 +1,21 @@
 module
 
+public import Mathlib.LinearAlgebra.Matrix.Bilinear
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Calculus.FDeriv.Star
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.Complex
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.Analysis.Matrix.IndefiniteUnitaryGroup
+import TauCeti.Topology.Algebra.Group.Units
 public import Lib.General.LinearAlgebra.HermitianMatrices
 public import Lib.General.Measure.HaarNormalisation
 
@@ -781,7 +797,7 @@ instance : (volume (α := U J)).IsHaarMeasure := by
       exact continuous_cayleyDenom.matrix_det.isOpen_support.measure_pos _
         ⟨0, by simp [cayleyDenom]⟩
     · exact fun y (hy : (cayleyDenom J y).det ≠ 0) ↦ by simp [hy, det_ne_zero]
-    all_goals measurability
+    measurability
   obtain ⟨s, -, -, hs_pos, hs_fin⟩ := exists_subset_measure_lt_top .univ h_pos
   rw [haarMeasure_unique volume Classical.ofNonempty] at hs_pos hs_fin ⊢
   refine IsHaarMeasure.smul _ (fun h_zero ↦ by simp [h_zero] at hs_pos) fun h_top ↦ ?_

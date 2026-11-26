@@ -1,7 +1,14 @@
 module
 
-public import Lib.DiscreteSeries.FlenstedJensen.RightDerivatives
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.SimpleRing.Principal
+import TauCeti.LinearAlgebra.Matrix.Triangular
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.General.LinearAlgebra.MinorProducts
+public import Lib.Adelic.QuotientMeasure.Basic -- shake: keep (needed public by an exposed definition)
+import Lib.DiscreteSeries.FlenstedJensen.RightDerivatives
+import Lib.DiscreteSeries.Haar.TotalMass
 
 /-!
 # Maximal compact subgroup, block diagonal matrices and equivariance of minors
@@ -282,10 +289,10 @@ theorem IsKDominant.weightMinors_mul_borel (ho : o.Injective) (hw : IsKDominant 
         d i j = 0 ∨ x j k = 0 := Or.inl (diagonal_apply_ne _ (by grind))
     have h_det : principalMinor b (t ≤ w ·) = principalMinor d (t ≤ w ·) := by
       simp [d, principalMinor, toSquareBlockProp, toBlock, submatrix_diagonal,
-        det_eq_prod_diag_of_blockTriangular _ hb_borel.left.submatrix, ho]
+        hb_borel.left.submatrix.det_eq_prod_diag _, ho]
     rw [principalMinor_mul h_zero, principalMinor_mul h_zero_diag, h_det, mul_comm]
   have h_diag : weightMinors w (x * b) = weightMinors w (d * x) := by
-    simp [weightMinors, h_minor, d, det_eq_prod_diag_of_blockTriangular ho hb_borel.left, mul_comm]
+    simp [weightMinors, h_minor, d, hb_borel.left.det_eq_prod_diag ho, mul_comm]
   rw [h_diag, weightMinors_diagonal_mul hx (hb_borel.diag_ne_zero ho), mul_comm, diagChar]
 
 /-- Let `o` be injective and `w` dominant within each block of `ε` for `o`, not `-o`
