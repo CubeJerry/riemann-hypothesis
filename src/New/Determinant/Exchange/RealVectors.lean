@@ -324,11 +324,11 @@ lemma exists_contDiff_eventuallyEq_inv {A₀ : Matrix b b ℂ} (hdet : A₀.det 
   simp only [nonsing_inv_eq_ringInverse]
   -- Transport smoothness of ring inversion from the operator norm to the entrywise norm.
   open Norms.Operator in
+  exact
     let e : (b → b → ℂ) ≃L[ℝ] Matrix b b ℂ := .refl ..
     let x : b → b → ℂ := (u : Matrix b b ℂ)
-    have h : ContDiffAt ℝ ω (e.symm ∘ Ring.inverse ∘ e) x :=
+    show ContDiffAt ℝ ω (e.symm ∘ Ring.inverse ∘ e) x from
       e.symm.contDiff.comp_contDiffAt x ((contDiffAt_ringInverse ℝ u).comp x e.contDiff.contDiffAt)
-    exact h
 
 /-- If `x * A` has an invertible Gram matrix for `J` and equals `g * x₀ * c` with `g` in the unitary
 group `U J`, then `x` has the same form `g * x₀ * c'`, and `c'` carries the Gram matrix of `x₀` to
