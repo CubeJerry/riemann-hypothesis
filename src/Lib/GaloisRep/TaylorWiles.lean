@@ -257,7 +257,8 @@ lemma nsmul_apply (k : ℕ) (a : D.FormEnd L) (y : D.formsOfLevel L) : (k • a)
 
 
 @[simp]
-lemma smul_apply [ThePrime ℓ] [PadicIso ℓ] (r : EllAdicIntegers) (a : D.FormEnd L) (y : D.formsOfLevel L) :
+lemma smul_apply [ThePrime ℓ] [PadicIso ℓ] (r : EllAdicIntegers) (a : D.FormEnd L)
+    (y : D.formsOfLevel L) :
     (r • a) y = r • a y := rfl
 
 @[simp]
