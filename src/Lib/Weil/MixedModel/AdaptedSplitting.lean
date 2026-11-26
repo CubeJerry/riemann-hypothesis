@@ -114,7 +114,8 @@ noncomputable def removePlanes : (hyperbolicSum p V).Splitting V p := by
 instance : IsBaseAdapted (removePlanes p V) where
   isOrthoIntegral := by
     -- The frame is the block matrix of the inverse base point of hyperbolic space and `1`.
-    convert (isOrthoIntegral_hyperbolicSpace (E := E) (p := p)).right.block_diag (.one (n := n)) using 1
+    convert (isOrthoIntegral_hyperbolicSpace (E := E) (p := p)).right.block_diag
+      (.one (n := n)) using 1
     simp [← ext_iff, Matrix.mul_apply, lAdelic, kAdelic, iAdelic, Space.ratMap, removePlanes,
       hyperbolicSum, sum, blockGL, fromRows_map, fromBlocks_mul_fromRows, Matrix.one_apply]
 
