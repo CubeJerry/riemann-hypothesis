@@ -40,22 +40,6 @@ section Reindex
 
 variable {F : Sort*} {α β : Type*} [EquivLike F α β]
 
-/-- A statement `∀ y, p y` about `β` is reindexed along an equivalence `e` from `α` to `β`. -/
-lemma New.forall_reindex_equiv (e : F) {p : β → Prop} : (∀ y : β, p y) ↔ ∀ x : α, p (e x) :=
-  (EquivLike.surjective e).forall
-
-/-- A statement `∃ y, p y` about `β` is reindexed along an equivalence `e` from `α` to `β`. -/
-lemma New.exists_reindex_equiv (e : F) {p : β → Prop} : (∃ y : β, p y) ↔ ∃ x : α, p (e x) :=
-  (EquivLike.surjective e).exists
-
-/-- A finite sum over `β` is reindexed along an equivalence `e` from `α` to `β`. -/
-lemma New.sum_reindex_equiv [Fintype α] [Fintype β] {M : Type*} [AddCommMonoid M] (e : F)
-    (f : β → M) : ∑ i : β, f i = ∑ i : α, f (e i) := ((EquivLike.bijective e).sum_comp f).symm
-
-/-- A finite product over `β` is reindexed along an equivalence `e` from `α` to `β`. -/
-lemma New.prod_reindex_equiv [Fintype α] [Fintype β] {M : Type*} [CommMonoid M] (e : F)
-    (f : β → M) : ∏ i : β, f i = ∏ i : α, f (e i) := ((EquivLike.bijective e).prod_comp f).symm
-
 /-- For an equivalence `e` from `α` to `β`, statements `∀ y, p y` and `∃ y, p y` about `β`, and
 finite sums and products over `β` of values in a type of universe 0, become those over `α` of the
 composite with `e`. The four rules are joined so that `simp` takes them as one argument. -/
@@ -65,8 +49,8 @@ lemma New.reindex_equiv (e : F) :
     ∀ [Fintype α] [Fintype β] {M : Type} (f : β → M),
       (∀ [AddCommMonoid M], ∑ i : β, f i = ∑ i : α, f (e i)) ∧
       ∀ [CommMonoid M], ∏ i : β, f i = ∏ i : α, f (e i) :=
-  ⟨New.forall_reindex_equiv e, New.exists_reindex_equiv e,
-    fun f ↦ ⟨New.sum_reindex_equiv e f, New.prod_reindex_equiv e f⟩⟩
+  ⟨(EquivLike.surjective e).forall, (EquivLike.surjective e).exists,
+    fun f ↦ ⟨((EquivLike.bijective e).sum_comp f).symm, ((EquivLike.bijective e).prod_comp f).symm⟩⟩
 
 end Reindex
 
