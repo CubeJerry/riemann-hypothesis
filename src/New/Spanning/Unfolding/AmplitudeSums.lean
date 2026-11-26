@@ -180,14 +180,8 @@ lemma lintegral_classCutoff_mul_prod [HasPrimitiveRoot5040 E] [S.IsAdmissible]
     _ = ∫⁻ x, (∫⁻ u, S.classCutoff c (fun v ↦ ((u v).val : 𝔰.G₁) * x v)
           ∂(Measure.pi fun _ : InfinitePlace E ↦ 𝔰.besselHaar)) *
         ∏ v, w v (x v) ∂(Measure.pi fun _ : InfinitePlace E ↦ besselQuotMeasure) := by
-      rw [← (measurePreserving_pi_orbitMeasure 𝔰.besselHaar).lintegral_comp (by fun_prop),
-        lintegral_prod _ (by fun_prop)]
-      refine lintegral_congr fun x ↦ ?_
-      have h_eq (u : InfinitePlace E → besselU (T := 𝔰.middleGram (1 : ℂ))) :
-          ∏ v, w v (((fun v ↦ (u v).val) * x) v) = ∏ v, w v (x v) :=
-        Finset.prod_congr rfl fun v _ ↦ hw_inv v (u v).1 (u v).2 (x v)
-      simp_rw [h_eq, Pi.mul_def]
-      exact lintegral_mul_const _ (by fun_prop)
+      simp (disch := first | fun_prop | simp) [lintegral_prod, Pi.mul_def, hw_inv,
+        lintegral_mul_const, ← (measurePreserving_pi_orbitMeasure 𝔰.besselHaar).lintegral_comp]
     _ = .ofReal S.unipotentCovolume *
         ∫⁻ x, ∏ v, w v (x v) ∂(.pi fun _ : InfinitePlace E ↦ besselQuotMeasure) := by
       simp only [lintegral_classCutoff_eq_unipotentCovolume]
