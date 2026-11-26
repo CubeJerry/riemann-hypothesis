@@ -5,6 +5,7 @@ import Mathlib.Tactic.Linter.Style
 import Mathlib.Topology.Algebra.Group.CompactOpen
 import Mathlib.Topology.Algebra.Group.Matrix
 import Mathlib.Topology.MetricSpace.Ultra.ContinuousMaps
+import TauCeti.Topology.ContinuousMap.UltrametricStoneWeierstrass
 public import Lib.GaloisRep.Pseudocharacter.Pseudorepresentations
 public import Lib.Adelic.AutomorphicForms.SmoothAlgebraicForms
 import Lib.Adelic.Adeles.StrongApproximation
@@ -182,7 +183,7 @@ section FreeWeightDensity
 
 open Module Finset IsUltrametricDist Matrix MvPolynomial Submodule Fintype ContinuousMap
 
-variable {X k : Type} [TopologicalSpace X] [CompactSpace X] [Nonempty X] [NormedField k]
+variable {X k : Type} [TopologicalSpace X] [CompactSpace X] [NormedField k]
   [IsUltrametricDist k]
 
 /-- An ultrametric Stone–Weierstrass theorem. Suppose that for each point `a` some `d ∈ N` equals
@@ -190,85 +191,10 @@ variable {X k : Type} [TopologicalSpace X] [CompactSpace X] [Nonempty X] [Normed
 in the closure of `N`. -/
 lemma New.stoneWeierstrass_ultrametric (N : Submodule k C(X, k)) (φ : C(X, k))
     (h_fibre : ∀ a : X, ∃ d ∈ N, ∀ x : X, (∀ u ∈ N / N, u x = u a) → φ x = d x) :
-    ∀ ε > (0 : ℝ), ∃ g ∈ N, ‖φ - g‖ ≤ ε := by
-  -- Suppose `φ` is at distance more than `ε` from every element of `N`. A maximal ideal `m` of the
-  -- ring of bounded multipliers cuts out a set `Z` on which all multipliers are constant, so some
-  -- `d ∈ N` agrees with `φ` on `Z`, and a multiplier outside `m` makes `φ - d` small everywhere.
-  by_contra! ⟨ε, hε, h_far⟩
-  -- `B` is the ring of the multipliers of norm at most one.
-  let A : Subalgebra k C(X, k) := (N / N).toSubalgebra (by simp) fun x y hx hy z hz ↦ by
-    simpa [mul_assoc] using hx _ (hy _ hz)
-  let B := A.toSubring ⊓ {closedBall_openAddSubgroup _ one_pos, Submonoid.unitClosedBall _ with}
-  have norm_le_one (c : B) : ‖(c : C(X, k))‖ ≤ 1 := mem_closedBall_zero_iff.mp c.property.2
-  have mul_mem_N (c : B) {d : C(X, k)} (hd : d ∈ N) : (c : C(X, k)) * d ∈ N := c.property.1 d hd
-  -- The `w` with `w * φ` within `ε` of `N` form a proper ideal of `B`; a maximal ideal holds it.
-  obtain ⟨m, _, h_near⟩ : ∃ m : Ideal B, m.IsMaximal ∧
-      ∀ w : B, ∀ g ∈ N, ‖w.val * φ - g‖ ≤ ε → w ∈ m := by
-    let N' : Submodule B C(X, k) :=
-      { N.toAddSubmonoid with smul_mem' := fun c _ hd ↦ mul_mem_N c hd }
-    let ball : Submodule B C(X, k) := ⟨(closedBall_openAddSubgroup _ hε).1.1,
-      fun c _ ↦ by simpa using! norm_mul_le_of_le (norm_le_one c)⟩
-    -- `1` is not in it, as `φ` is far from `N`
-    have h_ne_top : (N' ⊔ ball).comap (LinearMap.toSpanSingleton B C(X, k) φ) ≠ ⊤ := by
-      simpa [N', ball, Ideal.eq_top_iff_one, Submodule.mem_sup, ← eq_sub_iff_add_eq',
-        closedBall_openAddSubgroup] using h_far
-    obtain ⟨m, hm, h_le⟩ := Ideal.exists_le_maximal _ h_ne_top
-    exact ⟨m, hm, fun w g hg h ↦
-      h_le (mem_sup.2 ⟨g, hg, _, by simpa [ball] using! h, add_sub_cancel ..⟩)⟩
-  let P := m.primeCompl
-  have : Nonempty P := ⟨1⟩
-  let Z : Set X := {x | ∀ f : P, 1 ≤ ‖(f : C(X, k)) x‖}
-  -- By compactness, a bound for `g` on `Z` holds for `f * g` everywhere, for some `f ∉ m`.
-  have h_small (g : C(X, k)) {r : ℝ} (hr : 0 < r) (hg : ∀ x ∈ Z, ‖g x‖ ≤ r) :
-      ∃ f : P, ‖(f : C(X, k)) * g‖ ≤ r := by
-    let U (f : P) : Set X := ((f : C(X, k)) * g) ⁻¹' Metric.closedBall 0 r
-    have h_cover (x : X) : ∃ f : P, x ∈ U f := by
-      by_cases hx : x ∈ Z
-      · exact ⟨1, by simpa [U] using hg x hx⟩
-      -- Off `Z` some `f` has size less than one, and a power of it serves.
-      obtain ⟨f, hf⟩ : ∃ f : P, ‖(f : C(X, k)) x‖ < 1 := by simpa [Z] using hx
-      obtain ⟨n, hn⟩ := exists_pow_lt_of_lt_one (show 0 < r / (‖g x‖ + 1) by positivity) hf
-      use f ^ n
-      suffices h_le : ‖(f : C(X, k)) x‖ ^ n * ‖g x‖ ≤ r by simpa [U] using h_le
-      calc ‖(f : C(X, k)) x‖ ^ n * ‖g x‖ ≤ r / (‖g x‖ + 1) * ‖g x‖ := by grw [hn]
-        _ ≤ r := by simp [field]
-    have h_mono (e f : P) : U f ⊆ U (e * f) := fun x hx ↦ by
-      simp only [U, Set.mem_preimage, Metric.mem_closedBall, dist_zero_right, ContinuousMap.coe_mul,
-        Pi.mul_apply, MulMemClass.coe_mul, norm_mul, mul_assoc] at hx ⊢
-      grw [norm_coe_le_norm, norm_le_one, one_mul, hx]
-    have h_open (f : P) : IsOpen (U f) :=
-      (isOpen_closedBall 0 hr.ne').preimage ((f : C(X, k)) * g).continuous
-    have h_directed : Directed (· ⊆ ·) U := fun e f ↦
-      ⟨e * f, by simpa [mul_comm] using h_mono f e, h_mono e f⟩
-    obtain ⟨f, hf⟩ : ∃ f : P, Set.univ ⊆ U f := isCompact_univ.elim_directed_cover U h_open
-      (fun x _ ↦ Set.mem_iUnion.2 (h_cover x)) h_directed
-    exact ⟨f, by simpa [U, norm_le, hr.le, Set.subset_def] using hf⟩
-  have h_const (u : C(X, k)) (hu : u ∈ N / N) (x : X) (hx : x ∈ Z) (a : X) (ha : a ∈ Z) :
-      u x = u a := by
-    -- On `Z`, `v` vanishes at `a` and is largest at some `y`. Suppose `v y ≠ 0`.
-    let v : C(X, k) := u - .const X (u a)
-    have hZ : IsClosed Z := isClosed_le (f := 1) (g := fun x (f : P) ↦ ‖(f : C(X, k)) x‖)
-      (by fun_prop) (by fun_prop)
-    obtain ⟨y, hy, h_max⟩ : ∃ y ∈ Z, IsMaxOn (fun x : X ↦ ‖v x‖) Z y :=
-      hZ.isCompact.exists_isMaxOn ⟨x, hx⟩ (by fun_prop)
-    refine eq_of_norm_sub_le_zero ((h_max hx).trans (not_lt.1 fun h_pos ↦ ?_))
-    obtain ⟨f, hf⟩ := h_small v h_pos h_max
-    -- `w = f * v / v y` vanishes at `a` and `f - w` at `y`, so both lie in `m`, while `f` does not.
-    let w : B := ⟨(v y)⁻¹ • (f * v),
-      A.smul_mem (mul_mem f.val.property.1 (sub_mem hu (algebraMap_mem ..))) _, by
-        simpa [norm_smul, field, closedBall_openAddSubgroup]⟩
-    have w_mem : w ∈ m := by_contra fun hw ↦ (ha ⟨w, hw⟩).not_gt (by simp [w, v])
-    have diff_mem : f - w ∈ m := by_contra fun hw ↦
-      (hy ⟨_, hw⟩).not_gt (by simp [w, mul_comm, norm_pos_iff.1 h_pos])
-    exact f.property ((m.sub_mem_iff_left w_mem).mp diff_mem)
-  -- Take `d` for a point of `Z` (any point if `Z` is empty).
-  obtain ⟨d, hd, hφd⟩ := h_fibre (Classical.epsilon fun x ↦ x ∈ Z)
-  -- On `Z` all multipliers are constant, so `φ = d` there.
-  have h_bound : ∀ x ∈ Z, ‖(φ - d) x‖ ≤ ε := fun x hx ↦ by
-    simp [hφd x fun u hu ↦ h_const u hu x hx _ (Classical.epsilon_spec ⟨x, hx⟩), hε.le]
-  obtain ⟨f, hf⟩ := h_small (φ - d) hε h_bound
-  have h_near_f : ‖(f : C(X, k)) * φ - (f : C(X, k)) * d‖ ≤ ε := by rwa [← mul_sub]
-  exact f.property (h_near f _ (mul_mem_N f hd) h_near_f)
+    ∀ ε > (0 : ℝ), ∃ g ∈ N, ‖φ - g‖ ≤ ε := fun _ hε ↦
+  exists_mem_norm_sub_le_of_eq_on_multiplier_fibers N φ (fun a ↦
+    let ⟨d, hd, hφd⟩ := h_fibre a
+    ⟨d, hd, fun x hx ↦ hφd x fun u hu ↦ hx u (Submodule.mem_leftOrder_iff.2 hu)⟩) hε
 
 /-- An algebraically closed extension of `ℚ_[l]` has infinite degree over every finite extension. -/
 lemma New.natCast_le_rank_of_isAlgClosed {l : ℕ} [Fact l.Prime] {K : Type*} [Field K]
