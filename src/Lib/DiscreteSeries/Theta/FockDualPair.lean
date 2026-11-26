@@ -63,17 +63,17 @@ section OscillatorDefs
 
 open Matrix Fintype Fock MvPolynomial Finset GlModule
 
-variable {R C ι : Type} [DecidableEq R] [Fintype C] [DecidableEq C] [Fintype ι]
-
-private theorem oscRaise_eq (η : R → ℤˣ) (a : R) :
+private theorem oscRaise_eq {R : Type} (η : R → ℤˣ) (a : R) :
     TauCeti.oscRaise ℂ (fun i ↦ η i = 1) a = raiseOp η a := by
   ext P
   by_cases h : η a = 1 <;> simp [raiseOp, h]
 
-private theorem oscLower_eq (η : R → ℤˣ) (a : R) :
+private theorem oscLower_eq {R : Type} (η : R → ℤˣ) (a : R) :
     TauCeti.oscLower ℂ (fun i ↦ η i = 1) a = lowerOp η a := by
   ext P
   by_cases h : η a = 1 <;> simp [lowerOp, h]
+
+variable {R C ι : Type} [DecidableEq R] [Fintype C] [DecidableEq C] [Fintype ι]
 
 /-- The raising operators of the Fock model for the signs `η` commute: `raiseOp η a` is
 multiplication by `X a` if `η a = 1` and `-∂ a` otherwise. -/
