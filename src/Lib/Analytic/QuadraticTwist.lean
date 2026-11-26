@@ -439,7 +439,8 @@ lemma exists_summable_ge_of_isSquare {σ : ℝ} (hσ : 1 / 2 < σ) (k : ℕ+) :
   have h_zeta : Summable fun a : ℕ ↦ ‖(a : ℝ) ^ (2 * -σ)‖ :=
     (summable_nat_rpow.mpr (by linarith)).norm
   let f (x : ℕ × ℕ × ℕ) : ℝ := x.1 ^ (2 * -σ) * (x.2.1 ^ (2 * -σ) * x.2.2 ^ (2 * -σ))
-  -- Elaborated without the expected type: matching `?f x.1 * ?g x.2` against `f` unfolds `Finset.sum`.
+  -- Elaborated without the expected type: matching `?f x.1 * ?g x.2` against `f` unfolds
+  -- `Finset.sum`.
   have hf : Summable f := (summable_mul_of_summable_norm h_zeta (h_zeta.mul_norm h_zeta) :)
   have hf_nonneg (x : ℕ × ℕ × ℕ) : 0 ≤ f x := by positivity
   let pair (x : ℕ × ℕ × ℕ) : ℕ+ × ℕ+ := ((x.1 * x.2.1 ^ 2 / k).toPNat', (x.1 * x.2.2 ^ 2).toPNat')
