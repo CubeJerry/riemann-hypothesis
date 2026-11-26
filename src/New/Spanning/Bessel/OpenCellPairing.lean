@@ -225,8 +225,7 @@ Here `W` is the tensor product, over a finite family `X` of Bessel systems, of t
 of `W (γ⁻¹ y) ⊗ W (y)^*`. -/
 noncomputable def pairKernel (X : ι → BesselSystem 𝔰 b f) (σ : FullOrCut) (γ y : ι → 𝔰.G₁) :
     EuclideanSpace ℂ (((v : ι) → (X v).Index) × ((v : ι) → (X v).Index)) :=
-  WithLp.toLp 2 fun i ↦ ∏ v : ι, (X v).besselFn σ (y v) (i.1 v) * conj
-    ((X v).besselFn σ ((γ v)⁻¹ * y v) (i.2 v))
+  piKernel X σ γ (γ⁻¹ * y)
 
 /-- The passage to the adjoint (conjugate transpose) of a complex matrix indexed by `I × I`, a real
 linear isometry for the Hilbert–Schmidt norm. -/
