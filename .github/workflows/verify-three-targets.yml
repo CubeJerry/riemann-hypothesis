@@ -1,0 +1,47 @@
+name: Verify three proof refactors
+on:
+  push:
+    branches: [verify/m13-tate-casimir-quadric]
+permissions:
+  contents: read
+concurrency:
+  group: verify-m13-tate-casimir-quadric
+  cancel-in-progress: true
+jobs:
+  targets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      BASE: ef1760f555d5386fe8eea9c663110f7b8d08e467
+      MATHLIB_CACHE_GET_URL: https://cache.mathlib.org/mathlib4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check out the upstream cache baseline
+        run: |
+          git fetch --depth=1 https://github.com/leanprover-community/riemann-hypothesis "$BASE"
+          git checkout --detach "$BASE"
+      - name: Install the pinned Lean toolchain
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lake" --version
+      - name: Restore the upstream caches
+        run: |
+          ulimit -Sn "$(ulimit -Hn)"
+          lake exe mathlib/cache get
+          python3 scripts/tauceti-cache-get.py
+          python3 scripts/ci-cache-get.py
+      - name: Compile each changed module
+        run: |
+          git restore --source="$GITHUB_SHA" -- src
+          git diff --check
+          result=0
+          for target in Lib.PadicHodge.TateSen Lib.DiscreteSeries.Theta.CasimirComparison Lib.General.Measure.QuadricDisintegration; do
+            echo "::group::$target"
+            lake build "$target" || result=1
+            echo "::endgroup::"
+          done
+          exit "$result"
