@@ -1,0 +1,340 @@
+{
+  "title": "Verified improvements to condensed main",
+  "date": "2026-11-26",
+  "status_checked_at_utc": "2026-11-26 02:00:00 UTC",
+  "upstream_main": "e063a923620ee7787b4a1270421478645bf66bdb",
+  "lean_toolchain": "leanprover/lean4:v4.35.0",
+  "mathlib_revision": "56a005855ea17e0b0958f73ec801ae140b0a1679",
+  "pull_requests": 10,
+  "named_target_builds": 51,
+  "source_files_checked": 22,
+  "source_hashes_matched": true,
+  "warnings_in_changed_files": [],
+  "project_dependency_counts": [
+    {
+      "module": "Lib.General.Algebra.ResidueSums",
+      "before": 9,
+      "after": 2
+    },
+    {
+      "module": "Lib.General.LinearAlgebra.MatricesNearIdentity",
+      "before": 16,
+      "after": 9
+    },
+    {
+      "module": "Lib.General.LinearAlgebra.HermiteForm",
+      "before": 27,
+      "after": 6
+    },
+    {
+      "module": "Lib.General.Analysis.MeanValueAndTaylor",
+      "before": 18,
+      "after": 3
+    }
+  ],
+  "results": [
+    {
+      "id": "grid-imports",
+      "pr": "https://github.com/leanprover-community/riemann-hypothesis/pull/5694",
+      "source_commit": "258ca82a4502566724e4a26973388e8c66f48187",
+      "base": "2fc633272442a664eb260b76151c6e4e474c6b0b",
+      "files": {
+        "src/New/Determinant/AuxiliaryForms/GridPaths.lean": "8f1dd22a5158406aaf2bcc5150de08f6ff028f286d63f0a716ffe407497a3f26"
+      },
+      "command": "lake build New.Determinant.AuxiliaryForms.GridPaths New.Determinant.Chain.Moduli New.Determinant.AuxiliaryForms.PathData",
+      "exit_code": 0,
+      "sorry_warning": false,
+      "verification_source_commit": "f477e17c192af198e574772a085ab4d5ca0348bf",
+      "evidence_url": "https://github.com/CubeJerry/riemann-hypothesis/actions/runs/45734140787/job/139623158263",
+      "benefit": "Replace the blanket Lib.Base dependency with two focused Mathlib imports in grid-path combinatorics.",
+      "upstream_ci": [
+        {
+          "id": 45733728015,
+          "name": "build",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 79,
+          "jobs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45733728015/jobs",
+          "logs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45733728015/logs",
+          "workflow_id": 430978372
+        }
+      ]
+    },
+    {
+      "id": "residue-import",
+      "pr": "https://github.com/leanprover-community/riemann-hypothesis/pull/5720",
+      "source_commit": "576c958dd023037545a2a03a4cc53005ada5226c",
+      "base": "2fc633272442a664eb260b76151c6e4e474c6b0b",
+      "files": {
+        "src/Lib/General/Algebra/ResidueSums.lean": "479e1822c7201bb02fbeff901ce6d8149e7e7f5a9ba3bd1480aac892d3eb5664"
+      },
+      "command": "lake build Lib.General.Algebra.ResidueSums New.Appendix.DiscreteSeries.StationaryPosition",
+      "exit_code": 0,
+      "sorry_warning": false,
+      "verification_source_commit": "f477e17c192af198e574772a085ab4d5ca0348bf",
+      "evidence_url": "https://github.com/CubeJerry/riemann-hypothesis/actions/runs/45734140787/job/139623158263",
+      "benefit": "Remove the discrete-series dependency from residue-sum identities.",
+      "upstream_ci": [
+        {
+          "id": 45735186686,
+          "name": "build",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 101,
+          "jobs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45735186686/jobs",
+          "logs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45735186686/logs",
+          "workflow_id": 430978372
+        }
+      ]
+    },
+    {
+      "id": "partial-derivatives",
+      "pr": "https://github.com/leanprover-community/riemann-hypothesis/pull/5766",
+      "source_commit": "57e024e620ef60b6597ffcc9e8847197d1b149d3",
+      "base": "2fc633272442a664eb260b76151c6e4e474c6b0b",
+      "files": {
+        "src/Lib/General/Algebra/MultivariatePolynomials.lean": "19bc4e60baa12c9d46cc1265fd4da77ba2094d1e3617f9bd00c50190479ebc86",
+        "src/Lib/SiegelWeil/Reproduction.lean": "33e940389009522333a589ac352821039972809fe1a951a91b2717679532ef1d"
+      },
+      "command": "lake build Lib.General.Algebra.MultivariatePolynomials Lib.SiegelWeil.Reproduction Lib.DiscreteSeries.Theta.LocalCorrespondence Lib.DiscreteSeries.Theta.FockDualPair Lib.DiscreteSeries.Theta.FockJointHarmonics Lib.Weil.Fock.OscillatorPair",
+      "exit_code": 0,
+      "sorry_warning": false,
+      "verification_source_commit": "f477e17c192af198e574772a085ab4d5ca0348bf",
+      "evidence_url": "https://github.com/CubeJerry/riemann-hypothesis/actions/runs/45734140787/job/139623158263",
+      "benefit": "Use MvPolynomial.pderiv_comm and remove the duplicated project theorem.",
+      "upstream_ci": [
+        {
+          "id": 45736750797,
+          "name": "build",
+          "status": "in_progress",
+          "conclusion": null,
+          "run_number": 128,
+          "jobs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45736750797/jobs",
+          "logs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45736750797/logs",
+          "workflow_id": 430978372
+        }
+      ]
+    },
+    {
+      "id": "series-substitution",
+      "pr": "https://github.com/leanprover-community/riemann-hypothesis/pull/5767",
+      "source_commit": "b64fb25bfb81d08e2fda2c2756551320ec23d5b3",
+      "base": "2fc633272442a664eb260b76151c6e4e474c6b0b",
+      "files": {
+        "src/Lib/CM/FormalGroup/IntegralParameter.lean": "e1eb1dab965ac73c460fb6f39f748aa1f9d77dd76a51d922fe0d36e1b272dbb2",
+        "src/Lib/General/Algebra/IntegralPowerSeries.lean": "3df741f03370cf3cb4fda12f8f4fe194b23ce6a045008f31c888542772d7465e",
+        "src/New/Derivatives/Sharpness/Couplings.lean": "86b4c6b1f9c1a1440f70b78acc217eb5b5e2ce7eeba681f36e29a49ca0c9ecba",
+        "src/New/Derivatives/Vacuum/JetIntegrality.lean": "3167df29c4de0e2a3145a5ed6e78d40fbfffa049aefafd1cc46910d6a85bb32d",
+        "src/New/Derivatives/Sharpness/LeastValuation.lean": "0428666a7f827c2ed1be5a3dc6f0a6ab42d59a13bc3a4beba08d02d2967a1806"
+      },
+      "command": "lake build Lib.General.Algebra.IntegralPowerSeries Lib.CM.FormalGroup.IntegralParameter New.Derivatives.Vacuum.JetIntegrality New.Derivatives.Sharpness.Couplings New.Derivatives.Sharpness.LeastValuation",
+      "exit_code": 0,
+      "sorry_warning": false,
+      "verification_source_commit": "f477e17c192af198e574772a085ab4d5ca0348bf",
+      "evidence_url": "https://github.com/CubeJerry/riemann-hypothesis/actions/runs/45734140787/job/139623158263",
+      "benefit": "Use PowerSeries.constantCoeff_subst_of_constantCoeff_zero, making former implicit simp uses explicit.",
+      "upstream_ci": [
+        {
+          "id": 45736925376,
+          "name": "build",
+          "status": "in_progress",
+          "conclusion": null,
+          "run_number": 129,
+          "jobs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45736925376/jobs",
+          "logs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45736925376/logs",
+          "workflow_id": 430978372
+        }
+      ]
+    },
+    {
+      "id": "matrix-import",
+      "pr": "https://github.com/leanprover-community/riemann-hypothesis/pull/5783",
+      "source_commit": "93f6db722e93ccb5635b6cddbc3f4ba62dbed764",
+      "base": "2fc633272442a664eb260b76151c6e4e474c6b0b",
+      "files": {
+        "src/Lib/General/LinearAlgebra/MatricesNearIdentity.lean": "4dbe745bb46f7736b4c0c4f737c70c9402b8b8878f466a873663d2303f1f7b37"
+      },
+      "command": "lake build Lib.General.LinearAlgebra.MatricesNearIdentity New.Appendix.DiscreteSeries.SteepParameters New.Appendix.DiscreteSeries.MinorSecondOrder Lib.Weil.Fock.PolynomialVectors",
+      "exit_code": 0,
+      "sorry_warning": false,
+      "verification_source_commit": "f477e17c192af198e574772a085ab4d5ca0348bf",
+      "evidence_url": "https://github.com/CubeJerry/riemann-hypothesis/actions/runs/45734140787/job/139623158263",
+      "benefit": "Remove unused complex-theta data from near-identity matrix estimates.",
+      "upstream_ci": [
+        {
+          "id": 45737711672,
+          "name": "build",
+          "status": "in_progress",
+          "conclusion": null,
+          "run_number": 149,
+          "jobs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45737711672/jobs",
+          "logs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45737711672/logs",
+          "workflow_id": 430978372
+        }
+      ]
+    },
+    {
+      "id": "prime-congruences",
+      "pr": "https://github.com/leanprover-community/riemann-hypothesis/pull/5785",
+      "source_commit": "d0848dc4e9076ee90fa5483a8c262ef38c2d96ba",
+      "base": "2fc633272442a664eb260b76151c6e4e474c6b0b",
+      "files": {
+        "src/New/Derivatives/Field/PrimeDecomposition.lean": "1f541e4174aeac7a3e7aba96a5826a124ca36b76d6f7b830e647116127729919",
+        "src/New/Reduction/Data/FieldsAndPlaces.lean": "c4e8bc479ec3a39026d347439bbe3ea9ba75f15e47c5ad5bd7abcd3b0c8ff92f"
+      },
+      "command": "lake build New.Reduction.Data.FieldsAndPlaces New.Derivatives.Field.PrimeDecomposition New.Derivatives.Field.WeilData",
+      "exit_code": 0,
+      "sorry_warning": false,
+      "verification_source_commit": "f477e17c192af198e574772a085ab4d5ca0348bf",
+      "evidence_url": "https://github.com/CubeJerry/riemann-hypothesis/actions/runs/45734140787/job/139623158263",
+      "benefit": "Remove three unused self-conjugate-prime lemmas and their obsolete documentation reference.",
+      "upstream_ci": [
+        {
+          "id": 45737784459,
+          "name": "build",
+          "status": "in_progress",
+          "conclusion": null,
+          "run_number": 154,
+          "jobs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45737784459/jobs",
+          "logs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45737784459/logs",
+          "workflow_id": 430978372
+        }
+      ]
+    },
+    {
+      "id": "pieri-imports",
+      "pr": "https://github.com/leanprover-community/riemann-hypothesis/pull/5788",
+      "source_commit": "f47fb9760e8841a79b05a1a7f70006f6ef35797a",
+      "base": "e063a923620ee7787b4a1270421478645bf66bdb",
+      "files": {
+        "src/New/UpperBound/ElementaryDivisors/PieriCone.lean": "b34165f0e274b8d8936d112be878d5a697487b2d598eea707cc27d10dae3d4f0"
+      },
+      "command": "lake build New.UpperBound.ElementaryDivisors.PieriCone New.UpperBound.ElementaryDivisors.DefectCount",
+      "exit_code": 0,
+      "sorry_warning": false,
+      "verification_source_commit": "938eecafa4d7d34b5440b401273639d4bfaf2f97",
+      "evidence_url": "https://github.com/CubeJerry/riemann-hypothesis/actions/runs/45736098093/job/139629622434",
+      "benefit": "Replace the blanket Lib.Base dependency with eleven focused Mathlib imports for the Pieri cone formulas.",
+      "upstream_ci": [
+        {
+          "id": 45737886261,
+          "name": "build",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 157,
+          "jobs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45737886261/jobs",
+          "logs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45737886261/logs",
+          "workflow_id": 430978372
+        }
+      ]
+    },
+    {
+      "id": "hermite-dependency",
+      "pr": "https://github.com/leanprover-community/riemann-hypothesis/pull/5789",
+      "source_commit": "7dcf74b9bc3556e31f411b764efc31804146683c",
+      "base": "e063a923620ee7787b4a1270421478645bf66bdb",
+      "files": {
+        "src/Lib/Adelic/Witt/WittTheorem.lean": "d9198b16580b15f8d375dfba158e2e231f018fc3c667dd215ba9304cf580a663",
+        "src/Lib/General/LinearAlgebra/HermiteForm.lean": "bd76a04b141539f3b519dc901b94253a8a04c4d5d4e5f7613119c9d2c5c9e038",
+        "src/Lib/General/LinearAlgebra/IntegralLattices.lean": "7b311ea723af6e1fa45b40cccbfe83fbd50bdb539c0b846cd54de8410042016e",
+        "src/Lib/LocalGL/Iwahori/ParahoricStructure.lean": "15116091cfa723283cda7a2b168765d81d81613a90ece3d8a573c35dfc6e4e5a",
+        "src/Lib/PadicHodge/Crystalline/HodgeTateJumps.lean": "848f3166f43a823749e77791bf96b6ad06abfd27e89d8bb636967ec425139f9f"
+      },
+      "command": "lake build Lib.General.LinearAlgebra.IntegralLattices Lib.Adelic.Witt.WittTheorem Lib.General.LinearAlgebra.HermiteForm Lib.LocalGL.Iwahori.ParahoricStructure Lib.PadicHodge.Crystalline.HodgeTateJumps New.UpperBound.ElementaryDivisors.ElementaryDivisorTheorem Lib.PadicHodge.RadiusLemma Lib.PadicHodge.BlochKato Lib.Cohomology.WoodsHole Lib.PadicComparison.Crystalline.ComparisonMap Lib.PadicComparison.HodgeTate.GaloisWeight Lib.PadicComparison.Primitive.ComparisonTheorem Lib.PadicComparison.Primitive.Periods Lib.PadicHodge.Kisin.KummerChartDeRham Lib.PadicHodge.Kisin.PeriodMatrixFrame Lib.General.Algebra.BlockFittingBound Lib.General.Algebra.SharpMinors Lib.Shimura.CongruenceRelation.EichlerShimura Lib.General.LinearAlgebra.PartnerAlgebra",
+      "exit_code": 0,
+      "sorry_warning": false,
+      "verification_source_commit": "938eecafa4d7d34b5440b401273639d4bfaf2f97",
+      "evidence_url": "https://github.com/CubeJerry/riemann-hypothesis/actions/runs/45736098093/job/139629621893",
+      "benefit": "Move generic matrix definitions to IntegralLattices so HermiteForm no longer imports the adelic Witt theorem.",
+      "upstream_ci": [
+        {
+          "id": 45738008254,
+          "name": "build",
+          "status": "in_progress",
+          "conclusion": null,
+          "run_number": 158,
+          "jobs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45738008254/jobs",
+          "logs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45738008254/logs",
+          "workflow_id": 430978372
+        }
+      ]
+    },
+    {
+      "id": "additive-characters",
+      "pr": "https://github.com/leanprover-community/riemann-hypothesis/pull/5790",
+      "source_commit": "0300cdf5d83671a7f13ac9a7c38a639bb59bf5a9",
+      "base": "e063a923620ee7787b4a1270421478645bf66bdb",
+      "files": {
+        "src/Lib/General/Analysis/FiniteFourier.lean": "961297ce1b9a42fae949592d690144f487ad1b130f60f338720f367ac4216439"
+      },
+      "command": "lake build Lib.General.Analysis.FiniteFourier",
+      "exit_code": 0,
+      "sorry_warning": false,
+      "verification_source_commit": "c9e435ffff54fd30a29c93c5cf1b9872ea918d5f",
+      "evidence_url": "https://github.com/CubeJerry/riemann-hypothesis/actions/runs/45737454025/job/139634010598",
+      "benefit": "Replace the finite-sum induction with map_sum and inline a single-use primitive-character helper.",
+      "upstream_ci": [
+        {
+          "id": 45738247448,
+          "name": "build",
+          "status": "in_progress",
+          "conclusion": null,
+          "run_number": 159,
+          "jobs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45738247448/jobs",
+          "logs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45738247448/logs",
+          "workflow_id": 430978372
+        }
+      ]
+    },
+    {
+      "id": "taylor-dependency",
+      "pr": "https://github.com/leanprover-community/riemann-hypothesis/pull/5810",
+      "source_commit": "de84e853470e8aea8d6ed2d63ddf3a1ff4253610",
+      "base": "e063a923620ee7787b4a1270421478645bf66bdb",
+      "files": {
+        "src/Lib/CM/Sigma/Basic.lean": "d4c5de84da52eba6f94d100f8a2b849d1a56e145ec63aacf1be4210ce0d6d915",
+        "src/Lib/General/Analysis/MeanValueAndTaylor.lean": "3da10476643179f3719e3a6563460e72cfc86a67cbfb7e34af5011a02917214c",
+        "src/Lib/Weil/MixedModel/FockSections.lean": "59cab12faad581a4fda3c6541b93982555a0944a17a619ccb8891902b91aa0f5"
+      },
+      "command": "lake build Lib.General.Analysis.MeanValueAndTaylor Lib.CM.Sigma.Basic Lib.Adelic.Witt.SmoothWitt Lib.Weil.MixedModel.FockSections Lib.DiscreteSeries.Holomorphic.HighestVectorExtension Lib.CM.Sigma.ThetaSections",
+      "exit_code": 0,
+      "sorry_warning": false,
+      "verification_source_commit": "1a7f4effa421a71a2c51af4a73c4a06ea03d1307",
+      "evidence_url": "https://github.com/CubeJerry/riemann-hypothesis/actions/runs/45738794898/job/139638411993",
+      "benefit": "Place taylorAtZero with general Taylor theory and make the true integral and Fourier dependencies explicit.",
+      "upstream_ci": [
+        {
+          "id": 45739298891,
+          "name": "build",
+          "status": "in_progress",
+          "conclusion": null,
+          "run_number": 179,
+          "jobs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45739298891/jobs",
+          "logs_url": "https://api.github.com/repos/leanprover-community/riemann-hypothesis/actions/runs/45739298891/logs",
+          "workflow_id": 430978372
+        }
+      ]
+    }
+  ],
+  "excluded_candidates": [
+    {
+      "reason": "Already covered by another open pull request",
+      "candidate": "unused FittingBlock wrapper",
+      "pr": "https://github.com/leanprover-community/riemann-hypothesis/pull/5668"
+    },
+    {
+      "reason": "Already covered by another open pull request",
+      "candidate": "unused monomial-colength examples",
+      "pr": "https://github.com/leanprover-community/riemann-hypothesis/pull/5671"
+    },
+    {
+      "reason": "Already covered by another open pull request",
+      "candidate": "unused triangle corollaries",
+      "pr": "https://github.com/leanprover-community/riemann-hypothesis/pull/5697"
+    },
+    {
+      "reason": "Targeted build exposed required Haar-measure instances and elaboration dependencies; not submitted",
+      "candidate": "holomorphic-integration import reduction"
+    }
+  ]
+}
