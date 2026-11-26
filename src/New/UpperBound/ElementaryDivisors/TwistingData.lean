@@ -243,6 +243,11 @@ lemma p_dvd_embedding_of_mem_maximalIdeal {y : W} (hy_mem : y ∈ maximalIdeal W
   rw [← (h_unit.map (T.embedding s)).dvd_mul_right, h_factor]
   simpa [ZMod.natCast_self] using T.frobenius_pow_congr N s y
 
+private lemma p_dvd_embedding_of_mem_parahoric {τ : Fin k → ℕ} {g : GL (Fin k) W}
+    (hg : g ∈ parahoric W τ) {i j : Fin k} (hij : τ i < τ j) :
+    (T.p : R) ∣ T.embedding s (g i j) :=
+  T.p_dvd_embedding_of_mem_maximalIdeal s ((residue_eq_zero_iff _).1 (hg hij))
+
 /-- Let `g` lie in the parahoric subgroup of `τ`. Each letter `s` in `ℤ/N` is marked even or odd by
 `T.isEven s`, neighbouring letters differently, and on an even letter the matrix
 `T.letterMatrix s g` is the entrywise image of `g` under the ring map `T.embedding s : W → R`. If
@@ -250,9 +255,7 @@ lemma p_dvd_embedding_of_mem_maximalIdeal {y : W} (hy_mem : y ∈ maximalIdeal W
 lemma p_dvd_letterMatrix_of_mem_parahoric_of_isEven {τ : Fin k → ℕ} {g : GL (Fin k) W}
     (hg : g ∈ parahoric W τ) (hs : T.isEven s = true) {i j : Fin k} (hij : τ i < τ j) :
     (T.p : R) ∣ T.letterMatrix s g i j := by
-  have h_entry : T.letterMatrix s g i j = T.embedding s (g i j) := by simp [letterMatrix_apply, hs]
-  rw [h_entry]
-  exact T.p_dvd_embedding_of_mem_maximalIdeal s ((residue_eq_zero_iff _).1 (hg hij))
+  simpa [letterMatrix_apply, hs] using T.p_dvd_embedding_of_mem_parahoric s hg hij
 
 /-- Let `g` lie in the parahoric subgroup of `τ`. Each letter `s` in `ℤ/N` is marked even or odd by
 `T.isEven s`, neighbouring letters differently, and on an odd letter the matrix `T.letterMatrix s g`
@@ -261,11 +264,7 @@ is odd and `τ j < τ i`, then `p` divides the entry `(i, j)` of this matrix. -/
 lemma p_dvd_letterMatrix_of_mem_parahoric_of_not_isEven {τ : Fin k → ℕ} {g : GL (Fin k) W}
     (hg : g ∈ parahoric W τ) (hs : T.isEven s = false) {i j : Fin k} (hji : τ j < τ i) :
     (T.p : R) ∣ T.letterMatrix s g i j := by
-  -- The entry comes from the entry `(j, i)` of `g⁻¹`, which is parahoric too.
-  have h_entry : T.letterMatrix s g i j = T.embedding s (g⁻¹ j i) := by
-    simp [letterMatrix_apply, hs]
-  rw [h_entry]
-  exact T.p_dvd_embedding_of_mem_maximalIdeal s ((residue_eq_zero_iff _).1 (inv_mem hg hji))
+  simpa [letterMatrix_apply, hs] using T.p_dvd_embedding_of_mem_parahoric s (inv_mem hg) hji
 
 /-- Let `g` lie in the parahoric subgroup of `τ`. Suppose that `τ i < τ j` if `s` is even, and
 `τ j < τ i` if it is odd. Then `p` divides the entry `(i, j)` of `T.letterMatrix s g`. -/
