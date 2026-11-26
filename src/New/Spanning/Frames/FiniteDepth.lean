@@ -213,6 +213,19 @@ theorem exists_mem_boxSet_hasMatrixSize_of_inner_ne_zero {Γ : Gauge F}
   exact ⟨u, hu, v, hv, box_eq.ge hux, box_eq.ge hvy,
     fun i j ↦ mem_ofSize_mono (h_size _ (fun k ↦ h_int k j) i)⟩
 
+private lemma exists_nonzero_pivotL1Norm_of_formMajorant_ne_zero (Z : F.IntermediateGroup)
+    {j : ℕ} {p q : ℕ → Aˣ} {x : T.G} (hx : F.formMajorant j p q Z.besselVector x ≠ 0) :
+    ∃ y : T.G, F.pivotL1Norm j (frameCorrelation Z.besselVector 1) y (y * x) ≠ 0 ∧
+      F.pivotL1Norm j (frameCorrelation Z.besselVector (weylRatio j p q))
+        ((weylElem j p)⁻¹ * y) ((weylElem j p)⁻¹ * y * x) ≠ 0 := by
+  obtain ⟨y, -, hy⟩ :
+      ∃ y ∈ floorGroup 0,
+        F.pivotL1Norm j (frameCorrelation Z.besselVector 1) y (y * x) *
+          F.pivotL1Norm j (frameCorrelation Z.besselVector (weylRatio j p q))
+            ((weylElem j p)⁻¹ * y) ((weylElem j p)⁻¹ * y * x) ≠ 0 :=
+    exists_ne_zero_of_ae ae_partialGroupMeasure_mem hx
+  exact ⟨y, left_ne_zero_of_mul hy, right_ne_zero_of_mul hy⟩
+
 /-- Let `F` be a large lattice datum, `Z` a group between the congruence subgroup K(g) and the
 integral group K, `j ≤ ϱ`, and let `p`, `q` be sequences of units. If the majorant `F.formMajorant`
 of their form of floor `j` (an integral of moduli of orbital integrals of the Bessel vector of `Z`)
@@ -224,19 +237,14 @@ theorem prod_mem_of_formMajorant_ne_zero (Z : F.IntermediateGroup) {j : ℕ}
     (∏ a ∈ Finset.range l, p a).val ∈ integers ∧ (∏ a ∈ Finset.range l, q a).val ∈ integers := by
   -- Where the integrand is not zero, the frames `y`, `y * x` and their translates by the inverses
   -- of the Weyl elements of `p` and of `q` respectively are near at `j`.
-  obtain ⟨y, -, hy⟩ :
-      ∃ y ∈ floorGroup 0,
-        F.pivotL1Norm j (frameCorrelation Z.besselVector 1) y (y * x) *
-          F.pivotL1Norm j (frameCorrelation Z.besselVector (weylRatio j p q))
-            ((weylElem j p)⁻¹ * y) ((weylElem j p)⁻¹ * y * x) ≠ 0 :=
-    exists_ne_zero_of_ae ae_partialGroupMeasure_mem hx
+  obtain ⟨y, hy, hy'⟩ := exists_nonzero_pivotL1Norm_of_formMajorant_ne_zero Z hx
   obtain ⟨σ, hσ, h_first⟩ : ∃ σ ∈ floorGroup j,
       ⟪Z.besselVector (σ * y), Z.besselVector (1 * (σ * (y * x)))⟫_ℂ ≠ 0 :=
-    exists_ne_zero_of_pivotL1Norm_ne_zero (left_ne_zero_of_mul hy)
+    exists_ne_zero_of_pivotL1Norm_ne_zero hy
   obtain ⟨τ, hτ, h_second⟩ : ∃ τ ∈ floorGroup j,
       ⟪Z.besselVector (τ * ((weylElem j p)⁻¹ * y)),
         Z.besselVector (weylRatio j p q * (τ * ((weylElem j p)⁻¹ * y * x)))⟫_ℂ ≠ 0 :=
-    exists_ne_zero_of_pivotL1Norm_ne_zero (right_ne_zero_of_mul hy)
+    exists_ne_zero_of_pivotL1Norm_ne_zero hy'
   have h_near {ρ z : T.G} (hρ : ρ ∈ floorGroup j) (hz : Z.besselVector (ρ * z) ≠ 0) :
       F.IsNear j z :=
     ((isCut_besselVector Z).isNear_of_ne_zero hz).of_floorGroup_mul hρ le_rfl
@@ -416,15 +424,10 @@ theorem mem_positions_of_formMajorant_ne_zero {F : PlaceData ι T (m + 1)} {x : 
   -- `PlaceData.exists_mem_congruenceSubgroup_of_inner_ne_zero`, `x` is then a conjugate by `σ * y`
   -- of an element of `besselU`, times an element of `F.congruenceSubgroup`, which is the form of a
   -- position.
-  obtain ⟨y, -, hy⟩ :
-      ∃ y ∈ floorGroup 0,
-        F.pivotL1Norm j (frameCorrelation Z.besselVector 1) y (y * x) *
-          F.pivotL1Norm j (frameCorrelation Z.besselVector (weylRatio j p q))
-            ((weylElem j p)⁻¹ * y) ((weylElem j p)⁻¹ * y * x) ≠ 0 :=
-    exists_ne_zero_of_ae ae_partialGroupMeasure_mem hx
+  obtain ⟨y, hy, -⟩ := exists_nonzero_pivotL1Norm_of_formMajorant_ne_zero Z hx
   obtain ⟨σ, -, h_pair⟩ :
       ∃ σ ∈ floorGroup j, ⟪Z.besselVector (σ * y), Z.besselVector (1 * (σ * (y * x)))⟫_ℂ ≠ 0 :=
-    exists_ne_zero_of_pivotL1Norm_ne_zero (left_ne_zero_of_mul hy)
+    exists_ne_zero_of_pivotL1Norm_ne_zero hy
   rw [one_mul] at h_pair
   obtain ⟨u, hu, v, hv, -, h_lev⟩ :
       ∃ u ∈ besselU, ∃ v ∈ besselU,
