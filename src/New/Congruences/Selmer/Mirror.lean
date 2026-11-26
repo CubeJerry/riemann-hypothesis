@@ -321,7 +321,7 @@ lemma eq_zero_of_mem_dualSelmer_of_forall_sahGroup {hp : IsTiedPrimes ℓ S₀ V
       (T.reductionKer M N).isNormal'.conj_mem g hg T.γ
     have h_mul : ⁅g, T.γ⁆ * (T.γ * g * T.γ⁻¹) = g := by simp [commutatorElement_def, mul_assoc]
     have h_same : y g = y (T.γ * g * T.γ⁻¹) := by
-      simpa [h_mul, hH _ h_comm] using
+      simpa only [h_mul, hH _ h_comm, zero_add] using
         hy.map_mul _ (T.mem_reductionKer_of_mem_sahGroup h_comm) _ h_conj
     have h_val (m : n → QuotSpan a) : y g (T.ρ T.γ • m) = y g m :=
       calc y g (T.ρ T.γ • m) = y (T.γ * g * T.γ⁻¹) (T.ρ T.γ • m) := by rw [← h_same]
