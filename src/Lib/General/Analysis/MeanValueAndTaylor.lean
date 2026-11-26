@@ -1,4 +1,4 @@
-import Lib.CM.Sigma.Basic
+import Lib.General.Measure.IdempotentKernel
 
 /-!
 # Circle means, Taylor series at zero, a power bound, and smooth matrix operations
@@ -8,7 +8,7 @@ develops the algebra of Taylor series at 0 of analytic functions and proves an e
 x^l by a factorial and exponentials. It also gives smoothness rules for matrix operations and
 extends analytic germs to globally smooth maps.
 
-The imported notion `New.taylorAtZero f` is the formal power series whose `n`-th coefficient is
+The definition `New.taylorAtZero f` is the formal power series whose `n`-th coefficient is
 `iteratedDeriv n f 0 / n !`, the Taylor series of `f : ℂ → ℂ` at 0.
 
 ## Main definitions and results
@@ -98,6 +98,10 @@ open PowerSeries Finset Nat AnalyticAt Complex
 attribute [fun_prop] Differentiable.analyticAt
 
 namespace New
+
+/-- The Taylor series ∑ f⁽ⁿ⁾(0) zⁿ/n! at 0 of a function f : ℂ → ℂ, as a formal power series. -/
+noncomputable def taylorAtZero (f : ℂ → ℂ) : PowerSeries ℂ :=
+  PowerSeries.mk fun n ↦ iteratedDeriv n f 0 / n.factorial
 
 @[simp]
 lemma coeff_taylorAtZero {f : ℂ → ℂ} (n : ℕ) :

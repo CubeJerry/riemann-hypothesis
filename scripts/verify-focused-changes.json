@@ -1,0 +1,27 @@
+[
+  {
+    "id": "taylor-dependency",
+    "files": [
+      "src/Lib/CM/Sigma/Basic.lean",
+      "src/Lib/General/Analysis/MeanValueAndTaylor.lean",
+      "src/Lib/Weil/MixedModel/FockSections.lean"
+    ],
+    "targets": [
+      "Lib.General.Analysis.MeanValueAndTaylor",
+      "Lib.CM.Sigma.Basic",
+      "Lib.Adelic.Witt.SmoothWitt",
+      "Lib.Weil.MixedModel.FockSections",
+      "Lib.DiscreteSeries.Holomorphic.HighestVectorExtension",
+      "Lib.CM.Sigma.ThetaSections"
+    ]
+  },
+  {
+    "id": "additive-characters",
+    "files": [
+      "src/Lib/General/Analysis/FiniteFourier.lean"
+    ],
+    "targets": [
+      "Lib.General.Analysis.FiniteFourier"
+    ]
+  }
+]

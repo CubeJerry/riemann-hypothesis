@@ -1,3 +1,4 @@
+import Lib.General.Analysis.MeanValueAndTaylor
 import Lib.General.NumberTheory.ImaginaryQuadraticField
 import Lib.Shimura.ComplexTheta.DimensionFormula
 
@@ -664,10 +665,6 @@ open Complex PeriodPair ComplexConjugate NumberField
 namespace New
 
 /-! ### Taylor series -/
-
-/-- The Taylor series ∑ f⁽ⁿ⁾(0) zⁿ/n! at 0 of a function f : ℂ → ℂ, as a formal power series. -/
-def taylorAtZero (f : ℂ → ℂ) : PowerSeries ℂ :=
-  PowerSeries.mk fun n ↦ iteratedDeriv n f 0 / n.factorial
 
 /-- The Taylor series of f at 0 with the ring homomorphism ι : ℂ → K applied to its
 coefficients. -/

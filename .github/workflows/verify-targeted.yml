@@ -1,0 +1,72 @@
+name: verify repaired proof improvements
+
+on:
+  push:
+    branches: [verify/repaired-proofs-20261126]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repaired-lean-verification
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        case: [taylor-dependency, additive-characters]
+    env:
+      VERIFY_BASE: e063a923620ee7787b4a1270421478645bf66bdb
+      VERIFY_CASES: ${{ matrix.case }}
+      MATHLIB_CACHE_GET_URL: https://cache.mathlib.org/mathlib4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Preserve the verifier and check out the upstream base
+        run: |
+          echo "VERIFY_HEAD=$GITHUB_SHA" >> "$GITHUB_ENV"
+          cp scripts/verify-focused-changes.py scripts/verify-focused-changes.json "$RUNNER_TEMP/"
+          git fetch --no-tags --depth=200 https://github.com/leanprover-community/riemann-hypothesis.git +refs/heads/main:refs/remotes/upstream/main
+          git checkout --detach "$VERIFY_BASE"
+
+      - name: Install the pinned Lean toolchain
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lake" --version
+
+      - name: Restore Mathlib and Tau Ceti caches
+        run: |
+          lake exe mathlib/cache get
+          python3 scripts/tauceti-cache-get.py
+
+      - name: Restore the published project baseline
+        run: |
+          ulimit -Sn "$(ulimit -Hn)"
+          status=0
+          python3 scripts/ci-cache-get.py --baseline upstream/main || status=$?
+          case "$status" in
+            0|4) ;;
+            *) exit "$status" ;;
+          esac
+
+      - name: Build each change independently with explicit targets
+        run: python3 "$RUNNER_TEMP/verify-focused-changes.py"
+
+      - name: Upload build evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: targeted-build-evidence-${{ matrix.case }}
+          path: ${{ runner.temp }}/targeted-build-evidence
+          if-no-files-found: warn
+          retention-days: 14
