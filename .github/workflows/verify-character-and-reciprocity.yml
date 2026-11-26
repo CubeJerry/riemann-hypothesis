@@ -1,0 +1,58 @@
+name: Targeted Lean builds
+on:
+  push:
+    branches: [verify/character-and-reciprocity-lean437]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 175
+    env:
+      MATHLIB_CACHE_GET_URL: https://cache.mathlib.org/mathlib4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Restore upstream sources for the cache lookup
+        run: |
+          git fetch --no-tags --depth=200 https://github.com/leanprover-community/riemann-hypothesis.git +refs/heads/main:refs/remotes/upstream/main
+          git checkout --detach 2746005d8130ee6d0c82d771ec11d69521a65093
+      - name: Install the pinned toolchain
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lake" --version
+      - name: Restore Mathlib and Tau Ceti
+        run: |
+          lake exe mathlib/cache get
+          python3 scripts/tauceti-cache-get.py
+      - name: Restore the project cache
+        id: cache
+        run: |
+          ulimit -Sn "$(ulimit -Hn)"
+          result=0
+          python3 scripts/ci-cache-get.py --baseline upstream/main || result=$?
+          case "$result" in 0|4) ;; *) exit "$result" ;; esac
+      - name: Build twisted-l-inversion
+        if: ${{ !cancelled() && steps.cache.outcome == 'success' }}
+        run: |
+          git restore --source=HEAD -- src
+          git restore --source="$GITHUB_SHA" -- src/New/Determinant/Chain/Moduli.lean
+          git diff --check
+          lake build New.Determinant.Chain.Moduli
+      - name: Build split-prime-kummer
+        if: ${{ !cancelled() && steps.cache.outcome == 'success' }}
+        run: |
+          git restore --source=HEAD -- src
+          git restore --source="$GITHUB_SHA" -- src/Lib/ClassField/GreenbergWiles/SplitPrimeReciprocity.lean
+          git diff --check
+          lake build Lib.ClassField.GreenbergWiles.SplitPrimeReciprocity
+      - name: Build top-floor-integrability
+        if: ${{ !cancelled() && steps.cache.outcome == 'success' }}
+        run: |
+          git restore --source=HEAD -- src
+          git restore --source="$GITHUB_SHA" -- src/New/Spanning/Frames/TopFloor.lean
+          git diff --check
+          lake build New.Spanning.Frames.TopFloor

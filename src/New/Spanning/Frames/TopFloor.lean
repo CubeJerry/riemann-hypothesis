@@ -176,12 +176,10 @@ lemma lintegral_headSumNormSq_eq {F : PlaceData ι T (m + 1)} (Z : F.Intermediat
     ∫⁻ g : T.G, ENNReal.ofReal (headSumNormSq Z R ω (g * l)).re ∂F.measureH =
       ENNReal.ofReal
         (∑ a : j, ∑ b : j, R a b * fiberPairing Z (ω a) (ω b) (orbitPoint 𝔰.top l)).re := by
-  have h_int (a b : j) : Integrable
-      (fun g : T.G ↦ ⟪scaledOrbitalIntegral Z (ω a) (g * l),
-        scaledOrbitalIntegral Z (ω b) (g * l)⟫_ℂ) F.measureH :=
-    integrable_inner_scaledOrbitalIntegral Z (ω a) (ω b) hl
   simpa only [fiberPairing_orbitPoint Z _ _ hl, headSumNormSq] using
-    lintegral_ofReal_re_sum_sum_mul (R := R) h_int fun g ↦ headSumNormSq_nonneg Z hR ω (g * l)
+    lintegral_ofReal_re_sum_sum_mul (R := R)
+      (fun a b ↦ integrable_inner_scaledOrbitalIntegral Z (ω a) (ω b) hl)
+      fun g ↦ headSumNormSq_nonneg Z hR ω (g * l)
 
 /-- If `F` is a large lattice datum (`P.IsLargeLatticeData F`) and `R` is positive semidefinite,
 then for every vector `e` the sum `∑ a b, R a b * fiberPairing Z (ω a) (ω b) e` is a nonnegative
@@ -192,12 +190,10 @@ lemma sum_fiberPairing_nonneg {F : PlaceData ι T (m + 1)} (Z : F.IntermediateGr
   by_cases h_orbit : ∃ l ∈ T.floorGroup 𝔰.ϱ, orbitPoint 𝔰.top l = e
   · -- At `l⁻¹ z` the sum is the integral over `besselH` of `headSumNormSq Z R ω (g * l) ≥ 0`.
     obtain ⟨l, hl, rfl⟩ : ∃ l ∈ T.floorGroup 𝔰.ϱ, orbitPoint 𝔰.top l = e := h_orbit
-    have h_int (a b : j) : Integrable
-        (fun g : T.G ↦ ⟪scaledOrbitalIntegral Z (ω a) (g * l),
-          scaledOrbitalIntegral Z (ω b) (g * l)⟫_ℂ) F.measureH :=
-      integrable_inner_scaledOrbitalIntegral Z (ω a) (ω b) hl
     simpa only [fiberPairing_orbitPoint Z _ _ hl] using
-      sum_sum_mul_integral_nonneg (R := R) h_int fun g ↦ headSumNormSq_nonneg Z hR ω (g * l)
+      sum_sum_mul_integral_nonneg (R := R)
+        (fun a b ↦ integrable_inner_scaledOrbitalIntegral Z (ω a) (ω b) hl)
+        fun g ↦ headSumNormSq_nonneg Z hR ω (g * l)
   · simp [fiberPairing, h_orbit]
 
 /-- The scaled orbital integral of the finite Bessel vector of `Z` with head `r` does not change

@@ -65,15 +65,6 @@ lemma CriticalPair.L_inv (p : D.CriticalPair) :
       p.character.L {w : FinPlace D.E | D.IsChosen w} :=
   p.hasWeight.L_inv p.tamePart_eq_one
 
-/-- For the character `ν` of a critical pair and a tame character `ϑ` of modulus `Q`, the character
-`ν ϑ` and its inverse have the same `L`-function away from the chosen places, the places of `Q` and
-their conjugates. -/
-lemma CriticalPair.L_mul_inv (p : D.CriticalPair) (ϑ : D.TameChar) :
-    (p.character * ϑ.toAutChar)⁻¹.L ({w : FinPlace D.E | D.IsChosen w} ∪ ϑ.Q) =
-      (p.character * ϑ.toAutChar).L ({w : FinPlace D.E | D.IsChosen w} ∪ ϑ.Q) := by
-  refine (p.hasWeight.mul ϑ.hasWeight).L_inv fun w hw ↦ ?_
-  simp [p.tamePart_eq_one w (fun h ↦ hw (.inl h)), ϑ.tamePart_eq_one w (fun h ↦ hw (.inr h))]
-
 lemma lRatioProd_nonneg (ν : AutChar D.E) (s : ℕ) (ϑ : D.TameChar) : 0 ≤ D.lRatioProd ν s ϑ :=
   prod_nonneg fun _ _ ↦ div_nonneg (norm_nonneg _) (norm_nonneg _)
 
@@ -94,7 +85,7 @@ lemma CriticalPair.lRatioProd_eq_prod_norm_div (p : D.CriticalPair) (s : ℕ) (�
       ∏ i ∈ Icc 1 s,
         ‖(p.character * ϑ.toAutChar).L ({w : FinPlace D.E | D.IsChosen w} ∪ ϑ.Q) i /
           p.character.L {w : FinPlace D.E | D.IsChosen w} i‖ := by
-  simp only [lRatioProd, p.L_mul_inv ϑ, p.L_inv, norm_div]
+  simp only [lRatioProd, CriticalPair.L_inv_mul (p := p) ϑ, p.L_inv, norm_div]
 
 /-- For a critical pair `p` (a character `ν = p.character` and an integer `z = p.z`) and a tame
 character `ϑ` with places `ϑ.Q`, the number `lValueProd` up to `z` for `(ν ϑ)⁻¹` and the chosen
@@ -388,7 +379,7 @@ lemma CriticalPair.lValueProd_mul_zpow_eq (p : D.CriticalPair) (ξ : D.Twist) (e
         (ξ.normQ : ℝ) ^ p.z ^ 2 * D.lRatioProd p.character p.z ξ.toTameChar ^ 2 := by
   rw [places_twistModulus, ← p.lValueProd_mul_inv_eq]
   obtain rfl | rfl := Int.units_eq_one_or sign
-  · simp only [Units.val_one, zpow_one, lValueProd, p.L_mul_inv]
+  · simp only [Units.val_one, zpow_one, lValueProd, CriticalPair.L_inv_mul (p := p)]
   · simp
 
 /-- Let `p = (ν, z)` be a ramified critical pair of `D` of weight `-negWeight`, so the tame part of
