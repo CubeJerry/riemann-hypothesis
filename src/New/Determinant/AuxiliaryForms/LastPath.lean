@@ -410,19 +410,10 @@ theorem exists_isLiftWeight_isHCParam :
     have h_columns : κ τ (card (ι (j + 1))) = D.gap - D.t - z.toNat := by
       simp [h_above τ _ (h_mono j.succ_pos), κ₁]
     simp only [e, h_columns]
-    -- `D.liftWeight` grows by `D.gap` from `j + 1` to `j + 2`, and half the rank by `D.t + z` in
-    -- two steps.
+    -- `D.liftWeight` grows by `D.gap` from `j + 1` to `j + 2`. The rank grows by `2 (D.t + z)`
+    -- from `j` to `j + 2`, so its half grows by `D.t + z`, and `D.t + 1 ≤ D.gap`.
     simp only [gridWeight, card_gridIndex, ι]
-    have h_gap : D.t + 1 ≤ D.gap := by
-      have := D.k_add_t_add_one_le_halfGap; rw [gap]; omega
-    have h_rank :
-        D.r + z.toNat + (j + 1 + 1) * (D.t + z.toNat) + D.m * (D.t - z.toNat) + (!z).toNat =
-          D.r + z.toNat + j * (D.t + z.toNat) + D.m * (D.t - z.toNat) + (!z).toNat +
-            (D.t + z.toNat) * 2 := by
-      ring
-    rw [h_rank, Nat.add_mul_div_right _ _ two_pos, D.liftWeight_succ (j + 1)]
-    have := z.toNat_le
-    omega
+    cases z <;> grind
   refine ⟨κ, e, h_up, h_next, fun j hj ↦ ?_⟩
   induction j with
   | zero => exact h_param
