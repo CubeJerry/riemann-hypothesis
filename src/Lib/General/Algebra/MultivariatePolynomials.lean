@@ -4,9 +4,8 @@ import Lib.Cohomology.Etale.Basic
 # Multivariate polynomials: cost of vanishing, homogenization, Nullstellensatz, Hensel
 
 This file collects lemmas on polynomials in several variables and on algebras of finite type. They
-cover commuting partial derivatives, generation by products of polynomials in two sets of variables,
-the cost of monomials of polynomials that vanish to high order, and homogenization along a linear
-form.
+cover generation by products of polynomials in two sets of variables, the cost of monomials of
+polynomials that vanish to high order, and homogenization along a linear form.
 
 ## Main definitions and results
 
@@ -37,19 +36,6 @@ which each u^κ(u) agrees with a polynomial of lower weighted degree. A nonzero 
 to order d at all these points then has a monomial of weighted degree at least d. Source: Alon,
 Combinatorial Nullstellensatz (1999); Ball–Serra, Punctured combinatorial Nullstellensätze (2009).
 -/
-
-/-! ## Partial derivatives of multivariate polynomials commute -/
-
-/-- The formal partial derivatives of a polynomial in several variables commute. -/
-lemma New.pderiv_comm {σ A : Type*} [CommRing A] (a b : σ) (p : MvPolynomial σ A) :
-    (p.pderiv b).pderiv a = (p.pderiv a).pderiv b := by
-  classical
-  ext m
-  -- Both coefficients are the same multiple of the coefficient of `p` at `m + eₐ + e_b`.
-  obtain rfl | h_ne := eq_or_ne a b
-  · rfl
-  · simp [MvPolynomial.coeff_pderiv, add_right_comm m (Finsupp.single a 1), h_ne, h_ne.symm,
-      mul_right_comm]
 
 /-! ## Polynomials in two covering sets of variables -/
 

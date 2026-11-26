@@ -1,0 +1,130 @@
+[
+  {
+    "id": "grid-imports",
+    "files": [
+      "src/New/Determinant/AuxiliaryForms/GridPaths.lean"
+    ],
+    "targets": [
+      "New.Determinant.AuxiliaryForms.GridPaths",
+      "New.Determinant.Chain.Moduli",
+      "New.Determinant.AuxiliaryForms.PathData"
+    ]
+  },
+  {
+    "id": "residue-import",
+    "files": [
+      "src/Lib/General/Algebra/ResidueSums.lean"
+    ],
+    "targets": [
+      "Lib.General.Algebra.ResidueSums",
+      "New.Appendix.DiscreteSeries.StationaryPosition"
+    ]
+  },
+  {
+    "id": "partial-derivatives",
+    "files": [
+      "src/Lib/General/Algebra/MultivariatePolynomials.lean",
+      "src/Lib/SiegelWeil/Reproduction.lean"
+    ],
+    "targets": [
+      "Lib.General.Algebra.MultivariatePolynomials",
+      "Lib.SiegelWeil.Reproduction",
+      "Lib.DiscreteSeries.Theta.LocalCorrespondence",
+      "Lib.DiscreteSeries.Theta.FockDualPair",
+      "Lib.DiscreteSeries.Theta.FockJointHarmonics",
+      "Lib.Weil.Fock.OscillatorPair"
+    ]
+  },
+  {
+    "id": "series-substitution",
+    "files": [
+      "src/Lib/CM/FormalGroup/IntegralParameter.lean",
+      "src/Lib/General/Algebra/IntegralPowerSeries.lean",
+      "src/New/Derivatives/Sharpness/Couplings.lean",
+      "src/New/Derivatives/Vacuum/JetIntegrality.lean",
+      "src/New/Derivatives/Sharpness/LeastValuation.lean"
+    ],
+    "targets": [
+      "Lib.General.Algebra.IntegralPowerSeries",
+      "Lib.CM.FormalGroup.IntegralParameter",
+      "New.Derivatives.Vacuum.JetIntegrality",
+      "New.Derivatives.Sharpness.Couplings",
+      "New.Derivatives.Sharpness.LeastValuation"
+    ]
+  },
+  {
+    "id": "matrix-import",
+    "files": [
+      "src/Lib/General/LinearAlgebra/MatricesNearIdentity.lean"
+    ],
+    "targets": [
+      "Lib.General.LinearAlgebra.MatricesNearIdentity",
+      "New.Appendix.DiscreteSeries.SteepParameters",
+      "New.Appendix.DiscreteSeries.MinorSecondOrder",
+      "Lib.Weil.Fock.PolynomialVectors"
+    ]
+  },
+  {
+    "id": "taylor-dependency",
+    "files": [
+      "src/Lib/CM/Sigma/Basic.lean",
+      "src/Lib/General/Analysis/MeanValueAndTaylor.lean"
+    ],
+    "targets": [
+      "Lib.General.Analysis.MeanValueAndTaylor",
+      "Lib.CM.Sigma.Basic",
+      "Lib.Adelic.Witt.SmoothWitt",
+      "Lib.Weil.MixedModel.FockSections",
+      "Lib.DiscreteSeries.Holomorphic.HighestVectorExtension",
+      "Lib.CM.Sigma.ThetaSections"
+    ]
+  },
+  {
+    "id": "additive-characters",
+    "files": [
+      "src/Lib/General/Analysis/FiniteFourier.lean"
+    ],
+    "targets": [
+      "Lib.General.Analysis.FiniteFourier"
+    ]
+  },
+  {
+    "id": "prime-congruences",
+    "files": [
+      "src/New/Derivatives/Field/PrimeDecomposition.lean",
+      "src/New/Reduction/Data/FieldsAndPlaces.lean"
+    ],
+    "targets": [
+      "New.Reduction.Data.FieldsAndPlaces",
+      "New.Derivatives.Field.PrimeDecomposition",
+      "New.Derivatives.Field.WeilData"
+    ]
+  },
+  {
+    "id": "fitting-wrapper",
+    "files": [
+      "src/New/Congruences/FirstOrder/FittingBlock.lean"
+    ],
+    "targets": [
+      "New.Congruences.FirstOrder.FittingBlock"
+    ]
+  },
+  {
+    "id": "monomial-colength",
+    "files": [
+      "src/New/UpperBound/Divisibility/ColengthAtLevel.lean"
+    ],
+    "targets": [
+      "New.UpperBound.Divisibility.ColengthAtLevel"
+    ]
+  },
+  {
+    "id": "triangle-corollaries",
+    "files": [
+      "src/New/Determinant/Chain/TriangleNorms.lean"
+    ],
+    "targets": [
+      "New.Determinant.Chain.TriangleNorms"
+    ]
+  }
+]

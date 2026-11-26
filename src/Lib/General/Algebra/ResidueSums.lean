@@ -1,4 +1,4 @@
-import Lib.DiscreteSeries.FlenstedJensen.Defs
+import Lib.Base
 
 /-!
 # Sums of residues at simple real poles
