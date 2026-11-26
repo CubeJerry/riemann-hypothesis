@@ -409,6 +409,8 @@ lemma simpleRootSum_conj_heisenbergElem (hs : s ∈ floorGroup (a + 1)) :
 
 end FloorGroups
 
+/-- The Heisenberg element `heisenbergElem a p` of floor `a` is a continuous function of its
+parameter `p`, a pair of a vector and a skew element. -/
 @[fun_prop]
 lemma continuous_heisenbergElem [TopologicalSpace A] [IsTopologicalRing A] [ContinuousStar A]
     [T2Space A] [TraceOne A] {T : 𝔰.Form A} [H : IsHermitianUnit T.splitGram]
