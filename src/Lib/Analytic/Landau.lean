@@ -7,7 +7,7 @@ import Mathlib.Analysis.Complex.TaylorSeries
 import Mathlib.Analysis.Meromorphic.Order
 import Mathlib.MeasureTheory.Order.Group.Lattice
 public import Lib.Analytic.EntireLFunction
-public import TauCeti.Analysis.LaplaceTransform.Meromorphic
+import TauCeti.Analysis.LaplaceTransform.Meromorphic
 
 /-!
 # Landau's lemma
