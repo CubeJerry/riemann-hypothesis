@@ -442,7 +442,7 @@ lemma weylNormSq_weylEval_permArray (e : ∀ τ : Φ, n τ ≃ Fin (rankAt n τ)
   have h_form : star (weylEval n κ y) ⬝ᵥ weylGramOver *ᵥ weylEval n κ y = 1 := by
     rw [h_star, ← eval_toPoly, toPoly_weylEval]
     exact eval_weylKernel_permArray e
-  show re (star (weylEval n κ y) ⬝ᵥ weylGramOver *ᵥ weylEval n κ y) = 1
+  change re (star (weylEval n κ y) ⬝ᵥ weylGramOver *ᵥ weylEval n κ y) = 1
   rw [h_form, one_re]
 
 /-- A tight frame of integral vectors. Let `hk` be the hook number and `⟨ξ, ξ'⟩ = ξ* G ξ'` the form
@@ -623,18 +623,6 @@ lemma comulMatrix_equivariant (g : ∀ τ : Φ, Matrix (n τ) (n τ) R) :
   simp [comulMatrix_mulVec_weylEval, schur_mulVec_weylEval_of_schurDetExp_eq_zero,
     kronecker_mulVec_vec,
     mul_vecMulVec, vecMulVec_mul, vecMul_transpose]
-
-/-- Over an infinite domain, let `C` be the multiplication matrix.
-(a) `Cᵀ (G κ ⊗ G κ') C = G (κ + κ')` for the Gram matrices `G`; this part does not involve `g`.
-(b) `(S κ g ⊗ S κ' g) C = C * S (κ + κ') g` for the Schur matrices `S` of any family `g` of square
-matrices. -/
-lemma comulMatrix_isometry_and_equivariant (g : ∀ τ : Φ, Matrix (n τ) (n τ) R) :
-    let C := comulMatrix R n κ κ'
-    -- (a) the matrix is an isometry for the Gram forms
-    Cᵀ * ((weylGram n κ).map (↑) ⊗ₖ (weylGram n κ').map (Int.cast : ℤ → R) * C) = weylGramOver ∧
-    -- (b) the matrix is equivariant
-    schur κ g ⊗ₖ schur κ' g * C = C * schur (κ + κ') g :=
-  ⟨comulMatrix_isometry, comulMatrix_equivariant g⟩
 
 /-- The integer matrix whose row (p, q) lists the coordinates of the product of the basis minor
 products b_p for κ and b_q for κ', in the basis for κ + κ', has an integer left inverse. -/

@@ -812,7 +812,6 @@ lemma exists_isGlued (V : DividedSplitting N m a O z)
     (V.ε.injective.comp (inr_injective.comp z.injective)) O.incl.injective
   let ε' : N ⊕ m ≃ n := V.ε.trans σ
   have hε' : ∀ i : r, ε' (inr (z i)) = O.incl i := hσ
-
   obtain ⟨L, hL⟩ : ∃ L : DividedLattice O,
       L.reducedInverse = (reindex ε' V.ε G).map O.chosenModulusSq.reduction :=
     DividedLattice.exists_reducedInverse_eq (reindex V.ε ε' C) _ (by simp [hCG, submatrix_smul])

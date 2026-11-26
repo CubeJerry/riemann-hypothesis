@@ -248,7 +248,8 @@ lemma EtaleChart.tangent_mem_range_of_jet {X : CommAlg E ⥤ Type 1} (A : EtaleC
   let L : T →ₗ[k] Fin d → k := .pi fun i ↦ (γ (A.coordinate i)).snd
   have hL_coord (φ : T) : (fun i : Fin d ↦ (g φ (A.coordinate i)).snd) = L φ := by
     ext i
-    show (TrivSqZeroExt.map (Dual.eval k T φ) (γ (A.coordinate i))).snd = (γ (A.coordinate i)).snd φ
+    change (TrivSqZeroExt.map (Dual.eval k T φ) (γ (A.coordinate i))).snd =
+      (γ (A.coordinate i)).snd φ
     exact snd_map (Dual.eval k T φ) _
   have hL : Function.Injective L := by
     intro φ ψ h_eq
@@ -266,7 +267,7 @@ lemma EtaleChart.tangent_mem_range_of_jet {X : CommAlg E ⥤ Type 1} (A : EtaleC
     obtain ⟨φ, hφ⟩ := D.surjective fun i : Fin d ↦ (α (A.coordinate i)).snd
     have h_base_eq : α ≫ (restrictAlg E k).map fst = γ ≫ (restrictAlg E k).map fst := by
       apply A.injective
-      show X.map (α ≫ (restrictAlg E k).map fst) A.point =
+      change X.map (α ≫ (restrictAlg E k).map fst) A.point =
         X.map (γ ≫ (restrictAlg E k).map fst) A.point
       rw [X.map_comp_apply, X.map_comp_apply]
       exact hw
@@ -393,7 +394,7 @@ lemma IsTangentPoly.constIfCoincident {c u : W ⟶ X} {w : W.obj (CommAlgCat.of 
   have h_map : ofHom (TrivSqZeroExt.map (Dual.eval k T 0)) =
       ofHom (TrivSqZeroExt.map (Dual.eval k T 0)) ≫ SqZeroExt.fst ≫ structureMap := by
     ext r <;> simp
-  show W.map (ofHom (TrivSqZeroExt.map (Dual.eval k T 0))) v =
+  change W.map (ofHom (TrivSqZeroExt.map (Dual.eval k T 0))) v =
     W.map (SqZeroExt.fst ≫ structureMap) (W.map (ofHom (TrivSqZeroExt.map (Dual.eval k T 0))) v)
   rw [← W.map_comp_apply, ← h_map]
 
@@ -456,7 +457,7 @@ lemma preimage_lift_le_preimage_scaledGraph (t : k) (u c : W ⟶ X) {U : Subfunc
   have base_eq : (X ⊗ X).map C.baseProj ((scaledGraph t u c).app C x) =
       (X ⊗ X).map C.baseProj ((CartesianMonoidalCategory.lift u c).app (sqZeroExt.obj C) x) := by
     refine Prod.ext ?_ rfl
-    show X.map C.baseProj (u.app _ (W.map ((scaleModule t sqZeroExt).app C) x)) = _
+    change X.map C.baseProj (u.app _ (W.map ((scaleModule t sqZeroExt).app C) x)) = _
     rw [u.naturality_apply]
     exact (X.map_comp_apply ((scaleModule t sqZeroExt).app C) C.baseProj _).symm
   refine hU.mem_of_isSquareZero C.baseProj fst_surjective_and_kerIdeal_sq_eq_bot _ ?_

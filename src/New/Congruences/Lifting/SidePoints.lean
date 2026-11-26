@@ -106,7 +106,7 @@ lemma sum_padicValInt_Icc_le {n p m H : ℕ} {c : ℤ} (hp : p.Prime) (hn : n �
       padicValInt p k ≤ #{i ∈ range (p.log H) | ((p ^ (i + 1) : ℕ) : ℤ) ∣ k} := by
     have hk_le : k.natAbs ≤ H := by grind
     have h_log : padicValInt p k ≤ p.log H :=
-      (padicValNat_le_nat_log _).trans (Nat.log_mono_right hk_le)
+      (multiplicity_le_nat_log _).trans (Nat.log_mono_right hk_le)
     refine (card_range _).ge.trans (card_le_card fun i hi ↦ mem_filter.2 ⟨?_, ?_⟩)
     · exact mem_range.2 ((mem_range.1 hi).trans_le h_log)
     · exact_mod_cast (padicValInt_dvd_iff _ _).2 (.inr (mem_range.1 hi))

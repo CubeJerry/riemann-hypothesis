@@ -972,7 +972,7 @@ lemma IsWeakChainDatum.exists_lift_eq_chain_scaledHeckeOperator (H : IsWeakChain
           simp [s, rpow_sub, NeZero.pos, norm_p_eq_inv, div_eq_mul_inv, mul_comm]
         have hc_norm : ‖ιₚ (c i)‖ ≤ 1 := hc hj i
         grw [map_mul, norm_mul, hc_norm, one_mul, hs, ← rpow_add (mod_cast hp.1.pos)]
-      simp only [List.map_cons, List.sum_cons, Module.End.mul_apply, LinearMap.sum_apply,
+      simp only [List.map_cons, List.sum_cons, mul_apply_eq_comp, LinearMap.sum_apply,
         LinearMap.smul_apply, map_sum, map_smul]
       refine sum_mem fun i hi ↦ smul_mem_raises _ (h_coset i (mem_Iic.1 hi)) ?_
       exact (h_scalar i).trans_eq (by simp [β, add_assoc])
@@ -1019,7 +1019,7 @@ theorem IsWeakChainDatum.gaugeLe_scaledHeckeOperator_pow (H : IsWeakChainDatum �
     induction j with
     | zero => rfl
     | succ j ih =>
-      rw [pow_succ', Module.End.mul_apply, ← t_lift j x hx, ← ih]
+      rw [pow_succ', mul_apply_eq_comp, ← t_lift j x hx, ← ih]
       simp [chain, compUpTo]
   have h_comb : restrictedChain ϑ Ψ ((Y ^ D.m) v) =
       D.restrictToY (chainCombination ϑ Ψ (fun x j ↦ t j (D.translateDatum x j)) D.m v) := by

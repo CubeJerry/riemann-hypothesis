@@ -438,8 +438,8 @@ for measurable f. The continuity in b is why equality holds at every b rather th
 everywhere. -/
 lemma IsDisintegration.unique {l l' : skewAdjoint A → Measure (ι → A)}
     (hl : IsDisintegration μ T l) (hl' : IsDisintegration μ T l') : l b = l' b := by
-  haveI (b) := hl.isFiniteMeasureOnCompacts b
-  haveI (b) := hl'.isFiniteMeasureOnCompacts b
+  let : ∀ b, IsFiniteMeasureOnCompacts (l b) := hl.isFiniteMeasureOnCompacts
+  let : ∀ b, IsFiniteMeasureOnCompacts (l' b) := hl'.isFiniteMeasureOnCompacts
   -- Retract the ambient ring onto its skew elements so both formulas have the same base.
   obtain ⟨proj, hproj, hfix⟩ := (isClosed_skewAdjoint (A := A)).measurableSet.exists_measurable_proj
     ⟨0, (skewAdjoint A).zero_mem⟩

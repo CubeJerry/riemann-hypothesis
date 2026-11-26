@@ -281,7 +281,6 @@ lemma LValueData.fockPairing_fockPoly_highestVector [WeilData E] :
     fockPairing_rename_rename] at h_gram
 /-- The group `GL Unit (ResField w)` of invertible 1×1 matrices over the residue field `ResField w`
 at `w` has as many elements as the unit group `(ResField w)ˣ` of this field. -/
-
 lemma natCard_GL_unit_resField (w : FinPlace E) :
     Nat.card (GL Unit (ResField w)) = Nat.card (ResField w)ˣ :=
   Nat.card_congr (Units.mapEquiv uniqueRingEquiv.toMulEquiv).toEquiv
@@ -471,7 +470,6 @@ theorem LValueData.inner_thetaLift_constForm_self [WeilData E] (h_rank : 2 < Fin
     rfl
   have h_one : (fun _ : G E O.signs ↦ (1 : ℂ)) ∈ (stdSpace E Unit).rapidFunctions :=
     ((stdSpace E Unit).isAutomorphic_const 1).mem_rapidFunctions fun _ _ ↦ rfl
-
   have h_rallis : (stdSpace E n).petersson θ₁ θ₁ =
       (stdSpace E n).quotMeasure.real .univ * (X.blockMeanSquare / stdLevelIndex X.chosenLevel) *
         ∫ x : GInf E O.signs,

@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
-      BASE: ef1760f555d5386fe8eea9c663110f7b8d08e467
+      BASE: 4249e7b98bbb0ad3ba610e4c8c978fabf4569a83
       MATHLIB_CACHE_GET_URL: https://cache.mathlib.org/mathlib4
     steps:
       - uses: actions/checkout@v4
@@ -39,7 +39,7 @@ jobs:
           git restore --source="$GITHUB_SHA" -- src
           git diff --check
           result=0
-          for target in Lib.PadicHodge.TateSen Lib.DiscreteSeries.Theta.CasimirComparison Lib.General.Measure.QuadricDisintegration; do
+          for target in Lib.PadicHodge.TateSen Lib.DiscreteSeries.Theta.FockDualPair Lib.General.Measure.QuadricDisintegration; do
             echo "::group::$target"
             lake build "$target" || result=1
             echo "::endgroup::"

@@ -114,7 +114,7 @@ lemma letterPoly_schur_inclMatrix_mulVec {Φ : Type} [Fintype Φ] [DecidableEq �
     rw [toPoly_schur hκ.fitsRanks, hκ.schurDetExp_eq_zero, detPow_zero, mul_one]
   -- This substitution sends the variable in row `i` to that in row `f i`.
   rw [letterPoly, letterPoly, LinearMap.comp_apply, LinearMap.comp_apply, h_toPoly]
-  simp [rowSubst, fockLetters, inclMatrix, rename_aeval, comp_aeval_apply, Matrix.one_apply]
+  simp [rowSubst, fockLetters, inclMatrix, comp_aeval_apply, Matrix.one_apply]
 
 /-- Let `ε : N ⊕ m ≃ n` split the indices of `V = V″ ⊕ V°`, and let `O.colsPlus` and `O.colsMinus`
 satisfy `HasColumnsBelow`: each column of height below the rank of `V` has height below the rank of

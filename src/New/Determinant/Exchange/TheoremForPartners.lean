@@ -112,7 +112,7 @@ lemma IsSchwartzVector.adjointDatum {y : PairFock E u s} (hy : IsSchwartzVector 
     have h_coord (i : InfinitePlace E × n × b) : ‖f.realEquiv x i‖₊ = ‖x (i.1, i.2.swap)‖₊ := by
       simp [f, flipCoords, starCoordEquiv, nnNorm, Prod.map, abs_unit_intCast]
     refine eq_of_forall_ge_iff fun c ↦ ?_
-    simp only [pi_nnnorm_le_iff, h_coord, Prod.forall, Prod.swap_prod_mk]
+    simp only [pi_nnNorm_le_iff, h_coord, Prod.forall, Prod.swap_prod_mk]
     exact forall_congr' fun _ ↦ forall_comm
   have h_measure : MeasurePreserving f.realEquiv (normalizedVolume _) (normalizedVolume _) :=
     Heisenberg.IsVacuum.measurePreserving_equiv (realHeisenberg 1) (realHeisenberg 1)
@@ -445,7 +445,7 @@ lemma integral_thetaOnRealData_eq_zero (W : Space E n s) {μ : InfinitePlace E �
   let C : ℝ := ‖T‖ * ‖(Fock.vacVector : PairFock E s t)‖
   have h_moment (N : ℕ) (u : InfinitePlace E × (r ⊕ n) × n → ℂ) : fockMoment N (F u) ≤
       fockMoment N (Fock.vacVector : PairFock E s s) * ENNReal.ofReal C * (1 + ‖u‖ₑ) ^ N := by
-    have h_norm : ‖(φ u).2‖ₑ ≤ ‖u‖ₑ := enorm_le_iff_norm_le.2 (pi_norm_comp_le u _)
+    have h_norm : ‖(φ u).2‖ₑ ≤ ‖u‖ₑ := eNorm_le_iff_norm_le.2 (pi_norm_comp_le u _)
     have h_coeff : ‖T (realHeisenbergOp (φ u).1 Fock.vacVector)‖ₑ ≤ ENNReal.ofReal C := by
       grw [← ofReal_norm, T.le_opNorm, Heisenberg.Rep.norm_map]
     calc fockMoment N (F u)

@@ -107,7 +107,7 @@ lemma theta_sub_one_dvd_pow_mul_theta_zTau {g : k.subgroup} {ω : Ainf}
   let w : Ainf :=
     tau * u * (∑ j ∈ Finset.range (p ^ a), WittVector.teichmuller p epsTilt ^ j) * k.z.val
   have h_diff : toGp g.val • k.z.val - k.z.val = k.E.val * w := by
-    rw [hz, ← sub_one_mul, ← mul_geom_sum, ← mu, ← hu]
+    rw [hz, ← sub_one_mul, ← mul_geom_sum, ← mu_eq, ← hu]
     ring
   have h_theta_w : theta w = theta tau * theta u * p ^ a * theta k.z := by simp [w]
   have h_aeval : aeval (toGp g.val • k.z.val) F = toGp g.val • aeval k.z.val F :=

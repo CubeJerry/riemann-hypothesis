@@ -216,7 +216,7 @@ lemma hasPosMellinTransform_comp_conePoint {β : (InfinitePlace E × r' × Unit 
       mul_le_mul_iff_left₀ (sum_norm_sq_lineVector_pos X w)] using
       hβ_shell (conePoint X (κ, a)) (left_ne_zero_of_mul h_ne) w
   refine ⟨fun z ↦ (hρ_cont z).integrable_of_hasCompactSupport (hρ_supp z), fun z ↦ ?_⟩
-  exact (hρ_cont z).integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1) (hρ_supp z)
+  exact (hρ_cont z).integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1) (hρ_supp z)
     (fun _ ↦ mul_nonneg (hβ_nonneg _) (Real.rpow_nonneg ideleAbs_pos.le z))
     (by simpa [ρ] using hβ_ne_zero)
 
@@ -468,7 +468,7 @@ theorem exists_thetaLarge_cone_eq [IsBaseAdapted A] [IsBaseAdapted X] (μ : Infi
   obtain ⟨B, hB, -, h_image⟩ := exists_thetaLarge_cone_eq_mul A X μ σ hn
   have hB_ne : (B z : ℂ) ≠ 0 := Complex.ofReal_ne_zero.2 (hB z).ne'
   have h_schwartz : IsSchwartzVector ((B z : ℂ)⁻¹ • v) := fun N ↦ by
-    simpa only [fockMoment_smul] using ENNReal.mul_ne_top enorm_ne_top (hv N)
+    simpa only [fockMoment_smul] using ENNReal.mul_ne_top eNorm_ne_top (hv N)
   obtain ⟨v', hv', h_cone⟩ := h_image ((B z : ℂ)⁻¹ • v) h_schwartz
   refine ⟨v', hv', fun 𝔠 y g ↦ ?_⟩
   calc _ = B z * thetaLarge W V 𝔠 ((B z : ℂ)⁻¹ • v) (stdRowDatum σ 𝔠.semilocalChar y) g :=

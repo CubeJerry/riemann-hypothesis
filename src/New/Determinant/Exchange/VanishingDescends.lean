@@ -132,7 +132,7 @@ theorem ThetaLargeVanishes.of_add_plane {k : ℕ} {W : Space E n s} {W' : Space 
   have hε_ne : ε true ≠ 0 := norm_pos_iff.1 ((ha_pos true).trans_eq (hε_norm true).symm)
   have hP_pos : 0 < P (e + 1 : ℤ) := mul_pos (Real.rpow_pos_of_pos ideleAbs_pos _)
     (Finset.prod_pos fun w _ ↦ Real.rpow_pos_of_pos (by simp [FinPlace.q_bounds]) _)
-  show I = 0
+  change I = 0
   simpa only [R, mul_eq_zero, Complex.ofReal_eq_zero, hε_ne, hP_pos.ne', hΛ_ne _ h_lower,
     (hB_pos _).ne', false_or] using h_R_zero
 

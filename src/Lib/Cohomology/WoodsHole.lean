@@ -166,7 +166,7 @@ lemma New.Variety.sum_mul_hodgeTateMap_scaledGraph_eq_zero {p : ℕ} {A : Type*}
   -- restate the goal with `Φ`, and `φ`, `z` in terms of `XW`, `XY`
   revert φ z
   intro (φ : Module.Dual k (PairH (freeAb XW))) (z : HodgeH (freeAb.obj (XY ⊗ XY)) d)
-  show ∑ i : b.support, b i * L (fun t : k ↦ φ (hodgeTateMap d (Φ t i z))) = 0
+  change ∑ i : b.support, b i * L (fun t : k ↦ φ (hodgeTateMap d (Φ t i z))) = 0
   -- the diagonal of `W`, followed by the map to the tensor square
   let diag := freeAb.map (lift (𝟙 _) (𝟙 _)) ≫ freeAb.prod XW XW
   -- `diag` as a linear map on `PairH`, so that `simp` can use its linearity

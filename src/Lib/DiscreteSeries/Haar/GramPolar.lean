@@ -133,7 +133,7 @@ theorem exists_isGramSection :
   have h_near : ∀ᶠ t in 𝓝 (gramCoords J (β 0)),
       DifferentiableAt ℝ σ t ∧ gramCoords J (σ t) = t ∧ IsUnit (σ t) := by
     filter_upwards [hσ_smooth.eventually (by simp),
-      (h_smooth.hasStrictFDerivAt' h_deriv one_ne_zero).eventually_right_inverse,
+      (h_smooth.hasStrictFDerivAt h_deriv one_ne_zero).eventually_right_inverse,
       hσ_smooth.continuousAt.eventually_mem (Units.isOpen.mem_nhds (by simp [hσ_base]))]
       with t h_diff h_inv h_unit
     exact ⟨h_diff.differentiableAt one_ne_zero, h_inv, h_unit⟩

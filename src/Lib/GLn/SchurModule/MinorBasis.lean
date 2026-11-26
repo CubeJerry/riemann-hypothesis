@@ -343,7 +343,7 @@ lemma alternant_succ {N : ℕ} (hl_anti : Antitone l) (i : Fin (N + 1)) (x : Fin
   rw [univ.sum_comm, ite_sum_zero, ← sum_filter, ← sum_filter]
   -- Both sides are now sums over permutations `σ` of `Fin N`: on the left also over the exponents
   -- `g j` chosen from the geometric sums, on the right also over the interlacing `γ`.
-  show ∑ g ∈ Fintype.piFinset (fun j : Fin N ↦ Ico (p j.castSucc) (p j.succ)) with l (N + 1) = 0,
+  change ∑ g ∈ Fintype.piFinset (fun j : Fin N ↦ Ico (p j.castSucc) (p j.succ)) with l (N + 1) = 0,
       ∑ σ : Equiv.Perm (Fin N), (-1) ^ (i : ℕ) * x i ^ l N * (((Equiv.Perm.sign σ : ℤ) : ℂ) *
         ((∏ a : Fin N, (x (i.succAbove a) - x i)) * ((∏ j : Fin N, x (i.succAbove (σ j)) ^ g j) *
           x i ^ ∑ j : Fin N, (l (j.succ.rev : ℕ) + (j : ℕ) - g j)))) =
@@ -689,7 +689,7 @@ lemma linearIndependent_of_hasLeadingTerm {Γ : Finset (ℕ →₀ ℕ)} {ι : �
   have h_rel : (a.split γ).sum (fun i r ↦ r • q γ i) = 0 := by
     rw [linearCombination_apply, sigma_sum] at ha
     simp [← h_top.coeff_eq, ← map_sum, ha]
-  exact (mem_splitSupport_iff_nonzero a γ).mp hγ (linearIndependent_iff.mp (h_indep γ) _ h_rel)
+  exact (mem_splitSupport_iff_ne_zero a γ).mp hγ (linearIndependent_iff.mp (h_indep γ) _ h_rel)
 
 /-- Let `γ` run over the exponents interlacing the weight `l` at the colour of the row `y`, and let
 `l' γ` be `l` lowered by `γ`. Borel semi-invariants (`nabla`) `p γ i` of weight `l` with leading

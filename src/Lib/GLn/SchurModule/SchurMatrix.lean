@@ -250,7 +250,7 @@ lemma GL.rowSubst_minor (z : ∀ τ : Φ, Matrix (n' τ) (n τ) R) (τ : Φ)
   simp [rowSubst, reindex_equiv (rowEquivFin n τ).symm, ← C_mul', minor, AlgHom.map_det, Matrix.map,
     RingHom.map_det, ← det_mul]
   -- Both sides are the determinant of the same matrix: once entrywise, once as a product.
-  show (of fun (a b : Fin (Fintype.card (n τ))) ↦ ∑ c : Fin (Fintype.card (n τ)),
+  change (of fun (a b : Fin (Fintype.card (n τ))) ↦ ∑ c : Fin (Fintype.card (n τ)),
         C (z τ (I a) ((rowEquivFin n τ).symm c)) *
           X ((⟨τ, (rowEquivFin n τ).symm c⟩ : Σ σ : Φ, n σ), (b : ℕ))).det =
       ((of fun (a c : Fin (Fintype.card (n τ))) ↦ C (z τ (I a) ((rowEquivFin n τ).symm c))) *

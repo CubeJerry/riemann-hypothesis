@@ -111,7 +111,7 @@ lemma exists_enum_prod_le {ι : Type*} [DecidableEq ι] (d : ι → NNReal) (S :
       -- Remove from `A` one element `b` (namely `a`, if present) so that the rest lies in `S`.
       obtain ⟨b, hb, h_sub⟩ : ∃ b ∈ A, A.erase b ⊆ S := by grind
       rw [← prod_erase_mul A d hb, ← card_erase_add_one hb, prod_range_succ']
-      show (∏ x ∈ A.erase b, d x) * d b ≤ (∏ i ∈ range #(A.erase b), ρ i) * d a
+      change (∏ x ∈ A.erase b, d x) * d b ≤ (∏ i ∈ range #(A.erase b), ρ i) * d a
       exact mul_le_mul' (h_prod _ h_sub) (by grind)
 
 omit [Fintype Φ] [DecidableEq Φ] [∀ τ : Φ, DecidableEq (n τ)] in
@@ -242,7 +242,6 @@ lemma weylNormSq_schur_le (hF : FitsRanks n n' κ) (z : ∀ τ : Φ, Matrix (n' 
   let c : NNReal := ∏ τ : Φ, (∏ a : n τ, d τ a) ^ schurDetExp n n' κ τ
   have h_det : ∏ τ : Φ, ((z τ)ᴴ * z τ).det ^ schurDetExp n n' κ τ = c := by
     simp [c, hd, (h_herm _).det_eq_prod_eigenvalues]
-
   -- By `schur_conjTranspose_weylGram_schur`, conjugation by `schur κ U` passes inside `schur κ`.
   let G : Matrix (WeylIndexFamily n κ) (WeylIndexFamily n κ) ℂ := weylGramOver
   let η : WeylIndexFamily n κ → ℂ := schur κ (star U) *ᵥ ξ

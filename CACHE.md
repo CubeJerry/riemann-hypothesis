@@ -163,6 +163,11 @@ together: pick the Tau Ceti tag (or cached main commit) for the new Lean release
 Mathlib commit chosen here. A change of either pin changes the build inputs of every module that
 imports Tau Ceti, directly or not.
 
+Tau Ceti is the one dependency from outside leanprover-community and leanprover. The
+challenge-files check trusts it by its exact address, `TRUSTED_REPOS` in
+`.github/workflows/challenge-files.yml`; moving it to another address fails that check. Another
+such dependency needs its address added there first, by a maintainer, in a pull request of its own.
+
 For a con-leche `--compare` run, Tau Ceti's `.lake/packages/TauCeti/.lake/build/lib/lean` belongs
 on the untrusted `--search-path`, with the project's, so that its declarations are checked rather
 than trusted.

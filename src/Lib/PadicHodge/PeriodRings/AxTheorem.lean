@@ -4,7 +4,6 @@ public import Lib.ClassField.Places.ProfiniteGalois
 public import Lib.General.Algebra.AbsIntegrallyClosed
 public import Lib.General.Algebra.AdicCompletion
 public import TauCeti.NumberTheory.Padics.Complex.FixedPoints
-public import TauCeti.Topology.Algebra.Valued.NormedValued
 
 /-!
 # Tilting, Fontaine's θ, the ring O_C and Ax's theorem on Galois invariants in ℂ_p
@@ -27,7 +26,7 @@ elements fixed by `J`.
 * The continuous isometric action of `New.Gp` on `ℂ_p` (Tau Ceti's
   `UniformSpace.Completion.instMulSemiringAction`), which restricts to an action by ring
   automorphisms on the ring of integers `New.OC`.
-* `O_C` is `p`-adically complete and absolutely integrally closed, with `O_C[1/p] = ℂ_p`.
+* `O_C` is absolutely integrally closed, with `O_C[1/p] = ℂ_p`.
 * `New.Period.ax_mem_closure_fixedField`: Ax's theorem; an element fixed by a subgroup `J` is a
   limit of algebraic elements fixed by `J` (Tau Ceti's
   `PadicComplex.fixedPoints_eq_closure_fixedField`).
@@ -277,11 +276,6 @@ instance : Away (p : OC) ℂ_[p] := by
   have h_norm_le : ‖z‖ * ((p : ℝ) ^ n)⁻¹ ≤ 1 :=
     (div_le_one (pow_pos (zero_lt_one.trans hp_one_lt) n)).mpr hz_lt.le
   simpa [norm_p_eq_inv] using h_norm_le
-
-/-- `O_C` is `p`-adically complete. -/
-instance : IsAdicComplete (span {(p : OC)}) OC :=
-  (Valuation.integer.integers (NormedField.valuation (K := ℂ_[p]))).isAdicComplete_span_singleton
-    (by change ‖(p : ℂ_[p])‖ < 1; exact PadicComplex.norm_p_lt_one p)
 
 /-- `O_C` is absolutely integrally closed: every monic polynomial of positive degree over `O_C`
 has a root in `O_C`. -/

@@ -47,11 +47,6 @@ See also `Lib.PadicHodge.Crystalline.Regularity` and `Lib.PadicHodge.PeriodRings
 
 /-! ## Tate's vanishing theorem for cyclotomic twists of ℂ_p -/
 
-section TateVanishing
-
-open Algebra New.Selmer Finset Polynomial IntermediateField Submodule Units NeZero Set
-  IsUltrametricDist InfiniteGalois AdjoinSimple NonarchimedeanGroup PadicComplex Subgroup
-
 /-- Tate's theorem: if `χ(g) ^ u • g • x = χ(g) ^ v • x` for all `g` near `1` in `Gal(ℚ̄_p/ℚ_p)`,
 with `χ` the cyclotomic character and integers `u ≠ v`, then `x = 0` in `ℂ_p`. This is
 `H⁰(U, ℂ_p(u - v)) = 0` for every open subgroup `U`, as the relation is asked only near `1`. -/
@@ -62,7 +57,7 @@ lemma New.Period.tate_eq_zero_of_cyclotomicGp_twist {p : ℕ} [ThePrime p] {x : 
   -- An open subgroup `U` on which the relation holds.
   obtain ⟨U, hU⟩ : ∃ U : OpenSubgroup (Gp p), (U : Set (Gp p)) ⊆
       {g | (cyclotomicGp g ^ u).val • g • x = (cyclotomicGp g ^ v).val • x} :=
-    is_nonarchimedean _ hx
+    NonarchimedeanGroup.is_nonarchimedean _ hx
   let K := fixedFieldOf (U : Subgroup (Gp p))
   apply PadicComplex.eq_zero_of_forall_cyclotomicCharacter_zpow_mul_smul_eq
     (K := K) (i := u - v) (sub_ne_zero.mpr hu)
@@ -72,14 +67,12 @@ lemma New.Period.tate_eq_zero_of_cyclotomicGp_twist {p : ℕ} [ThePrime p] {x : 
     change g ∈ U.toSubgroup
     rw [← fixingSubgroup_fixedFieldOf U.toSubgroup]
     exact fun z ↦ σ.commutes z
-  have h : cyclotomicGp g ^ u • g • x = cyclotomicGp g ^ v • x := hU hg
   rw [← UniformSpace.Completion.algEquiv_restrictScalars_smul (R := ℚ_[p]), ← Algebra.smul_def]
   change algebraMap ℤ_[p] ℚ_[p] (cyclotomicGp g ^ (u - v)).val • g • x = x
   rw [IsScalarTower.algebraMap_smul]
   change cyclotomicGp g ^ (u - v) • g • x = x
-  simpa [zpow_sub, div_eq_inv_mul, mul_smul, inv_smul_eq_iff] using h
-
-end TateVanishing
+  rw [zpow_sub, mul_comm, mul_smul, inv_smul_eq_iff]
+  exact hU hg
 
 /-!
 ## Elimination by vectors of minimal support

@@ -151,7 +151,7 @@ lemma finite_vanishingCocycles [Finite M] {n : ℕ}
     fun z ⟨z_lc, z_cocycle, z_zero⟩ ↦
       ⟨⟨z_lc.continuous, z_cocycle⟩, Submodule.mem_pi.2 fun g hg ↦ z_zero g ?_⟩
   -- Inertia at a place prime to `N l` fixes the `N`-th roots of unity, so `g ∈ s`.
-  show g ∈ s
+  change g ∈ s
   simp_all [inertiaAbove, Set.subset_def]
   grind [valuation_natCast_eq_one_iff, cyclotomicCharMod_eq_one_of_mem_inertiaGroup]
 
@@ -321,12 +321,12 @@ lemma artin_reciprocity_of_mem_component {a : ℕ} (ha : l.Coprime a) (ha_one : 
       (decompGroup_le_cycloGalGroup (conj_over u).valuation_q_lt_one hq_one)
   refine ⟨fun u ↦ -((w u).valuation F y).log, fun u ↦ ?_,
     eq_zero_of_forall_hom_eq_zero fun lam ↦ ?_⟩
-  · show ordRat ℚ B (unitsRep (s u) (ofBase G Ω (Additive.ofMul y) : DiscreteUnits Ω)) =
+  · change ordRat ℚ B (unitsRep (s u) (ofBase G Ω (Additive.ofMul y) : DiscreteUnits Ω)) =
       -((w u).valuation F y).log
     simpa [split, ← (conj_over u).ordRat_smul (s u)] using (hw u).ordRat_ofBase (Γ := G) y
   have h_lc : IsLocallyConstant fun g : Gal(Ω/ℚ) ↦ lam (d • x g) :=
     (isLocallyConstant_of_mem_vanishingCocycles hx).comp fun z ↦ lam (d • z)
-  let χ : QZChar G := ⟨fun g ↦ lam (d • x g), h_lc.continuous.comp continuous_subtype_val,
+  let χ : QZChar G := ⟨fun g ↦ lam (d • x g), h_lc.continuous.comp continuous_subtypeVal,
     fun g h ↦ by simp [apply_mul_of_mem_vanishingCocycles hx,
       cyclotomicPowDirichlet_smul_eq_self g.prop, hx_tors]⟩
   have torsion : m • χ = 0 := by
@@ -386,9 +386,9 @@ private lemma exists_apply_eq_galUnitsRep_sub {κ : Gal(Ω/ℚ) → M} {s : Set 
     (hκ_tors : ∀ g : Gal(Ω/ℚ), l • κ g = 0) (L : M →+ DiscreteUnits Ω) :
     ∃ r : DiscreteUnits Ω, ∀ g : cycloGalGroup (N * l), L (κ g) = galUnitsRep g r - r := by
   have h_lc : IsLocallyConstant (L ∘ κ) := (isLocallyConstant_of_mem_vanishingCocycles hκ).comp L
-  refine hilbert90_unitsRep ⟨_, h_lc.continuous.comp continuous_subtype_val, fun g h ↦ ?_⟩
+  refine hilbert90_unitsRep ⟨_, h_lc.continuous.comp continuous_subtypeVal, fun g h ↦ ?_⟩
   -- `g` fixes the root of unity `L (κ h)` and acts trivially on `κ h`.
-  show L (κ (g * h)) = L (κ g) + unitsRep (g : Gal(Ω/ℚ)) (L (κ h))
+  change L (κ (g * h)) = L (κ g) + unitsRep (g : Gal(Ω/ℚ)) (L (κ h))
   rw [cyclotomicCharMod_eq_one_iff.1 g.2]
   · simp [hκ_tors, apply_mul_of_mem_vanishingCocycles hκ, cyclotomicPowDirichlet_smul_eq_self g.2]
   · simp [mul_smul, ← map_nsmul, hκ_tors]

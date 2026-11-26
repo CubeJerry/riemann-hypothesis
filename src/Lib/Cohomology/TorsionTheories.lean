@@ -438,7 +438,7 @@ lemma bijective_totalH_iff_isBijective {α : N' ⟶ c.functor ⋙ N} :
       _ = .of _ n (c.pull α n x) := pullbackAlong_of ..
       _ = DirectSum.map (c.pull α) (.of _ n x) := by rw [DirectSum.map_of]
   -- a direct sum of maps is bijective if and only if each summand is
-  show Bijective ((TotalH.comp (.homClass α)).comp
+  change Bijective ((TotalH.comp (.homClass α)).comp
     (TotalH.mapThenComp (N := N) (restrictAlong c.functor) (.homClass c.coeffHom))) ↔ _
   rw [h_total_eq_sum]
   exact .trans (.and (DirectSum.map_injective _) (DirectSum.map_surjective _)) forall_and.symm
@@ -903,7 +903,7 @@ lemma IdealFamily.constToZeros_zsmul_mk (c : C) (n : ℤ) :
     I.constToZeros c ⟦n • relFreeAb.mk I.topLocus ⟨⟩⟧ = ⟦⟨.const _ n⟩⟧ := by
   refine congrArg (⟦·⟧) ?_
   -- `oneLocConst` sends the generator to the constant function `1`
-  show ((oneLocConst (g := g)).app c).hom' (n • FreeAddCommGroup.of PUnit.unit) = _
+  change ((oneLocConst (g := g)).app c).hom' (n • FreeAddCommGroup.of PUnit.unit) = _
   have h_one : ((oneLocConst (g := g)).app c).hom' (.of PUnit.unit) =
       ⟨LocallyConstant.const _ (1 : ZMod ℓ)⟩ := freeAb.desc_of ..
   rw [map_zsmul, h_one, ← zsmul_one]

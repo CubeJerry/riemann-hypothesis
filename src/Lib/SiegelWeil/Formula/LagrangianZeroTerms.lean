@@ -423,7 +423,7 @@ lemma theta_normalisedTorus_le (hm : 2 * card p < card m) :
     rw [← ofReal_norm, norm_mixedValue_normalisedTorus, ofReal_norm, h_point, mixedValue,
       ContinuousLinearMap.comp_apply, homSlice_eq_slice, AddMonoidHom.mk'_apply]
   calc _ ≤ ∑' ξ, ‖θ ((stdSpace E Empty).hom T) ((P.homSource T).slice (pt ξ) f)‖ₑ := by
-        grw [← (hasSum_mixedValue_theta_splitWeil T P h _).tsum_eq, enorm_tsum_le_tsum_enorm]
+        grw [← (hasSum_mixedValue_theta_splitWeil T P h _).tsum_eq, eNorm_tsum_le_tsum_eNorm]
         exact (tsum_congr term_eq).le
     _ ≤ ‖θ ((stdSpace E Empty).hom T)‖ₑ * ((pt ⁻¹' Ω).encard * M * ‖f‖ₑ) := by
         grw [← hM pt, ← ENNReal.tsum_mul_left, ← ContinuousLinearMap.le_opENorm]

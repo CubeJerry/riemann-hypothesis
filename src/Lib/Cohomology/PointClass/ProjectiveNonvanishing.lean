@@ -156,7 +156,7 @@ private lemma pull_mk₀_comp_contractionPow_one_eq_pull_extClass_oneSubMu
   -- The left side is `α` (the form `ω` on pairs), then one contraction, then the projection
   -- `HodgeTatePair.contractionPow 0` of `⋀ M` to degree zero; with `D` below it is the class of the
   -- cocycle `D` (the form `ω`, then contraction along `f`), followed by that projection.
-  show TotalH.comp (TotalH.homClass α)
+  change TotalH.comp (TotalH.homClass α)
       (TotalH.comp HodgeTatePair.contractionCocycle.cohomClass (HodgeTatePair.contractionPow 0)) = _
   let D : Cocycle (HodgeTatePair.pairAlg ⋙ N) HodgeTatePair.formCoeff :=
     ⟨fun {c d} f ↦ α.app c ≫ HodgeTatePair.contractionCocycle.component f,
@@ -265,7 +265,7 @@ lemma thickeningOver.teichmullerLift_epsTilt (c : PadicTest) :
       algebraMap (WittVector p OFlat) c.Thickening (teichmuller p epsTilt) :=
     congrArg (algebraMap (WittVector p c.TiltRing) c.Thickening) (map_teichmuller ..).symm
   rw [h_lift, ← map_one c.thickeningProj, mulMu_thickeningProj]
-  simp [mu]
+  simp [mu_eq]
 
 /-- Let `V` be covered by charts of dimension one (`New.Variety.IsChartCovered 1 V`) and `U` an
 open subfunctor of `V`. Then restriction from `p`-adic tests to Hodge–Tate pairs is bijective

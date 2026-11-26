@@ -95,7 +95,6 @@ instance [Algebra R Amax] : IsAdicComplete (span {(p : R)}) Amax :=
 /-- The image of the period ring A in B^+ = A[1/p], as an A_inf-subalgebra. -/
 def amaxImage : Subalgebra Ainf BPlus := (toAlgHom Ainf Amax BPlus).range
 
-
 /-- The element X = ξ/p of the period ring A: the image of the variable of A_inf[X]/(pX − ξ). -/
 def Amax.xiDivP : Amax := .of _ _ (root _)
 
@@ -249,18 +248,22 @@ instance : Algebra ℚ_[p] BPlus :=
 /-- The `ℤ_p`-algebra structure of B⁺ factors through `ℚ_p`. -/
 instance : IsScalarTower ℤ_[p] ℚ_[p] BPlus := of_algHom ⟨_, lift_eq _⟩
 
+open TauCeti.Perfectoid.IsIntegralPerfectoid in
 /-- The image of φ(ξ) in the period ring A equals p up to a unit of A. -/
 lemma associated_p_frobEnd_xi : Associated (p : Amax) ↑(frobEnd xi) := by
   -- Write `ξ = t + p u` with `t` a Teichmüller lift and `u` a unit. Then `φ ξ = t ^ p + p φ u`, and
   -- `t ^ p = p ^ 2 c` in `Amax`, so `φ ξ = p (p c + φ u)`, where the second factor is a unit.
   set t : Ainf := .teichmuller p (WittVector.constantCoeff xi) with ht
-  obtain ⟨u, hu⟩ : ∃ u : Ainfˣ, p * u.val = xi - t := associated_p_xi_sub_teichmuller
+  -- `ξ` generates `ker θ`, so it is distinguished
+  obtain ⟨u, hu⟩ : ∃ u : Ainfˣ, xi = t + p * u :=
+    WittVector.isDistinguished_iff_exists_unit.mp <|
+      isDistinguished_of_ker_fontaineTheta_eq_span ker_theta_eq_span_xi
   have h_mem : t ∈ span {(p : Ainf), xi} := by simp [ht, Witt.mem_span_pair_iff]
   obtain ⟨c, hc⟩ : (p : Amax) ^ 2 ∣ algebraMap _ _ (t ^ p) :=
     p_pow_dvd_of_mem_pow (pow_le_pow_right (Fact.out : p.Prime).two_le (pow_mem_pow h_mem p))
   set v : Amax := algebraMap _ Amax (frobEnd (u : Ainf)) with hv
   have h_eq : algebraMap _ Amax (frobEnd xi) = p * (p * c + v) := by
-    rw [eq_add_of_sub_eq' hu.symm, map_add, frobEnd_teichmuller, map_add, hc]
+    rw [hu, map_add, frobEnd_teichmuller, map_add, hc]
     simp [hv, sq, mul_assoc, ← mul_add]
   -- `p c + φ u` is congruent to a unit modulo `p`, in a `p`-adically complete ring
   have h_dvd_sub : (p : Amax) ∣ p * c + v - v := ⟨c, add_sub_cancel_right _ _⟩
@@ -534,7 +537,7 @@ lemma BPlus.exists_p_pow_mul_eq_amax : ∃ (m : ℕ) (b : Amax), p ^ m * y = (b 
 to `1` modulo `τ`. -/
 lemma tau_dvd_xi_sub_p : tau ∣ xi - p := by
   have h_sum : xi - p = ∑ i ∈ Finset.range p, (WittVector.teichmuller p epsRoot ^ i - 1) := by
-    simp [xi]
+    simp [xi_eq_sum]
   rw [h_sum, tau]
   exact Finset.dvd_sum fun i _ ↦ sub_one_dvd_pow_sub_one _ i
 

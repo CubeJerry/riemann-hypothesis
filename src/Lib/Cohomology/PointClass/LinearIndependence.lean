@@ -323,7 +323,7 @@ lemma New.Variety.exists_etale_projection {k : Type} [Field k] [CharZero k] {R :
   have h_dim : n = d := equiv_iff_eq.mp ⟨b_U.indexEquiv b_c⟩
   -- Algebraicity over `S` puts the fibre over a general point `[1 : q]` into `U`.
   have h_root (r : c.coordRing) (hr : r ≠ 0) : ∃ P : Polynomial S, P.coeff 0 ≠ 0 ∧ P.aeval r = 0 :=
-    (h_alg.isAlgebraic r).exists_nonzero_coeff_and_aeval_eq_zero (mem_nonZeroDivisors_of_ne_zero hr)
+    (h_alg.isAlgebraic r).exists_coeff_ne_zero_and_aeval_eq_zero (mem_nonZeroDivisors_of_ne_zero hr)
   have h_memU : PointsIn.map κ c.point ∈ U.locus.obj (of k F) := ⟨⟨χ⟩, hχ⟩
   obtain ⟨q, h_fibre⟩ :=
     exists_fibre_mem_of_isOpenSubfunctor hκ hw₁ h_root (hw.comp κ) U.isOpenSubfunctor h_memU

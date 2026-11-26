@@ -379,7 +379,7 @@ private lemma ker_aeval_le_ker_aeval_smul_of_transcendental {κ B K Ω : Type} [
   have hwb : IsHomogeneousSolution k w b :=
     .of_ker j (AlgHom.id k B) (fun r hr ↦ by rw [hj_ker r hr, map_zero]) h_tw
   refine fun F hF ↦ (hwb.smul φ u).aeval_eq_zero_of_transcendental ht.integralClosure ?_
-  show aeval (t • toAlgHom k (integralClosure L Ω) Ω ∘ w) F = 0
+  change aeval (t • toAlgHom k (integralClosure L Ω) Ω ∘ w) F = 0
   rw [hw]
   exact (comp_aeval_apply b j F).symm.trans (by rw [RingHom.mem_ker.mp hF, map_zero])
 
@@ -397,7 +397,7 @@ private lemma isIntegral_aeval_of_evalForms_eq {G B : Type} [CommRing B] [Algebr
     simp only [θ, AlgHom.comp_apply, bind₁_X_right, aeval_rename]
     exact congrFun hΛb l
   refine .tower_top θ.toRingHom _ ?_
-  show ((aeval (R := k) ↿b).comp θ).toRingHom.IsIntegral
+  change ((aeval (R := k) ↿b).comp θ).toRingHom.IsIntegral
   rw [hfactor]
   exact hf_fin.to_isIntegral
 

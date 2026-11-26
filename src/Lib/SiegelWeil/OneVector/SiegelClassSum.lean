@@ -558,7 +558,7 @@ lemma New.integral_fourierChar_mul_inv_pow {k : ℕ} (hk : 1 ≤ k) {x : ℝ} (h
   have hg : g = 𝓕 p := by
     ext z
     calc g z = (∫ t : ℝ in Set.Ioi 0, (t : ℂ) ^ k * cexp (-(1 + 2 * π * .I * z) * t)) / k ! := by
-          rw [laplace_pow (by simp) k, div_div_cancel_left' (mod_cast k.factorial_ne_zero)]
+          rw [laplace_pow (by simp) k, div_div_cancel_left₀ (mod_cast k.factorial_ne_zero)]
       _ = 𝓕 p z := by
           rw [fourier_eq', ← integral_div, ← integral_indicator measurableSet_Ioi]
           congr with t
@@ -840,7 +840,7 @@ lemma New.norm_sub_one_le_of_normDensity_eq {E n : Type} [Field E] [CMType E] [W
   have h_bound : ‖∫ z in C, F z‖ₑ + ‖∫ z in Cᶜ, F z‖ₑ ≤
       .ofReal (1 + 2⁻¹ ^ (u + 1)) * volÔ E ^ Fintype.card n :=
     calc ‖∫ z in C, F z‖ₑ + ‖∫ z in Cᶜ, F z‖ₑ ≤ (∫⁻ z in C, ‖F z‖ₑ) + ∫⁻ z in Cᶜ, ‖F z‖ₑ :=
-        add_le_add (enorm_integral_le_lintegral_enorm _) (enorm_integral_le_lintegral_enorm _)
+        add_le_add (eNorm_integral_le_lintegral_eNorm _) (eNorm_integral_le_lintegral_eNorm _)
       _ = ∫⁻ z, ‖F z‖ₑ := lintegral_add_compl _ meas
       _ ≤ .ofReal (1 + 2⁻¹ ^ (u + 1)) * volÔ E ^ Fintype.card n := by
         grw [gauss, ← zeta, pow_one]

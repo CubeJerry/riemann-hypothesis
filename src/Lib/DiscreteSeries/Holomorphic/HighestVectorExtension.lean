@@ -220,7 +220,7 @@ theorem kTypeNormSq_pos (w : HCParam ε) : 0 < w.kTypeNormSq := by
   have h_cont : Continuous fun k : maxCompactU ε ↦ ‖weightMinors w (k : USign ε)‖ ^ 2 := by
     fun_prop (disch := simp [GeneralLinearGroup.det_ne_zero])
   unfold HCParam.kTypeNormSq
-  exact integral_pos_of_integrable_nonneg_nonzero (x := 1) h_cont
+  exact integral_pos_of_integrable_nonneg_ne_zero (x := 1) h_cont
     (h_cont.integrable_of_hasCompactSupport (.of_compactSpace _)) (fun k ↦ sq_nonneg _) (by simp)
 
 /-- For `|s| = 1` the matrix `diag (s ^ o)` is invertible and triangular for the order `o`. -/
@@ -367,7 +367,7 @@ theorem HCParam.IsKHighest.coef_mul_triangular (ho : o.Injective) {ρ : GlModule
     exact (factor.smul (hc h Y x s)).congr_deriv (by rw [act_Y, map_smul]; module)
   have f_const : f 1 = f 0 := is_const_of_deriv_eq_zero
     (fun s ↦ (deriv_zero s).differentiableAt) (fun s ↦ (deriv_zero s).deriv) 1 0
-  simpa [f, lam, exp_Y, hθ, exp_sum, exp_int_mul, diagChar] using f_const
+  simpa [f, lam, exp_Y, hθ, exp_sum, Complex.exp_intCast_mul, diagChar] using f_const
 
 /-- Under the hypotheses of `New.HCParam.IsKHighest.coef_mul_triangular` (`x` highest of weight
 `u`, `c` a coefficient map), the vector `diagChar u b • c h x` depends only on the product `h * b`

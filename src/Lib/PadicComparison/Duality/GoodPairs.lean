@@ -362,7 +362,7 @@ def rootPairs :
   map f := by
     rintro ⟨w, ψ⟩ ⟨h_assoc, h_const⟩
     refine ⟨?_, fun r ↦ congrArg f.hom.hom (h_const r)⟩
-    show Associated (f.hom.hom (asAlgHom ψ.val P.f))
+    change Associated (f.hom.hom (asAlgHom ψ.val P.f))
       (f.hom.hom (asAlgHom ψ.val X) - f.hom.hom (asAlgHom w.val (root P.f)))
     simpa only [map_sub] using h_assoc.map f.hom.hom
 

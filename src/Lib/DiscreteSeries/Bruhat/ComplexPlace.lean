@@ -60,7 +60,7 @@ instance complexPlace : Place ℂ := by
   have integrable := Integrable.of_integral_ne_zero (gauss.trans_ne (by simp))
   -- its Fourier transform, and the mass of `π exp (-‖x‖²)` as a Lebesgue integral
   have fourier (z : ℂ) := integral_cexp_neg_mul_sq_norm_add (b := 1) one_pos (2 * I) (z / I)
-  have mass := ofReal_integral_norm_eq_lintegral_enorm (integrable.const_mul π)
+  have mass := ofReal_integral_norm_eq_lintegral_eNorm (integrable.const_mul π)
   refine .mk (toTraceOne := ⟨2⁻¹, by norm_num⟩) (skewUnit := .mk0 (I / 2) (by norm_num))
     (skewMeasure := volume.map fun r : ℝ ↦ ⟨r * I, by simp [skewAdjoint.mem_iff]⟩)
     (modulus := ⟨⟨(‖·‖ₑ ^ 2), by norm_num⟩, by norm_num [mul_pow]⟩)
@@ -417,7 +417,7 @@ lemma map_orbitPoint_cellLaw_top (hk : 1 < 𝔰.k) :
   rw [h_quadric, lintegral_hyperboloidMeasure _ hf]
   simp (disch := with_unfolding_all fun_prop) only [lintegral_map, lintegral_mconv,
     lintegral_withDensity_eq_lintegral_mul, Pi.mul_apply]
-  show ∫⁻ c : ℂ, cellDensity 𝔰 𝔰.ϱ c *
+  change ∫⁻ c : ℂ, cellDensity 𝔰 𝔰.ϱ c *
       ∫⁻ h : U (1 : Matrix 𝔰.κ 𝔰.κ ℂ), f (orbitPoint 𝔰.top ((cellChart 𝔰 𝔰.ϱ c)⁻¹ * embedH h)) =
     ∫⁻ c : ℂ, .ofReal (sphereDensity 𝔰.k (-1 + ‖c‖ ^ 2)⁺) *
       ∫⁻ h : U (1 : Matrix 𝔰.κ 𝔰.κ ℂ), f (hyperboloidPoint (-1) (c, h))

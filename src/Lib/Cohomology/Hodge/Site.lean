@@ -193,7 +193,7 @@ lemma exteriorMap_formBasis (f : P ⟶ Q) (j : P.Index ↪o Q.Index)
 
 private lemma HodgeTest.withIndex_map_snd_single (i : ι) :
     ((withIndex ι).map f).2 (single i 1) = single i 1 := by
-  show f ∘ single i 1 = single i 1
+  change f ∘ single i 1 = single i 1
   grind
 
 /-- Let f : A → B be a map of k-algebras and x a form in ⋀_A A^ι. Under the map ⋀_A A^ι → ⋀_B B^ι

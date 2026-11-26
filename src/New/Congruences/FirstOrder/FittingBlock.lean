@@ -448,7 +448,7 @@ lemma exists_sum_mul_det_of_mem_fittingIdeal_map {R ι M : Type} [CommRing R] [F
 /-- The ideal spanned by the monomials that do not divide `∏ X j`. -/
 noncomputable abbrev nonDivisorIdeal (O J : Type) [CommRing O] [Fintype J] :
     Ideal (MvPolynomial J O) :=
-  restrictSupportIdeal O (Set.Iic (∑ j : J, Finsupp.single j 1))ᶜ (isLowerSet_Iic _).compl
+  restrictSupportIdeal O (Set.Iic (∑ j : J, Finsupp.single j 1))ᶜ (IsLowerSet.Iic _).compl
 
 /-- A polynomial lies in `nonDivisorIdeal O J` if and only if none of its monomials divides
 `∏ X j`. -/

@@ -379,7 +379,6 @@ lemma leFibreMeasure_heisenbergMeasure (a : Fin 𝔰.ϱ) :
     rw [Function.comp_apply, heisenbergElem_mulVec, h_orth]
     simp [ψ, q, dualPoint]
   have h_norm (t : ℝ) (p : (S → ℂ) × skewAdjoint ℂ) : (star (ψ t p) ⬝ᵥ 𝔰.J₁ *ᵥ ψ t p).re = t := by
-
     have h_re : (t / 2 + p.2 - q p.1 : ℂ).re = t / 2 -
         (star (inclMatrix ℂ Subtype.val *ᵥ p.1) ⬝ᵥ
           𝔰.J₁ *ᵥ inclMatrix ℂ Subtype.val *ᵥ p.1).re / 2 := by

@@ -205,7 +205,6 @@ lemma det_reducedExp : (reducedExp ε o Z).det = cexp Z.trace := by
 
 /-- If `X` and `Y` are within `ρ` and `σ` of the identity in the Frobenius norm, then their product
 is within `ρ σ + ρ + σ` of it. -/
-
 lemma norm_mul_sub_one_le {ρ σ : ℝ} (hX : ‖X - 1‖ ≤ ρ) (hY : ‖Y - 1‖ ≤ σ) :
     ‖X * Y - 1‖ ≤ ρ * σ + ρ + σ := by
   rw [show X * Y - 1 = (X - 1) * (Y - 1) + (X - 1) + (Y - 1) by noncomm_ring]
@@ -254,7 +253,6 @@ lemma flenstedJensen_reducedExp {ε : n → ℤˣ} {Z : Matrix n n ℂ} {h : ℕ
     one_mul]
 
 /-- The absolute value of an entry of a matrix is at most the Frobenius norm of the matrix. -/
-
 lemma norm_apply_le (X : Matrix n n ℂ) (i j : n) : ‖X i j‖ ≤ ‖X‖ := by
   rw [← sq_le_sq₀ (norm_nonneg _) (norm_nonneg _), frobenius_norm_sq_eq_sum]
   exact (single_le_sum (fun b _ ↦ sq_nonneg ‖X i b‖) (mem_univ j)).trans
@@ -352,7 +350,6 @@ lemma norm_trace_conj_coordProj_mul_sub_le (ho : o.Injective) (hZ_le : ‖Z‖ �
 
 /-- Multiplication on the right by an orthogonal projection does not increase the Frobenius
 norm. -/
-
 lemma norm_mul_proj_le {ρ : ℝ} (hP : IsStarProjection P) (hX : ‖X‖ ≤ ρ) : ‖X * P‖ ≤ ρ := by
   rw [← norm_star, star_mul, hP.isSelfAdjoint.star_eq]
   exact norm_proj_mul_le hP (by rwa [norm_star])

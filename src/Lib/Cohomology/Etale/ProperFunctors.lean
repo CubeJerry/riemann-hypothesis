@@ -433,7 +433,7 @@ lemma IsTestCohomEquiv.of_connected (hX : IsCohomContinuous Λ X)
   let G : Ideal R ⥤ AddCommGrpCat := TestCohomology.antitoneFamily hU.antitone Λ n
   let K : Ideal R ⥤ AddCommGrpCat := TestCohomology.antitoneFamily (hU.antitone_preimage u) Λ n
   let π (a : Ideal R) : G.obj a →+ K.obj a := TestCohomology.map Λ (fromPreimage (U a) u) n
-  show Bijective (π ⊥)
+  change Bijective (π ⊥)
   have h_nat {a b : Ideal R} (f : a ⟶ b) (x : G.obj a) : K.map f (π a x) = π b (G.map f x) :=
     -- both sides are the pull-back along the composite `u⁻¹(U b) → U a`
     calc K.map f (π a x)
