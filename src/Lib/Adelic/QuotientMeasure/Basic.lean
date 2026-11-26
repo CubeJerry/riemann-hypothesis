@@ -587,7 +587,10 @@ lemma isMulRightInvariant_of_finite_covolume (_h_finite : IsFiniteMeasure (Γ.qu
     simpa [ne, ENNReal.mul_eq_right, -withDensity_apply] using h_scale
   rw [h_mod, h_one, one_smul]
 
-instance [CompactSpace G] : IsMulRightInvariant μ :=
+instance instIsMulRightInvariantOfCompactSpace_lib {G : Type*} [Group G] [TopologicalSpace G]
+    [IsTopologicalGroup G] [LocallyCompactSpace G] [SecondCountableTopology G] [T2Space G]
+    [MeasurableSpace G] [BorelSpace G] {μ : Measure G} [IsHaarMeasure μ] [CompactSpace G] :
+    IsMulRightInvariant μ :=
   isMulRightInvariant_of_isHaarMeasure_of_isFiniteMeasure μ
 
 instance [IsMulRightInvariant μ] : IsInvInvariant μ := by
