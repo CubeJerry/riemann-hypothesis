@@ -108,14 +108,14 @@ lemma New.Exchange.exists_torus_mul_quasiReflection_fixes {D : G E s → ℂ}
       iCoord_mul_lAdelic, kCoord_mul_iAdelic, iCoord_mul_iAdelic, mul_one, lCoord_mul_iAdelic,
       lCoord_mul_lAdelic_mul, kCoord_mul_lAdelic_mul, iCoord_mul_lAdelic_mul, mul_zero,
       kCoord_mul_kAdelic_mul, iCoord_mul_kAdelic_mul, zero_sub, neg_add_rev, h_reflection, M]
-    -- Each coefficient is the image of an identity in `E`. Clear the local facts before automation.
+    -- Compare coefficients in `E`, clearing the local facts that slow the automation down.
     all_goals
       clear * -
       match_scalars
     all_goals simp only [← map_mul, ← map_add, ← map_neg, ← map_sub, ← map_one toAdele,
       (toAdele (E := E)).injective.eq_iff, map_eq_zero_iff _ (toAdele (E := E)).injective]
     all_goals grind [σ.ne_zero, star_eq_zero]
-  -- The line calculation gives the radical–Levi factorisation and the block identifies its Levi part.
+  -- The line gives the radical–Levi factorisation. The block identifies the Levi component.
   obtain ⟨h_line, h_block⟩ := h_coordinates
   obtain ⟨c', z', t, x, h_eq, -, hx⟩ := H.exists_eq_radicalElement_mul_levi h_line
   obtain rfl : x = W₀.ratEmbed ρ := ext_adeleMatrix (hx.trans h_block)
