@@ -121,6 +121,39 @@ lemma IsLatticeIn.exists_equivariant_embedding {u : AbsGal D →* Matrix n n O} 
         -- `-Subalgebra.coe_val` keeps `O.val.val` in the form in which `hB` states it
         simp [← hB, L, matrixRep, mul_assoc, -Subalgebra.coe_val]
 
+/-- Let u be a lattice in R over O, w a place of E above ℓ, and 𝓕 a filter on the decomposition
+group at w that is coarser than `nearOne`, the filter of neighbourhoods of 1 pulled back from
+Gal(ℚ̄_ℓ/ℚ_ℓ). A representation on T is admissible along 𝓕 if the elements of B_max ⊗ T fixed by
+𝓕-almost all group elements span it over B_max. If R at w is admissible along 𝓕, then so is u at
+w. -/
+lemma IsLatticeIn.isAdmissible_localLattice {u : AbsGal D →* Matrix n n O} {R : GalRep ℓ D.E n}
+    (hu : IsLatticeIn R u) {w : placesDividing D.E ℓ}
+    {𝓕 : Filter (decompGroup (AbsGal D) (placeOver w.val))}
+    (h_le : nearOne (decompGroup (AbsGal D) (placeOver w.val)) ≤ 𝓕)
+    (h_adm : Period.IsAdmissible (decompRep R (placeOver w.val)) 𝓕) :
+    Period.IsAdmissible (localLattice u w).ρ 𝓕 := by
+  obtain ⟨F, -, F_inj, -, -, F_mulVec⟩ := hu.exists_equivariant_embedding
+  -- the family of jointly injective maps consists of the single map `F`
+  exact .of_jointly_injective h_le (fun _ : Unit ↦ h_adm) (fun _ ↦ F)
+    (fun _ ↦ .of_forall fun s ↦ F_mulVec s) fun x hx ↦ F_inj x (hx ())
+
+/-- Let u be a lattice in R over O and w a place of E above ℓ. Let (s, m) be a Weil pair: s, in the
+decomposition group at w, acts on the residue field of ℚ̄_ℓ as x ↦ x^(1/ℓ^m). A polynomial kills (s,
+m) on a representation ρ on T (`IsKilledBy`) if ρ is potentially crystalline and the polynomial
+vanishes at the B_max-linear operator on B_max ⊗ T that extends φ^m s ⊗ ρ(s), with φ the Frobenius,
+from the elements fixed by all g near 1. If the polynomial Q over O, read in ℚ̄_ℓ, kills (s, m) on R
+at w, then Q kills (s, m) on u at w. -/
+lemma IsLatticeIn.isKilledBy_localLattice {u : AbsGal D →* Matrix n n O} {R : GalRep ℓ D.E n}
+    (hu : IsLatticeIn R u) {w : placesDividing D.E ℓ}
+    {s : decompGroup (AbsGal D) (placeOver w.val)} {m : ℕ} {Q : O[X]}
+    (hs : IsWeilPair (OverGp.toGp s : Gp ℓ) m)
+    (h_kills : IsKilledBy (decompRep R (placeOver w.val)) s m (Q.map O.val.val)) :
+    IsKilledBy (localLattice u w).ρ s m Q := by
+  obtain ⟨F, -, F_inj, F_smul, -, F_mulVec⟩ := hu.exists_equivariant_embedding
+  -- the family of jointly injective maps consists of the single map `F`, equivariant for all `g`
+  exact .of_jointly_injective hs (fun _ ↦ F) (fun _ ↦ .of_forall fun g ↦ F_mulVec g)
+    (fun x hx ↦ F_inj x (hx ())) le_top (fun _ : Unit ↦ h_kills) rfl fun _ ↦ F_smul
+
 variable [PadicIso ℓ]
 
 /-- Fix an isomorphism ℂ ≅ ℚ̄_ℓ (`PadicIso ℓ`), let p₀, p₁ be the primes of the data D and M = p₀p₁,
@@ -209,15 +242,12 @@ lemma IsConjSelfDualOfLevel.inClass_localLattice {τ : (D.E →+* ℂ) → Multi
     {𝓡 : GalRep ℓ D.E n → Prop} (h_selfDual : IsConjSelfDualOfLevel D t τ S R) (hR : 𝓡 R)
     (hu : IsLatticeIn R u) (w : placesDividing D.E ℓ) :
     InClass (crystallinityFilter w) (KillsAboveM 𝓡 w) (jumpSetAt τ w) (localLattice u w) := by
-  -- the families of jointly injective maps below consist of the single map `F`
-  obtain ⟨F, -, F_inj, F_smul, -, F_mulVec⟩ := hu.exists_equivariant_embedding
   refine ⟨?_, fun γ i hi ↦ ?_, fun s Q ⟨_, h_kills⟩ hs ↦ ?_⟩
   · -- Instantiate the local conditions using `localChart`. At `w`, `R` is potentially
     -- crystalline, and crystalline if `w` is not in `placesAboveM D`.
     obtain ⟨⟨-, h_potCrys⟩, -, h_good⟩ :=
       h_selfDual.local_conditions w.val (by simp) w.val.isPlaceOver_placeOver
-    refine .of_jointly_injective (τ := fun _ : Unit ↦ decompRep R (placeOver w.val)) le_sup_left
-      (fun _ ↦ ?_) (fun _ ↦ F) (fun _ ↦ .of_forall fun s ↦ F_mulVec s) fun x hx ↦ F_inj x (hx ())
+    refine hu.isAdmissible_localLattice le_sup_left ?_
     by_cases hw : w.val ∈ placesAboveM D
     · simp [crystallinityFilter, hw, h_potCrys]
     · obtain ⟨-, h_crys⟩ := h_good hw
@@ -226,8 +256,7 @@ lemma IsConjSelfDualOfLevel.inClass_localLattice {τ : (D.E →+* ℂ) → Multi
     rwa [jumpSetAt, mem_toFinset, ← count_ne_zero, ← h_selfDual.hasJumps_localLattice hu w _ i,
       surjInv_eq coefficientEmbedding_surjective γ]
   · -- `Q` kills `s` on every member of `𝓡`, in particular on `R`
-    exact .of_jointly_injective hs (fun _ ↦ F) (fun _ ↦ .of_forall fun g ↦ F_mulVec g)
-      (fun x hx ↦ F_inj x (hx ())) le_top (fun _ : Unit ↦ h_kills R hR) rfl fun _ ↦ F_smul
+    exact hu.isKilledBy_localLattice hs (h_kills R hR)
 
 /-- Let R be a conjugate self-dual representation of level S with jumps τ that belongs to a class 𝓡
 of representations, u a lattice in R over O and w a place of E above ℓ. Then for each g in
