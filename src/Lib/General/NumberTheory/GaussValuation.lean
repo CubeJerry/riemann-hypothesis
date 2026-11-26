@@ -2,6 +2,7 @@ module
 
 public import TauCeti.Algebra.Ring.GeomSum
 public import Lib.General.NumberTheory.PadicLimitsValuation
+import Lib.General.Algebra.AbsIntegrallyClosed
 
 /-!
 # The Gauss valuation of a polynomial over the ring of integers of ℚ̄_ℓ
@@ -157,13 +158,9 @@ lemma exists_ellVal_eq (ρ : ℚ≥0) : ∃ π : intQpBar ℓ, ellVal π.val = (
 
 /-- The residue field of `ℤ̄_ℓ = intQpBar ℓ`, the ring of integral elements of `ℚ̄_ℓ`, is
 algebraically closed. -/
-instance isAlgClosed_residueField : IsAlgClosed (ResidueField (intQpBar ℓ)) := by
-  refine .of_exists_root _ fun f hf h_irred ↦ ?_
-  obtain ⟨g, rfl, h_deg, hg⟩ :=
-    lifts_and_degree_eq_and_monic (mem_lifts_of_surjective residue_surjective f) hf
-  obtain ⟨α, hα⟩ := exists_eval_eq_zero_of_monic hg
-    (h_deg.trans_ne (degree_pos_of_irreducible h_irred).ne')
-  exact ⟨residue _ α, by rw [eval_map_apply, hα, map_zero]⟩
+instance isAlgClosed_residueField : IsAlgClosed (ResidueField (intQpBar ℓ)) :=
+  ((Variety.IsAbsIntegrallyClosed.of_isIntegrallyClosedIn (PadicAlgCl ℓ)).of_surjective
+    residue_surjective).isAlgClosed
 
 /-! ### The Gauss valuation -/
 
