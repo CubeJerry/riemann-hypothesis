@@ -1,4 +1,3 @@
-import Lib.Adelic.Adeles.LocalFactors
 import Lib.General.NumberTheory.LatticeCovolumes
 import New.Spanning.Unfolding.Setup
 

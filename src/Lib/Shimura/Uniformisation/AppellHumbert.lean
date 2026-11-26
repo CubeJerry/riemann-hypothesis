@@ -1,5 +1,4 @@
 import Lib.General.Analysis.HolomorphicIntegrals
-import Lib.Shimura.AbelianScheme.Pairings
 import Lib.Shimura.Uniformisation.HolomorphicFamilies
 
 /-!

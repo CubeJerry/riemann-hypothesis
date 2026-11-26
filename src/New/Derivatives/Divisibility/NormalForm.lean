@@ -1,6 +1,5 @@
 import Lib.General.Algebra.SeriesBounds
 import Lib.General.Algebra.SeriesCongruences
-import Lib.General.NumberTheory.PadicLimitsValuation
 
 /-!
 # Couplings and the normal form

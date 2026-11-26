@@ -1,6 +1,6 @@
 import New.Reduction.Lattices.Colength
 import New.UpperBound.Divisibility.SetupAtLevel
-import New.UpperBound.Objects.Rows
+import New.UpperBound.Objects.AuxiliaryPair
 
 /-!
 # The colength of source forms at p = N

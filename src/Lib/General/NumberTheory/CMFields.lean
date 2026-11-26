@@ -1,4 +1,4 @@
-import Lib.Adelic.Adeles.IdeleModulus
+import Lib.Adelic.Adeles.Basic
 
 /-!
 # Criteria for CM fields
