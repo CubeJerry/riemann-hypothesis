@@ -386,6 +386,20 @@ lemma New.Variety.CutsOutLocus.exists_lift_near_prime {k A B σ : Type} [Field k
   · simpa only [θ, q, aevalTower_C, aeval_X, Function.comp_apply] using h_fac (.C (X j))
   · simpa only [surjInv_eq h_surj x, Function.comp_apply] using h_fac (surjInv h_surj x)
 
+/-- Suppose that some solution `v` of the homogeneous equations of `g` has `v i ≠ 0`. Then every
+solution `u` whose coordinate `u i` is a unit is a coordinate vector of a point of `Y`. -/
+lemma New.Variety.CutsOutLocus.exists_point_of_isUnit_coord {k ι F : Type} [Field k] [Field F]
+    {R : CommRingCat} [Algebra R k] [Finite ι] [Algebra k F] {Y : Over (AlgebraicGeometry.Spec R)}
+    {L : LineBundle Y.left ι} [Fact (L.IsProjEmbedding Y.hom)] {ξ : PointsIn Y (CommAlgCat.of k F)}
+    {g : ι → F} (hξ : IsCoordsWithUnit L ξ g) {A C : CommAlg k} {v : ι → A} {u : ι → C} {i : ι}
+    (hv : IsHomogeneousSolution k g v) (hi : v i ≠ 0) (hu : IsHomogeneousSolution k g u)
+    (h_unit : IsUnit (u i)) :
+    ∃ y : PointsIn Y C, IsCoordsWithUnit L y u := by
+  -- the point is the image of the universal point of `IsCoordsWithUnit.exists_universal_chart`
+  obtain ⟨D, y, j, G, -, h_rep⟩ := hξ.exists_universal_chart hv hi
+  obtain ⟨φ, -, hφ⟩ := h_rep hu h_unit
+  exact ⟨y.map φ, hφ⟩
+
 /-- The Galois cover of a Noether normalisation, as a functor on `k`-algebras. A point over `A` is
 a family `y` of points of `Y` indexed by `G` with a map `v : B → A` of `k`-algebras, such that
 `v ∘ b σ` is a coordinate vector of `y σ` with a unit entry for each `σ`, and the values
@@ -455,12 +469,9 @@ lemma New.Variety.CutsOutLocus.exists_cover_point_near_prime {k ι F G : Type} [
   obtain ⟨ha_unit, h_unit_s⟩ := h_unit
   obtain ⟨v', hv', hv'_s⟩ := h_lift C ψ.hom ha_unit
   have h_unit' (σ : G) : IsUnit (v' (b σ (i σ))) := (hv'_s _).symm ▸ h_unit_s σ
-  -- the point is the image of the universal point of `IsCoordsWithUnit.exists_universal_chart`
-  have h_point (σ : G) : ∃ y : PointsIn Y C, IsCoordsWithUnit L y (v' ∘ b σ) := by
-    obtain ⟨_, y, _, _, -, h_rep⟩ :=
-      hξ.exists_universal_chart (A := .of k m.ResidueField) ((hb_hom σ).map v) (hi σ)
-    obtain ⟨φ, -, hφ⟩ := h_rep ((hb_hom σ).map v') (h_unit' σ)
-    exact ⟨y.map φ, hφ⟩
+  have h_point (σ : G) : ∃ y : PointsIn Y C, IsCoordsWithUnit L y (v' ∘ b σ) :=
+    exists_point_of_isUnit_coord (A := .of k m.ResidueField) (v := v ∘ b σ) (u := v' ∘ b σ) hξ
+      ((hb_hom σ).map v) (hi σ) ((hb_hom σ).map v') (h_unit' σ)
   choose y hy using h_point
   exact ⟨y, v', hy, hv'⟩
 
