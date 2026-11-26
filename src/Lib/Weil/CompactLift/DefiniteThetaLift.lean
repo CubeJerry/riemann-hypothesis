@@ -303,6 +303,28 @@ open MeasureTheory Space ThetaKernel FiniteDimensional
 
 variable {E n n' : Type} [Field E] [CMType E] [WeilData E] [Fintype n] [Fintype n']
   {κ : NumberField.InfinitePlace E → ℕ → ℕ} {e ea eb : NumberField.InfinitePlace E → ℤ}
+/-- The theta integral over `[U(n)]` (for `quotMeasure`) against the coefficient of an algebraic
+form `φ` at a linear form is additive in the linear form. Here `θ` is the theta functional,
+`pairWeil` the Weil action of the pair twisted by `a`, `b`, and `v` any test function. -/
+lemma integral_theta_mul_algFormCoeff_add [DecidableEq n'] [DecidableEq n] (a b : AutChar E)
+    (v : 𝒮 ((stdSpace E n).hom (stdSpace E n'))) (φ : AlgForm n κ e) (h : G E (1 : n' → ℤˣ))
+    (s t : (WeylIndex n κ → ℂ) →ₗ[ℂ] ℂ) :
+    ∫ g : G E 1, θ ((stdSpace E n).hom (stdSpace E n'))
+      (pairWeil (stdSpace E n) (stdSpace E n') a b (g, h) v) *
+        algFormCoeff 1 (s + t) φ g ∂(stdSpace E n).quotMeasure =
+      (∫ g : G E 1, θ ((stdSpace E n).hom (stdSpace E n'))
+        (pairWeil (stdSpace E n) (stdSpace E n') a b (g, h) v) *
+        algFormCoeff 1 s φ g ∂(stdSpace E n).quotMeasure) +
+      ∫ g : G E 1, θ ((stdSpace E n).hom (stdSpace E n'))
+        (pairWeil (stdSpace E n) (stdSpace E n') a b (g, h) v) *
+        algFormCoeff 1 t φ g ∂(stdSpace E n).quotMeasure := by
+  have h_rapid (L : (WeylIndex n κ → ℂ) →ₗ[ℂ] ℂ) :
+      algFormCoeff 1 L φ ∈ (stdSpace E n).rapidFunctions :=
+    (isAutomorphic_algFormCoeff φ).mem_rapidFunctions fun _ _ ↦ rfl
+  rw [← integral_add ((pairThetaKer _ _ a b).integrable_theta_mul (h_rapid s) v h)
+    ((pairThetaKer _ _ a b).integrable_theta_mul (h_rapid t) v h)]
+  refine integral_congr_ae (.of_forall fun g ↦ ?_)
+  simp only [algFormCoeff, LinearMap.pi_apply, LinearMap.comp_apply, LinearMap.add_apply, mul_add]
 
 /-- Let `(κ, e)` go up from rank `n > 0` to rank `n' > 0` along `eb`, let `a o n` and `a o n'` be
 characters at the ranks `n` and `n'` of weights `ea` and `eb` (with residue-field characters `ψ o`,
@@ -376,8 +398,9 @@ lemma isThetaLift_thetaKernel [Nonempty n] [Nonempty n'] [DecidableEq n'] [Decid
       change Continuous fun u : GInf E (1 : n' → ℤˣ) ↦
         (α u * (β / stdLevelIndex K)) *
           gramForm (highestVector κ l') (conjWeylRep κ ea (s := 1) u⁻¹ v)
-      have := LinearMap.continuous_of_finiteDimensional (gramForm (highestVector κ l'))
-      fun_prop
+      exact (α.continuous.mul continuous_const).mul
+        ((LinearMap.continuous_of_finiteDimensional (gramForm (highestVector κ l'))).comp
+          ((continuous_conjWeylRep (s := 1) (κ := κ) (e := ea) v).comp continuous_inv))
     have h_fn : (fun g : G E 1 ↦ ofAlgForm l 1 φ (g * (x, 1)⁻¹)) =
         algFormCoeff 1 (gramForm (highestVector κ l) ∘ₗ conjWeylRep κ e x) φ := by
       ext g
@@ -401,12 +424,9 @@ lemma isThetaLift_thetaKernel [Nonempty n] [Nonempty n'] [DecidableEq n'] [Decid
       mul_zero, integral_zero]
   | add s t _ _ hs ht =>
     obtain ⟨⟨s', hs'⟩, ⟨t', ht'⟩⟩ := hs, ht
-    refine ⟨s' + t', fun o Φ φ h ↦ .trans ?_ congr($(hs' o Φ φ h) + $(ht' o Φ φ h))⟩
-    have h_int (L : (WeylIndex n κ → ℂ) →ₗ[ℂ] ℂ) v :=
-      (pairThetaKer (stdSpace E n) (stdSpace E n') (a o n) (a o n')).integrable_theta_mul
-        ((isAutomorphic_algFormCoeff φ (L := L)).mem_rapidFunctions fun _ _ ↦ rfl) v h
-    rw [← integral_add (h_int s _) (h_int t _)]
-    simp only [algFormCoeff, LinearMap.pi_apply, LinearMap.comp_apply, LinearMap.add_apply, mul_add]
+    refine ⟨s' + t', fun o Φ φ h ↦ ?_⟩
+    rw [integral_theta_mul_algFormCoeff_add, hs' o Φ φ h, ht' o Φ φ h]
+    simp only [algFormCoeff, LinearMap.pi_apply, LinearMap.comp_apply, LinearMap.add_apply]
   | smul r t _ ht =>
     obtain ⟨t', ht'⟩ := ht
     -- The integral is linear in `t` and the coefficient of the lift is linear in `t'`.
