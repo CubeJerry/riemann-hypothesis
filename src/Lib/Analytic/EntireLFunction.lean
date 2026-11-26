@@ -150,11 +150,11 @@ lemma LSeriesHasSum_mul_vonMangoldt (hs : 1 < s.re) :
     LSeriesHasSum (fun n : ℕ ↦ χ n * Λ n) s
       ((if χ = 1 then 1 else 0) / (s - 1) - logDeriv (entireL χ) s) := by
   refine LSeriesHasSum_iff.2 ⟨χ.LSeriesSummable_twist_vonMangoldt hs, ?_⟩
+  -- The series is `-L' / L`; for `χ = 1` the factor `s - 1` of `entireL` adds `1 / (s - 1)` to the
+  -- logarithmic derivative.
   have hs_ne : s ≠ 1 := ne_of_apply_ne re hs.ne'
-  have h_series : LSeries (fun n : ℕ ↦ χ n * Λ n) s = -logDeriv χ.LFunction s := by
-    rw [χ.logDeriv_LFunction_eq_neg_LSeries hs, neg_neg]
-    rfl
-  rw [h_series, entireL]
+  change LSeries ((fun n : ℕ ↦ χ n) * fun n : ℕ ↦ (Λ n : ℂ)) s = _
+  rw [neg_eq_iff_eq_neg.mp (χ.logDeriv_LFunction_eq_neg_LSeries hs).symm, entireL]
   obtain rfl | hχ := eq_or_ne χ 1
   · rw [ite_eq_left rfl, ite_eq_left rfl, logDeriv_apply, logDeriv_apply,
       deriv_LFunctionTrivChar₁_apply_of_ne_one N hs_ne, LFunctionTrivChar₁,
