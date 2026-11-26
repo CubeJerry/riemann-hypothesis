@@ -753,7 +753,6 @@ lemma hasSum_amplitudeSum_of_cutoff (hT : S.IsStable T) (c : S.Classes) (s : S.R
   let X : Set (S.G E) := T ∩ S.termsOver c s c'
   let Δ : Type := S.classUnipotent c × S.classUnipotent c'
   let Y : Type := InfinitePlace E → 𝔰.G₁
-  let : Group Δ := inferInstanceAs (Group (S.classUnipotent c × S.classUnipotent c'))
   let : MeasurableSpace (S.G E) := ⊤
   let : MulAction Δ X :=
     { smul u γ := ⟨u.1 * γ * u.2⁻¹, mul_mul_inv_mem_inter_termsOver hT u.1 u.2 γ.property⟩
@@ -764,8 +763,6 @@ lemma hasSum_amplitudeSum_of_cutoff (hT : S.IsStable T) (c : S.Classes) (s : S.R
   -- The first component of `u` acts on `y` by left translation.
   let action : MulAction Δ Y := .compHom _ ((S.ratToInf.domRestrict _).comp (.fst _ _))
   let : SMul Δ Y := action.toSMul
-  let : SMul Δ (X × Y) := inferInstance
-  let : HSMul Δ (X × Y) (X × Y) := instHSMul
   let ρ : Measure (X × Y) := Measure.count.prod volume
   have preserving (u : Δ) : MeasurePreserving (u • ·) ρ ρ :=
     (measurePreserving_count (MulAction.toPerm u)).prod (measurePreserving_mul_left ..)
@@ -790,7 +787,8 @@ lemma hasSum_amplitudeSum_of_cutoff (hT : S.IsStable T) (c : S.Classes) (s : S.R
     refine ⟨by fun_prop, fun p ↦ ?_⟩
     rw [lintegral_count]
     change ∑' u : S.classUnipotent c × S.classUnipotent c',
-      S.classCutoff c (S.ratToInf u.1 * p.2) * S.classCutoff c' ((S.ratToInf (u • p).1)⁻¹ * (u • p).2) = 1
+      S.classCutoff c (S.ratToInf u.1 * p.2) *
+        S.classCutoff c' ((S.ratToInf (u • p).1)⁻¹ * (u • p).2) = 1
     simp only [h_smul_arg, tsum_prod', ENNReal.tsum_mul_left, tsum_classCutoff_eq_one, mul_one]
   have φ_cutoff : IsCutoff (count : Measure Δ) fun p : X × Y ↦ φ p.1 p.2 :=
     ⟨measurable_from_prod_countable_right fun γ ↦ hφ_meas γ,
