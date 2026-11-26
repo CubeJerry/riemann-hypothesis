@@ -824,11 +824,9 @@ lemma exists_baseChange_isIwahoriEigen
       rw [Module.End.mem_maxGenEigenspace]
       have hNa : localNorm E u ∘ a.val ∈ dominantTorus := (h_dom _ a.val).mpr a.prop
       refine ⟨1, ?_⟩
-      change heckeFun (localFormRep (stdSpace E m) κ hw).ρ proIwahori
-          ((iwahoriDoubleCoset (localNorm E u ∘ a.val)).indicator 1) f -
-        (iwahoriDegree a.val * (torusChar θ (localNorm E u ∘ a.val) : ℂ)) • f = 0
-      rw [heckeFun_iwahoriDoubleCoset_eq_iwahoriDegree_smul hNa hf_level, hf_eigen _ hNa,
-        mul_smul, sub_eq_zero]
+      simp only [pow_one, LinearMap.sub_apply, LinearMap.smul_apply, one_apply_eq_self,
+        Function.comp_apply, id_eq, sub_eq_zero,
+        heckeFun_iwahoriDoubleCoset_eq_iwahoriDegree_smul hNa hf_level, hf_eigen _ hNa, mul_smul]
       simp [iwahoriDegree]
     · exact (mem_heckeGenEigenspace.mp (Submodule.mem_inf.mp hx).1).2 _
   case eigen =>
