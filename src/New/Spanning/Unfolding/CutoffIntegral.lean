@@ -260,7 +260,8 @@ lemma det_toSquareBlockProp_isFreeEntry (hb : b = fromBlocks 1 0 0 (fromBlocks M
     (b.toSquareBlockProp fun j : 𝔰.BesselIndex ↦ IsFreeEntry (a, j)).det = b.det := by
   have h_rest : (b.toSquareBlockProp fun j ↦ ¬IsFreeEntry (a, j)) = 1 := by
     simp [Matrix.one_apply, toSquareBlockProp, ← ext_iff, hb]
-  simp [b.twoBlockTriangular_det (fun j ↦ IsFreeEntry (a, j)) (freeEntry_cross_eq_zero hb a), h_rest]
+  simp [b.twoBlockTriangular_det (fun j ↦ IsFreeEntry (a, j)) (freeEntry_cross_eq_zero hb a),
+    h_rest]
 
 open scoped Classical in
 /-- If `b` differs from the identity only in its middle block, then the entries of `l ᵥ* b` in the
