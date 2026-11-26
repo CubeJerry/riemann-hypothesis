@@ -1,0 +1,56 @@
+[
+  {
+    "id": "pieri-imports",
+    "files": [
+      "src/New/UpperBound/ElementaryDivisors/PieriCone.lean"
+    ],
+    "targets": [
+      "New.UpperBound.ElementaryDivisors.PieriCone",
+      "New.UpperBound.ElementaryDivisors.DefectCount"
+    ]
+  },
+  {
+    "id": "holomorphic-imports",
+    "files": [
+      "src/Lib/General/Analysis/HolomorphicIntegrals.lean",
+      "src/Lib/Weil/Fock/Basic.lean"
+    ],
+    "targets": [
+      "Lib.General.Analysis.HolomorphicIntegrals",
+      "Lib.Weil.Fock.Basic",
+      "Lib.GLn.SchurModule.TensorModel",
+      "Lib.General.LinearAlgebra.GramDeterminant"
+    ]
+  },
+  {
+    "id": "hermite-dependency",
+    "files": [
+      "src/Lib/Adelic/Witt/WittTheorem.lean",
+      "src/Lib/General/LinearAlgebra/HermiteForm.lean",
+      "src/Lib/General/LinearAlgebra/IntegralLattices.lean",
+      "src/Lib/LocalGL/Iwahori/ParahoricStructure.lean",
+      "src/Lib/PadicHodge/Crystalline/HodgeTateJumps.lean"
+    ],
+    "targets": [
+      "Lib.General.LinearAlgebra.IntegralLattices",
+      "Lib.Adelic.Witt.WittTheorem",
+      "Lib.General.LinearAlgebra.HermiteForm",
+      "Lib.LocalGL.Iwahori.ParahoricStructure",
+      "Lib.PadicHodge.Crystalline.HodgeTateJumps",
+      "New.UpperBound.ElementaryDivisors.ElementaryDivisorTheorem",
+      "Lib.PadicHodge.RadiusLemma",
+      "Lib.PadicHodge.BlochKato",
+      "Lib.Cohomology.WoodsHole",
+      "Lib.PadicComparison.Crystalline.ComparisonMap",
+      "Lib.PadicComparison.HodgeTate.GaloisWeight",
+      "Lib.PadicComparison.Primitive.ComparisonTheorem",
+      "Lib.PadicComparison.Primitive.Periods",
+      "Lib.PadicHodge.Kisin.KummerChartDeRham",
+      "Lib.PadicHodge.Kisin.PeriodMatrixFrame",
+      "Lib.General.Algebra.BlockFittingBound",
+      "Lib.General.Algebra.SharpMinors",
+      "Lib.Shimura.CongruenceRelation.EichlerShimura",
+      "Lib.General.LinearAlgebra.PartnerAlgebra"
+    ]
+  }
+]

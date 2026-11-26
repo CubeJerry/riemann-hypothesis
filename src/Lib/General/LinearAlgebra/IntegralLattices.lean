@@ -23,6 +23,9 @@ unitary groups.
   the denominator of `a`. An infinite index is read as `0`.
 * `New.colLattice`, `New.preimageLattice`: the span of the columns of `M`, and the vectors `M` makes
   integral.
+* `New.HasLeftInv`, `New.IsPrimitiveMatrix`: a matrix has a left inverse, or has both its entries
+  and those of a left inverse in a specified subring.
+* `New.colSpan`: the submodule spanned by the columns of a matrix.
 * `New.unitaryLevel`: the principal congruence subgroup of the unitary group `New.U J`.
 
 Notions from other files:
@@ -554,6 +557,30 @@ class Floors.IsHermitianUnit (J : Matrix n n A) : Prop where
 end New
 
 end AdelicRingDefs
+
+/-! ## Left invertible and primitive matrices -/
+
+section PrimitiveMatrices
+
+open Matrix
+
+namespace New
+
+variable {R n k : Type*} [DecidableEq k] [CommRing R] [Fintype n]
+  (O : Subring R) (X : Matrix n k R)
+
+/-- The n × k matrix X over R has a left inverse over R. -/
+abbrev HasLeftInv : Prop := ∃ L : Matrix k n R, L * X = 1
+
+/-- The submodule of R^n spanned by the columns of the matrix X. -/
+abbrev colSpan [Fintype k] : Submodule R (n → R) := X.mulVecLin.range
+
+/-- The matrix X has entries in the subring O and a left inverse with entries in O. -/
+def IsPrimitiveMatrix : Prop := IsIntMatrix O X ∧ ∃ L : Matrix k n R, IsIntMatrix O L ∧ L * X = 1
+
+end New
+
+end PrimitiveMatrices
 
 namespace New
 

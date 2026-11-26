@@ -1,6 +1,7 @@
 import Lib.General.LinearAlgebra.HermitianMatrices
 import Lib.General.Measure.HaarModulus
 import Lib.General.Measure.IntegralOperators
+import Lib.General.Topology
 import Lib.Weil.Construction.WeilOperators
 
 /-!

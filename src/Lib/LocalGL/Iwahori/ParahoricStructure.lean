@@ -1,4 +1,5 @@
 import Lib.Adelic.Hecke.ClassSums
+import Lib.Adelic.Unitary.Defs
 import Lib.General.LinearAlgebra.HermiteForm
 
 /-!

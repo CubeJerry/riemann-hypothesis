@@ -1,7 +1,5 @@
 import Lib.General.Analysis.GaussianIntegral
-import Lib.General.Groups.CongruenceSubgroups
 import Lib.General.Measure.HaarNormalisation
-import Lib.General.Topology
 
 /-!
 # Strong operator integrals, analyticity of parameter integrals, and Hua's integral bound
@@ -268,8 +266,8 @@ lemma DiscreteSeries.IsAnalyticFamily.of_analyticAt [R1Space K] {ι : K → F} (
     IsAnalyticFamily (fun (x : E) (k : K) ↦ Θ (x, ι k)) p := by
   -- By compactness of `K`, `Θ` is analytic at `(x, ι k)` for all `k` and all `x` near `p`.
   have h_near : ∀ᶠ x : E in nhds p, ∀ k : K, AnalyticAt ℂ Θ (x, ι k) := by
-    simpa using isCompact_univ.eventually_forall_mem (fun x k ↦ (x, ι k))
-      {y | AnalyticAt ℂ Θ y} fun k _ ↦ (hΘ k).eventually_analyticAt
+    simpa using isCompact_univ.eventually_forall_of_forall_eventually fun k _ ↦
+      (continuous_fst.prodMk (hι.comp continuous_snd)).continuousAt (hΘ k).eventually_analyticAt
   refine isAnalyticFamily_of_continuousAt_of_differentiableAt ?_
     (h_near.mono fun x hx k ↦ (hx k).differentiableAt.comp x (by fun_prop))
   filter_upwards [h_near] with x hx k

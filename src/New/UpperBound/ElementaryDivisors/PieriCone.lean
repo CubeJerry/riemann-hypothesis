@@ -1,4 +1,16 @@
-import Lib.Base
+module
+
+public import Mathlib.Data.Fin.Tuple.Sort
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.LinearAlgebra.Matrix.Permutation
+public import Mathlib.LinearAlgebra.Matrix.SchurComplement
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+public import Mathlib.Tactic.CongrExclamation
+public import Mathlib.Tactic.Field
+public import Mathlib.Tactic.FunProp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.LinearCombination
 
 /-!
 # The Pieri cone, the step map and the slab: interlacing and volume of the cone
@@ -32,6 +44,8 @@ the application `v j` is true for even `j`.
 
 See `New.UpperBound.ElementaryDivisors.DefectCount` for related work.
 -/
+
+@[expose] public section
 
 namespace New
 
