@@ -516,6 +516,13 @@ lemma exists_carry_eq_one_sub_ite {Q : Type*} [Group Q] [Finite Q] [DecidableEq 
   qify
   grind [mul_eq_right, QZ.fracRep, Equiv.injective, toAdd_mul]
 
+private lemma carry_mul_right {Q : Type*} [Group Q] (f : Q →* Multiplicative QZ) (p q r : Q) :
+    carry (f p).toAdd (f (q * r)).toAdd =
+      carry (f p).toAdd (f q).toAdd - (carry (f q).toAdd (f r).toAdd -
+        carry (f (p * q)).toAdd (f r).toAdd) := by
+  simp only [map_mul, toAdd_mul]
+  linarith only [QZ.carry_add_add_carry (f p).toAdd (f q).toAdd (f r).toAdd]
+
 include K in
 /-- Hilbert 90 for functions on cosets: for an open subgroup `U` of `Γ`, every continuous
 1-cocycle with values in the functions `Γ ⧸ U → Ωˣ` is a coboundary. By Shapiro's lemma this is
@@ -551,9 +558,8 @@ lemma QZChar.exists_eq_cyclicClass_of_resH2_eq_zero (χ : ↥(QZChar Γ)) (x : (
       ∃ γ : Γ ⧸ U.toSubgroup, ∀ q : Γ ⧸ U.toSubgroup, c q γ = 1 - if q = 1 then 1 else 0 :=
     exists_carry_eq_one_sub_ite _ (kerLift_injective (toHom χ))
   have carry_cocycle (p q r : Γ ⧸ U.toSubgroup) :
-      c p (q * r) = c p q - (c q r - c (p * q) r) := by
-    qify [c]
-    grind [toAdd_mul]
+      c p (q * r) = c p q - (c q r - c (p * q) r) :=
+    carry_mul_right (kerLift (toHom χ)) p q r
   let M : DiscreteModule ℤ Γ := unitsModule Γ
   let N : DiscreteModule ℤ Γ := M.funModule U.toSubgroup
   -- `D F q = F (q * γ) - F q`
@@ -636,9 +642,8 @@ lemma QZChar.exists_corestrictH0_eq_of_cyclicClass_eq_zero (χ : ↥(QZChar Γ))
   have sum_shift (F : Γ ⧸ U.toSubgroup → M) : ∑ q, F (q * γ) = ∑ q, F q :=
     (mulRight_bijective γ).sum_comp F
   have carry_cocycle (p q r : Γ ⧸ U.toSubgroup) :
-      c p (q * r) = c p q - (c q r - c (p * q) r) := by
-    qify [c]
-    grind [toAdd_mul]
+      c p (q * r) = c p q - (c q r - c (p * q) r) :=
+    carry_mul_right (kerLift (toHom χ)) p q r
   obtain ⟨a, a_cont : Continuous a,
       ha : ∀ g l : Γ, c g l • w.val = M.ρ g (a l) - a (g * l) + a g⟩ :=
     (ker_mkQ _).le hw

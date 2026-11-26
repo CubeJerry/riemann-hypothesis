@@ -58,6 +58,14 @@ variable {F : PlaceData ι T (m + 1)} {x y : T.G} (Z : F.IntermediateGroup)
 
 namespace IntegralPlace.IsLargeLatticeData
 
+private lemma exists_ne_zero_of_formMajorant_ne_zero (Z : F.IntermediateGroup)
+    {j : ℕ} {p q : ℕ → Aˣ} {x : T.G} (hx : F.formMajorant j p q Z.besselVector x ≠ 0) :
+    ∃ y ∈ floorGroup 0,
+      F.pivotL1Norm j (frameCorrelation Z.besselVector 1) y (y * x) *
+        F.pivotL1Norm j (frameCorrelation Z.besselVector (weylRatio j p q))
+          ((weylElem j p)⁻¹ * y) ((weylElem j p)⁻¹ * y * x) ≠ 0 :=
+  exists_ne_zero_of_ae ae_partialGroupMeasure_mem hx
+
 variable [h : IsLargeLatticeData F]
 
 /-- Let `F` be a large lattice datum, `R = integers` the ring of integers of `A` and `P.intUnits`
@@ -228,12 +236,7 @@ theorem prod_mem_of_formMajorant_ne_zero (Z : F.IntermediateGroup) {j : ℕ}
     (∏ a ∈ Finset.range l, p a).val ∈ integers ∧ (∏ a ∈ Finset.range l, q a).val ∈ integers := by
   -- Where the integrand is not zero, the frames `y`, `y * x` and their translates by the inverses
   -- of the Weyl elements of `p` and of `q` respectively are near at `j`.
-  obtain ⟨y, -, hy⟩ :
-      ∃ y ∈ floorGroup 0,
-        F.pivotL1Norm j (frameCorrelation Z.besselVector 1) y (y * x) *
-          F.pivotL1Norm j (frameCorrelation Z.besselVector (weylRatio j p q))
-            ((weylElem j p)⁻¹ * y) ((weylElem j p)⁻¹ * y * x) ≠ 0 :=
-    exists_ne_zero_of_ae ae_partialGroupMeasure_mem hx
+  obtain ⟨y, -, hy⟩ := exists_ne_zero_of_formMajorant_ne_zero Z hx
   obtain ⟨σ, hσ, h_first⟩ : ∃ σ ∈ floorGroup j,
       ⟪Z.besselVector (σ * y), Z.besselVector (1 * (σ * (y * x)))⟫_ℂ ≠ 0 :=
     exists_ne_zero_of_pivotL1Norm_ne_zero (left_ne_zero_of_mul hy)
@@ -420,12 +423,7 @@ theorem mem_positions_of_formMajorant_ne_zero {F : PlaceData ι T (m + 1)} {x : 
   -- `PlaceData.exists_mem_congruenceSubgroup_of_inner_ne_zero`, `x` is then a conjugate by `σ * y`
   -- of an element of `besselU`, times an element of `F.congruenceSubgroup`, which is the form of a
   -- position.
-  obtain ⟨y, -, hy⟩ :
-      ∃ y ∈ floorGroup 0,
-        F.pivotL1Norm j (frameCorrelation Z.besselVector 1) y (y * x) *
-          F.pivotL1Norm j (frameCorrelation Z.besselVector (weylRatio j p q))
-            ((weylElem j p)⁻¹ * y) ((weylElem j p)⁻¹ * y * x) ≠ 0 :=
-    exists_ne_zero_of_ae ae_partialGroupMeasure_mem hx
+  obtain ⟨y, -, hy⟩ := exists_ne_zero_of_formMajorant_ne_zero Z hx
   obtain ⟨σ, -, h_pair⟩ :
       ∃ σ ∈ floorGroup j, ⟪Z.besselVector (σ * y), Z.besselVector (1 * (σ * (y * x)))⟫_ℂ ≠ 0 :=
     exists_ne_zero_of_pivotL1Norm_ne_zero (left_ne_zero_of_mul hy)
