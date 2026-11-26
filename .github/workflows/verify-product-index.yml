@@ -1,0 +1,29 @@
+name: Verify the product subgroup index
+
+on:
+  push:
+    branches: [verify/product-index-lean437]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      MATHLIB_CACHE_GET_URL: https://cache.mathlib.org/mathlib4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install the pinned toolchain
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lake" --version
+      - name: Restore the group theory dependencies
+        run: lake exe mathlib/cache get Mathlib.GroupTheory.Index
+      - name: Build the product subgroup index
+        run: lake build Lib.General.Groups.IndexOfProduct

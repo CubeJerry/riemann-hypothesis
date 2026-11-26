@@ -1,4 +1,4 @@
-import Lib.Base
+import Mathlib.GroupTheory.Index
 
 /-!
 # The index of a product of subgroups is the product of the indices
