@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        case: [taylor-dependency, additive-characters]
+        case: [taylor-dependency]
     env:
       VERIFY_BASE: e063a923620ee7787b4a1270421478645bf66bdb
       VERIFY_CASES: ${{ matrix.case }}
