@@ -704,7 +704,6 @@ lemma lintegral_depthWeight_le (hj : j ≤ 𝔰.ϱ) (g y : T.G) (h_near : F.IsNe
       ∂ascConv heisenbergMeasure j ≤ ∏ l ∈ Finset.range j, Γ.floorConst l := by
   -- Move both points by the element `γ * n` of `R^(j)` that takes `g` into the box `F.boxSet`,
   -- then use induction on the length.
-  have h_meas : MeasurableSet Γ.positionsOfSize := Γ.measurableSet_positionsOfSize
   obtain ⟨ξ, hξ, hg⟩ : ∃ ξ ∈ partialUnitriangularGroup j, ξ * g ∈ F.boxSet := h_near
   obtain ⟨γ, hγ, n, hn, rfl⟩ : ∃ γ ∈ floorGroup j, ∃ n ∈ unipotentBelow j, ξ = γ * n :=
     exists_floorGroup_mul_unipotentBelow hξ

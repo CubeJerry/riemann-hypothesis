@@ -166,7 +166,7 @@ instance isAppellHumbert_hermitianForm : IsAppellHumbert L.hermitianForm (sigmaS
         (if Even a ∧ Even b then 1 else -1) * (if Even c ∧ Even d then 1 else -1) *
           (if Even ((c * b - d * a) * k) then 1 else -1) := by
       grind [Int.even_add, Int.even_sub]
-    rw [h_det, ofReal_intCast, mul_comm (_ * I), exp_int_mul, exp_pi_mul_I]
+    rw [h_det, ofReal_intCast, mul_comm (_ * I), exp_intCast_mul, exp_pi_mul_I]
     simpa only [sigmaSign, h_sum, half_mem_lattice_iff_even, neg_one_zpow_eq_ite] using h_parity
 
 /-- If multiplication by the complex number a maps the lattice of L into the lattice of M, then
@@ -278,7 +278,7 @@ lemma differentiable_weierstrassPMulSq (f_diff : Differentiable ℂ f)
     -- as `f z = 0`.
     have slope_analytic : AnalyticAt ℂ (dslope f z) z :=
       let ⟨_, hp⟩ := f_diff.analyticAt z
-      hp.has_fpower_series_dslope_fslope.analyticAt
+      hp.dslope_fslope.analyticAt
     have near : L.weierstrassPMulSq f =ᶠ[nhds z]
         dslope f z ^ 2 - (z⁻¹ • f) ^ 2 + ℘[L - z] * f ^ 2 := by
       filter_upwards [L.compl_lattice_sdiff_singleton_mem_nhds z] with w hw
@@ -315,7 +315,7 @@ lemma weierstrassPMulSq_mem_thetaSpace (hf : f ∈ L.hermitianForm.thetaSpace χ
   have periodic : ℘[L] (z + l) = ℘[L] z := L.weierstrassP_add_coe z ⟨l, hl⟩
   have factor_sq : exp (L.hermitianForm l z + L.hermitianForm l l / 2) ^ 2 =
       exp ((2 • L.hermitianForm) l z + (2 • L.hermitianForm) l l / 2) := by
-    simp only [two_nsmul_hermitianForm_apply, ← exp_nat_mul]
+    simp only [two_nsmul_hermitianForm_apply, ← exp_natCast_mul]
     ring_nf
   rw [weierstrassPMulSq_of_notMem (by rwa [add_mem_cancel_right hl]), periodic, hf.2 l hl z,
     weierstrassPMulSq_of_notMem hz, Pi.pow_apply, ← factor_sq]
@@ -388,18 +388,6 @@ lemma IsAppellHumbert.deriv_theta_ne_zero [IsAppellHumbert L.hermitianForm χ]
     (hz : z ∈ L.lattice) : deriv f z ≠ 0 := by
   simpa [weierstrassPMulSq_of_mem hz] using
     weierstrassPMulSq_ne_zero hf hf_ne hf_zero (theta_eq_zero_of_mem_lattice hf hf_zero hz)
-
-/-- Let `(H, χ)` be Appell–Humbert data with `H = L.hermitianForm` (see `New.IsAppellHumbert`) and
-`f ≠ 0` a theta function for them with `f 0 = 0`. The theorem combines three facts: the zeros of `f`
-are the lattice points, they are simple, and `℘ f²` and `f²` span the theta functions for
-`(2 H, χ²)`. -/
-lemma IsAppellHumbert.thetaSpace_two_eq_span [IsAppellHumbert L.hermitianForm χ]
-    (hf : f ∈ L.hermitianForm.thetaSpace χ) (hf_ne : f ≠ 0) (hf_zero : f 0 = 0) :
-    (∀ z : ℂ, f z = 0 ↔ z ∈ L.lattice) ∧
-    (∀ z ∈ L.lattice, deriv f z ≠ 0) ∧
-    (2 • L.hermitianForm).thetaSpace (χ ^ 2) = span ℂ {L.weierstrassPMulSq f, f ^ 2} :=
-  ⟨fun _ ↦ theta_eq_zero_iff_mem_lattice hf hf_ne hf_zero,
-    fun _ ↦ deriv_theta_ne_zero hf hf_ne hf_zero, thetaSpace_two_eq_span_pair hf hf_ne hf_zero⟩
 
 /-- If `f` is a theta function for `L.hermitianForm` and `sigmaSign L`, then so is `z ↦ f (-z)`. -/
 lemma comp_neg_mem_thetaSpace (hf : f ∈ L.hermitianForm.thetaSpace (sigmaSign L)) :

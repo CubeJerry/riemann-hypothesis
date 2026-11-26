@@ -188,15 +188,16 @@ def entryConj {R : Type*} [CommRing R] [StarRing R] :
     U (1 : Matrix n n R) →* U (1 : Matrix n n R) :=
   (invTransposeGL.toMonoidHom.comp (U 1).subtype).codRestrict (U (1 : Matrix n n R)) fun g ↦
     -- transpose the equation that makes `g⁻¹` unitary
-    mul_eq_one_comm.1 (by
+    mem_unitaryGroupOf_iff.2 <| mul_eq_one_comm.1 (by
       show g⁻¹.1.1ᵀ * (g⁻¹.1.1ᵀᴴ * 1) = 1
-      simpa [U, -coe_units_inv, conjTranspose, transpose_map] using
-        congrArg Matrix.transpose g⁻¹.2)
+      simpa [star_eq_conjTranspose, -coe_units_inv, conjTranspose, transpose_map] using
+        congrArg Matrix.transpose (mem_unitaryGroupOf_iff.1 g⁻¹.2))
 
 @[simp]
 lemma conjAtSplit_unitary : (conjAtSplit w g).1ᴴ * conjAtSplit w g = 1 := by
-  simpa [U] using show conjAtSplit w g ∈ U (1 : Matrix n n (𝔸f E)) from
-    (entryConj (ofSplitPlace w.2 g)).property
+  have h := mem_unitaryGroupOf_iff.1 (entryConj (ofSplitPlace w.2 g)).property
+  rw [Matrix.mul_one, star_eq_conjTranspose] at h
+  exact h
 
 /-- `conjAtSplit w g` is a unitary similitude (with multiplier `1`). -/
 @[simp]
@@ -223,11 +224,16 @@ lemma conj_conjAtSplit {g : GL n (𝔸f E)} (hg : g ∈ GU E n) (m : GL n (LocFi
   -- `gᴴ * g` is a scalar matrix, so every unitary matrix preserves this form too.
   have h_scalar : g.1ᴴ * g.1 = (c⁻¹ : E) • finAdeleIncl ℚ E ε • 1 := by
     simpa [hc.ne', map_smul'] using congrArg (fun M : Matrix n n (𝔸f E) ↦ (c⁻¹ : E) • M) hframe
-  have h_mem : conjAtSplit w m ∈ U (g.1ᴴ * 1 * g.1) := by simp [U, h_scalar]
+  have h_mem : conjAtSplit w m ∈ U (g.1ᴴ * 1 * g.1) := by
+    simp [mem_unitaryGroupOf_iff, star_eq_conjTranspose, h_scalar]
   -- Hence both sides are unitary. They are trivial off `w` and its conjugate, and they have the
   -- same component at `w`.
+  have h_mem' : conjAtSplit w (dualComponent w g * m * (dualComponent w g)⁻¹) ∈
+      U (1 : Matrix n n (𝔸f E)) := by
+    rw [mem_unitaryGroupOf_iff, Matrix.mul_one, star_eq_conjTranspose]
+    exact conjAtSplit_unitary (w := w) (dualComponent w g * m * (dualComponent w g)⁻¹)
   have h_conj_eq : U.conj g rfl ⟨conjAtSplit w m, h_mem⟩ =
-      ⟨conjAtSplit w (dualComponent w g * m * (dualComponent w g)⁻¹), (entryConj _).property⟩ := by
+      ⟨conjAtSplit w (dualComponent w g * m * (dualComponent w g)⁻¹), h_mem'⟩ := by
     refine Gf.eq_of_supportedOn (S := {w.1}) ?_ ?_ ?_ <;>
       simp_all [Gf.atPlace, dualComponent, evalAt_conjAtSplit_of_ne]
   exact congrArg Subtype.val h_conj_eq

@@ -223,7 +223,7 @@ lemma coe_letterEmbedding (σ : D.Φ) (hσ : inducedPlace σ = l ∨ inducedPlac
 lemma not_isUnit_natCast_embValRing : ¬IsUnit (p : embValRing) := by
   rw [← mem_nonunits_iff, ← IsLocalRing.mem_maximalIdeal, Valuation.mem_maximalIdeal_iff]
   change ‖ιₚ (p : ℂ)‖ < 1
-  simpa using norm_p_lt_one
+  simpa using PadicComplex.norm_p_lt_one p
 
 /-- Let `D` be data for the parameters `P`, let `p` be inert in the imaginary quadratic field, let
 `l` be a split finite place of `D.E` and let `e` be odd. The infinite places form a group `(ℤ/q₁)ˣ`,

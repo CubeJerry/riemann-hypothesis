@@ -617,7 +617,7 @@ lemma conjTranspose_mul_isotropicRows_eq_neg {γ γ' : S.G E} {ξ : Matrix (Fin 
   set D : Matrix 𝔰.BesselIndex (Fin (𝔰.ϱ + 1)) E := fromRows ξ 0 with hD
   have h_gram : (F + D)ᴴ * S.ratGram * (F + D) = Fᴴ * S.ratGram * F := by
     have h_unitary : γ'.val.valᴴ * S.ratGram * γ'.val.val = γ.val.valᴴ * S.ratGram * γ.val.val :=
-      γ'.prop.trans γ.prop.symm
+      (mem_unitaryGroupOf_iff.1 γ'.prop).trans (mem_unitaryGroupOf_iff.1 γ.prop).symm
     rw [← h_add]
     exact congrArg (submatrix · 𝔰.besselFrame 𝔰.besselFrame) h_unitary
   have h_left : Dᴴ * S.ratGram * F = ξᴴ * isotropicRows (S.frameProducts γ) := by

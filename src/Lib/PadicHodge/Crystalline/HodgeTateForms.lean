@@ -92,7 +92,7 @@ lemma mem_hodgeTateMaps_of_span [Algebra.IsAlgebraic ℤ_[p] R] {ι : Sort*} {s 
   | smul r y _ hy =>
     -- the scalar `γ r = δ r` is algebraic, so it is fixed by `toGp g` for `g` near 1
     filter_upwards [hy, eventually_nearOne_apply_eq Γ (δ r)] with g hgy h_fix
-    simp [hgy, hδ, smul_coe_Cp, h_fix]
+    simp [hgy, hδ, h_fix]
 
 variable [F : Module.Finite R T]
 

@@ -119,7 +119,7 @@ lemma New.GaloisRep.exists_frame_extension {E : Type} [Field E] [CMBase E] {n W 
     have h_scalar :
         IsScalarFrame ((invTransposeGL t.val)⁻¹ * toFinGL y * invTransposeGL u.val)⁻¹ 1 := by
       simpa [mul_assoc] using levelGU.isScalarFrame_inv_one h_mem
-    have hy : y ∈ U (1 : Matrix n n E) :=
+    have hy : y ∈ U (1 : Matrix n n E) := mem_unitaryGroupOf_iff.2 <|
       ((h_frame u).conjTranspose_mul_mul_eq_smul (h_frame t) h_scalar).trans (by simp)
     obtain ⟨c, hc_f, hc⟩ := h_rat y hy
     have h_stab : t⁻¹ * c * u ∈ rightStabilizer f :=

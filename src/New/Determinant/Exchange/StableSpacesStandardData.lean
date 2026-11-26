@@ -189,7 +189,7 @@ lemma match_mem_of_stdColDatum
     simp [hd, hp_eq, hsx, hx, hr, invOnUnits, Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_assoc,
       stdColDatum]
   have h_pos : 0 < I x :=
-    (h_translates.comp fun f ↦ ‖f x‖).continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero
+    (h_translates.comp fun f ↦ ‖f x‖).continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero
       (.of_compactSpace _) (fun _ ↦ norm_nonneg _) (norm_ne_zero_iff.2 h_one)
   -- The weighted translate is a nonnegative multiple of `Ψ`, point by point.
   have key_eq (k : intGL n V.O) (y : Matrix n b F) :

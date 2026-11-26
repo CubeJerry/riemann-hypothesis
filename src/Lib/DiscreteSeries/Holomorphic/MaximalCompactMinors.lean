@@ -108,8 +108,10 @@ theorem conjTranspose_mul_self_eq_one_iff_commute {J A : Matrix n n ℂ} (h_invo
 exactly when it is block diagonal, that is, commutes with `signMatrix ε`. -/
 theorem mem_maxCompactU {g : U (signMatrix ε)} :
     g ∈ maxCompactU ε ↔ (g : Matrix n n ℂ) ∈ blockDiagAlg ε := by
-  rw [maxCompactU, Subgroup.mem_subgroupOf, mem_U, Matrix.mul_one, mem_blockDiagAlg_iff_commute]
-  exact conjTranspose_mul_self_eq_one_iff_commute (signMatrix_mul_self ε) (mem_U.mp g.property)
+  rw [maxCompactU, Subgroup.mem_subgroupOf, mem_unitaryGroupOf_iff, Matrix.mul_one,
+      mem_blockDiagAlg_iff_commute]
+  exact conjTranspose_mul_self_eq_one_iff_commute (signMatrix_mul_self ε)
+      (mem_unitaryGroupOf_iff.mp g.property)
 
 /-- Let `Φ` have the complex derivative `D` at `1`, and let `φ` be a complex linear form. If for
 every `Y` in the Lie algebra `unitaryLie (signMatrix ε)` of `U(diag ε)` whose one-parameter group

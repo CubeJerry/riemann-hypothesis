@@ -198,7 +198,7 @@ open CategoryTheory TensorProduct Function Functor Module LinearMap AlgebraTenso
 `p ≠ 0`. -/
 private lemma mem_wittOfMaxIdeal_of_natCast_mul_mem {p : ℕ} [ThePrime p] {y : Ainf}
     (h : (p : Ainf) * y ∈ wittOfMaxIdeal) : y ∈ wittOfMaxIdeal := by
-  aesop (add simp [wittOfMaxIdeal, p_nonzero])
+  aesop (add simp [wittOfMaxIdeal, p_ne_zero])
 
 /-- There is a linear map `W(𝔪) → 𝔪` that is onto with kernel `p W(𝔪)`: the zeroth coordinate.
 Here `𝔪` is the maximal ideal of `O♭` and `W(𝔪) = wittOfMaxIdeal`. -/
@@ -324,7 +324,7 @@ private lemma CoeffCompBijective.completion_wittOfMaxIdeal_of_almostCoeff {C C' 
     have h_rep_zero : y.val 1 = 0 ↔ x ∈ nsmulRange p _ := by
       rw [← hx, mkQ_apply, Submodule.Quotient.mk_eq_zero, nsmulRange.mem_span_pow_smul_top_iff,
         pow_one]
-    show redCompl.app b y = 0 ↔ ∃ z, p • z = y
+    change redCompl.app b y = 0 ↔ ∃ z, p • z = y
     rw [hxy, (h_red_mod b).right x]
     exact h_rep_zero.symm.trans h_ker
   -- So on values with `IsPerfectTorsionFree` the sequence of `p` and `redCompl` is short exact.

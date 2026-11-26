@@ -551,13 +551,13 @@ lemma toFibers_surjective : Function.Surjective (S.toFibers T blk) := by
       (Mᴴ * (S.latticeMiddle (LocProd T)).splitGram * M).map (evalFiber T blk i) =
         (S.latticeMiddle (LocProd T)).splitGram.map (evalFiber T blk i) := by
     rw [map_conjTranspose_mul_mul _ fun _ ↦ rfl, hM, S.map_splitGram_latticeMiddle]
-    exact mem_U.1 (y i).prop
+    exact mem_unitaryGroupOf_iff.1 (y i).prop
   have h_unitary : Mᴴ * (S.latticeMiddle (LocProd T)).splitGram * M =
       (S.latticeMiddle (LocProd T)).splitGram := by
     ext a b : 1
     exact (eq_iff_evalFiber_eq blk).2 fun i ↦ congr_fun₂ (h_fiber i) a b
   refine ⟨U.of IsHermitianUnit.isUnit M h_unitary, ?_⟩
-  ext i : 3
+  ext i : 2
   exact hM i
 
 /-- A unitary matrix over the completions at `T` is integral with integral inverse and congruent to
@@ -633,7 +633,7 @@ lemma measurableEmbedding_toFibers : MeasurableEmbedding (S.toFibers T blk) := b
     continuous_pi fun i : ι ↦ U.continuous_map (continuous_pi fun _ ↦ continuous_apply _)
       (hf_star := fun _ ↦ rfl) (hJ_map := S.map_splitGram_latticeMiddle (evalFiber T blk i))
   refine h_cont.measurableEmbedding fun x y hxy ↦ ?_
-  ext a b : 3
+  ext a b : 2
   refine (eq_iff_evalFiber_eq blk).2 fun i ↦ ?_
   rw [← toFibers_apply, ← toFibers_apply, hxy]
 

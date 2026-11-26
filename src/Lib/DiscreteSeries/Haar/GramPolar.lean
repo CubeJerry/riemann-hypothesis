@@ -46,7 +46,8 @@ variable {ι n : Type} [Fintype ι] [Fintype n] [DecidableEq ι] [DecidableEq n]
 
 /-- The Haar measure of `U J` is invariant under right translations. -/
 instance : (volume (α := U J)).IsMulRightInvariant :=
-  ⟨fun g ↦ (measurePreserving_haarU 1 g 1 (.mulRight g) (by simp [mem_U.1 g.2]) (by simp)).map_eq⟩
+  ⟨fun g ↦ (measurePreserving_haarU 1 g 1 (.mulRight g)
+    (by simpa [star_eq_conjTranspose] using mem_unitaryGroupOf_iff.1 g.2) (by simp)).map_eq⟩
 
 theorem IsHermitianInvolution.norm_det : ‖J.det‖ = 1 := by
   refine (pow_eq_one_iff_of_nonneg (norm_nonneg _) two_ne_zero).1 ?_
@@ -132,7 +133,7 @@ theorem exists_isGramSection :
   have h_near : ∀ᶠ t in 𝓝 (gramCoords J (β 0)),
       DifferentiableAt ℝ σ t ∧ gramCoords J (σ t) = t ∧ IsUnit (σ t) := by
     filter_upwards [hσ_smooth.eventually (by simp),
-      (h_smooth.hasStrictFDerivAt' h_deriv one_ne_zero).eventually_right_inverse,
+      (h_smooth.hasStrictFDerivAt h_deriv one_ne_zero).eventually_right_inverse,
       hσ_smooth.continuousAt.eventually_mem (Units.isOpen.mem_nhds (by simp [hσ_base]))]
       with t h_diff h_inv h_unit
     exact ⟨h_diff.differentiableAt one_ne_zero, h_inv, h_unit⟩

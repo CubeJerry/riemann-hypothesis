@@ -1084,7 +1084,7 @@ lemma freeAb.desc_of (s : (A : C) → Y.obj A → F.obj A)
     (A : C) (y : Y.obj A) :
     desc (F := F) (Y := Y) s h A (FreeAddCommGroup.of y) = s A y := by
   -- at `A` the map is the lift of `s A` to the free abelian group
-  show FreeAddCommGroup.lift (s A) (FreeAddCommGroup.of y) = s A y
+  change FreeAddCommGroup.lift (s A) (FreeAddCommGroup.of y) = s A y
   exact FreeAddCommGroup.lift_apply_of (s A) y
 
 /-- Two maps ℤ[Y] → F agree if they agree on every generator [y]. -/

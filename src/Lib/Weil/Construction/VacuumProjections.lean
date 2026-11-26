@@ -522,37 +522,6 @@ lemma projOn_finHeisenbergOp_vacElem (y : n → 𝔸f E) :
       if y ∈ integralBox n S.conjClosure then V.finHeisenbergOp y V.vacElem else 0 := by
   rw [V.projOn_finHeisenbergOp V.projOn_vacElem, boxIndicator, ite_smul, one_smul, zero_smul]
 
-/-- The translates ϱ_f(y) vac and ϱ_f(y') vac of the vacuum are orthogonal when y − y' is not in
-the standard lattice Ô^n. -/
-lemma dataInner_finHeisenbergOp_vacElem_eq_zero_of_sub_notMem {y y' : n → 𝔸f E}
-    (h_sub : y - y' ∉ stdLattice E n) :
-    V.dataInner (V.finHeisenbergOp y V.vacElem) (V.finHeisenbergOp y' V.vacElem) = 0 := by
-  -- Apply the unitary `ϱ_f(-y')` to both vectors: up to scalars they become `ϱ_f(y - y') vac`
-  -- and `vac`, whose inner product is `0`.
-  have h_shift (z : n → 𝔸f E) : V.finHeisenbergOp (-y') (V.finHeisenbergOp z V.vacElem) =
-      selfDualAddChar E (star traceOneAdele * star z ⬝ᵥ -y') •
-        V.finHeisenbergOp (z - y') V.vacElem := by
-    rw [V.finHeisenbergOp_finHeisenbergOp, neg_add_eq_sub]
-  have h_zero : V.dataInner (V.finHeisenbergOp (y - y') V.vacElem) V.vacElem = 0 := by
-    rw [V.dataInner_finHeisenbergOp_vacElem_vacElem, ite_eq_right h_sub]
-  rw [← V.dataInner_finHeisenbergOp (-y'), h_shift, h_shift, sub_self,
-    finHeisenbergOp_vacElem (zero_mem _)]
-  simp [h_zero]
-
-open scoped Classical in
-/-- Let r choose a representative of each class of finite adelic vectors modulo the standard
-lattice Ô^n. Then the translates ϱ_f(r q) vac of the vacuum are orthonormal. -/
-lemma dataInner_finHeisenbergOp_rep_vacElem {r : (n → 𝔸f E) ⧸ stdLattice E n → n → 𝔸f E}
-    (hr : ∀ q : (n → 𝔸f E) ⧸ stdLattice E n, (r q : (n → 𝔸f E) ⧸ stdLattice E n) = q)
-    (q q' : (n → 𝔸f E) ⧸ stdLattice E n) :
-    V.dataInner (V.finHeisenbergOp (r q) V.vacElem) (V.finHeisenbergOp (r q') V.vacElem) =
-      if q = q' then 1 else 0 := by
-  split_ifs with h_eq
-  · rw [h_eq, V.dataInner_finHeisenbergOp, dataInner_vacElem_vacElem]
-  · refine V.dataInner_finHeisenbergOp_vacElem_eq_zero_of_sub_notMem fun h_mem ↦ h_eq ?_
-    rw [← hr q, ← hr q']
-    exact QuotientAddGroup.eq_iff_sub_mem.mpr h_mem
-
 /-- P^S = `projOn S` multiplies the value of f at an adelic vector y by the indicator of the
 condition that the finite coordinate `finCoord y` of y is integral above S ∪ S̄. -/
 lemma projOn_val (f : 𝒮 V) (y : n → 𝔸 E) :
@@ -823,29 +792,6 @@ lemma finHeisenbergOp_mem_finitePart (hf : f ∈ V.finitePart) :
   | zero => simp
   | add f₁ f₂ _ _ h₁ h₂ => simpa using add_mem h₁ h₂
   | smul c f₁ _ h₁ => simpa using smul_mem _ c h₁
-
-variable (V) in
-/-- Let r choose a representative of each class of finite adelic vectors modulo the standard
-lattice Ô^n. Then the translates ϱ_f(r q) vac of the vacuum span the finite part 𝒮_f. They are
-orthonormal by `New.Space.dataInner_finHeisenbergOp_rep_vacElem`. -/
-lemma span_finHeisenbergOp_rep_vacElem {r : (n → 𝔸f E) ⧸ stdLattice E n → n → 𝔸f E}
-    (hr : ∀ q : (n → 𝔸f E) ⧸ stdLattice E n, (r q : (n → 𝔸f E) ⧸ stdLattice E n) = q) :
-    span ℂ (range fun q : (n → 𝔸f E) ⧸ stdLattice E n ↦ V.finHeisenbergOp (r q) V.vacElem) =
-      V.finitePart := by
-  refine le_antisymm (span_le.mpr ?_) (span_le.mpr ?_)
-  · rintro _ ⟨q, rfl⟩
-    exact finHeisenbergOp_mem_finitePart (r q) vacElem_mem_finitePart
-  · -- A translate `ϱ_f(z) vac` is a multiple of the translate by the representative of `z`, as
-    -- the two vectors differ by a lattice vector, which fixes the vacuum.
-    rintro _ ⟨z, rfl⟩
-    have h_mem : r z - z ∈ stdLattice E n := QuotientAddGroup.eq_iff_sub_mem.mp (hr z)
-    have h_rep : V.finHeisenbergOp z V.vacElem =
-        selfDualAddChar E (star traceOneAdele * star (r z - z) ⬝ᵥ z) •
-          V.finHeisenbergOp (r z) V.vacElem := by
-      nth_rw 1 [← finHeisenbergOp_vacElem h_mem]
-      rw [finHeisenbergOp_finHeisenbergOp, add_sub_cancel]
-    simpa only [SetLike.mem_coe, h_rep] using
-      smul_mem _ _ (subset_span (mem_range_self (z : (n → 𝔸f E) ⧸ stdLattice E n)))
 
 /-- The finite part is stable under the Heisenberg operators ϱ(x) of finite adelic vectors x. -/
 lemma rho_finVec_mem_finitePart (hf : f ∈ V.finitePart) : V.ϱ (finVec x) f ∈ V.finitePart :=

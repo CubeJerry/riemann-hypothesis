@@ -156,6 +156,7 @@ def weylOn (P : ℕ → Prop) (p : ℕ → A) : T.G :=
           simp [M, Matrix.mul_apply, Matrix.one_apply]
           grind [oppositeIndex_involutive_and_floorOf_level, inverse_mul_cancel] }
     property := by
+      rw [mem_unitaryGroupOf_iff]
       ext
       simp [M, Matrix.mul_apply, apply_ite star, inverse_star]
       grind [splitGram_eq_ite_oppositeIndex, oppositeIndex_involutive_and_floorOf_level,
@@ -171,7 +172,7 @@ def floorWeyl (c : A) : T.G := weylOn (· = l) fun _ ↦ c
 
 /-- The inverse, in the sense of `Ring.inverse`, of the conjugate of a unit `u` is the conjugate of
 `u⁻¹`. -/
-@[simp ↓]
+@[simp↓]
 lemma inverse_star_unit (u : Aˣ) : (star ↑u)⁻¹ʳ = star u⁻¹.val := by aesop
 
 /-! ### The subgroups and their entries -/
@@ -226,7 +227,7 @@ lemma floorGroup_apply_row (hg : g ∈ floorGroup l) (i j : 𝔰.BesselIndex) (h
   -- Read the entry `(oppositeIndex i, j)` of `gᴴ J g = J`: the column `oppositeIndex i` of `g` is
   -- that of `1`, so the left side is `g i j`.
   have h_isometry : (g.val.valᴴ * T.splitGram * g.val.val) (oppositeIndex i) j =
-      T.splitGram (oppositeIndex i) j := congrFun₂ g.property _ _
+      T.splitGram (oppositeIndex i) j := congrFun₂ (mem_unitaryGroupOf_iff.1 g.property) _ _
   simpa [mem_floorGroup.1 hg, oppositeIndex_oppositeIndex, floorOf_oppositeIndex, hi, hi_pair,
     apply_ite, Matrix.one_apply, Matrix.mul_apply] using h_isometry
 

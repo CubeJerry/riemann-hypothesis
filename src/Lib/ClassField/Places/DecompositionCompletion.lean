@@ -69,7 +69,7 @@ variable {p : ℕ} [Fact p.Prime] {K : Type*} [Field K]
 
 /-- The place of `Ω` induced by `ι : Ω → ℚ̄_p` lies above `p`. -/
 lemma valuation_comap_intQpBar_lt_one : ((intQpBar p).comap ι) p < 1 := by
-  simp [comap_apply_lt_one_iff, norm_p_lt_one]
+  simp [comap_apply_lt_one_iff, PadicAlgCl.norm_p_lt_one]
 
 /-- The valuation ring that `ℚ̄_p` induces on `ℚ_p` is `ℤ_p`: both consist of the elements of norm
 at most `1`. -/

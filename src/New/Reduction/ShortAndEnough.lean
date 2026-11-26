@@ -262,7 +262,7 @@ lemma normalizedPoincare_mem_integralVectors {ι : PrimePadicIso} (s : D.chosenG
   have h_lift_mem :
       (D.invGainFactor : ℂ) • D.lowerChainAtLevel ϑ (D.poincare (D.scaledInclusion φ)) ∈
         integralForms ι.place := fun g ↦ by
-    show weylGauge D.columnsY (D.lastEntry D.m) g ((D.invGainFactor : ℂ) •
+    change weylGauge D.columnsY (D.lastEntry D.m) g ((D.invGainFactor : ℂ) •
       (D.lowerChain ϑ.toTameChar (D.poincare (D.scaledInclusion φ))).val g) ≤ 1
     rw [h_seesaw φ, weylGauge_smul, h_norm, ← weylGauge_smul]
     simpa using h_gauge g

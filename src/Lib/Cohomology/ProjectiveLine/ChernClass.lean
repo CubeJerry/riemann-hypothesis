@@ -449,7 +449,7 @@ lemma Theory.mulClass_congr_of_eq_on_zeros [HasFlatValues S] [HasFlatValues S'] 
     refine t.inductionOn (fun s r ↦ ?_) fun x y hx hy ↦ add_mem hx hy
     refine (Θ.zariski_descent (Θ.isZariskiLocallyTop_ker_toZerosCoeff J)).of_preimage_le
       (pointMap s) fun b f hf ↦ ?_
-    show (kerComplex (J.toZerosCoeff Θ.functor)).X₁.map f.down s ⊗ₜ[ℤ]
+    change (kerComplex (J.toZerosCoeff Θ.functor)).X₁.map f.down s ⊗ₜ[ℤ]
         (relFreeAb J.topLocus).map f.down r = 0
     rcases hf with (hs : (kerComplex (J.toZerosCoeff Θ.functor)).X₁.map f.down s = 0) | hb
     · -- s dies along f
@@ -860,7 +860,7 @@ lemma pullbackAlong_etaClass_eq_zero_of_isUnit (b : Y ⟶ projLineAlong g)
   have h_zero : H.map (tateModule g) (freeAb.map b) 2 (etaClass g) = 0 := by
     refine map_etaClass_eq_zero_of_coboundary _ (fun c x ↦ ⟨(h_unit c x).unit⟩)
       fun c d f x ↦ Gm.ext.mpr ?_
-    show (ringOf g).map f (unimodularRow (b c x)).fst =
+    change (ringOf g).map f (unimodularRow (b c x)).fst =
       (rowUnit ((ringOf g).map f) (.of (b c x))).down.toMul.val *
         (unimodularRow (b d (Y.map f x))).fst
     rw [b.naturality_apply f x]

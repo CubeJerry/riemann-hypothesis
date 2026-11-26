@@ -536,7 +536,7 @@ lemma submatrix_inl_ratCoordMatrix_unitary {g : G E ε} (hg : g ∈ Y.besselGrou
       grind -funext [star_zero, sum_eq_zero]
     _ = _ := by
       rw [show (V.ratCoordMatrix g)ᴴ * V.J.map toAdele * V.ratCoordMatrix g = V.J.map toAdele from
-        (V.toRatCoords g).2, Y.submatrix_inl_map_J]
+        mem_unitaryGroupOf_iff.1 (V.toRatCoords g).2, Y.submatrix_inl_map_J]
 
 /-- On `New.Grading.besselGroup`, the X-block of the matrix in rational coordinates is
 multiplicative. -/

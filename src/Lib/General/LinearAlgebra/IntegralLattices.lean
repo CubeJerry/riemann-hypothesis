@@ -157,7 +157,8 @@ the identity form, the g in GL_n(A) with gᴴg = 1. -/
 def U.cutAt (he : IsIdempotentElem e) [StarRing A] (hs : star e = e) :
     U (1 : Matrix n n A) →* U (1 : Matrix n n A) :=
   ((cutGL he).comp (U 1).subtype).codRestrict (U 1) <| by
-    simp_all [mem_U, cutGL, he.eq, mul_add, add_mul, smul_smul, mul_sub]
+    simp_all [Matrix.mem_unitaryGroupOf_iff, Matrix.star_eq_conjTranspose,
+      cutGL, he.eq, mul_add, add_mul, smul_smul, mul_sub]
 
 end New
 

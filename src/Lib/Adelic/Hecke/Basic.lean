@@ -148,20 +148,6 @@ lemma card_classAut_mul_mul {γ k : G} (hγ : γ ∈ Γ) (hk : k ∈ K) (g : G) 
   rw [inv_inv, mem_classAut, mem_classAut, h_left, h_conj, mul_mem_cancel_right hk,
     mul_mem_cancel_left (inv_mem hk)]
 
-/-- For f left invariant under Γ and right invariant under K, the class sum can be computed with
-any system of representatives r of Γ\G/K. -/
-lemma classSum_eq_finsum_of_rep [Module ℚ W] {f : G → W}
-    (hf_left : ∀ γ ∈ Γ, ∀ g : G, f (γ * g) = f g) (hf_right : ∀ k ∈ K, ∀ g : G, f (g * k) = f g)
-    {r : DoubleCoset.Quotient (Γ : Set G) K → G}
-    (hr : ∀ c : DoubleCoset.Quotient (Γ : Set G) K, DoubleCoset.mk Γ K (r c) = c) :
-    classSum Γ K f = ∑ᶠ c : DoubleCoset.Quotient (Γ : Set G) K,
-      (Nat.card (classAut Γ K (r c)) : ℚ)⁻¹ • f (r c) := by
-  refine finsum_congr fun c ↦ ?_
-  -- The chosen representative of `c` lies in the double coset of `r c`.
-  obtain ⟨γ, hγ, k, hk, h_out⟩ : ∃ γ ∈ Γ, ∃ k ∈ K, c.out = γ * r c * k :=
-    (DoubleCoset.eq ..).1 (by rw [hr c, out_eq'])
-  rw [h_out, card_classAut_mul_mul hγ hk, hf_right k hk, hf_left γ hγ]
-
 variable [TopologicalSpace G] [IsTopologicalGroup G]
 
 /-! ### Open and compact subgroups of a topological group -/

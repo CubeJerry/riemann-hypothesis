@@ -651,7 +651,7 @@ lemma faithfullyFlat_descent [hS : PerfectRing S p] [Algebra S V] (ρ : V →ₐ
     { app D := ↟(r D)
       naturality D D' _ := by
         refine ModuleCat.hom_ext ?_
-        show r D' ∘ₗ _ = _ ∘ₗ r D
+        change r D' ∘ₗ _ = _ ∘ₗ r D
         ext
         rfl }
   have h_factor (D : PerfectAlg S) : rTensor S _ (Algebra.linearMap V a.obj) =

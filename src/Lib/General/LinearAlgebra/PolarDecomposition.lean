@@ -157,7 +157,8 @@ theorem New.exists_polar {ε : n → ℤˣ} (g : USign ε) :
   -- `z² = gᴴ g` and `z` is hermitian, so `g z⁻¹` is unitary.
   have g_adj : g.val.valᴴ = z * z * g⁻¹ := by simp [z_sq, P]
   have k_mem : g * z⁻¹ ∈ maxCompactU ε :=
-    mem_U.2 (by simp [z_pos.inv.isHermitian.eq, g_adj, mul_assoc])
+    mem_unitaryGroupOf_iff.2 (by simp [star_eq_conjTranspose, z_pos.inv.isHermitian.eq, g_adj,
+        mul_assoc])
   exact ⟨⟨g * z⁻¹, k_mem⟩, z, z_pos, by simp, Set.mem_range_self _⟩
 
 /-- The accretive matrices, those with `z + zᴴ` positive definite, form a neighbourhood of each

@@ -161,7 +161,7 @@ def realHomeomorph : (NumberField.InfinitePlace E → USign ε) ≃ₜ
   -- of `S`, to the diagonal form of signs `ε`, and back.
   Homeomorph.piCongrRight fun v ↦ DiscreteSeries.frameEquiv.symm.toHomeomorph.trans <|
     Homeomorph.mulLeft ⟨(S.basisScaleGL v)⁻¹ * GeneralLinearGroup.map (evalInf v) V.x * p.matrix⁻¹,
-      gram_mul_of_gram_eq
+      mem_unitaryGroupOf_iff.2 <| gram_mul_of_gram_eq
         (gram_mul_of_gram_eq (gram_inv_of_gram_eq
           (S.conjTranspose_basisScaleGL_mul_splitGram_mul v))
           (X.gram_map_evalInf_point v))
@@ -172,7 +172,8 @@ infinite part of `X.adelicEquiv g`. -/
 theorem realHomeomorph_mul (g' : New.G E ε) :
     X.realHomeomorph (g * g').1 = S.adelicToInf (X.adelicEquiv g) * X.realHomeomorph g'.1 := by
   -- At each place both sides are products of the same change-of-basis matrices.
-  ext v : 2
+  ext v : 1
+  refine Subtype.ext ?_
   have h_comp : (g.1 v).val = GeneralLinearGroup.map (evalInf v) (G.toUnitary g).val := rfl
   -- `X.adelicEquiv` is conjugation by the point of `V`, and `X.realHomeomorph` multiplies by `x`.
   let x : GL 𝔰.BesselIndex ℂ := (S.basisScaleGL v)⁻¹ * GeneralLinearGroup.map (evalInf v) V.x
@@ -194,7 +195,7 @@ theorem finiteEquiv_eq_conj_adelicToFin :
   simp only [finiteEquiv, adelicToFin, MulEquiv.trans_apply, MulAut.conj_apply, inv_inv,
     MonoidHom.comp_apply, MonoidHom.coe_ofClass]
   congr 3
-  ext : 2
+  refine Subtype.ext (Units.ext ?_)
   -- It remains to compare the matrices of the finite part in rational coordinates.
   show V.ratCoordMatrixFin g.2 = (V.ratCoordMatrix g).map Prod.snd
   exact V.ratCoordMatrixFin_snd g

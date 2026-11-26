@@ -1,6 +1,7 @@
 module
 
 public import Lib.CM.Integrality.TorsionValues
+public import TauCeti.RingTheory.PowerSeries.Substitution
 
 /-!
 # Integral series rings 𝔬[[T]], congruence parts of power series, a functional equation
@@ -98,15 +99,6 @@ lemma rescale_smul {a c : ℂ_[p]} {f : ℂ_[p]⟦X⟧} : rescale a (c • f) = 
 lemma constantCoeff_subst_eq {T : ℂ_[p]⟦X⟧} (hT₀ : T.constantCoeff = 0) {f : ℂ_[p]⟦X⟧} :
     constantCoeff (f.subst T) = f.constantCoeff :=
   PowerSeries.constantCoeff_subst_of_constantCoeff_zero hT₀ f
-
-/-- The linear coefficient of `f(T)` is the product of those of `f` and `T`, if `T(0) = 0`. -/
-lemma coeff_one_subst {T : ℂ_[p]⟦X⟧} (hT₀ : T.constantCoeff = 0) {f : ℂ_[p]⟦X⟧} :
-    coeff 1 (f.subst T) = f.coeff 1 * T.coeff 1 := by
-  -- Only the power `T ^ 1` contributes to degree one, as `T` has no constant term.
-  have h_pow (n : ℕ) (hn : n ≠ 1) : coeff 1 (T ^ n) = 0 := by
-    rcases n with _ | _ | n <;> simp_all [coeff_one_pow]
-  rw [coeff_subst' (.of_constantCoeff_zero' hT₀), finsum_eq_single _ 1, pow_one, smul_eq_mul]
-  simp +contextual [h_pow]
 
 /-- Substituting `a X` in `f(T)` gives `f(T(a X))`, if `T(0) = 0`. -/
 lemma rescale_subst {a : ℂ_[p]} {T : ℂ_[p]⟦X⟧} (hT₀ : T.constantCoeff = 0) {f : ℂ_[p]⟦X⟧} :

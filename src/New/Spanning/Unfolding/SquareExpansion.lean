@@ -42,7 +42,7 @@ variable {R n : Type} [CommRing R] [StarRing R] [Fintype n] [DecidableEq n] (J :
 /-- A scalar `ζ` with `ζ ζ̄ = 1` as an isometry of the form `J`. -/
 noncomputable def scalarIsometry (ζ : R) (hζ : ζ * star ζ = 1) : U J :=
   ⟨⟨ζ • 1, star ζ • 1, by simp [smul_smul, mul_comm, hζ], by simp [smul_smul, hζ]⟩,
-    show (ζ • 1)ᴴ * J * (ζ • 1) = J by simp [smul_smul, hζ]⟩
+    mem_unitaryGroupOf_iff.2 <| show (ζ • 1)ᴴ * J * (ζ • 1) = J by simp [smul_smul, hζ]⟩
 
 lemma scalarIsometry_one (h : (1 : R) * star 1 = 1) : scalarIsometry J 1 h = 1 := by
   ext : 2
@@ -219,7 +219,7 @@ lemma exists_scalar_mul_besselS {γ : S.G E} {c c' : S.Classes} {s : S.ResidueGL
     mem_intGL.2 ⟨IsIntMatrix.smul h_int .one, IsIntMatrix.smul (star_mem_Ô h_int) .one⟩⟩
   let k₀ : S.latticeStabilizer := z⁻¹ * k
   have hk₀ : (k₀ : S.GFin) = S.translateByClassReps c c' γ₀ := by
-    ext : 2
+    refine Subtype.ext (Units.ext ?_)
     have hk₀_val : ((k₀ : S.GFin) : GL 𝔰.BesselIndex (𝔸f E)).val =
         star (ζ : 𝔸f E) • ((k : S.GFin) : GL 𝔰.BesselIndex (𝔸f E)).val :=
       val_scalarIsometry_inv_mul _ hζ_fin (k : S.GFin)

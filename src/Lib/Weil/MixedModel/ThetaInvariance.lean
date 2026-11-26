@@ -144,7 +144,7 @@ lemma exists_hyperbolic_levi_multiplier_nonneg :
         (hyperbolicSpace E p).x := by
   let g₁ : G E (hyperbolicSigns p) :=
     (hyperbolicSpace E p).toRatCoords.symm
-      ⟨blockGL (star a⁻¹, a), by simp [U, fromBlocks_conjTranspose,
+      ⟨blockGL (star a⁻¹, a), by simp [mem_unitaryGroupOf_iff, fromBlocks_conjTranspose,
       fromBlocks_map, star_eq_conjTranspose, fromBlocks_multiply, ← conjTranspose_mul]⟩
   have h_mat : g₁.adeleMatrix = (hyperbolicSpace E p).x⁻¹.1 * fromBlocks a⁻¹.1ᴴ 0 0 a.1 *
     (hyperbolicSpace E p).x := rfl

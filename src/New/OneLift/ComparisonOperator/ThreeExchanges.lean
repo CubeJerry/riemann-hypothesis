@@ -482,7 +482,7 @@ lemma carrierForm_ne_zero {m : ℕ} [NeZero m] : carrierForm E m ≠ 0 := by
       Fock.fockInner v (realPairWeil 0 0 (u, 1) v) = Fock.fockInner v v :=
     fockInner_realPairWeil_variableMinor_pow_eq_self u
   have : CompactSpace (USign (-1 : Fin m → ℤˣ)) := by
-    rw [show USign (-1 : Fin m → ℤˣ) = U 1 by simp [U]]
+    rw [show USign (-1 : Fin m → ℤˣ) = U 1 by ext; simp [mem_unitaryGroupOf_iff]]
     infer_instance
   intro h_lift_zero
   -- The modulus is trivial, so the finite part of the datum is the vacuum, which is sharp.

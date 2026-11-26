@@ -730,7 +730,7 @@ lemma pairOccursAt_succ (h_agree : S.CharsAgree γ) {μ μ' : E} (j : Fin 𝔰.�
   obtain ⟨u, hu, hu_sum, hu_eichler⟩ := exists_mem_besselU_eq_eichlerMap j.succ x r hγv hx hm
   obtain ⟨w, hw, hw_sum, hw_eichler⟩ := exists_mem_besselU_eq_eichlerMap j.succ y r hv hy hm'
   have h_comm : u * γ = γ * w := by
-    ext : 2
+    refine Subtype.ext (Units.ext ?_)
     simp [hu_eichler, hw_eichler, hxy, ext_iff_mulVec, U.form_mulVec_mulVec, ← mulVec_mulVec,
       frameImage_mulVec γ.val.val, eichlerMap_mulVec, mulVec_sub, mulVec_add, mulVec_smul]
   -- So the agreement of the characters at `u` and `w` is the claim.

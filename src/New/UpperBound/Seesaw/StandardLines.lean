@@ -514,7 +514,7 @@ lemma exists_place_generates_of_notMem_latticeMinus {y : ι → 𝔸f E} (hL : Y
     refine exists_eq_mul_iff_v_le.2 fun w' ↦ ?_
     obtain rfl | hw' := eq_or_ne w' w
     · simpa [finAdele_mul_apply] using h_le_pole
-    · simp [finAdele_mul_apply, hw']
+    · simp [hw']
   refine ⟨c, hc, hL.mem_latticeMinus_iff.2 ⟨by simp [hy_string, hz_string], fun b ↦ ?_⟩⟩
   suffices idem {w} * (coord z b - c * coord y b) ∈ Ô E by
     simpa [coord, mul_sub, mul_left_comm] using this

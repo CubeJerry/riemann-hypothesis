@@ -80,7 +80,8 @@ lemma isForm_neg_iff_and_integral_neg (W : Space E n s) (S : Space E n (-s))
     ∀ F : G E (-s) → ℂ,
       ∫ g : G E (-s), F g ∂S.quotMeasure = ∫ g : G E s, F (G.neg g) ∂W.quotMeasure := by
   -- `U (signMatrix (-s))` is the same subgroup as `U (signMatrix s)`, with the same Haar measure.
-  have h_group : U (signMatrix s : Matrix n n ℂ) = U (signMatrix (-s)) := by simp [U]
+  have h_group : U (signMatrix s : Matrix n n ℂ) = U (signMatrix (-s)) := by
+    ext; simp [mem_unitaryGroupOf_iff]
   -- This is stated for any proof `h_mem` that the subgroups agree, as that proof changes below.
   have h_haar (h_mem : ∀ g : GL n ℂ, g ∈ U (signMatrix s) ↔ g ∈ U (signMatrix (-s))) :
       MeasurePreserving (Equiv.subtypeEquivRight h_mem : USign s ≃ USign (-s)) :=

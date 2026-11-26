@@ -282,7 +282,6 @@ lemma IsRepOfType.isMainSummandLike_twistByChar [PadicIso ℓ]
     obtain ⟨j, -, hψ : O.tamePart = D.chiMLocal ^ (j : ℤ) * (1 : D.Twist).tamePart⟩ :=
       hO.exists_tamePart_eq_chiMLocal_zpow_mul
     aesop
-
   have h_weight_eq : (O.rankDiff - 1 : ℕ) + (2 * a - 0) = (card r - 1 : ℕ) := by
     grind [IsLiftSetting]
   have h_type (σ : D.E →+* ℂ) (u : ℤ) : u + -(O.hasWeight.inv.toAlgebraic 0 a).val.2.toAdd σ =
@@ -310,7 +309,6 @@ lemma neg_coeff_eq_of_hasLiftHeckePolynomial [DecidableEq n] (r_pos : 0 < Fintyp
     -H.coeff (Fintype.card n - 1) =
       w.q ^ V.rankDiff * V.charW.frobValue r w / V.charV.frobValue n w * b w 1 +
         (∑ i ∈ Finset.range V.rankDiff, (w.q : ℂ) ^ i) * V.charW.frobValue r w := by
-
   have monic : H.IsMonicOfDegree (card n) := hH.isMonicOfDegree hy_ne
   -- `y` is spherical at `w` with Hecke eigenvalues `s j`
   obtain ⟨y_sph, s, rfl : H = heckePoly w.q (card n) s, y_hecke⟩ := hH

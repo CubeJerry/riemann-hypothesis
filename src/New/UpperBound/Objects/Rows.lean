@@ -235,7 +235,8 @@ lemma exists_space_isStd_of_le_and_gram_eq_of_lt :
     { J
       x := mkAdelicGL (y, hL_unit.unit * (l * k'.val))
       gram_point :=
-        gram_mkAdelicGL hy (gram_mul_of_gram_eq rfl (gram_mul_of_gram_eq hl_orth k.val.prop)) }
+        gram_mkAdelicGL hy (gram_mul_of_gram_eq rfl (gram_mul_of_gram_eq hl_orth
+            (Matrix.mem_unitaryGroupOf_iff.1 k.val.prop))) }
   refine ⟨V, fun h_le ↦ absurd h_le hj.not_ge, fun _ ↦ ⟨rfl, ⟨l, hl⟩ * k', fun x ↦ ?_, by rfl⟩⟩
   have hk' : intGL.map (reduceAt (D.chosenPlace x)) k' =
       (intGL.map (reduceAt (D.chosenPlace x)) ⟨l, hl⟩)⁻¹ :=

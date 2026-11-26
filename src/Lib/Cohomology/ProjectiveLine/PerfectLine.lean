@@ -196,7 +196,7 @@ instance : Mono gluing := by
   have h_epi : Epi (discToTorus coeHom) := by
     refine ⟨fun x y h_comp ↦ hom_ext (algHom_ext' (MonoidHom.ext fun s ↦ ?_) (by ext))⟩
     refine mabs_mem_iff (H := MonoidHom.eqLocus ..).mp ?_
-    show x (of OFlat ℚ (mabs s)) = y (of OFlat ℚ (mabs s))
+    change x (of OFlat ℚ (mabs s)) = y (of OFlat ℚ (mabs s))
     rw [of_mabs_eq_single_nnabs]
     simpa using congrArg (fun φ ↦ φ (single s.nnabs (1 : OFlat))) h_comp
   -- On each test `gluing` has a retraction: a point of the disc `false` goes to the point `∗`; a

@@ -606,7 +606,8 @@ lemma eventually_exists_isLatticeIn [TopologicalSpace G] [IsTopologicalGroup G] 
   choose D hD_count hD_dense using fun p : n × n ↦ (isCompact_range (hs_cont p)).isSeparable
   have h_gen (g : G) (p : n × n) : ∃ S : Finset (PadicAlgCl ℓ),
       ↑S ⊆ D p ∧ s g p.fst p.snd ∈ adjoin ℚ_[ℓ] (S : Set (PadicAlgCl ℓ)) := by
-    refine exists_finset_of_mem_adjoin ((fixedField_fixingSubgroup _).le fun σ ↦ ?_)
+    refine exists_finset_of_mem_adjoin
+      ((InfiniteGalois.fixedField_fixingSubgroup _).le fun σ ↦ ?_)
     -- `σ` fixes `D p`, hence its closure, which contains `s g p.fst p.snd`
     exact EqOn.closure (fun x hx ↦ σ.prop ⟨x, subset_adjoin ℚ_[ℓ] _ hx⟩) (by fun_prop) continuous_id
       (hD_dense p ⟨g, rfl⟩)

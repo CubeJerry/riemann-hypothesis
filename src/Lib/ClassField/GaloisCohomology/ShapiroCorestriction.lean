@@ -64,11 +64,6 @@ variable {R Γ : Type} {H : Type*} [CommRing R] [Group Γ] [TopologicalSpace Γ]
 characters of Γ to those of H, χ ↦ χ∘φ. -/
 def New.QZChar.comap : QZChar Γ →+ QZChar H := pairMapZ1 φ LinearMap.id
 
-omit [IsTopologicalGroup Γ] [CompactSpace Γ] in
-/-- The character `χ ∘ φ`, as a homomorphism to `ℚ/ℤ`, takes the value `χ (φ h)` at `h`. -/
-lemma New.QZChar.comap_apply [IsTopologicalGroup H] (χ : ↥(QZChar Γ)) (h : H) :
-    QZChar.toHom (QZChar.comap φ χ) h = QZChar.toHom χ (φ h) := rfl
-
 /-- An open normal subgroup `U` of the compact group `Γ` with cyclic quotient is the kernel of a
 continuous character `Γ → ℚ/ℤ`. -/
 lemma New.QZChar.exists_ker_eq_of_isCyclic [U.Normal] (h_cyclic : IsCyclic (Γ ⧸ U.toSubgroup)) :

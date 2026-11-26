@@ -403,7 +403,7 @@ lemma classCoord_conj_splitGram (c : S.Classes) :
       (S.ratMiddle (𝔸f E)).splitGram := by
   have h_basis : (classBasis c).valᴴ * (S.ratMiddle (𝔸f E)).splitGram * (classBasis c).val =
       (S.latticeMiddle (𝔸f E)).splitGram :=
-    gram_mul_of_gram_eq (toBesselH 𝔰 (S.N : 𝔸f E) c.out).prop
+    gram_mul_of_gram_eq (mem_unitaryGroupOf_iff.1 (toBesselH 𝔰 (S.N : 𝔸f E) c.out).prop)
       (gram_besselLatticeBasis _ _ S.piN_mul_star)
   exact gram_inv_of_gram_eq h_basis
 

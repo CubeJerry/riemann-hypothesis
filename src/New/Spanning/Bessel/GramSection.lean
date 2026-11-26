@@ -642,7 +642,9 @@ lemma conjTranspose_framePair_mul_mul (γ : 𝔰.G₁) :
   -- The Gram matrix of `γ F` is that of `F` because `γ` is an isometry.
   have h_last : (g * 𝔰.frameCols)ᴴ * 𝔰.J₁ * (g * 𝔰.frameCols) = diagLast 0 - 1 :=
     calc _ = 𝔰.frameColsᴴ * (gᴴ * 𝔰.J₁ * g) * 𝔰.frameCols := by simp [Matrix.mul_assoc]
-      _ = diagLast 0 - 1 := by rw [γ.property, frameCols_gram_frameCols]
+      _ = diagLast 0 - 1 := by
+        rw [show gᴴ * 𝔰.J₁ * g = 𝔰.J₁ from mem_unitaryGroupOf_iff.1 γ.property,
+            frameCols_gram_frameCols]
   rw [h_pair, conjTranspose_fromCols_eq_fromRows_conjTranspose, fromRows_mul,
     fromRows_mul_fromCols, frameCols_gram_frameCols, h_upper, h_lower, h_last]
 

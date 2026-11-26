@@ -178,14 +178,6 @@ indicator) to the vacuum `V.vacElem` of `V`. -/
 @[simp]
 lemma boxProd_vacElem : boxProd hs V₁.vacElem V₂.vacElem = V.vacElem := tmul_vacElem _
 
-/-- For a splitting of the coordinates of V into those of V₁ and V₂ compatible with the signs,
-the product of data is multiplicative for the inner products:
-⟨f₁ ⊠ f₂, f₁′ ⊠ f₂′⟩ = ⟨f₁, f₁′⟩ ⟨f₂, f₂′⟩. -/
-lemma dataInner_boxProd (f₁ f₁' : 𝒮 V₁) (f₂ f₂' : 𝒮 V₂) :
-    V.dataInner (boxProd hs f₁ f₂) (boxProd hs f₁' f₂') =
-      V₁.dataInner f₁ f₁' * V₂.dataInner f₂ f₂' :=
-  modelInner_tmul _ f₁ f₁' f₂ f₂'
-
 /-- The product respects the insertion of real vectors:
 (v₁ ⊗ f₁) ⊠ (v₂ ⊗ f₂) = (v₁ ⊠ v₂) ⊗ (f₁ ⊠ f₂). Here v ⊗ f = `New.Space.integrated` v f inserts a
 vector v of the Fock space of the real coordinates, and v₁ ⊠ v₂ = `New.Fock.realBoxProd` is the
@@ -367,12 +359,6 @@ lemma map_rho (x : n → 𝔸 E) (f : 𝒮 V₁) : D.map (V₁.ϱ (D.φ x) f) = 
   refine ext fun _ ↦ ?_
   repeat erw [heisenbergOp_apply, transport_apply]
   simp [beta_phi]
-
-/-- Let D be a change of adelic coordinates from signs `s₁` to `s` that keeps the Heisenberg
-bicharacter up to the isometric ring endomorphism σ of ℂ. The map `D.map` : 𝒮(V₁) → 𝒮(V) induced by
-D preserves norms. -/
-lemma norm_map (f : 𝒮 V₁) : ‖D.map (V := V) f‖ = ‖f‖ :=
-  norm_transport D.beta_phi D.vacuumFn_apply f
 
 /-- For a change of adelic coordinates `D` from signs `s₁` to signs `s` (a map φ = A × B that keeps
 the Heisenberg bicharacter β up to `σ`, where A keeps the Gaussian and B keeps Ô^n), the induced map

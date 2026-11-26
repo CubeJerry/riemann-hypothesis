@@ -155,7 +155,7 @@ lemma classGroup_sq_bijective :
   obtain ⟨w, hw : s * sqrtNegDInt d ^ m = (star α + I.absNorm) * w⟩ :=
     span_singleton_le_span_singleton.1 (hJ_span.ge.trans mul_le_left)
   refine (mk0_eq_one_iff _).2 ⟨w, ?_⟩
-  show I = span {w}
+  change I = span {w}
   simpa [hJ_def, hw, ← span_singleton_mul_span_singleton, h_ne] using hJ_span
 
 open scoped Classical in

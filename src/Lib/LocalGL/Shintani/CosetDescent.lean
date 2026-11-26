@@ -138,7 +138,7 @@ lemma descendsTo_comp_reindexGL {n' : Type*} [Fintype n'] [DecidableEq n'] (e : 
     rfl
   calc Ψ (ρ s) = X.evalGL (reindexGL e γ) := hΨ σ hσ (ρ s) (reindexGL e γ) hs h_pow
     _ = X.evalGL γ := by
-      show X (simClassOf (γ.val.submatrix e.symm e.symm).toLin') = X (simClassOf γ.val.toLin')
+      change X (simClassOf (γ.val.submatrix e.symm e.symm).toLin') = X (simClassOf γ.val.toLin')
       rw [simClassOf_submatrix]
 
 /-- If (F, F') is a lift with coefficients in Z, then for every finite index set n some

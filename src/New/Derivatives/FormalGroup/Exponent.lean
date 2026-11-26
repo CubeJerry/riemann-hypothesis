@@ -177,7 +177,9 @@ lemma norm_piPrime_pow_div_le (hp : chiK d p ≠ 1) {n : ℕ} (hn : 2 < n) :
       ‖ιₚ (piPrime d p)‖ ^ (k + 1) := by
     rcases ramified_or_inert hp with ⟨hd, hq⟩ | ⟨hpd_ne, -, hq⟩
     · -- Here `π_p ^ 2 = -p`.
-      simp [hq, pow_add, piPrime_sq_of_ramified hd, hp0]
+      simp [hq, pow_add, piPrime_sq_of_ramified hd]
+      rw [mul_right_comm, inv_mul_cancel₀ (Nat.cast_ne_zero.mpr (Fact.out : p.Prime).ne_zero),
+        one_mul]
     · simp [hq, piPrime, hpd_ne, pow_add, hp0]
   rw [h_eq]
   exact pow_le_of_le_one (norm_nonneg _) (norm_piPrime_lt_one d).le k.succ_ne_zero

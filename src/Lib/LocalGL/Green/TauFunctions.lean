@@ -299,7 +299,7 @@ noncomputable def charName : MulChar k ℂ ≃* kˣ :=
         by simp⟩)
       (fun a b ↦ MulChar.ext fun y ↦ by
         -- At `y`, this is θ_{ab} = θ_a θ_b on the (|k| - 1)-th roots of unity.
-        show thetaChar T (Nat.card k) (algebraMap k K ↑(a * b)) (algebraMap k K y) =
+        change thetaChar T (Nat.card k) (algebraMap k K ↑(a * b)) (algebraMap k K y) =
           thetaChar T (Nat.card k) (algebraMap k K a) (algebraMap k K y) *
             thetaChar T (Nat.card k) (algebraMap k K b) (algebraMap k K y)
         simp [thetaChar_mul T one_lt_card, algebraMap_pow_card_pred_eq_one])

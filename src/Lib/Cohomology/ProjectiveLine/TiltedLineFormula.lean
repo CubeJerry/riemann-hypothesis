@@ -659,7 +659,7 @@ lemma etaAt_swap (x : TotalH (abTensor S (freeAb (projLineAlong g))) Θ.functor)
     rw [h_cut r fun _ _ ↦ rfl]
     refine h_cut q fun c hc ↦ ?_
     ext s
-    show _ ⊗ₜ FreeAddCommGroup.of (q.val c) = _ ⊗ₜ FreeAddCommGroup.of (r.val c)
+    change _ ⊗ₜ FreeAddCommGroup.of (q.val c) = _ ⊗ₜ FreeAddCommGroup.of (r.val c)
     rw [hJ c hc]
   -- Taking `r` to be the base point, where both `x` and `η` vanish, kills the diagonal terms.
   have h_diag (q : (projLineAlong g).sections) : o q q = 0 := by

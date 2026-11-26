@@ -792,7 +792,8 @@ def restrictToY :
     refine ⟨?_, fun γ g ↦ ?_⟩
     · -- the stabiliser contains the preimage under `borderU` of the open stabiliser of `ψ`
       have cont : Continuous D.borderU := by
-        refine (U.isClosedEmbedding_coe isUnit_one).continuous_iff.2 (.matrix_reindex ?_ ..)
+        refine (Matrix.unitaryGroupOf.isClosedEmbedding_val isUnit_one).continuous_iff.2
+            (.matrix_reindex ?_ ..)
         -- each entry of `diag (g, 1)` is a constant or an entry of `g`
         simp [U.sum]
         fun_prop

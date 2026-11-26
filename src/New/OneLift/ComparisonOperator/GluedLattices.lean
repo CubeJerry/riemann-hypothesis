@@ -396,7 +396,7 @@ lemma DividedLattice.exists_reducedInverse_eq (C G : Matrix n n (Ô E))
     -- Since `e * star e = 0`, both products are the same combination of `C`, `Cᴴ` and `1`.
     simp [c, cutGL, mul_add, add_mul, smul_smul, h_disj, mul_comm, ← he]
     ac_rfl
-  let γ : Gf E n := ⟨star c⁻¹ * c, val_inj.2 <|
+  let γ : Gf E n := ⟨star c⁻¹ * c, mem_unitaryGroupOf_iff.2 <| val_inj.2 <|
     show star (star c⁻¹ * c) * 1 * (star c⁻¹ * c) = 1 by simp [h_comm.inv_right.eq]⟩
   -- `ϖ γ⁻¹` is `G` at the chosen places, `ϖ Cᴴ` at their conjugates and `ϖ` elsewhere.
   have h_entry (a b : n) : O.genIdele * γ⁻¹.1.1 a b =
@@ -812,7 +812,6 @@ lemma exists_isGlued (V : DividedSplitting N m a O z)
     (V.ε.injective.comp (inr_injective.comp z.injective)) O.incl.injective
   let ε' : N ⊕ m ≃ n := V.ε.trans σ
   have hε' : ∀ i : r, ε' (inr (z i)) = O.incl i := hσ
-
   obtain ⟨L, hL⟩ : ∃ L : DividedLattice O,
       L.reducedInverse = (reindex ε' V.ε G).map O.chosenModulusSq.reduction :=
     DividedLattice.exists_reducedInverse_eq (reindex V.ε ε' C) _ (by simp [hCG, submatrix_smul])

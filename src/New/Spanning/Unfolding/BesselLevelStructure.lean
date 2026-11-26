@@ -674,7 +674,7 @@ noncomputable instance : TraceOne (𝔸f E) where
 function of its parameter `p`, a pair of a vector and a skew element. -/
 lemma New.continuous_heisenbergElem_finAdele {T : 𝔰.Form (𝔸f E)} [IsHermitianUnit T.splitGram]
     (a : Fin 𝔰.ϱ) : Continuous (heisenbergElem (T := T) a) := by
-  rw [(U.isClosedEmbedding_coe isUnit).continuous_iff]
+  rw [(Matrix.unitaryGroupOf.isClosedEmbedding_val isUnit).continuous_iff]
   simp [comp_def, heisenbergElem, eichlerMap]
   fun_prop
 

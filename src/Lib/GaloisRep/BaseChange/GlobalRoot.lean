@@ -445,7 +445,8 @@ lemma New.U.conjTranspose_aeval {R n : Type} [CommRing R] [StarRing R] [Fintype 
     (hv : aeval (γ : Matrix n n R) v * (γ : Matrix n n R) = 1) (f : R[X]) :
     (aeval (γ : Matrix n n R) f)ᴴ = aeval (γ : Matrix n n R) ((f.map conj).comp v) := by
   have h_inv : (γ : Matrix n n R)ᴴ = aeval (γ : Matrix n n R) v := by
-    simpa using left_inv_eq_left_inv γ.property hv
+    simpa [star_eq_conjTranspose] using left_inv_eq_left_inv
+        (mem_unitaryGroupOf_iff.1 γ.property) hv
   calc (aeval (γ : Matrix n n R) f)ᴴ = aeval (γ : Matrix n n R)ᴴ (f.map conj) :=
         star_aeval (R := R) (γ : Matrix n n R) f
     _ = aeval (γ : Matrix n n R) ((f.map conj).comp v) := by rw [h_inv, aeval_comp]

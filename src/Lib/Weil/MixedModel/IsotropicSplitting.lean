@@ -239,7 +239,8 @@ variable {E : Type*} [Field E] [NumberField E] [IsCMField E] {n n₁ : Type*} [F
 /-- An element `g` of the adelic unitary group preserves the standard form: `gᴴ S g = S`, with
 `S = stdForm E s`. -/
 lemma G.conjTranspose_adeleMatrix_mul_stdForm_mul_adeleMatrix :
-    g.adeleMatrixᴴ * stdForm E s * g.adeleMatrix = stdForm E s := g.toUnitary.prop
+    g.adeleMatrixᴴ * stdForm E s * g.adeleMatrix = stdForm E s :=
+  mem_unitaryGroupOf_iff.1 g.toUnitary.prop
 
 omit [IsCMField E] in
 /-- The standard form `S = stdForm E s` is its own inverse: `S (S a) = a`. -/

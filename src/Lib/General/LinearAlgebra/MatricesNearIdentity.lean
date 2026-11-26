@@ -308,7 +308,7 @@ lemma logOneAdd_mem_unitaryLie {n : Type} [Fintype n] [DecidableEq n] {ε : n �
   let G (s : ℝ) : Matrix n n ℂ := (1 + s • X)⁻¹ * X
   have h_form : (1 + X)ᴴ * signMatrix ε * (1 + X) = signMatrix ε := by
     rw [add_sub_cancel]
-    exact g.property
+    exact mem_unitaryGroupOf_iff.1 g.property
   have h_reflect (s : ℝ) (hs : s ∈ Set.uIcc (0 : ℝ) 1) :
       (G s)ᴴ * signMatrix ε = -(signMatrix ε * G (1 - s)) :=
     conjTranspose_inv_one_add_smul_mul_form h_form h_near (by simpa using hs)

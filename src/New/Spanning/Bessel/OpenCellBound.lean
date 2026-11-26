@@ -117,7 +117,6 @@ lemma gramDiscReal_div_two_le_and_isBoundedInCell {𝔰 : Shape} {M P : ℝ} {Z 
     (hZ' : Z' ∈ ball Z (P ^ 6)⁻¹) :
     gramDiscReal Z / 2 ≤ gramDiscReal Z' ∧ IsBoundedInCell Z' P := by
   -- The number `P / 2` bounds the sizes at `Z`, and `Z'` is a small perturbation of `Z`.
-  have hϱ : (0 : ℝ) ≤ 𝔰.ϱ := Nat.cast_nonneg 𝔰.ϱ
   have hnM : 𝔰.n ≤ M := (Nat.cast_succ 𝔰.ϱ).trans_le (by linarith)
   have hM_one : 1 ≤ M := by linarith
   have h_pow : M ^ (8 * 𝔰.n) ≤ P / 2 := by
@@ -240,7 +239,6 @@ lemma New.norm_le_of_besselLength_gramSection_mul_le {𝔰 : Shape} {M R : ℝ} 
   -- Move `gramSection Z * z` by a unipotent `w` to a point `y` of norm at most `M`. The columns of
   -- `z⁻¹` at the dual vectors are combinations of the frames at `y` and at `z` with bounded
   -- coefficients.
-  have hϱ : (0 : ℝ) ≤ 𝔰.ϱ := Nat.cast_nonneg 𝔰.ϱ
   have hM : 1 ≤ M := by linarith
   have hnM : 𝔰.n ≤ M := (Nat.cast_succ 𝔰.ϱ).trans_le (by linarith)
   have hMR : M ≤ R := (le_self_pow₀ hM (by lia)).trans h_pow_le
@@ -626,7 +624,6 @@ lemma New.BesselSystem.exists_isKernelBound_gramSection {𝔰 : Shape} {B M : �
   -- for `ν` a multiple of `‖W‖²` on `A`; Schur's bound gives the contraction.
   have hB : 8 * 𝔰.r ≤ B := X.eight_mul_rank_le
   have h_rank : (𝔰.r : ℝ) = 𝔰.ϱ + (card 𝔰.κ + 1 + 𝔰.ϱ) := by simp
-  have hϱ : (0 : ℝ) ≤ 𝔰.ϱ := Nat.cast_nonneg 𝔰.ϱ
   have hM_eight : 8 * (𝔰.ϱ + 1) ≤ M := by linarith [Nat.cast_nonneg (α := ℝ) (card 𝔰.κ)]
   have hM_two : 2 ≤ M := by linarith
   have h_disc_half : 0 < gramDiscReal Z / 2 := half_pos (h_disc.trans_lt' (by positivity))

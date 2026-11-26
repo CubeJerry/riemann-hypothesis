@@ -292,7 +292,7 @@ lemma cyclotomicPowDirichlet_smul_derivativeSum (hM : N * l ^ n ∣ M) (hS : ∀
     have h_shift : (L q (v * u)).toAdd - f q = (L q u).toAdd - d q := by simp [hv_shift]
     have h_arg : a • (x + ofZMod q u) = a • x + ofZMod q (v * u : (ZMod q)ˣ) := by
       simp [← map_nsmul, hv]
-    show ((L q u).toAdd - d q) * G (x + ofZMod q u) =
+    change ((L q u).toAdd - d q) * G (x + ofZMod q u) =
       ((L q (v * u)).toAdd - f q) * G' (a • x + ofZMod q (v * u : (ZMod q)ˣ))
     rw [hG h_tors, h_arg, h_shift]
 
@@ -773,7 +773,7 @@ private lemma derivativeSum_commutatorLog_mul_eq_of_isJacobiFamily
   -- `F (g g') (a x) = F g (a x) + a F g' x` (`nsmul_exponent_eq_sub`). Equivariance of the
   -- derivative sum carries this to `Λ`; it changes only the shifts, which do not matter.
   let F (h : Gal(Ω/ℚ)) (x : QZ) : ZMod (l ^ n) := commutatorLog (l ^ n) γ (y x) h
-  show derivativeSum e ψ L I 0 (F (g * g')) = derivativeSum e ψ L I 0 (F g) +
+  change derivativeSum e ψ L I 0 (F (g * g')) = derivativeSum e ψ L I 0 (F g) +
     (cyclotomicPowDirichlet l (e + 1) ψ g).val • derivativeSum e ψ L I 0 (F g')
   have killed {v : QuotSpan (l ^ n : O)} : l ^ n • v = 0 := nsmul_quot_eq_zero dvd_rfl v
   obtain ⟨a, ha⟩ : ∃ a : ℕ, (cyclotomicCharMod Ω M g).val = a := ⟨_, zmod_eq_natCast_val⟩

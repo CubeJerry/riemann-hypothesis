@@ -566,7 +566,7 @@ lemma periodicSeq.existsUnique_hom (f : R →+* D) (s : D → E) (ζ r u : Multi
   · obtain ⟨m, h_eq, h_exp⟩ : ∃ m : ℕ,
         (x t).val (a (N (x t))) = (x t).val (a m) ∧ (ζ ^ a m * r) t = u t :=
       ((h_lim (x t)).and (h_large t)).exists
-    show s (f ((x t).val (a (N (x t))))) = u t
+    change s (f ((x t).val (a (N (x t))))) = u t
     rw [h_eq, hx, h_exp]
   · rintro ψ ⟨rfl, hψ⟩
     ext y
@@ -786,7 +786,7 @@ lemma PadicTest.isLine_compatibleRoots
     have h_x_one (k : ℕ) : ((x (ofAdd 1)).val k).untilt =
         r (ofAdd 1) * ((1 : periodicSeq c.TiltRing).val k).untilt := by
       simp [hx]
-    show (ϕ (x (ofAdd 1))).untilt = _
+    change (ϕ (x (ofAdd 1))).untilt = _
     simpa using untilt_map_eq_mul_of_forall ϕ (r (ofAdd 1)) (x (ofAdd 1)) 1 h_x_one
   -- The shift multiplies each root `(ϕ (x n))^♯` by `(ε ^ n)^♯`, read in `D`.
   have h_shift {D : PadicTest} (ϕ : Hom D) (n : Multiplicative ℚ≥0) :

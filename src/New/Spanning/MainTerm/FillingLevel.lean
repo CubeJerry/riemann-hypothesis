@@ -214,7 +214,7 @@ theorem exists_isIntegralOff_toPlaces_eq (y : U (S.latticeMiddle (LocProd T)).sp
       add_left_surjective 1 y.val.val
     have hy : (1 + z)ᴴ * J.map (evalPlaces T) * (1 + z) = J.map (evalPlaces T) := by
       rw [hz, S.map_splitGram_latticeMiddle (evalPlaces T)]
-      exact mem_U.1 y.prop
+      exact mem_unitaryGroupOf_iff.1 y.prop
     have h_zero : zᴴ * (J.map (evalPlaces T) * z) + zᴴ * J.map (evalPlaces T) +
         J.map (evalPlaces T) * z = 0 := by
       rw [conjTranspose_add, conjTranspose_one] at hy
@@ -222,13 +222,14 @@ theorem exists_isIntegralOff_toPlaces_eq (y : U (S.latticeMiddle (LocProd T)).sp
     have h_map : (φ z)ᴴ * (J * φ z) + (φ z)ᴴ * J + J * φ z = 0 := by
       rw [← h_star, ← h_left, ← h_right, ← map_mul, ← map_add, ← map_add, h_zero, map_zero]
     have hfy : (f y).val = 1 + φ z := by simp [f, ← hz]
+    rw [mem_unitaryGroupOf_iff]
     change (f y).valᴴ * J * (f y).val = J
     rw [hfy, conjTranspose_add, conjTranspose_one]
     linear_combination (norm := noncomm_ring) h_map
   have h_int (g : GL 𝔰.BesselIndex (LocProd T)) : IsIntMatrix (integralOff T) (f g).val :=
     IsIntMatrix.one.add fun _ _ ↦ adeleOfLocal_mem_integralOff T _
   refine ⟨⟨f y, h_unitary⟩, ?_, mem_intGL.2 ⟨h_int y, h_int y⁻¹⟩, ?_⟩
-  · ext i j : 3
+  · ext i j : 2
     change evalPlaces T ((f y).val i j) = y.val.val i j
     simp [hf, Matrix.one_apply]
   · -- Both subgroups ask certain entries to be those of `1`, and `f` keeps this.

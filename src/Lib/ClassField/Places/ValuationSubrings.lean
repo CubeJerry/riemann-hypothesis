@@ -413,7 +413,8 @@ def placeOfEmb : FinPlace E where
   ne_bot h_bot := by
     -- The centre is not zero: it contains `p ≠ 0`, as `‖p‖ < 1`.
     have h_norm_p : valuation.comap σ (p : E) < 1 := by
-      simpa [← NNReal.coe_lt_coe] using norm_p_lt_one
+      simpa [← NNReal.coe_lt_coe, norm_p_eq_inv] using
+        inv_lt_one_of_one_lt₀ (mod_cast (Fact.out : p.Prime).one_lt)
     have h_mem : (p : 𝓞 E) ∈ Cohomology.centrePrime E (valuation.comap σ).valuationSubring :=
       (mem_maximalIdeal_iff E (valuation.comap σ)).mpr h_norm_p
     exact NeZero.ne (p : 𝓞 E) (h_bot.le h_mem)
@@ -443,7 +444,8 @@ abbrev inducedPrime [PadicIso p] (σ : E →+* ℂ) : FinPlace E := placeOfEmb (
 omit [CharZero F] in
 /-- The prime `New.placeOfEmb σ` contains `p`, as `‖p‖ < 1` in `F`. -/
 @[simp high]
-lemma natCast_mem_placeOfEmb : (p : 𝓞 E) ∈ (placeOfEmb σ).asIdeal := by simp [norm_p_lt_one]
+lemma natCast_mem_placeOfEmb : (p : 𝓞 E) ∈ (placeOfEmb σ).asIdeal := by
+  simpa [norm_p_eq_inv] using inv_lt_one_of_one_lt₀ (mod_cast (Fact.out : p.Prime).one_lt)
 
 /-- The subfield `ℚ_p(σ E)` of `F` generated over `ℚ_p` by the image of `σ` is finite over `ℚ_p`. -/
 instance : FiniteDimensional ℚ_[p] (adjoin ℚ_[p] (Set.range σ)) := by

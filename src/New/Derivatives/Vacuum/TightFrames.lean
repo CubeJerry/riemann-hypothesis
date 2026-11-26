@@ -178,7 +178,7 @@ lemma exists_norm_adeleExtension_alpha_mul_eq_one {P : Parameters} {s p : ℕ} [
         rw [map_mul, map_natCast, norm_mul]
       _ ≤ ‖(p : ℂ_[p])‖ :=
         mul_le_of_le_one_right (norm_nonneg _) (norm_adeleExtension_le_one φ hy)
-      _ < 1 := norm_p_lt_one
+      _ < 1 := PadicComplex.norm_p_lt_one p
   have h_int : (P.α s).val * y ∈ Ô (P.E s) := by
     rw [h_decomp]
     exact add_mem (one_mem _) (mul_mem (natCast_mem _ p) hy)

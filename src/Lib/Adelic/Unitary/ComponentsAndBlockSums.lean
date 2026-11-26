@@ -391,7 +391,8 @@ diagonal sum of `J` and `J'`. -/
 def U.sum {J' : Matrix n n R} {J'' : Matrix (m ⊕ n) (m ⊕ n) R} (h : fromBlocks J 0 0 J' = J'') :
     U J × U J' →* U J'' :=
   (blockGL.comp ((U J).subtype.prodMap (U J').subtype)).codRestrict (U J'') <| by
-    aesop (add simp [mem_U, fromBlocks_conjTranspose, fromBlocks_multiply])
+    aesop (add simp [mem_unitaryGroupOf_iff, star_eq_conjTranspose, fromBlocks_conjTranspose,
+      fromBlocks_multiply])
 
 /-- The block diagonal homomorphism U_m(R) × U_n(R) → U_{m+n}(R), (g, h) ↦ diag(g, h), between
 the unitary groups of identity matrices. -/
@@ -404,7 +405,7 @@ obtained from `J` by the same renaming of rows and columns. -/
 def U.reindex {J' : Matrix n n R} (h : J.submatrix e.symm e.symm = J') : U J ≃* U J' where
   toEquiv := (reindexGL e).subtypeEquiv <| by
     subst h
-    simp [← ext_iff, reindex_equiv e.symm, mem_U]
+    simp [← ext_iff, reindex_equiv e.symm, mem_unitaryGroupOf_iff, star_eq_conjTranspose]
   map_mul' := by simp
 
 variable {l : Type*} [Fintype l] [DecidableEq l] (e : m ⊕ l ≃ n)
@@ -446,7 +447,8 @@ lemma G.adeleMatrix_sum (g : G E s × G E t) :
 /-- The isomorphism between the adelic unitary groups for signs s and −s that is the identity on
 matrices, since U(J) = U(−J) at each infinite place. -/
 def G.neg : G E s ≃* G E (-s) :=
-  .prodCongr (.piCongrRight fun _ ↦ MulEquiv.subgroupCongr (by simp [U])) (.refl (Gf E n))
+  .prodCongr (.piCongrRight fun _ ↦ MulEquiv.subgroupCongr (by ext; simp [mem_unitaryGroupOf_iff]))
+    (.refl (Gf E n))
 
 omit [IsCMField E] [Fintype m] [Fintype n] in
 /-- The standard adelic forms for signs s and t have as block diagonal sum the standard form for
@@ -573,7 +575,7 @@ def neg : Space E n (-s) where
 def move : Space E n s where
   J := V.J
   x := V.x * g.toUnitary.1
-  gram_point := gram_mul_of_gram_eq V.gram_point g.toUnitary.2
+  gram_point := gram_mul_of_gram_eq V.gram_point (mem_unitaryGroupOf_iff.1 g.toUnitary.2)
 
 attribute [simps J] signedSpace sum reindex neg move
 

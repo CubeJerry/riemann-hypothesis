@@ -427,7 +427,7 @@ lemma IsTiedPrimes.frob_sub_one_smul_tie_eq_zero_of_selmerOnLine [ThePrime ℓ]
     · simp [hs]
     · simp [Φ, sub_smul, add_smul, mul_smul,
         h_trivial (h_triv_of_V φ (hp.apply_idOrConjInv_of_slope_ne_zero v.2 hs b))]
-  show (Φ - 1) • (z γ - e ((d v).2 i) • z φ) = 0
+  change (Φ - 1) • (z γ - e ((d v).2 i) • z φ) = 0
   rw [smul_sub, h_commute, smul_comm, h_slope, sub_self]
 
 /-- Let `J` be a finite set of primes of the CM field `E` that lie, with their conjugates, outside

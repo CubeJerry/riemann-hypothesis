@@ -156,7 +156,8 @@ theorem HasGramDensity.lintegral_conjTranspose_mulVec {W : Set (Matrix n' n' ℝ
     simp [gramCoords, outerCoords, h_sum]
   have h_prod (X : Matrix n' n' ℂ) (w : n' → ℂ) :
       ((u : Matrix n n ℂ) * rows (X, w))ᴴ *ᵥ v = √r • w := by
-    have h_unitary : (u : Matrix n n ℂ)ᴴ * u = 1 := by simpa using mem_U.1 u.property
+    have h_unitary : (u : Matrix n n ℂ)ᴴ * u = 1 := by
+      simpa [star_eq_conjTranspose] using mem_unitaryGroupOf_iff.1 u.property
     rw [← hu, mulVec_mulVec, conjTranspose_mul, Matrix.mul_assoc, h_unitary]
     simp [funext_iff, v₀, rows, mulVec_smul]
   have h_outer (w : n' → ℂ) : r⁻¹ • outerCoords (√r • w) = outerCoords w := by

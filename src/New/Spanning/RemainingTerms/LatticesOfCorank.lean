@@ -220,7 +220,7 @@ lemma tsum_discriminant_inv_le_of_out_eq {c : S.Classes} {η : U (stdSpace E �
   -- The rational isometry `η⁻¹` moves the lattices injectively and preserves the discriminant.
   let H : Matrix 𝔰.κ 𝔰.κ E := (η⁻¹ : GL 𝔰.κ E).val
   let P : (𝔰.κ → 𝔸f E) →ₗ[Ô E] 𝔰.κ → 𝔸f E := (finAdeleMatrix H).mulVecLin.restrictScalars (Ô E)
-  have hH : Hᴴ * H = 1 := by simpa [H] using mem_U.1 η⁻¹.2
+  have hH : Hᴴ * H = 1 := by simpa [H, star_eq_conjTranspose] using mem_unitaryGroupOf_iff.1 η⁻¹.2
   have h_inv : finAdeleMatrix Hᴴ * finAdeleMatrix H = 1 := by
     simpa only [Matrix.map_mul, Matrix.map_one, map_zero, map_one] using congrArg finAdeleMatrix hH
   have hP : Function.Injective P := injective_restrictScalars_mulVecLin h_inv
@@ -474,7 +474,8 @@ lemma one_le_sublatticeDiscriminant_unimodular (u : Gf E 𝔰.κ) (V : Submodule
     1 ≤ sublatticeDiscriminant u.val.val_inv V := by
   refine one_le_sublatticeDiscriminant u.1.val_inv V fun m hm ↦ ?_
   -- As `u⁻¹` is unitary, the Gram matrix of `m` is that of the integral matrix `u⁻¹ m`.
-  have h_unitary : (u.1.inv)ᴴ * u.1.inv = 1 := by simpa using mem_U.1 u⁻¹.2
+  have h_unitary : (u.1.inv)ᴴ * u.1.inv = 1 := by
+    simpa [star_eq_conjTranspose] using mem_unitaryGroupOf_iff.1 u⁻¹.2
   have h_gram : (u.1.inv * m)ᴴ * (u.1.inv * m) = mᴴ * m := by
     rw [conjTranspose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc _ u.1.inv, h_unitary,
       Matrix.one_mul]
