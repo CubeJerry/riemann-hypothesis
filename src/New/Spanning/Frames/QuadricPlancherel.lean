@@ -265,7 +265,10 @@ lemma partialCorrelation_heisenbergElem_eq_integral {ξ : A} {ε : ℕ}
   have hs : s ∈ floorUnipotent a :=
     conj_mem_floorUnipotent (heisenbergElem_mem_floorUnipotent a t) σ hσ
   have hs_unip : s ∈ unipotentBelow (a + 1) := (Subgroup.mem_inf.1 hs).right
-  have h_law := hk.equivariance (pow_mem hs_unip ε) hs_unip (σ * x) (σ * y)
+  have h_law : F.partialCorrelation (a + 1 + 1) k (s ^ ε * (σ * x)) (s * (σ * y)) =
+      ψ (F.levelUnit⁻¹.val * (simpleRootSum (d * s * d⁻¹) - simpleRootSum (s ^ ε))) *
+        F.partialCorrelation (a + 1 + 1) k (σ * x) (σ * y) :=
+    hk.equivariance (pow_mem hs_unip ε) hs_unip (σ * x) (σ * y)
   rw [h_twist s hs, hs_eq, simpleRootSum_conj_heisenbergElem hσ, mul_neg, ← neg_mul,
     conj_pow] at h_law
   simpa only [mul_assoc, inv_mul_cancel_left] using h_law
