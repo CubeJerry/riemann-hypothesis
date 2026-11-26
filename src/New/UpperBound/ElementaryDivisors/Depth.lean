@@ -893,7 +893,8 @@ lemma New.FrobeniusCycle.sum_finrank_deepForms_le (T : FrobeniusCycle N W K) [Ch
   · subst k
     let : IsEmpty (Fin 0 × ZMod N) := ⟨fun x ↦ Fin.elim0 x.1⟩
     have h_zero (d : ℕ) : finrank K (T.deepForms 0 n r (d + 1)) = 0 :=
-      Nat.eq_zero_of_le_zero ((h_rank d).trans_eq (by simp [cost, weight_eq_sum, Finset.sum_of_isEmpty]))
+      Nat.eq_zero_of_le_zero ((h_rank d).trans_eq
+        (by simp [cost, weight_eq_sum, Finset.sum_of_isEmpty]))
     simp only [h_zero, sum_const_zero, Nat.cast_zero]
     unfold divisorConstant
     positivity
