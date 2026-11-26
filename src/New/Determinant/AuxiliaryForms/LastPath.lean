@@ -172,16 +172,26 @@ lemma exists_add_eq_of_interlace {N : ℕ} (hN : 0 < N)
   · obtain _ | q := q
     · simp at hq
     have hq_lt : q + 1 < N := (mem_Ioo.1 hq).2
-    have h_diff : d τ q - d τ (q + 1) = κ₀ τ (q + 1) - κ τ (q + 2) := by
+    have h_diff : d τ q - d τ (q + 1) = κ₀ τ (q + 1) - κ τ (q + 1 + 1) := by
       simp only [d, diagramWeight_eq_add_succ τ hq_lt,
         diagramWeight_eq_add_succ τ (Nat.succ_lt_succ hq_lt)]
       lia
     simp only [γ, κ₁, add_tsub_cancel_right]
-    grind [hd τ q, hd τ (q + 1)]
+    obtain ⟨h0, h1⟩ := hd τ q (by lia)
+    obtain ⟨h2, h3⟩ := hd τ (q + 1) hq_lt
+    have e0 := Int.toNat_of_nonneg h0
+    have e2 := Int.toNat_of_nonneg h2
+    rw [min_eq_right (by omega)]
+    omega
   · have h_diff : d τ (N - 1) = e₀ τ - e τ := by
-      simp (disch := lia) [d, diagramWeight_eq_zero_of_le_succ]
+      simp (disch := lia) only [d, diagramWeight_eq_zero_of_le_succ, Nat.cast_zero, add_zero,
+        Nat.sub_add_cancel]
     simp only [κ₁]
-    grind [hd τ (N - 1)]
+    obtain ⟨h0, h1⟩ := hd τ (N - 1) (by lia)
+    rw [Nat.sub_add_cancel hN] at h1
+    have e0 := Int.toNat_of_nonneg h0
+    rw [min_eq_right (by omega)]
+    omega
 
 end Interlacing
 
@@ -413,7 +423,15 @@ theorem exists_isLiftWeight_isHCParam :
     -- `D.liftWeight` grows by `D.gap` from `j + 1` to `j + 2`, and half the rank by `D.t + z` in
     -- two steps.
     simp only [gridWeight, card_gridIndex, ι]
-    cases z <;> grind
+    have h_gap : D.t + 1 ≤ D.gap := by have := D.k_add_t_add_one_le_halfGap; rw [gap]; omega
+    have h_rank :
+        D.r + z.toNat + (j + 1 + 1) * (D.t + z.toNat) + D.m * (D.t - z.toNat) + (!z).toNat =
+          D.r + z.toNat + j * (D.t + z.toNat) + D.m * (D.t - z.toNat) + (!z).toNat +
+            (D.t + z.toNat) * 2 := by
+      ring
+    rw [h_rank, Nat.add_mul_div_right _ _ two_pos, D.liftWeight_succ (j + 1)]
+    have := z.toNat_le
+    omega
   refine ⟨κ, e, h_up, h_next, fun j hj ↦ ?_⟩
   induction j with
   | zero => exact h_param
