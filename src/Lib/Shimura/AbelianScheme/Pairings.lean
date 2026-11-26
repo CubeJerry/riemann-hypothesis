@@ -197,16 +197,6 @@ variable {R : CommRingCat} {A : Over (Spec R)} [IsLocalRing R] [AddObj A] {c : P
 
 /-! ### Group schemes over a local ring -/
 
-omit [AddObj A] in
-/-- Over a local ring, a class pulls back to zero along a point that comes from a section. -/
-@[simp]
-lemma atPoint_toUnit_comp_eq_zero {T : Over (Spec R)} (z : 𝟙_ (Over (Spec R)) ⟶ A) :
-    c.atPoint (toUnit T ≫ z) = 0 := by
-  simp [Pic.atPoint, c.pull_comp, eq_zero_of_isLocalRing]
-
-@[simp]
-lemma atPoint_zero {T : Over (Spec R)} : c.atPoint (T := T) 0 = 0 := atPoint_toUnit_comp_eq_zero _
-
 /-- Let `A` be a commutative group scheme over a local ring and `c` a class in `Pic A` that
 satisfies the parallelogram law `New.Pic.ParallelogramLaw`. Then the pull-back of `c` under
 multiplication by a natural number `m` is `m² c`. -/

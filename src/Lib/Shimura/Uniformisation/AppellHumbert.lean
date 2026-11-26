@@ -1,7 +1,6 @@
 module
 
 public import Lib.General.Analysis.HolomorphicIntegrals
-public import Lib.Shimura.AbelianScheme.Pairings
 public import Lib.Shimura.Uniformisation.HolomorphicFamilies
 
 /-!
