@@ -88,7 +88,7 @@ variable (k₀) in
 fixed by σ. -/
 abbrev HasFixedField (σ : Gal(k'/k)) : Prop := Set.range (algebraMap k₀ k') = fixedPoints σ
 
-/-- An automorphism fixes all of `k'` exactly when it is the identity. -/
+/-- An automorphism fixes all of `L` exactly when it is the identity. -/
 private lemma hasFixedField_self_iff {K L : Type*} [Field K] [Field L] [Algebra K L]
     (σ : Gal(L/K)) : HasFixedField L σ ↔ σ = 1 := by
   constructor
@@ -230,6 +230,7 @@ lemma DescendsTo.iff_comp_inl_eq_evalGL :
     funext g
     exact h_desc (inl g) g (by simp) (by simp)
   · intro h_eq s γ _ hγ
+    -- Since `σ = 1` has order one, `hγ` identifies `s` with `inl` of the image of `γ`.
     have hs_eq : s = inl (γ.map (algebraMap k' k')) := by simpa using hγ
     simp [hs_eq, ← h_eq]
 
