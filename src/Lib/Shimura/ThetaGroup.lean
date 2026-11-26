@@ -213,10 +213,8 @@ lemma exists_isSectionLift_coordSection {s : ι → N.H0 R}
   -- correctly, and `(s a).val i` divides the unit `(s j).val i`
   have h_frame : (N.mul (L.pull F.left).inv).IsFrame fun (i, a) ↦ (s a).val i := by
     have h_sec (j : ι) : N.IsSection (s j).val := isSection_val (s j)
-    simp_all only [IsSection, IsRegularOn, IsFrame, mul_opens, inv_opens, pull_opens, landsIn_inf,
-      landsIn_preimage, implies_true, mul_transition, Pi.mul_apply, inv_transition, pull_transition,
-      PointFn.pull, and_imp, Prod.forall, true_and]
-    grind only [= IsUnit.mul_iff]
+    simp_all [IsSection, IsRegularOn, IsFrame]
+    grind
   obtain ⟨Φ, hΦ_frame, hΦ_eq⟩ := exists_isPullbackVia F (fun (i, a) ↦ (s a).val i) h_frame
   refine ⟨Φ, ⟨fun (i, a) ↦ (s a).val i, hΦ_frame, hΦ_eq⟩, fun j ↦ H0_ext fun {i} h₁ h₂ ↦
     h₁.ext_of_dominant (𝟙 _) h₂ (L.pull F.left) ?_⟩
@@ -262,11 +260,8 @@ lemma IsSectionLift.comp {X'' : Over (Spec (CommRingCat.of R''))} {μ : Type}
   let M := L''.mul (L.pull (g ≫ f)).inv
   have h_frame : ((M.mul T.inv).pull (𝟙 _)).IsFrame
       fun ((i, a), b) ↦ v (i, b) * pull g (u (b, a)) := by
-    simp only [IsPullbackVia, IsFrame, IsSection, IsRegularOn, mul_opens, inv_opens, pull_opens,
-      landsIn_inf, landsIn_preimage, and_imp, Prod.forall, mul_transition, Pi.mul_apply,
-      inv_transition, pull_transition, PointFn.pull, Subtype.forall, pull_comp, pull_id,
-      Category.assoc, map_mul, Pi.one_apply, mul_one, IsUnit.mul_iff, M, T] at hu hv ⊢
-    grind only [=_ Category.assoc, L'.transition_trans]
+    simp [M, T, IsFrame, IsSection, IsRegularOn] at hu hv ⊢
+    grind [L'.transition_trans]
   -- Applied to the frame `1` of `T`, they glue to a frame `w` of `M`.
   have h_one : T.IsFrame 1 := by simp [T, IsFrame, IsSection, IsRegularOn]
   obtain ⟨w, ⟨⟨hw_reg, -⟩, -⟩, hw_eq, hw_frame⟩ :=
@@ -283,13 +278,8 @@ lemma IsSectionLift.comp {X'' : Over (Spec (CommRingCat.of R''))} {μ : Type}
       (ht : LandsIn (t ≫ 𝟙 X''.left) (M.opens (i, a))) (htb : LandsIn t ((L'.pull g).opens b)) :
       (Θ (Φ s)).val i A (t ≫ 𝟙 X''.left) =
         (w (i, a) * pull (g ≫ f) (s.val a)) A (t ≫ 𝟙 X''.left) := by
-    simp only [IsPullbackVia, IsFrame, IsSection, IsRegularOn, mul_opens, inv_opens, pull_opens,
-      landsIn_inf, landsIn_preimage, and_imp, Prod.forall, mul_transition, Pi.mul_apply,
-      inv_transition, pull_transition, PointFn.pull, Subtype.forall, Category.comp_id, pull_comp,
-      Category.assoc, Pi.one_apply, mul_one, M, T] at hu hv hw_eq ht htb ⊢
-    rw [hw_eq i a b A t ht.1 ht.2 htb, mul_assoc, ← Category.assoc,
-      ← hu.2 _ s.2 b a A (t ≫ g) htb (by rw [Category.assoc]; exact ht.2)]
-    exact hv.2 _ (Φ s).2 i b A t ht.1 htb
+    simp [M, T, IsFrame, IsSection, IsRegularOn] at hu hv hw_eq ht htb ⊢
+    grind
   simpa [M] using h_left.ext_of_dominant (𝟙 _) h_right (L'.pull g) h_local
 
 /-- If X' is a commutative group scheme over R' whose global functions are constant, two maps
