@@ -136,9 +136,7 @@ lemma besselFn_mul_of_mem_classUnipotent {c : S.Classes} (u : S.classUnipotent c
   -- representative of `c` lies in `S.principalLevel`, so the character has at `u` its value at `1`.
   obtain ⟨hu_besselU, hu_level⟩ := u.property
   have h_char : S.unipotentChar (S.ratToFin u) = 1 := by
-    rw [unipotentChar_eq_of_mem_principalLevel (one_mem _) (ratToFin_mem_besselU_iff.2 hu_besselU)
-      c.out (by rw [inv_one, one_mul]; exact hu_level)]
-    simp
+    simp_all [unipotentChar_eq_of_mem_principalLevel (one_mem _) _ c.out]
   simp [besselFn_ratToInf_mul hu_besselU, h_char]
 
 /-- Let `besselKernel γ y` be the tensor `besselFn(y) ⊗ besselFn(γ⁻¹ y)^*` of Bessel functions. Let
@@ -759,14 +757,9 @@ lemma hasSum_amplitudeSum_of_cutoff (hT : S.IsStable T) (c : S.Classes) (s : S.R
     ((smulInvariantMeasure_tfae Δ ρ).out 7 1).1 preserving
   let kernel (τ : FullOrCut) (p : X × Y) : EuclideanSpace ℂ (S.BesselCoord × S.BesselCoord) :=
     S.besselKernel τ p.1 p.2
-  have h_smul_arg (u : Δ) (p : X × Y) :
-      (S.ratToInf (u • p).1)⁻¹ * (u • p).2 = S.ratToInf u.2 * ((S.ratToInf p.1)⁻¹ * p.2) := by
-    change (S.ratToInf (u.1 * p.1 * u.2⁻¹))⁻¹ * (S.ratToInf u.1 * p.2) = _
-    simp [mul_assoc]
   have kernel_smul (τ : FullOrCut) (u : Δ) (p : X × Y) : kernel τ (u • p) = kernel τ p := by
-    have h_fst : (u • p).2 = S.ratToInf u.1 * p.2 := rfl
-    simp only [kernel, besselKernel]
-    rw [h_smul_arg, h_fst, besselFn_mul_of_mem_classUnipotent, besselFn_mul_of_mem_classUnipotent]
+    simp +zetaDelta [besselKernel, HSMul.hSMul, besselFn_mul_of_mem_classUnipotent, mul_assoc,
+      SMul.smul]
   have kernel_meas (τ : FullOrCut) : Measurable (kernel τ) := by fun_prop [besselKernel]
   let β₀ (p : X × Y) : ℝ≥0∞ := S.classCutoff c p.2 * S.classCutoff c' ((S.ratToInf p.1)⁻¹ * p.2)
   have β₀_cutoff : IsCutoff (count : Measure Δ) β₀ := by
