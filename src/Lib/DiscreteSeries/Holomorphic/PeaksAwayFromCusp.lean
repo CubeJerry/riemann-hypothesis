@@ -127,7 +127,8 @@ lemma New.Rows.exists_unitary_mul_triangular_of_pos {n : Type} [Fintype n] [Deci
   let β (l : n) : ℂ := s l * conj (v l) * r l
   let c : Matrix n n ℂ :=
     of fun k l ↦ if o k < o l then v k * τ * β l else if k = l then r l * p (o l) else 0
-  have c_block : c.BlockTriangular o := by grind [BlockTriangular, of_apply]
+  have c_block : c.BlockTriangular o := fun k l hkl ↦ by
+    simp [c, hkl.not_gt, show k ≠ l from fun h ↦ hkl.ne (congrArg o h).symm]
   have c_tri : IsBorelMatrix o c := by
     refine ⟨c_block, ?_⟩
     rw [c_block.det_eq_prod_diag o_inj]
@@ -175,6 +176,20 @@ lemma New.Rows.exists_unitary_mul_triangular_of_pos {n : Type} [Fintype n] [Deci
   have c_diag : c k k = Real.exp (-L k / 2) := by simp [c, r, (p_pos _).ne']
   rw [c_tri.inv_apply_diag o_inj, c_diag, ← Complex.ofReal_inv, ← Real.exp_neg, neg_div, neg_neg]
 
+/-- A zero-sum weighted sum bounded by `A - c` on the `+1` signs and `A` on the `-1` signs is at
+most `-c` times the sum of weights on the `+1` signs. -/
+private lemma New.Rows.sum_mul_le_of_split {n : Type} [Fintype n] {s : n → ℤˣ} {u : n → ℤ}
+    {L : n → ℝ} {A c : ℝ} (sum_L : ∑ k : n, L k = 0)
+    (h_pos : ∀ k : n, s k = 1 → L k * u k ≤ L k * (A - c))
+    (h_neg : ∀ k : n, s k = -1 → L k * u k ≤ L k * A) :
+    ∑ k : n, L k * u k ≤ -(c * ∑ k : n with s k = 1, L k) := by
+  have term_le (k : n) : L k * u k ≤ L k * A - c * if s k = 1 then L k else 0 := by
+    obtain hk | hk := Int.units_eq_one_or (s k)
+    · simpa [hk, mul_sub, mul_comm c] using h_pos k hk
+    · simpa [hk] using h_neg k hk
+  refine (sum_le_sum fun k _ ↦ term_le k).trans_eq ?_
+  rw [sum_sub_distrib, ← sum_mul, sum_L, ← mul_sum, ← sum_filter, zero_mul, zero_sub]
+
 /-- If the real numbers `L k` sum to `0` and have the signs `s k`, and the integer vector `u` has
 gap `1` for `s`, then `∑ L k * u k` is at most minus the sum of `L k` over the signs `+1`. -/
 lemma New.Rows.sum_mul_le_of_sign_mul_nonneg {n : Type} [Fintype n] [Nonempty n] {s : n → ℤˣ}
@@ -182,15 +197,13 @@ lemma New.Rows.sum_mul_le_of_sign_mul_nonneg {n : Type} [Fintype n] [Nonempty n]
     (h_sign : ∀ k : n, 0 ≤ (s k : ℝ) * L k) :
     ∑ k : n, L k * u k ≤ -∑ k : n with s k = 1, L k := by
   obtain ⟨A, hA_pos, hA_neg⟩ := exists_int_separating hu
-  have term_le (k : n) : L k * u k ≤ L k * A - if s k = 1 then L k else 0 := by
-    obtain hk | hk := Int.units_eq_one_or (s k)
-    · have h_le : (u k : ℝ) + 1 ≤ A := mod_cast hA_pos k hk
-      simp only [hk, ite_true]
-      nlinarith [show 0 ≤ L k by simpa [hk] using h_sign k]
-    · have h_nonpos : L k ≤ 0 := by simpa [hk] using h_sign k
-      simpa [hk] using mul_le_mul_of_nonpos_left (mod_cast hA_neg k hk : (A : ℝ) ≤ u k) h_nonpos
-  refine (sum_le_sum fun k _ ↦ term_le k).trans_eq ?_
-  rw [sum_sub_distrib, ← sum_mul, sum_L, ← sum_filter, zero_mul, zero_sub]
+  simpa using sum_mul_le_of_split (A := (A : ℝ)) (c := 1) sum_L
+    (fun k hk ↦ mul_le_mul_of_nonneg_left
+      (by linarith [show (u k : ℝ) + 1 ≤ A from mod_cast hA_pos k hk])
+      (by simpa [hk] using h_sign k))
+    (fun k hk ↦ mul_le_mul_of_nonpos_left
+      (mod_cast hA_neg k hk : (A : ℝ) ≤ u k)
+      (by simpa [hk] using h_sign k))
 
 /-- If the real numbers `L k` sum to `0` and have the signs `-s k`, and the entries of the integer
 vector `u` have absolute value at most `B`, then `∑ L k * u k` is at most `-2 B` times the sum of
@@ -198,16 +211,14 @@ vector `u` have absolute value at most `B`, then `∑ L k * u k` is at most `-2 
 lemma New.Rows.sum_mul_le_of_sign_mul_nonpos {n : Type} [Fintype n] {s : n → ℤˣ} {u : n → ℤ}
     {L : n → ℝ} {B : ℝ} (hB : ∀ k : n, |(u k : ℝ)| ≤ B) (sum_L : ∑ k : n, L k = 0)
     (h_sign : ∀ k : n, (s k : ℝ) * L k ≤ 0) :
-    ∑ k : n, L k * u k ≤ -(2 * B * ∑ k : n with s k = 1, L k) := by
-  have term_le (k : n) : L k * u k ≤ L k * B - 2 * B * if s k = 1 then L k else 0 := by
-    obtain ⟨h_lower, h_upper⟩ := abs_le.1 (hB k)
-    obtain hk | hk := Int.units_eq_one_or (s k)
-    · simp only [hk, ite_true]
-      nlinarith [show L k ≤ 0 by simpa [hk] using h_sign k]
-    · have h_nonneg : 0 ≤ L k := by simpa [hk] using h_sign k
-      simpa [hk] using mul_le_mul_of_nonneg_left h_upper h_nonneg
-  refine (sum_le_sum fun k _ ↦ term_le k).trans_eq ?_
-  rw [sum_sub_distrib, ← sum_mul, sum_L, ← mul_sum, ← sum_filter, zero_mul, zero_sub]
+    ∑ k : n, L k * u k ≤ -(2 * B * ∑ k : n with s k = 1, L k) :=
+  sum_mul_le_of_split (A := B) (c := 2 * B) sum_L
+    (fun k hk ↦ mul_le_mul_of_nonpos_left
+      (by linarith [(abs_le.1 (hB k)).1])
+      (by simpa [hk] using h_sign k))
+    (fun k hk ↦ mul_le_mul_of_nonneg_left
+      (abs_le.1 (hB k)).2
+      (by simpa [hk] using h_sign k))
 
 /-- Let `o` put the signs `1` first and let `x` have total `0` and the signs `s`. If
 `τ ∑ |x l| < 1`, then `1 - τ ∑ (x l, o l < a)` is positive for every `a`. -/
@@ -228,10 +239,15 @@ lemma New.Rows.one_sub_mul_sum_filter_pos {n : Type} [Fintype n] {s : n → ℤ�
           exact absurd ((o_lt l k h_sign hk').trans hk) hl
         · simpa [h_sign] using hx l
       rw [← sum_x, sum_filter]
-      exact sum_le_sum (by grind)
+      refine sum_le_sum fun l _ ↦ ?_
+      split_ifs with hl
+      · exact le_rfl
+      · exact h_outside l hl
   have h_le : ∑ l with o l < a, x l ≤ ∑ l : n, |x l| :=
     (sum_le_sum fun l _ ↦ le_abs_self _).trans (sum_le_univ_sum_of_nonneg fun l ↦ abs_nonneg _)
-  obtain hτ₀ | hτ₀ := le_total τ 0 <;> nlinarith
+  obtain hτ₀ | hτ₀ := le_total τ 0
+  · linarith [mul_nonpos_of_nonpos_of_nonneg hτ₀ h_nonneg]
+  · linarith [mul_le_mul_of_nonneg_left h_le hτ₀]
 
 /-- For an injective `o` and numbers `p a = 1 - τ ∑ (x l, o l < a)`, the sum of
 `log (p (o k + 1)) - log (p (o k))` over an initial segment `T` of the order `o` is
@@ -244,17 +260,32 @@ lemma New.Rows.sum_log_sub_log_eq {n : Type} [Fintype n] [DecidableEq n] {o : n 
   induction T using Finset.induction_on_max_value o with
   | empty => simp
   | insert a S haS h_max ih =>
-    have h_below : univ.filter (o · < o a) = S := by grind
-    rw [sum_insert haS, sum_insert haS, ih (by grind), hp, hp, sum_filter_lt_add_one o_inj,
+    have h_lt_a {k : n} (hk : k ∈ S) : o k < o a :=
+      lt_of_le_of_ne (h_max k hk) fun h ↦ haS (o_inj h ▸ hk)
+    have h_below : univ.filter (o · < o a) = S := by
+      ext k
+      simp only [mem_filter, mem_univ, true_and]
+      refine ⟨fun hk ↦ ?_, h_lt_a⟩
+      by_contra hkS
+      by_cases hka : k = a
+      · exact hk.ne (congrArg o hka)
+      · exact hk.not_gt (hT k (by simp [hka, hkS]) a (mem_insert_self a S))
+    have hS : ∀ l ∉ S, ∀ k ∈ S, o k < o l := fun l hl k hk ↦ by
+      by_cases hla : l = a
+      · exact hla ▸ h_lt_a hk
+      · exact hT l (by simp [hla, hl]) k (mem_insert_of_mem hk)
+    rw [sum_insert haS, sum_insert haS, ih hS, hp, hp, sum_filter_lt_add_one o_inj,
       h_below, sub_add_cancel, add_comm (x a)]
 
 /-- If `c (b - a)` is nonnegative for positive `a` and `b`, then so is `c (log b - log a)`. -/
 lemma New.Rows.mul_log_sub_log_nonneg {a b c : ℝ} (ha : 0 < a) (hb : 0 < b)
     (h_mul_sub : 0 ≤ c * (b - a)) : 0 ≤ c * (b.log - a.log) := by
   obtain hc | rfl | hc := lt_trichotomy c 0
-  · exact mul_nonneg_of_nonpos_of_nonpos hc.le (sub_nonpos.2 (log_le_log hb (by nlinarith)))
+  · exact mul_nonneg_of_nonpos_of_nonpos hc.le
+      (sub_nonpos.2 (log_le_log hb (sub_nonpos.1 (nonpos_of_mul_nonneg_right h_mul_sub hc))))
   · simp
-  · exact mul_nonneg hc.le (sub_nonneg.2 (log_le_log ha (by nlinarith)))
+  · exact mul_nonneg hc.le
+      (sub_nonneg.2 (log_le_log ha (sub_nonneg.1 (nonneg_of_mul_nonneg_right h_mul_sub hc))))
 
 /-- Let `o` be injective and put the signs `1` of `J = diag s` first, let the weight `u` have gap
 `1` (`u i + 1 ≤ u j` whenever `s i = 1` and `s j = -1`) and size at most `B ≥ 2`, and let `v` be
@@ -299,14 +330,18 @@ lemma New.Rows.exists_unitary_mul_triangular {n : Type} [Fintype n] [DecidableEq
   have sum_all : ∑ k : n, L k = 0 := by simp [telescope, sum_x]
   have sum_pos : ∑ k : n with s k = 1, L k = Real.log (y - η) := by
     -- the positive `x k` make up half of `|v|²`
-    have sq_eq (k : n) : ‖v k‖ ^ 2 = 2 * (if s k = 1 then x k else 0) - x k := by grind
+    have sq_eq (k : n) : ‖v k‖ ^ 2 = 2 * (if s k = 1 then x k else 0) - x k := by
+      obtain hk | hk := Int.units_eq_one_or (s k) <;> simp [hk, x]
+      ring
     have h_first (l : n) (hl : s l ≠ 1) (k : n) (hk : s k = 1) : o k < o l :=
       ho.2 k l hk ((Int.units_eq_one_or (s l)).resolve_left hl)
     rw [telescope _ (by simpa using h_first), ht]
     simp only [sq_eq, sum_sub_distrib, ← mul_sum, ← sum_filter, sum_x, τ]
     ring_nf
   have log_le : Real.log y ≤ Real.log (y - η) + 2 * η := by
-    calc Real.log y ≤ Real.log ((y - η) * (2 * η + 1)) := log_le_log (by linarith) (by nlinarith)
+    have h_prod : y ≤ (y - η) * (2 * η + 1) := by
+      linarith [mul_nonneg hη.le (show 0 ≤ 2 * y - 2 * η - 1 by linarith)]
+    calc Real.log y ≤ Real.log ((y - η) * (2 * η + 1)) := log_le_log (by linarith) h_prod
       _ = Real.log (y - η) + Real.log (2 * η + 1) := log_mul (by linarith) (by linarith)
       _ ≤ _ := by linarith [log_le_sub_one_of_pos (show 0 < 2 * η + 1 by linarith)]
   -- `L k` has the sign of `-τ * s k`
@@ -316,12 +351,24 @@ lemma New.Rows.exists_unitary_mul_triangular {n : Type} [Fintype n] [DecidableEq
   have h_log : (∑ k : n, L k * u k) / 2 ≤ 2 * (B * η) - Real.log y * 2⁻¹ := by
     obtain hτ | hτ := le_total τ 0
     · have h_sign (k : n) : 0 ≤ (s k : ℝ) * L k :=
-        mul_log_sub_log_nonneg (p_pos _) (p_pos _) (by nlinarith [h_diff k])
-      nlinarith [sum_mul_le_of_sign_mul_nonneg hu sum_all h_sign, sum_pos]
+        mul_log_sub_log_nonneg (p_pos _) (p_pos _)
+          (by rw [h_diff k]; exact mul_nonneg (neg_nonneg.2 hτ) (sq_nonneg _))
+      have hBη : 2 * η ≤ B * η := mul_le_mul_of_nonneg_right hB₂ hη.le
+      linarith [sum_mul_le_of_sign_mul_nonneg hu sum_all h_sign, sum_pos, log_le, hBη]
     · have h_sign (k : n) : (s k : ℝ) * L k ≤ 0 := by
-        linarith [mul_log_sub_log_nonneg (c := -(s k : ℝ)) (p_pos (o k)) (p_pos (o k + 1))
-          (by nlinarith [h_diff k])]
-      nlinarith [sum_mul_le_of_sign_mul_nonpos hB sum_all h_sign, sum_pos, log_pos hy]
+        have h_neg : 0 ≤ -(s k : ℝ) * (p (o k + 1) - p (o k)) := by
+          rw [neg_mul, h_diff k, neg_mul, neg_neg]
+          exact mul_nonneg hτ (sq_nonneg _)
+        linarith [mul_log_sub_log_nonneg (c := -(s k : ℝ)) (p_pos (o k)) (p_pos (o k + 1)) h_neg]
+      have h_sum := sum_mul_le_of_sign_mul_nonpos hB sum_all h_sign
+      rw [sum_pos] at h_sum
+      have h_mul_log : 2 * (B * Real.log y) - 4 * (B * η) ≤ 2 * B * Real.log (y - η) := by
+        have h := mul_le_mul_of_nonneg_left (show Real.log y - 2 * η ≤ Real.log (y - η) by
+          linarith) (show (0 : ℝ) ≤ 2 * B by linarith)
+        linarith
+      have h_Blog : 2 * Real.log y ≤ B * Real.log y :=
+        mul_le_mul_of_nonneg_right hB₂ (log_pos hy).le
+      linarith [h_sum, h_mul_log, h_Blog, log_pos hy]
   calc ‖diagChar u b‖ = Real.exp ((∑ k : n, L k * u k) / 2) := by
         simp [diagChar, b_diag, Complex.norm_exp, ← rpow_intCast, ← exp_mul, div_mul_eq_mul_div,
           ← exp_sum, ← sum_div]
@@ -471,7 +518,11 @@ lemma New.Rows.norm_le_of_transvection_invariant {E n : Type} [Field E] [CMType 
     ring_nf
   let η (w : InfinitePlace E) : ℝ := (a w).im * ∑ i, ‖y w i‖ ^ 2
   have η_le (w : InfinitePlace E) : η w ≤ 2⁻¹ := by
-    nlinarith [single_le_sum (fun w _ ↦ (η_pos w).le) (mem_univ w), η_pos w]
+    have h1 : 2 * η w ≤ A * η w := mul_le_mul_of_nonneg_right hA (η_pos w).le
+    have h2 : A * η w ≤ 1 :=
+      (mul_le_mul_of_nonneg_left (single_le_sum (fun w _ ↦ (η_pos w).le) (mem_univ w))
+        (by linarith)).trans η_sum
+    linarith
   -- factor `x z` as an element of `USign s` times a triangular matrix
   have factor (z : ℍ) (w : InfinitePlace E) :
       ∃ (h : USign s) (b : Matrix n n ℂ), IsBorelMatrix o b ∧ x z w = h * b ∧
@@ -585,7 +636,7 @@ theorem New.Rows.IsPeak.le_firstMinimum {E n : Type} [Field E] [CMType E] [Finty
   have le_sup (x : G E s) : ‖F x‖ ≤ C := le_ciSup hg.bddAbove x
   have C_pos : 0 < C := (norm_pos_iff.2 hg.ne_zero).trans_le (le_sup g)
   have le_one : (√(A * A'))⁻¹ ≤ 1 :=
-    inv_le_one_of_one_le₀ (Real.one_le_sqrt.2 (by nlinarith))
+    inv_le_one_of_one_le₀ (Real.one_le_sqrt.2 (one_le_mul_of_one_le_of_one_le (by linarith) hA'))
   refine le_firstMinimum_iff.2 ⟨le_one, fun y hy hy₀ ↦ ?_⟩
   by_contra! short
   -- a lattice vector `y` of length less than `1` is isotropic; `Y` are its coordinates at `g`
@@ -632,5 +683,6 @@ theorem New.Rows.IsPeak.le_firstMinimum {E n : Type} [Field E] [CMType E] [Finty
     simpa [Prod.mk_one_one] using norm_le_of_transvection_invariant ho h_gap h_wt hA (h_hol g)
       (fun h ↦ le_sup _) C_pos re_eq iso_inf size_pos size_sum t_eq t_fix
   -- so `C / 2 < ‖F g‖ ≤ C * exp (2 - 2 π) ≤ C / e < C / 2`
-  nlinarith [hg.half_lt,
-    exp_neg_one_lt_half.trans_le' (show exp (2 + -(2 * π)) ≤ exp (-1) by bound [two_le_pi])]
+  have h_exp : exp (2 + -(2 * π)) < 1 / 2 :=
+    exp_neg_one_lt_half.trans_le' (show exp (2 + -(2 * π)) ≤ exp (-1) by bound [two_le_pi])
+  linarith [hg.half_lt, schwarz, mul_lt_mul_of_pos_left h_exp C_pos]
