@@ -165,22 +165,25 @@ lemma finiteImage_resolutionVectors_mem [DecidableEq n] {I : Type} {w : I → P.
   · simpa [finiteImage, hc] using hw j.1
   · simp [finiteImage, hc]
 
-variable [Fintype n]
-
-/-- A finite adelic vector that is integral at the places above `p` becomes integral everywhere
-when it is multiplied by a suitable number prime to `p`. -/
-lemma exists_coprime_mul_mem_of_mem_integralAfter {x : n → 𝔸f (P.E s)}
-    (hx : x ∈ integralAfter (1 : 𝓞 P.K) fun u : FinPlace (P.E s) ↦ ↑p ∈ u.asIdeal) :
-    ∃ m : ℕ, p.Coprime m ∧ ∀ c : n, m * x c ∈ Ô (P.E s) := by
+/-- If `δ x` is integral at the places above `p`, then a suitable number prime to `p` makes
+`δ x` integral everywhere. Only finiteness of the coordinates is needed. -/
+lemma exists_coprime_mul_mem_of_mem_integralAfter [Finite n] {δ : 𝓞 P.K}
+    {x : n → 𝔸f (P.E s)}
+    (hx : x ∈ integralAfter δ fun u : FinPlace (P.E s) ↦ ↑p ∈ u.asIdeal) :
+    ∃ m : ℕ, p.Coprime m ∧
+      ∀ c : n, m * ((algebraMap P.K (P.E s) δ : 𝔸f (P.E s)) * x c) ∈ Ô (P.E s) := by
   have hp : p.Prime := Fact.out
-  obtain ⟨m₀, hm₀, h_clear⟩ := exists_forall_mul_mem_Ô x
+  obtain ⟨m₀, hm₀, h_clear⟩ :=
+    exists_forall_mul_mem_Ô fun c ↦ (algebraMap P.K (P.E s) δ : 𝔸f (P.E s)) * x c
   obtain ⟨e, m, hm, rfl⟩ : ∃ e m : ℕ, ¬p ∣ m ∧ m₀ = p ^ e * m :=
     WfDvdMonoid.max_power_factor hm₀ hp
   refine ⟨m, hp.coprime_iff_not_dvd.2 hm, fun c ↦ mem_Ô.2 fun u ↦ ?_⟩
   by_cases hu : ↑p ∈ u.asIdeal
-  · simpa using nsmul_mem hx m c u hu
+  · simpa [mul_left_comm] using nsmul_mem hx m c u hu
   · have h_unit : Valued.v (p : LocField u) = 1 := by simpa using v_algebraMap_eq_one hu
     simpa [h_unit] using mem_Ô.1 (h_clear c) u
+
+variable [Fintype n]
 
 /-- Let `V` be a standard space over `E = P.E s` (its signs `ε` are `+1` and its point is the
 identity), and let `F` lie in the finite part of its Weil model `𝒮 V`, the span of the translates of
@@ -200,10 +203,7 @@ lemma exists_rho_finiteImage_eq_and_coprime_mul_mem [DecidableEq n]
   obtain ⟨γ, hγ, h_translate⟩ := exists_finiteImage_approx hF x
   have h_int : finiteImage γ ∈ integralAfter δ fun u ↦ ↑p ∈ u.asIdeal := by
     simpa only [sub_add_cancel] using add_mem (integralAfter.stdLattice_le hγ) hx
-  have h_scaled : finiteImage (fun c ↦ algebraMap P.K (P.E s) δ * γ c) ∈
-      integralAfter (1 : 𝓞 P.K) fun u ↦ ↑p ∈ u.asIdeal := fun c u hu ↦ by
-    simpa [finiteImage, mul_left_comm, mul_assoc] using h_int c u hu
-  obtain ⟨m, hm, h_clear⟩ := exists_coprime_mul_mem_of_mem_integralAfter h_scaled
+  obtain ⟨m, hm, h_clear⟩ := exists_coprime_mul_mem_of_mem_integralAfter h_int
   exact ⟨γ, m, h_translate, hm, fun c ↦ by simpa [finiteImage, mul_left_comm] using h_clear c⟩
 
 end RationalTranslates
@@ -367,29 +367,19 @@ lemma exists_isVacuumExpansion {P : Parameters} {s : ℕ} {n : Type} (p : ℕ) [
     ∃ (b : ℕ) (I : Type) (_ : Fintype I) (w : I → P.E s) (F : 𝒮 V)
       (J : Type) (_ : Fintype J) (y : J → n → 𝔸f (P.E s)) (a : J → embValRing),
       IsVacuumExpansion p V b w F y a := by
-  obtain ⟨b, hb, I, _, w, hw⟩ : ∃ b : ℕ, p.Coprime b ∧
-      ∃ (I : Type) (_ : Fintype I) (w : I → P.E s), IsTightFrame w 1 (b * b) :=
-    exists_coprime_isTightFrame_sq P s p
+  obtain ⟨b, hb, I, _, w, hw⟩ := exists_coprime_isTightFrame_sq P s p
   have hb_ne : b ≠ 0 := ne_zero_of_prime_coprime hb
   have h_area : P.cmCurve.area = ‖(P.cmPeriod : ℂ)‖ ^ 2 / (b * b : ℕ) * (b * b : ℕ) * √P.d / 2 := by
     simp [area_eq_of_eq_scaledIdeal latticeModule_cmCurve, hb_ne]
   have hb_norm : (b : 𝓞 P.K) * conj ((b : 𝓞 P.K) : ℂ) = (b * b : ℕ) := by simp
   -- All factors of `F` are `θ`, the monomial with exponents `(1, 0, 0)`.
-  obtain ⟨F, hF, hF_theta⟩ : ∃ F : 𝒮 V,
-      IsResolutionProduct V P.cmCurve (P.cmPeriod / conj ((b : 𝓞 P.K) : ℂ)) w 1
-        (fun _ : I × n ↦ P.cmCurve.monomialSection (1, 0, 0)) F ∧
-      IsThetaFunction ((b : P.E s) • idealLattice (P.E s) n) (entireTheta F) := by
-    obtain ⟨F, hF, -, h_periods⟩ := exists_isResolutionProduct_of_isTightFrame V b
-      (mul_ne_zero hb_ne hb_ne) hb_norm hw (fun _ ↦ (1, 0, 0)) (by simp)
-      cmPeriod_mem_cmCurve_lattice h_area
-    exact ⟨F, hF, by simpa using h_periods⟩
+  obtain ⟨F, hF, -, h_periods⟩ := exists_isResolutionProduct_of_isTightFrame V b
+    (mul_ne_zero hb_ne hb_ne) hb_norm hw (fun _ ↦ (1, 0, 0)) (by simp)
+    cmPeriod_mem_cmCurve_lattice h_area
   have hF_value : V.θ F = 1 := by
     simpa [monomialSection, resolutionShift] using hF.theta_translate 0
-  obtain ⟨J, _, y, a, hy, h_vacuum⟩ :
-      ∃ (J : Type) (_ : Fintype J) (y : J → n → 𝔸f (P.E s)) (a : J → embValRing),
-        (∀ j : J, b • y j ∈ stdLattice (P.E s) n) ∧
-        intVacuum V = ∑ j : J, a j • V.ϱ (finVec (y j)) F :=
-    exists_intVacuum_eq_sum_of_isThetaFunction hb hF_value hF_theta
+  obtain ⟨J, _, y, a, hy, h_vacuum⟩ :=
+    exists_intVacuum_eq_sum_of_isThetaFunction hb hF_value (by simpa using h_periods)
   refine ⟨b, I, inferInstance, w, F, J, inferInstance, y, a,
     { coprime := hb, isTightFrame := hw, mem_finitePart := hF.mem_finitePart,
       nsmul_mem_stdLattice := hy, intVacuum_eq_sum := h_vacuum,
