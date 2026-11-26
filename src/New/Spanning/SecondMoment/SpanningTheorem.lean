@@ -317,10 +317,13 @@ lemma comap_scaledPoincare_eq_comap_goodPoincare (s : D.chosenGL) (F : Submodule
   have h_scale : (D.poincareScale : ℂ) ≠ 0 := mod_cast (Real.sqrt_pos.2 (inv_pos.2
     (mul_pos (measureReal_pos_of_isLevel (K := D.chosenLevel)) D.filling.unipotentCovolume_pos))).ne'
   have h_card : (Nat.card D.chosenGL : ℂ) ≠ 0 := mod_cast Nat.card_pos.ne'
-  rw [scaledPoincare, goodPoincare, goodProjTranslate, LinearMap.comp_smul, LinearMap.comp_smul]
-  erw [LinearMap.smul_comp (Nat.card D.chosenGL : ℂ) _ D.poincare,
-    Submodule.comap_smul _ F _ h_scale, Submodule.comap_smul _ F _ h_card]
-  rfl
+  let T : D.SourceForm →ₗ[ℂ] D.targetForms :=
+    ((D.principalRep (D.spaceY 0)).asAlgebraHom D.e₀).rangeRestrict ∘ₗ
+      D.principalRep (D.spaceY 0) s ∘ₗ D.poincare
+  rw [scaledPoincare, LinearMap.comp_smul, LinearMap.comp_smul]
+  exact (Submodule.comap_smul (T ∘ₗ D.sourceFormCoords.symm.toLinearMap) F _ h_scale).trans
+    (congrArg (Submodule.comap D.sourceFormCoords.symm.toLinearMap)
+      (Submodule.comap_smul T F _ h_card).symm)
 
 /-- **One translate.** For `s` in the finite group `Ḡ = D.chosenGL`, the map `D.goodPoincare s` is
 `#Ḡ · e₀ s Π`: the unscaled Poincaré map `Π = D.poincare` from the source forms `D.SourceForm` to
