@@ -173,8 +173,7 @@ lemma New.exists_smul_schurCoeffPoly_eq_jointHarmonic {E : Type} [Field E] [CMTy
   -- `M w p` is the block of variables on the first `p` rows and columns, ordered by decreasing
   -- `l' w` and `l w`.
   let M (w : InfinitePlace E) (p : ℕ) : Matrix (Fin p) (Fin p) (MvPolynomial (n' × n) ℂ) :=
-    of fun i j ↦ ∑ a : n', ∑ c : n,
-      if decreasingPosition (l' w) a = i ∧ decreasingPosition (l w) c = j then X (a, c) else 0
+    staircaseBlock (1 : n → ℤˣ) (decreasingPosition (l w)) (l' w) 1 p
   -- The staircase product of the minors is a joint harmonic, so by uniqueness the chosen joint
   -- harmonic at `w` is a multiple of it.
   have h_stair (w : InfinitePlace E) : ∃ u : ℂ, jointHarmonicAt ea eb l l' 1 1 w =
@@ -183,19 +182,8 @@ lemma New.exists_smul_schurCoeffPoly_eq_jointHarmonic {E : Type} [Field E] [CMTy
       (ν := HCParam.lowestKType (ε := 1) (l' w)) (o := decreasingPosition (l w))
       (hl w).1 (hl' w).1 (by simp [decreasingPosition]) _ (h_cols w) (by simp)
       (by simp [hl'.lowestKType_eq, diagramWeight_apply, vacuumWeight])
-    have h_M (p : Fin (card n')) :
-        staircaseBlock (1 : n → ℤˣ) (decreasingPosition (l w)) (l' w) 1 p = M w p := by
-      ext i j
-      simp only [staircaseBlock, M, of_apply, Units.val_one, one_smul, Pi.one_apply, true_and]
-    have h_prod : (∏ η : ℤˣ, ∏ p : Fin (card n'),
-        (staircaseBlock (1 : n → ℤˣ) (decreasingPosition (l w)) (l' w) η p).det ^
-          (Pi.single 1 (κ w) : ℤˣ → ℕ → ℕ) η p) =
-        ∏ p : Fin (card n'), (M w p).det ^ κ w p := by
-      rw [Fintype.prod_eq_single (1 : ℤˣ) fun η hη ↦ prod_eq_one fun p _ ↦ by
-        rw [Pi.single_eq_of_ne hη, Pi.zero_apply, pow_zero]]
-      refine prod_congr rfl fun p _ ↦ ?_
-      rw [Pi.single_eq_same, h_M p]
-    rw [← h_prod]
+    rw [Fintype.prod_eq_single (1 : ℤˣ) fun η hη ↦ prod_eq_one fun p _ ↦ by
+      rw [Pi.single_eq_of_ne hη, Pi.zero_apply, pow_zero], Pi.single_eq_same] at h_highest
     exact (h_match w).unique
       (isJointHarmonic_jointHarmonicAt (h_match w)).isJointHighest.isPreJointHarmonic
       h_highest.isPreJointHarmonic
@@ -218,7 +206,8 @@ lemma New.exists_smul_schurCoeffPoly_eq_jointHarmonic {E : Type} [Field E] [CMTy
       RingHom.map_det]
     congr 2
     ext i j
-    simp only [M, y, RingHom.mapMatrix_apply, AlgHom.mapMatrix_apply, Matrix.map_apply,
+    simp only [M, staircaseBlock, Units.val_one, one_smul, Pi.one_apply, true_and, y,
+      RingHom.mapMatrix_apply, AlgHom.mapMatrix_apply, Matrix.map_apply,
       Matrix.transpose_apply, of_apply, Function.comp_apply, rowSubst, aeval_X, map_sum, eval_X,
       smul_eq_C_mul, map_mul, eval_C, permArray, Fin.val_castLE, sum_mul, mul_ite, mul_one,
       mul_zero, apply_ite (eval _), map_zero, ite_and]
@@ -314,29 +303,7 @@ open MeasureTheory Space ThetaKernel FiniteDimensional
 
 variable {E n n' : Type} [Field E] [CMType E] [WeilData E] [Fintype n] [Fintype n']
   {κ : NumberField.InfinitePlace E → ℕ → ℕ} {e ea eb : NumberField.InfinitePlace E → ℤ}
-/-- The theta integral over `[U(n)]` (for `quotMeasure`) against the coefficient of an algebraic
-form `φ` at a linear form is additive in the linear form. Here `θ` is the theta functional,
-`pairWeil` the Weil action of the pair twisted by `a`, `b`, and `v` any test function. -/
-lemma integral_theta_mul_algFormCoeff_add [DecidableEq n'] [DecidableEq n] (a b : AutChar E)
-    (v : 𝒮 ((stdSpace E n).hom (stdSpace E n'))) (φ : AlgForm n κ e) (h : G E (1 : n' → ℤˣ))
-    (s t : (WeylIndex n κ → ℂ) →ₗ[ℂ] ℂ) :
-    ∫ g : G E 1, θ ((stdSpace E n).hom (stdSpace E n'))
-      (pairWeil (stdSpace E n) (stdSpace E n') a b (g, h) v) *
-        algFormCoeff 1 (s + t) φ g ∂(stdSpace E n).quotMeasure =
-      (∫ g : G E 1, θ ((stdSpace E n).hom (stdSpace E n'))
-        (pairWeil (stdSpace E n) (stdSpace E n') a b (g, h) v) *
-        algFormCoeff 1 s φ g ∂(stdSpace E n).quotMeasure) +
-      ∫ g : G E 1, θ ((stdSpace E n).hom (stdSpace E n'))
-        (pairWeil (stdSpace E n) (stdSpace E n') a b (g, h) v) *
-        algFormCoeff 1 t φ g ∂(stdSpace E n).quotMeasure := by
-  have h_rapid (L : (WeylIndex n κ → ℂ) →ₗ[ℂ] ℂ) :
-      algFormCoeff 1 L φ ∈ (stdSpace E n).rapidFunctions :=
-    (isAutomorphic_algFormCoeff φ).mem_rapidFunctions fun _ _ ↦ rfl
-  rw [← integral_add ((pairThetaKer _ _ a b).integrable_theta_mul (h_rapid s) v h)
-    ((pairThetaKer _ _ a b).integrable_theta_mul (h_rapid t) v h)]
-  refine integral_congr_ae (.of_forall fun g ↦ ?_)
-  simp only [algFormCoeff, LinearMap.pi_apply, LinearMap.comp_apply, LinearMap.add_apply, mul_add]
- 
+
 /-- Let `(κ, e)` go up from rank `n > 0` to rank `n' > 0` along `eb`, let `a o n` and `a o n'` be
 characters at the ranks `n` and `n'` of weights `ea` and `eb` (with residue-field characters `ψ o`,
 `ψ' o` at the finite places), let `c ≠ 0` and let `K` be a level. Then the lifts of the kernels of
@@ -409,9 +376,8 @@ lemma isThetaLift_thetaKernel [Nonempty n] [Nonempty n'] [DecidableEq n'] [Decid
       change Continuous fun u : GInf E (1 : n' → ℤˣ) ↦
         (α u * (β / stdLevelIndex K)) *
           gramForm (highestVector κ l') (conjWeylRep κ ea (s := 1) u⁻¹ v)
-      exact (α.continuous.mul continuous_const).mul
-        ((LinearMap.continuous_of_finiteDimensional (gramForm (highestVector κ l'))).comp
-          ((continuous_conjWeylRep (s := 1) (κ := κ) (e := ea) v).comp continuous_inv))
+      have := LinearMap.continuous_of_finiteDimensional (gramForm (highestVector κ l'))
+      fun_prop
     have h_fn : (fun g : G E 1 ↦ ofAlgForm l 1 φ (g * (x, 1)⁻¹)) =
         algFormCoeff 1 (gramForm (highestVector κ l) ∘ₗ conjWeylRep κ e x) φ := by
       ext g
@@ -435,16 +401,17 @@ lemma isThetaLift_thetaKernel [Nonempty n] [Nonempty n'] [DecidableEq n'] [Decid
       mul_zero, integral_zero]
   | add s t _ _ hs ht =>
     obtain ⟨⟨s', hs'⟩, ⟨t', ht'⟩⟩ := hs, ht
-    refine ⟨s' + t', fun o Φ φ h ↦ ?_⟩
-    rw [integral_theta_mul_algFormCoeff_add, hs' o Φ φ h, ht' o Φ φ h]
-    simp only [algFormCoeff, LinearMap.pi_apply, LinearMap.comp_apply, LinearMap.add_apply]
+    refine ⟨s' + t', fun o Φ φ h ↦ .trans ?_ congr($(hs' o Φ φ h) + $(ht' o Φ φ h))⟩
+    have h_int (L : (WeylIndex n κ → ℂ) →ₗ[ℂ] ℂ) v :=
+      (pairThetaKer (stdSpace E n) (stdSpace E n') (a o n) (a o n')).integrable_theta_mul
+        ((isAutomorphic_algFormCoeff φ (L := L)).mem_rapidFunctions fun _ _ ↦ rfl) v h
+    rw [← integral_add (h_int s _) (h_int t _)]
+    simp only [algFormCoeff, LinearMap.pi_apply, LinearMap.comp_apply, LinearMap.add_apply, mul_add]
   | smul r t _ ht =>
     obtain ⟨t', ht'⟩ := ht
     -- The integral is linear in `t` and the coefficient of the lift is linear in `t'`.
-    refine ⟨r • t', fun o Φ φ h ↦ ?_⟩
-    refine (?_ : _ = r * _).trans (congrArg (r * ·) (ht' o Φ φ h))
+    refine ⟨r • t', fun o Φ φ h ↦ .trans ?_ congr(r * $(ht' o Φ φ h))⟩
     rw [← integral_const_mul]
-    refine integral_congr_ae (.of_forall fun g ↦ ?_)
     simp only [algFormCoeff, LinearMap.pi_apply, LinearMap.comp_apply, LinearMap.smul_apply,
       smul_eq_mul, mul_left_comm _ r]
 
