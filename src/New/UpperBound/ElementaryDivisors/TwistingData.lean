@@ -249,15 +249,17 @@ private lemma p_dvd_embedding_of_mem_parahoric {τ : Fin k → ℕ} {g : GL (Fin
     (T.p : R) ∣ T.embedding s (g i j) :=
   T.p_dvd_embedding_of_mem_maximalIdeal s ((residue_eq_zero_iff _).1 (hg hij))
 
-/-- At an even letter, `letterMatrix` embeds `g` entrywise. If `τ i < τ j` and `g` is parahoric,
-then `p` divides the entry `(i, j)`. -/
+/-- The predicate `T.isEven` marks neighbouring letters differently. At an even letter,
+`letterMatrix` embeds `g` entrywise. If `τ i < τ j` and `g` is parahoric, then `p` divides the
+entry `(i, j)`. -/
 lemma p_dvd_letterMatrix_of_mem_parahoric_of_isEven {τ : Fin k → ℕ} {g : GL (Fin k) W}
     (hg : g ∈ parahoric W τ) (hs : T.isEven s = true) {i j : Fin k} (hij : τ i < τ j) :
     (T.p : R) ∣ T.letterMatrix s g i j := by
   simpa [letterMatrix_apply, hs] using T.p_dvd_embedding_of_mem_parahoric s hg hij
 
-/-- At an odd letter, `letterMatrix` embeds the transpose of `g⁻¹`. If `τ j < τ i` and `g` is
-parahoric, then `p` divides the entry `(i, j)`. -/
+/-- The predicate `T.isEven` marks neighbouring letters differently. At an odd letter,
+`letterMatrix` embeds the transpose of `g⁻¹`. If `τ j < τ i` and `g` is parahoric, then `p` divides
+the entry `(i, j)`. -/
 lemma p_dvd_letterMatrix_of_mem_parahoric_of_not_isEven {τ : Fin k → ℕ} {g : GL (Fin k) W}
     (hg : g ∈ parahoric W τ) (hs : T.isEven s = false) {i j : Fin k} (hji : τ j < τ i) :
     (T.p : R) ∣ T.letterMatrix s g i j := by
