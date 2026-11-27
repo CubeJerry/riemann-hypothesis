@@ -325,6 +325,23 @@ attribute [local instance low] Fintype.ofFinite
 variable {n ι : Type _} [Fintype n] [DecidableEq n] [Fintype ι] [DecidableEq ι] {k : Type _}
   [Field k] [Finite k]
 
+/-- For a Green label `p`, the label idempotent equals the primitive central idempotent of an
+irreducible representation with Green character `Ξ_p`. -/
+private lemma labelIdem_eq_primitiveCentralIdempotent
+    [Invertible (Nat.card (GL n k) : ℂ)] (p : Polynomial k) (hp : IsLabel (Fintype.card n) p)
+    (V : FDRep ℂ (GL n k)) [Representation.IsIrreducible V.ρ]
+    (hV : V.character = (labelChar (faithfulChar k) p).evalGL) :
+    labelIdem n p = TauCeti.Representation.primitiveCentralIdempotent V.ρ := by
+  classical
+  ext x
+  simp only [labelIdem, hp, ite_true, coeff_groupAlgElem,
+    Finsupp.equivFunOnFinite_symm_apply_apply,
+    TauCeti.Representation.primitiveCentralIdempotent_coeff, ← hV]
+  change V.character 1 / Nat.card (GL n k) * starRingEnd ℂ (V.character x) =
+    (Nat.card (GL n k) : ℂ)⁻¹ * V.character 1 * V.character x⁻¹
+  have hchar : IsChar V.character := ⟨V, rfl⟩
+  rw [div_eq_inv_mul, hchar.apply_inv]
+
 /-- Each polynomial c over k gives an element e_c of ℂ[G], where G = GL_n(k). If c is a label of
 degree |n| (monic, squarefree, nonzero constant term), e_c = ∑_g (Ξ_c(1)/|G|)·conj Ξ_c(g)·g, with
 Green's class function Ξ_c formed with a fixed faithful character. If c is not such a label,
@@ -338,24 +355,13 @@ lemma labelIdem_orthogonal : OrthogonalIdempotents (labelIdem (k := k) n) := by
     aesop (add simp labelIdem)
   let : Invertible (Nat.card (GL n k) : ℂ) :=
     invertibleOfNonzero (Nat.cast_ne_zero.2 Nat.card_pos.ne')
-  have hIdem (p : Polynomial k) (hp : IsLabel (Fintype.card n) p)
-      (V : FDRep ℂ (GL n k)) [Representation.IsIrreducible V.ρ]
-      (hV : V.character = (labelChar (faithfulChar k) p).evalGL) :
-      labelIdem n p = TauCeti.Representation.primitiveCentralIdempotent V.ρ := by
-    ext x
-    simp only [labelIdem, hp, ite_true, coeff_groupAlgElem,
-      Finsupp.equivFunOnFinite_symm_apply_apply,
-      TauCeti.Representation.primitiveCentralIdempotent_coeff, ← hV]
-    change V.character 1 / Nat.card (GL n k) * starRingEnd ℂ (V.character x) =
-      (Nat.card (GL n k) : ℂ)⁻¹ * V.character 1 * V.character x⁻¹
-    have hchar : IsChar V.character := ⟨V, rfl⟩
-    rw [div_eq_inv_mul, hchar.apply_inv]
   obtain ⟨V, hV_simple, hV⟩ := hc.isIrreducibleChar_labelChar (n := n) (faithfulChar k)
   have := FDRep.isIrreducible_of_simple V
   by_cases hcd : c = d
   · subst d
-    rw [ite_eq_left rfl, hIdem c hc V hV]
-    exact TauCeti.Representation.isIdempotentElem_primitiveCentralIdempotent V.ρ
+    rw [ite_eq_left rfl, labelIdem_eq_primitiveCentralIdempotent c hc V hV,
+      TauCeti.Representation.primitiveCentralIdempotent_mul_primitiveCentralIdempotent,
+      ite_eq_left ⟨Representation.Equiv.refl _⟩]
   obtain ⟨W, hW_simple, hW⟩ := hd.isIrreducibleChar_labelChar (n := n) (faithfulChar k)
   have := FDRep.isIrreducible_of_simple W
   have hne : ¬ Nonempty (Representation.Equiv V.ρ W.ρ) := by
@@ -367,7 +373,8 @@ lemma labelIdem_orthogonal : OrthogonalIdempotents (labelIdem (k := k) n) := by
     rw [ite_eq_right hcd] at hzero
     rw [← classInner_evalGL, ← hV, ← hW, ← he, hV, hnorm] at hzero
     exact one_ne_zero hzero
-  rw [ite_eq_right hcd, hIdem c hc V hV, hIdem d hd W hW,
+  rw [ite_eq_right hcd, labelIdem_eq_primitiveCentralIdempotent c hc V hV,
+    labelIdem_eq_primitiveCentralIdempotent d hd W hW,
     TauCeti.Representation.primitiveCentralIdempotent_mul_primitiveCentralIdempotent,
     ite_eq_right hne]
 
