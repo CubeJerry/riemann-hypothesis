@@ -392,7 +392,8 @@ theorem orthoFrame_besselS_mul (y : 𝔰.G₁) {s : 𝔰.G₁} (hs : s ∈ besse
   · exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨b, hba, rfl⟩)
   · simp [frameMatrix_unitriangular hu b a hab.le, hab.ne']
 
-/-- The moved frame consists of distinct columns of the invertible matrix `y⁻¹`. -/
+/-- The vectors of the moved frame are linearly independent because they are distinct columns
+of the invertible matrix `y⁻¹`. -/
 lemma linearIndependent_frameVector : LinearIndependent ℂ (frameVector y) := by
   have h := (linearIndependent_col_iff_isUnit.2 y⁻¹.val.isUnit).comp 𝔰.besselFrame
     besselFrame_injective
