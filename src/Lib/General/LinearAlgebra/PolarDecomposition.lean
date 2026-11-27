@@ -52,8 +52,8 @@ open Matrix InnerProductSpace ComplexOrder
 /-- Gram–Schmidt: if a real or complex n × k matrix X has a left inverse and wt is a weight on its
 columns with values in a linear order, then there is an invertible matrix b, block upper triangular
 for wt, such that the columns of X b are orthonormal. -/
-lemma New.exists_orthonormal_mul {n k α 𝕜 : Type*} [RCLike 𝕜] [Fintype n] [Fintype k] [DecidableEq k]
-    [LinearOrder α] (wt : k → α) {X : Matrix n k 𝕜} (hX : HasLeftInv X) :
+lemma New.exists_orthonormal_mul {n k α 𝕜 : Type*} [RCLike 𝕜] [Fintype n] [Fintype k]
+    [DecidableEq k] [LinearOrder α] (wt : k → α) {X : Matrix n k 𝕜} (hX : HasLeftInv X) :
     ∃ b : GL k 𝕜, b.val.BlockTriangular wt ∧ (X * b.val)ᴴ * (X * b.val) = 1 := by
   -- Refine `wt` to a linear order on `k` and normalise the positive-definite Gram matrix `Xᴴ * X`
   -- by an upper-triangular change of basis.
