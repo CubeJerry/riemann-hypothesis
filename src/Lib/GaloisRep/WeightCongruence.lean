@@ -20,7 +20,7 @@ import Lib.Weil.Unramified.HeckeGL
 
 A prime `l` and an isomorphism `ιℓ` from `ℂ` to the algebraic closure of `ℚ_[l]` are fixed. Twisting
 an algebraic modular form by its weight, evaluated at the components of `g` above `l`, gives its
-`l`-adic model. An ultrametric Stone–Weierstrass theorem is proved. It shows that combinations of
+`l`-adic model. Tau Ceti's ultrametric Stone–Weierstrass theorem shows that combinations of
 matrix coefficients of free weights are uniformly dense among continuous `l`-adic functions that
 factor through general linear groups over one finite extension of `ℚ_[l]`.
 
@@ -30,8 +30,6 @@ factor through general linear groups over one finite extension of `ℚ_[l]`.
   above `l` induced by the embeddings `New.weightEmbedding`, one for each infinite place.
 * `New.padicModel`: the `ιℓ`-semilinear map `f ↦ (g ↦ M ρ_κ'(z g)⁻¹ ιℓ(f g))`, where `ρ` is
   `New.weylRep` and `z` is `New.padicComponents`.
-* `New.stoneWeierstrass_ultrametric`: a function that agrees with an element of `N` on each fibre of
-  the family of all multipliers lies in the closure of `N`.
 * `New.mem_uniformClosure_weylRep_coeff`: a continuous function that factors through
   `z : X → ∏ GL_N(k)`, whose entries lie in one finite extension of `ℚ_[l]`, is a uniform limit
   (`New.uniformClosure`) of combinations of matrix coefficients of free weights.
@@ -62,7 +60,8 @@ concerns scalar-valued functions on a compact space over an ultrametric normed f
 function that agrees with some member of a subspace on each level set of the subspace's multipliers
 lies in the closure of that subspace. Source: Dieudonné 1944; Kaplansky, The Weierstrass theorem in
 fields with valuations (1950); module form as in Prolla, Approximation of Vector Valued Functions
-(1977) and Topics in Functional Analysis over Valued Division Rings (1982).
+(1977) and Topics in Functional Analysis over Valued Division Rings (1982). This file uses Tau
+Ceti's proof, `ContinuousMap.exists_mem_norm_sub_le_of_eq_on_multiplier_fibers`.
 
 Known result: Density of algebraic vectors, congruences to supercuspidal types, and limits of
 eigensystems. For definite unitary groups, a form is an l-adic uniform limit of forms with very
@@ -175,26 +174,17 @@ end EllAdicModel
 /-!
 ## Density of matrix coefficients of weights
 
-A Stone–Weierstrass theorem over an ultrametric field `k`, applied to matrix coefficients of general
-linear groups. For a submodule `N` of `C(X, k)`, `N / N` is the set of its multipliers.
+Tau Ceti's Stone–Weierstrass theorem over an ultrametric field `k`
+(`ContinuousMap.exists_mem_norm_sub_le_of_eq_on_multiplier_fibers`), applied to matrix coefficients
+of general linear groups. For a submodule `N` of `C(X, k)`, `N.leftOrder` is the subalgebra of its
+multipliers.
 -/
 
 section FreeWeightDensity
 
 open Module Finset IsUltrametricDist Matrix MvPolynomial Submodule Fintype ContinuousMap
 
-variable {X k : Type} [TopologicalSpace X] [CompactSpace X] [NormedField k]
-  [IsUltrametricDist k]
-
-/-- An ultrametric Stone–Weierstrass theorem. Suppose that for each point `a` some `d ∈ N` equals
-`φ` at all points where every multiplier `u ∈ N / N` takes the same value as at `a`. Then `φ` lies
-in the closure of `N`. -/
-lemma New.stoneWeierstrass_ultrametric (N : Submodule k C(X, k)) (φ : C(X, k))
-    (h_fibre : ∀ a : X, ∃ d ∈ N, ∀ x : X, (∀ u ∈ N / N, u x = u a) → φ x = d x) :
-    ∀ ε > (0 : ℝ), ∃ g ∈ N, ‖φ - g‖ ≤ ε := fun _ hε ↦
-  exists_mem_norm_sub_le_of_eq_on_multiplier_fibers N φ (fun a ↦
-    let ⟨d, hd, hφd⟩ := h_fibre a
-    ⟨d, hd, fun x hx ↦ hφd x fun u hu ↦ hx u (Submodule.mem_leftOrder_iff.2 hu)⟩) hε
+variable {X k : Type} [TopologicalSpace X] [CompactSpace X] [NormedField k] [IsUltrametricDist k]
 
 /-- An algebraically closed extension of `ℚ_[l]` has infinite degree over every finite extension. -/
 lemma New.natCast_le_rank_of_isAlgClosed {l : ℕ} [Fact l.Prime] {K : Type*} [Field K]
@@ -284,8 +274,8 @@ lemma New.mem_uniformClosure_weylRep_coeff {l N : ℕ} {Φ : Type} [Fact l.Prime
             ψ = fun γ : X ↦ β ⬝ᵥ weylRep κ e (z γ) *ᵥ ξ} := by
   -- Evaluate semi-invariant polynomials `F` at `z γ * y` for a fixed triangular `y`. The functions
   -- so obtained from the weights `κ d` span a space `S` of matrix coefficients. The first-column
-  -- entries multiply `S` into itself and determine `z γ`, so `stoneWeierstrass_ultrametric`
-  -- applies.
+  -- entries multiply `S` into itself and determine `z γ`, so the ultrametric Stone–Weierstrass
+  -- theorem `ContinuousMap.exists_mem_norm_sub_le_of_eq_on_multiplier_fibers` applies.
   obtain ⟨v, hv⟩ : ∃ v : Fin N → k, LinearIndependent L v :=
     exists_linearIndependent_of_le_rank (natCast_le_rank_of_isAlgClosed L N)
   let y (x : (Σ _ : Φ, Fin N) × ℕ) : k := if x.2 ≤ x.1.2 then v x.1.2 else 0
@@ -298,7 +288,8 @@ lemma New.mem_uniformClosure_weylRep_coeff {l N : ℕ} {Φ : Type} [Fact l.Prime
   let S : Submodule k C(X, k) :=
     span k {E F | (d) (F ∈ nabla k Sigma.fst (diagramWeight (fun _ ↦ N + 1) (κ d)))}
   -- Multiplying by a variable of the first column raises `d τ` by one.
-  have h_mul (τ : Φ) (a : Fin N) : E (.X (⟨τ, a⟩, 0)) ∈ S / S := by
+  have h_mul (τ : Φ) (a : Fin N) : E (.X (⟨τ, a⟩, 0)) ∈ S.leftOrder := by
+    refine mem_leftOrder_iff.2 (mem_div_iff_forall_mul_mem.1 ?_)
     refine mapsTo_span (f := .mulLeft ..) ?_
     rintro _ ⟨d, F, hF, rfl⟩
     refine ⟨d + Pi.single τ 1, minor k ![⟨τ, a⟩] * F, ?_, ext (by simp [E, minor])⟩
@@ -312,7 +303,7 @@ lemma New.mem_uniformClosure_weylRep_coeff {l N : ℕ} {Φ : Type} [Fact l.Prime
     rw [h_weight]
     exact SetLike.mul_mem_graded (minor_mem_nabla (Fin.forall_fin_one.2 rfl)) hF
   -- That multiplier is `∑ b, z γ τ a b * v b` at `γ`, and `v` is independent over `L`.
-  have z_eq (γ δ : X) (h : ∀ u ∈ S / S, u δ = u γ) : z δ = z γ := by
+  have z_eq (γ δ : X) (h : ∀ u ∈ S.leftOrder, u δ = u γ) : z δ = z γ := by
     ext τ a b
     -- the multiplier of `h_mul τ a` takes the value `∑ b, z γ τ a b * v b` at `γ`
     have h_sum_L : ∑ b, (⟨_, hL δ τ a b⟩ : L) • v b = ∑ b, (⟨_, hL γ τ a b⟩ : L) • v b := by
@@ -325,12 +316,12 @@ lemma New.mem_uniformClosure_weylRep_coeff {l N : ℕ} {Φ : Type} [Fact l.Prime
   have w_ne : w.eval y ≠ 0 := by
     simp [w, y, tableauPoly, prod_eq_zero_iff, BlockTriangular, hv.ne_zero,
       det_of_isLowerTriangular, minor, RingHom.map_det]
-  have h_local (γ : X) : ∃ b ∈ S, ∀ δ : X, (∀ u ∈ S / S, u δ = u γ) → φ δ = b δ := by
+  have h_local (γ : X) : ∃ b ∈ S, ∀ δ : X, (∀ u ∈ S.leftOrder, u δ = u γ) → φ δ = b δ := by
     refine ⟨E ((φ γ / w.eval y) • rowSubst (fun τ ↦ (z γ τ).val⁻¹) w), subset_span
       ⟨0, _, smul_mem _ _ (rowSubst_mem_nabla _ prod_tableauPoly_mem_nabla), rfl⟩, fun δ h ↦ ?_⟩
     simp [E, z_eq γ δ h, h_factors (z_eq γ δ h), rowSubst_rowSubst, w_ne]
   refine mem_uniformClosure.2 fun ε hε ↦ ?_
-  obtain ⟨g, hg, h_near⟩ := stoneWeierstrass_ultrametric S ⟨φ, hφ⟩ h_local ε hε
+  obtain ⟨g, hg, h_near⟩ := exists_mem_norm_sub_le_of_eq_on_multiplier_fibers S ⟨φ, hφ⟩ h_local hε
   refine ⟨g, mapsTo_span (f := coeFnLinearMap k) ?_ hg, (norm_le _ hε.le).mp h_near⟩
   -- Each generator is a matrix coefficient: expand `F` in the family `b` of the basis products of
   -- minors times the power of the determinant that the columns of height `N` contribute.
