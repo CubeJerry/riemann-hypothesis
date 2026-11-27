@@ -1052,9 +1052,8 @@ lemma New.Period.exists_Ainf_eq_of_contraction {p : ℕ} [ThePrime p] (V : Set B
           _ = _ := by simp [z', hy v hv, ← IsScalarTower.algebraMap_apply]
       -- So `u φ c = ξ ^ n d` with `d` in `A_inf`; cancel `ξ ^ n`.
       obtain ⟨d, hd⟩ : xi ^ n ∣ u * frobEnd c := xi_pow_dvd_of_algebraMap_BPlus_dvd ⟨_, h_mul⟩
-      have hξ_ne : (xi : BPlus) ^ n ≠ 0 := pow_ne_zero n (by simpa using Ainf.prime_xi.ne_zero)
-      rw [hd, algebraMap.coe_mul, algebraMap.coe_pow, mul_right_inj' hξ_ne] at h_mul
-      exact ⟨d, z', injective_Amax_BPlus h_mul⟩
+      rw [hd, algebraMap.coe_mul, algebraMap.coe_pow] at h_mul
+      exact ⟨d, z', injective_Amax_BPlus ((BPlus.isRegular_xi.pow n).left h_mul)⟩
   choose a z ha using h_approx
   -- For `k ≤ l`, `p ^ k` divides `a k - a l` in `Amax`, which puts it in `(p, ξ) ^ k`.
   have h_cauchy {k l : ℕ} (hk : k ≤ l) : a k - a l ∈ span {↑p, xi} ^ k := by
