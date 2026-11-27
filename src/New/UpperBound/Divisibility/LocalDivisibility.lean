@@ -429,6 +429,9 @@ theorem exists_colengthDvd_gaugeLe_compositeLift {P : Parameters} {D : Data P} {
       ∀ (ϑ : D.Twist) (Ψ : D.Translations →₀ ℂ), IsChainDatum ϑ Ψ → p.Coprime ϑ.normQ →
         ∀ φ ∈ S, φ ∈ D.ramifiedSourceForms →
           GaugeLe 1 (p ^ (D.allowedLoss p - D.gain p)) (compositeLift ϑ Ψ φ) := by
+  -- There are three cases. If `p ≠ N` is split or at least `x₁`, or if `p < x₁` is non-split and
+  -- not exceptional, every integral source form works: away from `N`, a chain datum expands into
+  -- a weak chain datum. The other two cases are `p < x₁` exceptional and `p = N`.
   have h_loss : 0 ≤ D.loss p := le_trans (by positivity) (D.le_loss p)
   have h_cases : ((p ∉ D.smallNonsplitPrimes ∧ p ≠ D.N) ∨
       (p ∈ D.smallNonsplitPrimes ∧ ¬D.IsExceptional p)) ∨
@@ -460,7 +463,11 @@ theorem exists_colengthDvd_gaugeLe_compositeLift {P : Parameters} {D : Data P} {
     obtain ⟨Λ, hΛ⟩ : ∃ Λ : Finset (FinPlace D.E), D.IsFullMark Λ :=
       D.exists_isFullMark (mem_smallNonsplitPrimes_iff_isSmallNonsplit.1 h_mem).1 h_exc
     -- Trade collision loss in valuation for the colength of this submodule.
-    obtain ⟨-, l, hl, h_colength⟩ := hΛ.isOntoUpToColength_prod_scaledHeckeOperator_pow
+    obtain ⟨-, l, hl, h_colength⟩ :
+        IsOntoUpToColength ↑p D.integralSourceForms (D.collisionExponent p)
+        ((Λ.attach.toList.map hΛ.scaledHeckeOperator).prod ^ D.m)
+          (D.loss p * finrank ℂ D.SourceForm) :=
+      hΛ.isOntoUpToColength_prod_scaledHeckeOperator_pow
     have h_colength_budget :
         D.loss p * finrank ℂ D.SourceForm ≤ 2 * D.loss p * finrank ℂ D.SourceForm := by
       gcongr
