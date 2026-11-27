@@ -82,7 +82,8 @@ variable {S : Type*} [MeasurableSpace S] {ν : Measure S} {u : S → ℝ} {K A c
 private lemma measure_sublevel_le_rpow (hK : 0 ≤ K)
     (h_vol : ∀ R ≥ (1 : ℝ), ν {s : S | u s ≤ R} ≤ ENNReal.ofReal ((K * R ^ e) ^ d) * V)
     (R : ℝ) (hR : 1 ≤ R) :
-    ν {s : S | u s ≤ R} ≤ ENNReal.ofReal (R ^ ((e * d : ℕ) : ℝ)) * (ENNReal.ofReal (K ^ d) * V) := by
+    ν {s : S | u s ≤ R} ≤
+      ENNReal.ofReal (R ^ ((e * d : ℕ) : ℝ)) * (ENNReal.ofReal (K ^ d) * V) := by
   refine (h_vol R hR).trans_eq ?_
   rw [← mul_assoc, mul_comm (ENNReal.ofReal (R ^ _)), ← ENNReal.ofReal_mul (pow_nonneg hK d),
     Real.rpow_natCast, mul_pow, ← pow_mul]
@@ -127,12 +128,15 @@ lemma New.integral_rpow_neg_le_of_measure_sublevel_le (hu_meas : Measurable u)
     (hA : e * d < A) (hc : A ≤ c * (A - e * d)) :
     ∫ s : S, u s ^ (-A) ∂ν ≤ K ^ d * c * V.toReal := by
   have hc_nonneg : 0 ≤ c := by nlinarith [show (0 : ℝ) ≤ e * d by positivity]
-  rw [integral_eq_lintegral_of_nonneg_ae
-    (.of_forall fun s ↦ rpow_nonneg (zero_le_one.trans (hu s)) (-A))
-    (hu_meas.pow_const (-A)).aestronglyMeasurable]
-  have h_le := lintegral_rpow_neg_le_of_measure_sublevel_le hu_meas hu hK h_vol hA hc
-  simpa only [ENNReal.toReal_mul, ENNReal.toReal_ofReal (by positivity : 0 ≤ K ^ d * c)] using
-    ENNReal.toReal_mono (by finiteness) h_le
+  calc ∫ s : S, u s ^ (-A) ∂ν = (∫⁻ s : S, .ofReal (u s ^ (-A)) ∂ν).toReal :=
+        integral_eq_lintegral_of_nonneg_ae
+          (.of_forall fun s ↦ rpow_nonneg (zero_le_one.trans (hu s)) (-A))
+          (hu_meas.pow_const (-A)).aestronglyMeasurable
+    _ ≤ (ENNReal.ofReal (K ^ d * c) * V).toReal :=
+        ENNReal.toReal_mono (by finiteness)
+          (lintegral_rpow_neg_le_of_measure_sublevel_le hu_meas hu hK h_vol hA hc)
+    _ = K ^ d * c * V.toReal := by
+        rw [ENNReal.toReal_mul, ENNReal.toReal_ofReal (by positivity)]
 
 /-- Let `u ≥ 1` be measurable and suppose that `ν {u ≤ R} ≤ (K R^e)^d V` for all `R ≥ 1`, where
 `K ≥ 0` and `V` is finite. If `e d < A` and `A ≤ c (A - e d)`, then `u^(-A)` is integrable and
