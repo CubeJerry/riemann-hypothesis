@@ -399,11 +399,12 @@ variable {p : ℕ}
 
 /-- If `L` has length at most `m` modulo `L'` and `L'` has length at most `n` modulo `L''`, then
 `L` has length at most `m + n` modulo `L''`. -/
-lemma relLength_trans (h_left : relLength L L' ≤ m) (h_right : relLength L' L'' ≤ n) :
+lemma relLength_trans {A W : Type*} [Ring A] [AddCommGroup W] [Module A W]
+    {L L' L'' : Submodule A W} {m n : ℕ} (h_left : relLength L L' ≤ m) (h_right : relLength L' L'' ≤ n) :
     relLength L L'' ≤ ↑(m + n) :=
   -- Work modulo `L''` and filter the image of `L` by the image of `L'`.
-  let π : V →ₗ[ℤ_[p]] V ⧸ L'' := L''.mkQ
-  calc relLength L L'' = relLength (L.map π) (L'.map π) + length ℤ_[p] ↥(L.map π ⊓ L'.map π) := by
+  let π : W →ₗ[A] W ⧸ L'' := L''.mkQ
+  calc relLength L L'' = relLength (L.map π) (L'.map π) + length A ↥(L.map π ⊓ L'.map π) := by
         rw [relLength_eq_length_map_mkQ, relLength_add_length_inf]
     _ ≤ relLength L ((L'.map π).comap π) + relLength L' L'' := by
         grw [length_mono inf_le_right, relLength_comap, relLength_eq_length_map_mkQ L']
