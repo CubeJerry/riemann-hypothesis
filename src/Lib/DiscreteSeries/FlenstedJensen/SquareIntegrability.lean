@@ -960,8 +960,8 @@ theorem integral_formalDegree_mul_two_div_norm_pow_le [hg : l.HasLargeGap B]
     linarith [show 8 * (card n : ℝ) ^ 2 ≤ c from mod_cast hc.le]
   have h_layers : ∫ g : USign ε, ‖(g : Matrix n n ℂ)‖ ^ (-c : ℝ) ≤
       K ^ (2 * card n ^ 2) * 2 * (ENNReal.ofReal (4 / l.formalDegree)).toReal :=
-    integral_rpow_neg_le_of_measure_sublevel_le (by fun_prop) (one_le_norm ·) (by positivity)
-      ENNReal.ofReal_ne_top h_ball (mod_cast by omega) h_factor
+    (DiscreteSeries.integral_rpow_neg_le_of_measure_le (by fun_prop) (one_le_norm ·) (by positivity)
+      ENNReal.ofReal_ne_top h_ball (mod_cast by omega) h_factor).2
   calc ∫ g : USign ε, l.formalDegree * (2 / ‖(g : Matrix n n ℂ)‖) ^ c
       = l.formalDegree * 2 ^ c * ∫ g : USign ε, ‖(g : Matrix n n ℂ)‖ ^ (-c : ℝ) := by
         simp [div_eq_mul_inv, mul_pow, mul_assoc, integral_const_mul]
