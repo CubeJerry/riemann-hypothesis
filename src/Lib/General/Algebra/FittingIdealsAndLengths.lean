@@ -400,7 +400,8 @@ variable {p : ℕ}
 /-- If `L` has length at most `m` modulo `L'` and `L'` has length at most `n` modulo `L''`, then
 `L` has length at most `m + n` modulo `L''`. -/
 lemma relLength_trans {A W : Type*} [Ring A] [AddCommGroup W] [Module A W]
-    {L L' L'' : Submodule A W} {m n : ℕ} (h_left : relLength L L' ≤ m) (h_right : relLength L' L'' ≤ n) :
+    {L L' L'' : Submodule A W} {m n : ℕ}
+    (h_left : relLength L L' ≤ m) (h_right : relLength L' L'' ≤ n) :
     relLength L L'' ≤ ↑(m + n) :=
   -- Work modulo `L''` and filter the image of `L` by the image of `L'`.
   let π : W →ₗ[A] W ⧸ L'' := L''.mkQ
