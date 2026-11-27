@@ -232,8 +232,8 @@ open scoped Pointwise in
 /-- In the chart of `L.pow m` indexed by the constant tuple `i`, the coordinate sections evaluate
 at `ξ` to the degree-`m` monomials in the affine coordinates of `ξ` in the chart `i` of `L`. -/
 private lemma span_eval_coordSection_pow_eq_formSpan {k ι : Type} [CommRing k]
-    {X : Over (Spec (CommRingCat.of k))} {L : LineBundle X.left ι} {m : ℕ} (h : (L.pow m).IsLinearSystem)
-    {B : CommRingCat} [Algebra k B] (ξ : Spec B ⟶ X.left) (i : ι) :
+    {X : Over (Spec (CommRingCat.of k))} {L : LineBundle X.left ι} {m : ℕ}
+    (h : (L.pow m).IsLinearSystem) {B : CommRingCat} [Algebra k B] (ξ : Spec B ⟶ X.left) (i : ι) :
     span k (range fun c ↦ (coordSection (R := k) h c).val (fun _ ↦ i) B ξ) =
       formSpan k (fun j ↦ L.transition i j B ξ) m := by
   let x (j : ι) : B := L.transition i j B ξ
