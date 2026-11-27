@@ -241,7 +241,8 @@ lemma exists_tsum_thetaTerm_schrodingerOp_le {P : Set (FinPlace E)} (hP : Set.Is
       ∑' x : Matrix n' p E, ‖D.thetaTerm T a b
         (integrated (S.hom T) v (schrodingerOp (S.hom T) P Ψ (vacElem (S.hom T)))) g x k‖ₑ ≤ C := by
   -- A sum over finitely many `x` is the value of a functional `ℓ = ∑ u_x θ(·[x])` with phases
-  -- `u_x`. Apply the uniform vacuum estimate to this functional at the height of `k`.
+  -- `u_x`. Apply `exists_norm_pairWeil_schrodingerVacuum_le` at the height of `k`.
+  -- The decay from the short pair cancels the growth of the functional.
   obtain ⟨C, B, h_sum⟩ : ∃ (C : ℝ) (B : ℕ), ∀ (f : 𝒮 (S.hom T)) (k : G E s'),
       ∑' x : Matrix n' p E, ‖D.thetaTerm T a b f g x k‖ₑ ≤
         ENNReal.ofReal (|C| * ‖f‖ * T.height k ^ B) := D.exists_tsum_thetaTerm_le T a b g

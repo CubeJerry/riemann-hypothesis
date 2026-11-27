@@ -290,7 +290,8 @@ lemma exists_norm_theta_sub_zeroTerm_le (D : W'.Splitting W Unit) (χ : AutChar 
         (integrated (W'.hom V) (polyVector (realSigns E (homSigns t 1)) P)
           (schrodingerOp (W'.hom V) A Ψ (vacElem (W'.hom V)))))‖ ≤ K := by
   -- Where the height of `g` exceeds two, `D.k` is short after a rational translation.
-  -- The uniform vacuum estimate bounds the functional `ℓ = θ - θ₀` using this short frame.
+  -- In `exists_norm_pairWeil_schrodingerVacuum_le`, the decay from this short frame cancels
+  -- the growth of the functional `ℓ = θ - θ₀`.
   let ℓ : 𝒮 (W'.hom V) →L[ℂ] ℂ := θ (W'.hom V) - θ (W.hom V) ∘L (D.homSource V).zeroTerm
   let v : fockSpace (realSigns E (homSigns t 1)) := polyVector (realSigns E (homSigns t 1)) P
   obtain ⟨C, i, h_growth⟩ := (pairThetaKer W' V χ 1).swap.moderate_growth

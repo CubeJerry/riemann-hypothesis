@@ -363,11 +363,11 @@ lemma exists_norm_pairWeil_schrodingerOp_mul_pow_le {S : Space E n s} {T : Space
     _ = C' * |Y| * 2 ^ (N + A) * m * ρ ^ (N + 2 * A) := by
       simp [mul_pow, div_pow, pow_add, two_mul, field]
 
-/-- Fix a Fock vector `v` with finite moment of order `A`, and use the vacuum for the finite
-datum outside `P`. If the functional has growth bounded by `Y * ‖f‖ * H ^ A` and admits a short
-pair of length product at most `2 Z / H` whenever `H > 2`, its value on the translated vacuum
-datum is uniformly bounded. This is the decay estimate with exponent zero and the other height
-fixed at one. -/
+/-- For the datum `v ⊗ Ψ ⊗ vac`, suppose the Fock vector `v` has finite moment of order `A`.
+When the functional grows at most as `Y * ‖f‖ * H ^ A` and admits a short pair with length product
+at most `2 Z / H` for `H > 2`, its value on the translated datum is bounded uniformly in `H`.
+The bound depends on `v` through its moment. This is
+`exists_norm_pairWeil_schrodingerOp_mul_pow_le` at `N = 0` and `ρ = 1`. -/
 lemma exists_norm_pairWeil_schrodingerVacuum_le {S : Space E n s} {T : Space E n' s'}
     (a b : AutChar E) {P : Set (FinPlace E)} (hP : Set.IsConjDisjoint P)
     {Ψ : (n' × n → 𝔸f E) → ℂ} [IsSchwartzBruhat P Ψ]
