@@ -412,10 +412,11 @@ lemma contraction_ι_mul (m : M) (x : ExteriorAlgebra T M) :
   have h_snd : (ExteriorAlgebra.map (LinearMap.snd T' T' M')).toRingHom.comp (exteriorMap φ) =
       exteriorMapSnd φ :=
     exteriorRingHom_ext (fun _ ↦ by simp [Algebra.algebraMap_eq_smul_one]) (fun _ ↦ by simp)
+  have h_snd_x : ExteriorAlgebra.map (LinearMap.snd T' T' M') (exteriorMap φ x) =
+      exteriorMapSnd φ x := DFunLike.congr_fun h_snd x
   dsimp only [contraction, LinearMap.coe_mk, AddHom.coe_mk, Function.comp_apply]
   rw [(exteriorMap φ).map_mul, exteriorMap_iota, contractLeft_ι_mul, map_sub, map_smul, map_mul,
-    ExteriorAlgebra.map_apply_ι, show ExteriorAlgebra.map (LinearMap.snd T' T' M') (exteriorMap φ x) =
-      exteriorMapSnd φ x from DFunLike.congr_fun h_snd x]
+    ExteriorAlgebra.map_apply_ι, h_snd_x]
   rfl
 
 /-- The graded Leibniz rule for `contraction φ` along the ring map `exteriorMapSnd φ`. The sign
