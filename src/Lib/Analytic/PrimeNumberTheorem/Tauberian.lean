@@ -244,29 +244,33 @@ lemma abs_sub_le_of_unit_steps
       exact h_step_le y x hy0 hyx (by linarith [hy.1])
   simpa only [Real.dist_eq, NNReal.coe_mk] using h_lip.dist_le_mul v hv u hu
 
-/-- Let `R` be measurable and Lipschitz with constant `L` on `[0, ∞)`, with transform
-`Φ s = ∫₀^∞ R(v) e^{(1 - s) v} dv` in `re s > 2`, and let `u, δ > 0` and `H = (k + 1) / u > 1`. The
-number `(-H) ^ k H Φ⁽ᵏ⁾(1 + H) / k!` is within `L (δ + u² / ((k + 1) δ))` of `R(u)`, because the
-Gamma density has mean `u` and variance `u² / (k + 1)`. -/
+/-- For an `L`-Lipschitz function `R` on `[0, ∞)`, the normalised Taylor coefficient of its
+transform differs from `R u` by at most `L` times the standard deviation of the Gamma density.
+At rate `H = (k + 1) / u` the mean is `u` and the standard deviation is `u / √(k + 1)`. -/
 lemma norm_taylorCoeff_transform_sub_le_of_lipschitz (hR : Measurable R)
     (h_lip : ∀ x : ℝ, 0 ≤ x → ∀ y : ℝ, 0 ≤ y → |R y - R x| ≤ L * |y - x|)
     (Φ_eq : ∀ s : ℂ, 2 < s.re → Φ s = ∫ v in Ioi (0 : ℝ), R v * cexp ((1 - s) * v))
-    {u δ H : ℝ} {k : ℕ} (hu : 0 < u) (hδ : 0 < δ) (H_eq : H = (k + 1) / u) (hH : 1 < H) :
-    ‖(-H) ^ k * H / k ! * iteratedDeriv k Φ (1 + H) - R u‖ ≤ L * (δ + u ^ 2 / (k + 1) / δ) := by
+    {u H : ℝ} {k : ℕ} (hu : 0 < u) (H_eq : H = (k + 1) / u) (hH : 1 < H) :
+    ‖(-H) ^ k * H / k ! * iteratedDeriv k Φ (1 + H) - R u‖ ≤ L * (u / √(k + 1)) := by
   have hL : 0 ≤ L := by simpa using (abs_nonneg _).trans (h_lip 0 le_rfl 1 zero_le_one)
   have R_le (v : ℝ) (hv : 0 ≤ v) : |R v| ≤ (|R 0| + L) * rexp v := by
     have h_sub : |R v - R 0| ≤ L * v := by simpa [abs_of_nonneg hv] using h_lip 0 le_rfl v hv
     nlinarith [abs_sub_abs_le_abs_sub (R v) (R 0), Real.add_one_le_exp v, abs_nonneg (R 0)]
-  have h_near (v : ℝ) (hv : 0 < v) : |R v - R u| ≤ L * δ + L / δ * (v - (k + 1) / H) ^ 2 := by
-    have h_amgm : |v - u| ≤ δ + (v - u) ^ 2 / δ := by
-      field_simp
-      nlinarith only [sq_nonneg (|v - u| - δ), abs_nonneg (v - u), sq_abs (v - u)]
+  let σ := u / √(k + 1 : ℝ)
+  have hσ : 0 < σ := by dsimp [σ]; positivity
+  have hvar : (k + 1) / H ^ 2 = σ ^ 2 := by
+    simp only [H_eq, σ, div_pow, Real.sq_sqrt (by positivity : 0 ≤ (k : ℝ) + 1)]
+    field
+  have h_near (v : ℝ) (hv : 0 < v) :
+      |R v - R u| ≤ L * σ / 2 + L / (2 * σ) * (v - (k + 1) / H) ^ 2 := by
+    have h_quad : |v - u| ≤ (σ ^ 2 + (v - u) ^ 2) / (2 * σ) := by
+      apply (le_div_iff₀ (by positivity)).2
+      nlinarith only [sq_nonneg (|v - u| - σ), sq_abs (v - u)]
     rw [H_eq, div_div_cancel₀ (by positivity)]
-    calc |R v - R u| ≤ L * |v - u| := h_lip u hu.le v hv.le
-      _ ≤ L * (δ + (v - u) ^ 2 / δ) := by gcongr
-      _ = L * δ + L / δ * (v - u) ^ 2 := by ring
+    exact (h_lip u hu.le v hv.le).trans
+      ((mul_le_mul_of_nonneg_left h_quad hL).trans_eq (by field))
   refine (norm_taylorCoeff_transform_sub_le hR R_le Φ_eq hH k h_near).trans_eq ?_
-  rw [H_eq]
+  rw [hvar]
   field
 
 /-- For large `u` an even power of `c log u` is at most `u`, and a power of `u` is at most
@@ -339,7 +343,7 @@ theorem eventually_abs_le_inv_pow_of_transform (hR : Measurable R)
     Real.tendsto_log_atTop.const_mul_atTop (by positivity)
   -- Compare `R u` with one normalised Taylor coefficient of `dslope F 1` at a point `1 + H`: the
   -- two differ by `O(u ^ (-(B + 1)))`, and Cauchy's estimate makes the coefficient as small.
-  filter_upwards [h_log.eventually hF, h_log.eventually_ge_atTop 1, eventually_ge_atTop (2 * L + 8),
+  filter_upwards [h_log.eventually hF, h_log.eventually_ge_atTop 1, eventually_ge_atTop (L + 8),
     eventually_log_pow_le_and_pow_le_exp_sqrt (2 * B + 5 : ℕ) A (3 * B + 7)]
     with u hF_region hl_one hu_large ⟨h_log_pow_le, h_pow_le_exp⟩
   -- Take `k + 1 ≈ u ^ (2 B + 4)` and `H = (k + 1) / u`, so that the Gamma density has mean `u` and
@@ -361,13 +365,11 @@ theorem eventually_abs_le_inv_pow_of_transform (hR : Measurable R)
   let coeff : ℂ := (-H) ^ k * H / k ! * iteratedDeriv k (dslope F 1) (1 + H)
   -- As `u ≥ 8`, the factor `u` absorbs the numerical constants below.
   have h_const_mul_le : 8 * u ^ (2 * B + 4) ≤ u * u ^ (2 * B + 4) := by nlinarith
-  have h_close : ‖coeff - R u‖ ≤ 2 * L / u ^ (B + 1) :=
-    calc ‖coeff - R u‖ ≤ L * (1 / u ^ (B + 1) + u ^ 2 / (k + 1) / (1 / u ^ (B + 1))) :=
-          norm_taylorCoeff_transform_sub_le_of_lipschitz hR
-            (fun x hx y hy ↦ abs_sub_le_of_unit_steps h_lip hx hy) Φ_eq hu_pos (by positivity)
-            rfl hH_gt
-      _ ≤ L * (1 / u ^ (B + 1) + u ^ 2 / u ^ (2 * B + 4) / (1 / u ^ (B + 1))) := by gcongr
-      _ = 2 * L / u ^ (B + 1) := by field
+  have h_close : ‖coeff - R u‖ ≤ L / u ^ (B + 1) := by
+    refine (norm_taylorCoeff_transform_sub_le_of_lipschitz hR
+      (fun x hx y hy ↦ abs_sub_le_of_unit_steps h_lip hx hy) Φ_eq hu_pos rfl hH_gt).trans ?_
+    grw [← hk_ge, show 2 * B + 4 = (B + 2) * 2 by omega, pow_mul, Real.sqrt_sq (by positivity)]
+    exact le_of_eq (by field)
   have h_disc (s : ℂ) (hs : s ∈ closedBall (1 + H : ℂ) (H + η)) :
       DifferentiableAt ℂ F s ∧ ‖F s‖ ≤ l ^ A := by
     obtain ⟨h_re, h_norm⟩ := one_sub_le_re_and_norm_le_of_mem_closedBall (by positivity) hs
@@ -378,8 +380,8 @@ theorem eventually_abs_le_inv_pow_of_transform (hR : Measurable R)
     norm_taylorCoeff_dslope_le_inv_pow hu_pos hl_one rfl hH_gt (by linarith) h_log_pow_le
       h_pow_le_exp h_disc
   calc |R u| = ‖coeff - (coeff - R u)‖ := by simp
-    _ ≤ 1 / u ^ (B + 1) + 2 * L / u ^ (B + 1) := norm_sub_le_of_le h_small h_close
-    _ = (1 + 2 * L) / u / u ^ B := by field
-    _ ≤ 1 / u ^ B := by grw [(div_le_one hu_pos).2 (by linarith : 1 + 2 * L ≤ u)]
+    _ ≤ 1 / u ^ (B + 1) + L / u ^ (B + 1) := norm_sub_le_of_le h_small h_close
+    _ = (1 + L) / u / u ^ B := by field
+    _ ≤ 1 / u ^ B := by grw [(div_le_one hu_pos).2 (by linarith : 1 + L ≤ u)]
 
 end New
