@@ -935,22 +935,25 @@ instance [FaithfulSMul R BPlus] : FaithfulSMul R BdRPlus := by
 lemma BdRPlus.prime_xi : Prime (xi : BdRPlus) := by
   simp [Prime, Ainf.prime_xi.ne_zero, -isUnit_map_iff]
 
-instance : IsDomain BdRPlus := by
-  have h_nontrivial : Nontrivial BdRPlus := ⟨xi, 0, prime_xi.ne_zero⟩
-  -- nonzero `x`, `y` are associated to powers of `ξ`, so `x * y` is too, and `ξ` is not nilpotent
-  have h_noZeroDivisors : NoZeroDivisors BdRPlus := by
-    refine ⟨?_⟩
-    by_contra! ⟨x, y, hxy, hx, hy⟩
-    obtain ⟨m, hm⟩ := exists_associated_xi_pow hx
-    obtain ⟨n, hn⟩ := exists_associated_xi_pow hy
-    have h_assoc : Associated ((xi : BdRPlus) ^ m * xi ^ n) (x * y) := hm.mul_mul hn
-    -- `A_inf → B_dR⁺` is injective, and `ξ ≠ 0` in the domain `A_inf`
-    simp [hxy, ← map_pow, ← map_mul, Ainf.prime_xi.ne_zero] at h_assoc
-  exact NoZeroDivisors.to_isDomain _
+/-- The element `ξ` is regular in `B⁺`. In `Amax` we have `ξ = p X`; multiplication by the
+monic variable `X` detects divisibility by every power of `p`. -/
+lemma BPlus.isRegular_xi : IsRegular (xi : BPlus) := by
+  have hX : xiDivP ∈ nonZeroDivisors Amax := by
+    refine mem_nonZeroDivisors_iff_left.mpr fun y hy ↦ Adic.eq_zero_of_forall_pow_dvd fun m ↦ ?_
+    exact p_pow_dvd_of_dvd_aeval_mul (f := (X : Ainf[X])) monic_X y m (by simp [hy])
+  apply isRegular_iff_mem_nonZeroDivisors.mpr
+  rw [show (xi : BPlus) = algebraMap Amax BPlus (xi : Amax) from
+    IsScalarTower.algebraMap_apply Ainf Amax BPlus xi]
+  apply IsLocalization.nonZeroDivisors_le_comap (Submonoid.powers (p : Amax))
+  rw [← p_mul_X]
+  exact mul_mem p_mem_nonZeroDivisors hX
+
+instance : IsDomain BdRPlus :=
+  AdicCompletion.isDomain_of_isMaximal_span (R := BPlus) (r := (xi : BPlus)) BPlus.isRegular_xi
 
 instance : IsDiscreteValuationRing BdRPlus :=
-  .ofHasUnitMulPowIrreducibleFactorization
-    ⟨(xi : BdRPlus), prime_xi.irreducible, exists_associated_xi_pow⟩
+  AdicCompletion.isDiscreteValuationRing_of_isMaximal_span (R := BPlus) (r := (xi : BPlus))
+    BPlus.isRegular_xi
 
 instance : IsDomain BPlus := .of_faithfulSMul _ BdRPlus
 
@@ -993,7 +996,7 @@ open algebraMap Ideal New.Period.Amax IsScalarTower Algebra
 rings the multiples of `ξ` are the kernel of `θ`. -/
 lemma New.Period.xi_pow_dvd_of_algebraMap_BPlus_dvd {p : ℕ} [ThePrime p] {a : Ainf} {n : ℕ}
     (h_dvd : (xi : BPlus) ^ n ∣ a) : xi ^ n ∣ a := by
-  have hξ_reg : (xi : BPlus) ∈ nonZeroDivisors BPlus := by simpa using Ainf.prime_xi.ne_zero
+  have hξ_reg := isRegular_iff_mem_nonZeroDivisors.mp BPlus.isRegular_xi
   have h_one (b : Ainf) (hb : (xi : BPlus) ∣ b) : xi ∣ b := by
     rw [← thetaBPlus_eq_zero_iff, thetaBPlus_ainf] at hb
     exact theta_eq_zero_iff_xi_dvd.mp (by simpa using hb)
