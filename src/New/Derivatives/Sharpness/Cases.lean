@@ -462,6 +462,7 @@ lemma powerDegree_add_partnerDegree_le_of_isNearPair (D : Data P) {p : ℕ} [hp 
       ← cast_le (α := ℝ)]
     have h_pow : (2 : ℝ) ≤ p ^ e τ :=
       mod_cast hp.out.two_le.trans (le_self_pow (he τ hτ).pos.ne' p)
+    -- At the partner, j τ ≤ 2 b / p ^ (e τ) ≤ b ≤ l (dest τ, ()).
     calc (j τ : ℝ) ≤ 2 * D.b / 2 := by
            grw [hj τ hτ, cast_div_le, D.le_two_mul_b hl, cast_pow, ← h_pow]
       _ ≤ D.weight (dest τ) := by linarith [D.b_le_weight (he τ hτ).end_mem]
