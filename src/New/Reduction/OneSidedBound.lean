@@ -13,9 +13,9 @@ public import TauCeti.NumberTheory.DirichletCharacter.LFunction.ZeroReflection -
 # The one-sided bound, and the theorem in half-plane form
 
 For `0 < δ < 1/100` and all sufficiently large integers `x`, choose admissible data with
-`log b ≤ 2 x ^ δ` and `m ≥ √x`. The term `log⁶ b / m` from the main inequality then gives the exponent
-`-1/2 + 6 δ`. The prime number theorem bounds both remainders at the larger cut-off `x₁` by
-`x ^ (-2)` in absolute value. Together these estimates give
+`log b ≤ 2 x ^ δ` and `m ≥ √x`. The term `log⁶ b / m` from the main inequality
+then gives the exponent `-1/2 + 6 δ`. The prime number theorem bounds both remainders at the
+larger cut-off `x₁` by `x ^ (-2)` in absolute value. Together these estimates give
 `R_{q₀}(x) ≤ (64 φ(q₀) + 3) x ^ (-1/2 + 6 δ)`.
 
 Given `ε > 0`, choose `0 < δ < 1/100` with `6 δ ≤ ε`.
