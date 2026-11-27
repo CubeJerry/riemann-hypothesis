@@ -86,6 +86,7 @@ variable {R X X' ι ι' : Type*} {s s' : ℕ} [CommRing R]
   {E : Type*} [Field E] [CMType E] [Fintype ι] [DecidableEq ι] [Fintype X] [DecidableEq X]
   (e' : X' ⊕ Fin s' ≃ ι') (e : X ⊕ Fin s ≃ ι) {ε : ι → ℤˣ} {N : E} (V : Space E ι ε)
 
+omit [CommRing R] in
 /-- The block diagonal matrix with block A from X to X' and block B from string to string,
 reindexed along e and e'. -/
 abbrev gradedBlocks [Zero R] (A : Matrix X' X R) (B : Matrix (Fin s') (Fin s) R) : Matrix ι' ι R :=
