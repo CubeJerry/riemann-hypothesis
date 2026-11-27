@@ -851,10 +851,17 @@ lemma neg_le_jump_of_fitsWindows {η β V : ℕ} {σ : ℤˣ} (hU : FitsWindows 
     · exact absurd h_neg (by decide)
     · omega
 
-/-- At a plain cut with opposite far windows, the side with the negative far window can stop,
-allowing the other side to move safely from its Frobenius translate. The intervening letters
-share the sign `ρ`, except where both far windows fit inside the low window. The bound `η₀`
-on the pole at the preceding cut can differ from the bound `η` at the current cut. -/
+/-- Let the sides have their jumps in the low window `[-η, η]` and in opposite far windows with
+signs `-ε` and `ε`. At each letter `i.stepBack a` with `a < l`, suppose `ε = ρ` or the far
+windows fit inside the low window. Let `x`, `x'` at `i` be points over `p ^ e c`, `p ^ e c'`
+with orders `raisedOrdersAtZero (-η)` and depth `plainDepth t η l η₀`. Let `x₀`, `x₀'` over
+the same parameters at `i.stepBack l` have orders `raisedOrdersAtZero (-η₀)` and depths `d₀`,
+`d₀'`. Suppose `p ^ κ * E ^ t` kills the cokernel at `i` of the Tate dual side.
+
+If `ρ = 1`, the first side has a stop `q` and the second makes the safe move
+`φ ^ l • x₀' - x'`. If `ρ = -1`, the second side has a stop `q'` and the first makes the
+safe move `φ ^ l • x₀ - x`. Safety means that `p ^ κ` times the pairing of the move with any
+Galois difference of the stop lies in the image of `W(𝔪^♭)`. -/
 lemma SidePairing.exists_stop_of_aligned_windows {ε : k.Letter → ℤˣ} {β : k.Letter → ℕ}
     {η η₀ V κ e l t : ℕ} {ρ : ℤˣ} (P : S.SidePairing S')
     (hU : ∀ j : k.Letter, FitsWindows η (-ε j) (β j) V (S.jumpSet j))
