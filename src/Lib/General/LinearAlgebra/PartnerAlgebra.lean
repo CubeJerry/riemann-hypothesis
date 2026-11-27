@@ -81,7 +81,8 @@ lemma invLastRows_mul (g k : GL n R) :
     invLastRows e k * g.val = invLastRows e (g⁻¹ * k) := by
   change k⁻¹.val.submatrix (e ∘ Sum.inr) id * g.val =
     (g⁻¹ * k)⁻¹.val.submatrix (e ∘ Sum.inr) id
-  rw [_root_.mul_inv_rev, inv_inv, Units.val_mul, submatrix_mul _ _ _ id _ bijective_id, submatrix_id_id]
+  rw [_root_.mul_inv_rev, inv_inv, Units.val_mul,
+    submatrix_mul _ _ _ id _ bijective_id, submatrix_id_id]
 
 /-- Left multiplication of the selected columns agrees with selection after multiplication. -/
 lemma mul_firstCols (g k : GL n R) :
