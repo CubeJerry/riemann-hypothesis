@@ -91,8 +91,9 @@ lemma charpoly_eq_mul_of_trace_pow_add [CharZero k] {r ι : Type*} [Fintype r] [
     simpa [Fintype.card_sum, Nat.cast_add] using h_trace 0
   have hD : A.charpoly = D.charpoly :=
     Matrix.charpoly_eq_of_trace_pow_eq hcard fun m _ _ ↦ by
-      simpa [D, fromBlocks_diagonal_pow, trace_fromBlocks, diagonal_pow] using h_trace m
-  simpa [D, charpoly_fromBlocks_zero₂₁, charpoly_diagonal] using hD
+      simpa [D, fromBlocks_diagonal_pow, trace_fromBlocks, diagonal_pow, S.sum_coe_sort]
+        using h_trace m
+  simpa [D, charpoly_fromBlocks_zero₂₁, charpoly_diagonal, S.prod_coe_sort] using hD
 
 end New
 
