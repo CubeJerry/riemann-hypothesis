@@ -28,6 +28,8 @@ polynomials built from the eigenvalues of the Hecke operators `New.heckeSplit`, 
   split places outside a finite set and its conjugate.
 * `New.HasHeckePolyAt.isMonicOfDegree`: the Hecke polynomial of a nonzero spherical eigenvector
   (`New.HasHeckePolyAt`) of rank `n` is monic of degree `n`.
+* `New.Patching.TaylorWilesPlaces` records Frobenius data at distinct places, no two conjugate,
+  with residue-field sizes congruent to `1` modulo `m`.
 * `New.mostFrobenii`: the filter. `New.mostFrobeniiAt` adds that the Frobenius element `frob` tends
   to `g`.
 * `New.dense_of_mostFrobenii`: a property of most Frobenius elements holds on a dense set; hence the

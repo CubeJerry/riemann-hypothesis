@@ -21,8 +21,6 @@ residue fields give operators that commute with this algebra.
 
 ## Main definitions and results
 
-* `New.Patching.TaylorWilesPlaces`: Frobenius data at places `w j` whose residue fields have
-  order ≡ 1 mod m.
 * `New.Patching.BaseLevel.formsOfLevel`: the forms of that type and principal level at `L`, with the
   lattice `New.Patching.BaseLevel.ellIntegralForms` of integral forms and the algebra
   `New.Patching.BaseLevel.integralEnd` that keeps it.
@@ -63,8 +61,8 @@ noncomputable section
 /-!
 ## Auxiliary places, base level and integral forms
 
-* `New.Patching.TaylorWilesPlaces`, `New.Patching.BaseLevel`: the auxiliary places and the base
-  data.
+* `New.Patching.BaseLevel` gives the base data used with the auxiliary places from
+  `Lib.GaloisRep.Main.Defs`.
 * `New.Patching.BaseLevel.ellIntegralForms`, `New.Patching.BaseLevel.formsOfLevel`,
   `New.Patching.BaseLevel.integralEnd`: the integral forms, the forms of level `L`, and the
   endomorphisms of the latter that keep integral forms.
