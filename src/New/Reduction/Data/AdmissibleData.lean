@@ -183,7 +183,8 @@ def weight (self : Data P) : P.Φ self.towerExp → ℕ :=
 
 /-- The weight is `b = a / x` at the `b`-places and `a / x₁` elsewhere, where `a = x b`. -/
 lemma weight_eq (self : Data P) (τ : P.Φ self.towerExp) :
-    self.weight τ = if τ ∈ self.bPlaces then self.natB else self.natX * self.natB / self.natX₁ := rfl
+    self.weight τ = if τ ∈ self.bPlaces then self.natB
+      else self.natX * self.natB / self.natX₁ := rfl
 
 /-- The length `x` of the prime sum, as a real number. -/
 abbrev x : ℝ := exp D.logX
