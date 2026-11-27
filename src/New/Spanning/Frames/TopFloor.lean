@@ -708,10 +708,16 @@ lemma sum_lastEntryDensity_nonneg_and_eq_inv_mul_lintegral
             (∑ a : j, ∑ b : j, R a b * fiberPairing Z (ω a) (ω b) (vectorOfLastEntry π t x)).re
           ∂P.normFiberMeasure 𝔰.κ (lastEntrySphereIndex π t) := by
   refine ⟨sum_lastEntryDensity_nonneg Z hN hR ω ht, ?_⟩
-  rw [sum_lastEntryDensity_eq Z R ω ht, lintegral_ofReal_re_sum_sum_mul
-    (fun a b ↦ integrable_fiberPairing_vectorOfLastEntry Z (ω a) (ω b) hN t)
-    (fun x ↦ sum_fiberPairing_nonneg Z hR ω (vectorOfLastEntry π t x)),
-    Complex.re_ofReal_mul, ofReal_mul toReal_nonneg, ofReal_toReal (by simp)]
+  let μ : Measure (𝔰.κ → A) := P.normFiberMeasure 𝔰.κ (lastEntrySphereIndex π t)
+  have h_sphere : ∫⁻ x : 𝔰.κ → A, ENNReal.ofReal
+      (∑ a : j, ∑ b : j, R a b * fiberPairing Z (ω a) (ω b) (vectorOfLastEntry π t x)).re ∂μ =
+        ENNReal.ofReal (∑ a : j, ∑ b : j, R a b * ∫ x : 𝔰.κ → A,
+          fiberPairing Z (ω a) (ω b) (vectorOfLastEntry π t x) ∂μ).re :=
+    lintegral_ofReal_re_sum_sum_mul
+      (fun a b ↦ integrable_fiberPairing_vectorOfLastEntry Z (ω a) (ω b) hN t)
+      fun x ↦ sum_fiberPairing_nonneg Z hR ω (vectorOfLastEntry π t x)
+  rw [sum_lastEntryDensity_eq Z R ω ht, h_sphere, Complex.re_ofReal_mul, ofReal_mul toReal_nonneg,
+    ofReal_toReal (by simp)]
 
 end IntegralPlace.IsLargeLatticeData
 
