@@ -250,8 +250,11 @@ lemma sum_lagrange_smul_rootCoeffEval (l : Fin a → ℕ) (r : Fin a ↪ K) :
     rw [smul_mul_assoc, ← mul_smul_comm, replace_row, rootCoeffEval_genericSchur_mul_det]
     congr 1
     ext k j : 1
-    by_cases hk : k = i <;> simp [A, Matrix.updateRow_apply, hk, mul_pow]
-    exact mul_comm _ _
+    by_cases hk : k = i
+    · subst k
+      simpa [A, Matrix.updateRow_apply, mul_pow] using
+        (mul_comm (C (r i) ^ l j) ((X : K[X]) ^ l j))
+    · simp [A, Matrix.updateRow_apply, hk]
   rw [sum_mul, mul_right_comm, h_schur, Finset.sum_congr rfl fun i _ ↦ h_left i,
     Matrix.sum_det_updateRow_mul_row, mul_comm]
 
