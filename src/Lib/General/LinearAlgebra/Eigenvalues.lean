@@ -1,19 +1,20 @@
 module
 
 import TauCeti.LinearAlgebra.Matrix.Charpoly.Roots
-public import Mathlib.Algebra.Lie.Weights.Linear
-public import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
-public import Mathlib.LinearAlgebra.PID
-public import Mathlib.RingTheory.Coalgebra.IsFrobenius
-public import Mathlib.RingTheory.Etale.Weakly
-public import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
-public import Mathlib.RingTheory.Finiteness.Nilpotent
-public import Mathlib.RingTheory.Henselian
-public import Mathlib.RingTheory.HopfAlgebra.Basic
-public import Mathlib.RingTheory.PiTensorProduct
-public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.RingTheory.TotallySplit
+import Mathlib.Algebra.Lie.Weights.Linear
+import Mathlib.LinearAlgebra.Matrix.Charpoly.Univ
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.LinearAlgebra.PID
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.Finiteness.Nilpotent
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.TotallySplit
 public import Lib.General.Groups.CongruenceSubgroups
 
 /-!
@@ -708,14 +709,12 @@ lemma charpoly_smul_coeff (a : A) (M : Matrix n n A) (k : ℕ) :
   nontriviality A
   by_cases! h : card n < k
   · simp [coeff_eq_zero_of_natDegree_lt, h]
-  -- The coefficient is a signed sum of principal minors of size `card n - k`.
-  obtain ⟨m, hm, rfl⟩ : ∃ m ≤ card n, k = card n - m := ⟨card n - k, by omega, by omega⟩
-  have h_minor (s : Finset n) (hs : s ∈ univ.powersetCard m) :
-      ((a • M).submatrix (Subtype.val : s → n) Subtype.val).det =
-        a ^ m * (M.submatrix (Subtype.val : s → n) Subtype.val).det := by
-    simp [submatrix_smul, (mem_powersetCard.1 hs).2]
-  rw [charpoly_coeff_eq_sum_minors _ _ hm, charpoly_coeff_eq_sum_minors _ _ hm,
-    sum_congr rfl h_minor, ← mul_sum, Nat.sub_sub_self hm, mul_left_comm]
+  -- The universal coefficient of degree `k` is homogeneous of degree `card n - k` in the entries.
+  have eval (B : Matrix n n A) : _ = B.charpoly.coeff k :=
+    Matrix.charpoly.univ_coeff_eval₂Hom n (RingHom.id A) (Function.uncurry B) k
+  rw [← eval (a • M), ← eval M]
+  exact (Matrix.charpoly.univ_coeff_isHomogeneous A n k _ (Nat.add_sub_cancel' h)).eval_smul
+    a (Function.uncurry M)
 
 end New
 

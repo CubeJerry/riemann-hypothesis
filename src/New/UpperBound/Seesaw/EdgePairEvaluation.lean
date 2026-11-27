@@ -1,9 +1,13 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Ring.IsFormallyReal
 public import Lib.Weil.DualPair.TwoEdges
 public import Lib.Weil.MixedModel.AdaptedSplitting
-public import Lib.Weil.Periods.ConstantTerm
 public import New.UpperBound.Objects.Rows
+import Lib.General.LinearAlgebra.HermiteForm
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.Weil.Periods.ConstantTerm
 
 /-!
 # Finite zero terms and the evaluation of pairs of edges in the tower of spaces `Y_k`
@@ -22,9 +26,8 @@ Throughout, a *string* of a grading is the block of basis vectors outside the de
 `DoubleLiftData` records two successive steps `Y → Y' → Y''` where the first step makes the string
 one shorter and the second, unless the string is already empty, makes it shorter by one.
 
-* `New.Seesaw.zeroTermFin`: the finite part of the zero term. It obeys the law of the zero term for
-  finite points of the parabolic subgroup (`New.Seesaw.zeroTermFin_omega`) and is not zero at the
-  vacuum (`New.Seesaw.zeroTermFin_vacElem_ne_zero`).
+* `New.Seesaw.zeroTermFin`: the finite part of the zero term. It is not zero at the vacuum
+  (`New.Seesaw.zeroTermFin_vacElem_ne_zero`).
 * `New.Seesaw.GradeZeroPart`, `New.Seesaw.GradeZeroPart.splitting`: the part of grade zero, and the
   splitting it gives.
 * `New.Seesaw.DoubleLiftData`: the part of grade zero of `V⁻ ⊕ V''` is `X⁻ ⊕ X''` plus hyperbolic
@@ -295,9 +298,7 @@ lemma exists_eq_iFin_add_isotropicBasisFin_of_mulVec_eq_zero (D : V.Splitting V�
     {z : n → 𝔸f E} (hz : D.isotropicBasisFinᴴ *ᵥ z = 0) :
     ∃ (w : n₀ → 𝔸f E) (b : p → 𝔸f E), z = D.iFin *ᵥ w + D.isotropicBasisFin *ᵥ b := by
   obtain ⟨a, w, b, rfl⟩ := D.exists_eq_finFrameVector 1 1 z
-  obtain ⟨h_dual, -⟩ : D.isotropicBasisFinᴴ *ᵥ D.finFrameVector 1 1 a w b = a ∧
-      D.iFinᴴ *ᵥ D.finFrameVector 1 1 a w b = w :=
-        conjTranspose_isotropicBasisFin_iFin_mulVec_finFrameVector D a b w
+  have h_dual := (conjTranspose_isotropicBasisFin_iFin_mulVec_finFrameVector D a b w).1
   obtain rfl : a = 0 := h_dual.symm.trans hz
   exact ⟨w, b, finFrameVector_zero D w b⟩
 
@@ -314,7 +315,7 @@ lemma exists_eq_add_of_zeroTermFin_ne_zero (D : V.Splitting V₀ p) {y : n → �
     simpa using exists_sub_orthogonal_of_zeroTermFin_ne_zero D 1 1 h_ne (by simp)
       fun x hx ↦ by rw [one_mulVec, finHeisenbergOp_vacElem hx]
   obtain ⟨w, b, h_sub⟩ := exists_eq_iFin_add_isotropicBasisFin_of_mulVec_eq_zero D h_perp
-  exact ⟨l, hl, w, b, by rw [← h_sub, sub_add_cancel]⟩
+  exact ⟨l, hl, w, b, sub_eq_iff_eq_add.1 h_sub⟩
 
 /-- The translates of the vacuum under the finite Heisenberg operators of `x` and of `x + l`, with
 `l` in the standard lattice `Ô ^ n`, agree up to a root of unity. -/
@@ -997,11 +998,11 @@ lemma finEval_arrowProduct_equivariant (D : DoubleLiftData X'' q Y Y' Y'') (a b 
       (fromRows (V.formAdjoint V' (((0, 1) : 𝔸 E) • Y.stringMap Y'))
         (((0, 1) : 𝔸 E) • Y'.stringMap Y'')) := by
     ext <;> simp only [finVec, stackedStringMapFin, homAtPoint, matrixToVec, stackedStringMap,
-      formAdjoint, AddMonoidHom.mk'_apply, Units.mul_inv_cancel_left, Matrix.mul_apply, sum_sum_type,
-      fromRows_apply_inl, fromRows_apply_inr, conjTranspose_smul, Matrix.smul_apply, smul_eq_mul,
-      Prod.fst_sum, Prod.snd_sum, Prod.fst_mul, Prod.snd_mul, Prod.fst_add, Prod.snd_add,
-      Prod.fst_star, Prod.snd_star, Pi.zero_apply, star_zero, star_one, zero_mul, mul_zero, one_mul,
-      add_zero, Finset.sum_const_zero]
+      formAdjoint, AddMonoidHom.mk'_apply, Units.mul_inv_cancel_left, Matrix.mul_apply,
+      sum_sum_type, fromRows_apply_inl, fromRows_apply_inr, conjTranspose_smul, Matrix.smul_apply,
+      smul_eq_mul, Prod.fst_sum, Prod.snd_sum, Prod.fst_mul, Prod.snd_mul, Prod.fst_add,
+      Prod.snd_add, Prod.fst_star, Prod.snd_star, Pi.zero_apply, star_zero, star_one, zero_mul,
+      mul_zero, one_mul, add_zero, Finset.sum_const_zero]
   rw [← leftInverse_arrowTensor (TensorProduct.map _ _ _), arrowTensor_map_liftWeilFin,
     arrowTensor_finEval, h_equivariant]
   -- Split the translation over the two factors (`homHeisenbergOp_arrowProduct`,

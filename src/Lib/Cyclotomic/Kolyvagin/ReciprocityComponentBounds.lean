@@ -1,9 +1,18 @@
 module
 
-public import Mathlib.RingTheory.ZMod.Torsion
-public import Lib.ClassField.Global.Chebotarev
-public import Lib.Cyclotomic.Kolyvagin.DerivativeCocycles
-public import Lib.PadicComparison.Descent.TestCategory
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.RingTheory.ZMod.Torsion
+public import Lib.Cyclotomic.Stickelberger
+public import Lib.Cyclotomic.Voronoi
+import Lib.Adelic.Adeles.LocalFactors
+import Lib.ClassField.Global.AlbertBrauerHasseNoether
+import Lib.ClassField.Global.ArtinMap
+import Lib.ClassField.Global.ArtinReciprocity
+import Lib.ClassField.Global.Chebotarev
+import Lib.ClassField.Global.ExistenceTheorem
+import Lib.ClassField.GreenbergWiles.SelmerLevels
+import Lib.Cyclotomic.Kolyvagin.DerivativeCocycles
+import Lib.PadicComparison.Descent.TestCategory
 
 /-!
 # Reciprocity laws and Stickelberger and Kolyvagin bounds for odd-part cocycles
@@ -431,7 +440,7 @@ lemma reciprocity_mod_ell {a : ℕ} (ha : l.Coprime a) (ha_one : a ≡ 1 [MOD N]
   -- `κ τ` is killed by a unit.
   have h_zmodModule : Module (ZMod l) (O ∙ κ τ) :=
     AddCommGroup.zmodModule (by simp [mem_span_singleton, smul_comm, hκ_tors])
-  have b := Module.finBasis (ZMod l) (O ∙ κ τ)
+  let b := Module.finBasis (ZMod l) (O ∙ κ τ)
   have τ_fix : cyclotomicCharMod Ω (N * l) τ = 1 :=
     mem_ker.1 (decompGroup_le_cycloGalGroup hB hq_one (IsFrob.mem_decompGroup hτ))
   obtain ⟨v, hv, -, ord_q⟩ := exists_isPlaceOver_prime hB
@@ -618,7 +627,8 @@ lemma sum_floorDiff_dvd (h : IsStickelbergerBound N e X)
     simp only [floorDiff, ↓← map_neg, ofZMod_apply, QZ.fracRep_mk, mul_div, mod_eq_of_lt, val_lt,
       Int.fract_div_natCast_eq_div_natCast_mod]
     norm_cast
-    simp [-natCast_val, U, two_mul, sub_mul]
+    simp only [Int.cast_subNatNat, sub_mul, sum_sub_distrib, map_sub, map_sum, map_mul, map_natCast,
+      map_pow, two_mul, U]
     nth_rw 2 [← neg_bijective.sum_comp]
     simp [← h_odd, ← mul_assoc, ← mul_pow, h_char]
   -- Use `IsStickelbergerBound` at the levels `lⁿ⁺¹` and `lⁿ`. As `e ≠ 0`, the factor `l ^ e` turns
@@ -863,9 +873,8 @@ lemma mem_vanishingCocycles_of_mem_insert {a m : ℕ} (ha : a ≡ 1 [MOD N]) (hl
       (inertiaOff N l T) := by
   -- Local constancy and the cocycle identity come from `hy`; it remains to show that `y` vanishes
   -- on the inertia groups of the places above neither `l` nor a prime of `T`.
-  suffices hy_zero : ∀ τ ∈ inertiaOff N l T, y τ = 0 by
-    obtain ⟨hy_const, hy_cocycle, -⟩ := hy
-    exact ⟨hy_const, hy_cocycle, hy_zero⟩
+  refine ⟨isLocallyConstant_of_mem_vanishingCocycles hy,
+    apply_mul_of_mem_vanishingCocycles hy, ?_⟩
   rintro τ ⟨A, ⟨h_fix, h_val, hτ⟩, hA⟩
   by_cases hAr : A.valuation (r : Ω) < 1
   · obtain ⟨σ, hσ, h_detect⟩ := exists_isFrob_forall_isTrivialAbove (e := e) (ψ := ψ) (ν := ν) hr
@@ -1097,7 +1106,8 @@ lemma exists_detecting_points_component (h_bound : IsStickelbergerBound N e X)
   by_contra! h_blind
   set m : ℕ := X.factorization l + 1
   have h_two : IsUnit (2 : O) := by
-    exact_mod_cast isUnit_natCast_of_not_dvd (O := O) (not_dvd_of_pos_of_lt two_pos (by lia : 2 < l))
+    exact_mod_cast isUnit_natCast_of_not_dvd (O := O)
+      (not_dvd_of_pos_of_lt two_pos (by lia : 2 < l))
   have h_totient : IsUnit (φ (N * l) : O) := isUnit_totient_mul (by lia)
   obtain ⟨a, ha, hla, h_pow, h_pow_succ⟩ :=
     exists_modEq_one_coprime_isUnit_pow_sub_one (O := O) he_ne_zero hl

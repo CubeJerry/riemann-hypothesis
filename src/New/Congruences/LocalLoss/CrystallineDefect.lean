@@ -1,7 +1,12 @@
 module
 
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Data.Rat.Cast.OfScientific
 public import New.Congruences.LocalLoss.CrystallineCocycles
 public import New.Reduction.Data.Magnitudes
+import Lib.ClassField.Places.TameInertia
 
 /-!
 # The defect of the dual of a summand at a place above ℓ
@@ -19,10 +24,10 @@ loss `New.Selmer.defectBound`.
   `K`, `U` are the data of a class `New.Lift.InClass F K U` adapted to them. The summand `L none` is
   the main summand, of rank `r` and with jumps `J g` at `coefficientEmbedding O g`; the summand
   `L (some c)` has the single jump `c < t`.
-* `New.Selmer.normLength_dualDefect_le_of_isSummandClass`: let `D` be the data, take the coefficient ring `O`
-  sufficiently large, and consider summands consisting of one lattice of rank r, the main summand,
-  and further lattices with a single jump each. If a summand lies in a tame or crystalline class
-  adapted to the summands, then the defect of its dual is at most [G_ℓ :
+* `New.Selmer.normLength_dualDefect_le_of_isSummandClass`: let `D` be the data, take the coefficient
+  ring `O` sufficiently large, and consider summands consisting of one lattice of rank r, the main
+  summand, and further lattices with a single jump each. If a summand lies in a tame or crystalline
+  class adapted to the summands, then the defect of its dual is at most [G_ℓ :
   j(Γ)] · rank · `New.Selmer.defectBound` / x, where x = 1 for the main summand and x = D.t
   otherwise.
 
@@ -321,9 +326,9 @@ lemma New.Selmer.IsMainSummandWeights.le_two_mul_natAbs {P : Parameters} {D : Da
     omega
 
 /-- Let `ℓ = D.levelPrime n` be one of the two level primes of the data `D`, let `r = D.r` be the
-rank, `t = D.t = 5 r` and `0 < x ≤ t`. The number `3 r² ((r + t) r + 1)² + 150 (h₂² + 4 t + 2)` bounds
-the exponent of `ℓ` that `New.Lift.hasCupExponent_of_isTameType` gives at the sizes of the data.
-Twice this number is at most `defectBound D ℓ / x`, with
+rank, `t = D.t = 5 r` and `0 < x ≤ t`. The number `3 r² ((r + t) r + 1)² + 150 (h₂² + 4 t + 2)`
+bounds the exponent of `ℓ` that `New.Lift.hasCupExponent_of_isTameType` gives at the sizes of the
+data. Twice this number is at most `defectBound D ℓ / x`, with
 `defectBound D ℓ = 10⁶ (m / k) (b v_ℓ(M) + λ)` in the nonnegative reals, where `m = D.m`,
 `k = D.k = D.r + 1 - m`, `b = D.natB` is the weight at the b-places, `M = D.M` is the product of the
 two level primes, and `λ = crystallineLoss h₂ b ℓ` is the `ℓ`-adic valuation of
@@ -351,7 +356,7 @@ lemma New.Selmer.two_mul_tame_exponent_le_defectBound {P : Parameters} (D : Data
 `k = D.k = D.r + 1 - m`, `b = D.natB` is the weight at the b-places, `M = D.M` is the product of the
 two level primes, and `λ = crystallineLoss h₂ b ℓ` is the `ℓ`-adic valuation of
 `(2 b)! (∏ a) ^ h₂³`, with `a` over the positive integers in `(b - 30 h₂³, b + 30 h₂³]` and
-`h₂ = D.halfGap = D.r ^ 8`. The left side is the bound of
+`h₂ = D.halfGap = D.r ^ 8`. The left side bounds the threshold in
 `New.Selmer.normLength_dualDefect_le_of_crystallineSizes` for a lattice of rank `ρ`, with `Q = k t`
 and `μ = ⌊ρ m / (k x)⌋`. -/
 lemma New.Selmer.crystalline_bound_le_defectBound {P : Parameters} (D : Data P) (ℓ ρ : ℕ) {x : ℕ}
@@ -513,7 +518,8 @@ lemma New.Selmer.normLength_dualDefect_le_defectBound_of_isTameType {P : Paramet
     split_ifs <;> exact D.nat_lt_of_hasLogBound
   exact normLength_dualDefect_le_of_hasCupExponent hL.isPotentiallyCrystalline
     (by grw [show 8 * (D.halfGap ^ 2 + 1) + 2 * (4 * D.t) ≤
-        150 * (D.halfGap ^ 2 + 1 + 4 * D.t + 1) by omega, two_mul_tame_exponent_le_defectBound D n hx_pos hx_le])
+        150 * (D.halfGap ^ 2 + 1 + 4 * D.t + 1) by omega,
+      two_mul_tame_exponent_le_defectBound D n hx_pos hx_le])
     (hasCupExponent_of_isTameType (Γ := ⟨Γ⟩) h_group.1
       (mem_range_of_modEq_one h_group (D.levelPrime_modEq_one n)) hL h_tame hU hU' (by omega))
 
@@ -610,7 +616,11 @@ lemma New.Selmer.normLength_dualDefect_le_of_isSummandClass {P : Parameters} {�
       sign_eq := fun γ hγ ↦ by simpa only [h_lift] using h_reads.sign_eq (lift γ) hγ }
   refine normLength_dualDefect_le_of_crystallineSizes (Γ := ⟨Γ⟩) (D.k * D.t) D.m D.halfGap
     (finrank O (L c) * D.m / (D.k * x)) (crystallineSizes_data D hi) (fun γ ↦ (h_win γ).1)
-    (fun γ u hu ↦ (h_win γ).2 u (filter_subset _ _ hu)) h_dual' ?_ ?_ h_group.1 k ζ h_reads'
+    (fun γ u hu ↦ (h_win γ).2 u (filter_subset _ _ hu)) h_dual' ?_
+    (two_mul_lt_mul_crystallineLoss_succ D.halfGap D.natB)
+    (lt_div_mul_add (crystallineSizes_data D hi).bound_pos)
+    (fun ⦃n⦄ hn hd ↦ cube_le_crystallineLoss_of_dvd hn hd)
+    ?_ h_group.1 k ζ h_reads'
   · cases c with
     | none =>
       -- The main summand: the negative jumps are at most `-h₂ / 2`, and few jumps are low.
@@ -621,7 +631,9 @@ lemma New.Selmer.normLength_dualDefect_le_of_isSummandClass {P : Parameters} {�
       -- A character: the only jump is `-c - 1`, which is low and negative.
       exact .inr fun γ ↦ subset_Icc_of_jump_eq_single h_in.isPotentiallyCrystalline
         (c.isLt.trans_le hJ.t_le) (h_count (some c)) (hU' γ)
-  · simpa only [finrank_linearMap_self] using
-      crystalline_bound_le_defectBound D ℓ (finrank O (L c)) hx_pos hx_le
+  · rw [finrank_linearMap_self]
+    refine le_trans ?_ (crystalline_bound_le_defectBound D ℓ (finrank O (L c)) hx_pos hx_le)
+    norm_cast
+    omega
 
 end OnePlaceDefect

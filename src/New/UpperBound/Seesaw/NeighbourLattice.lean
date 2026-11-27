@@ -1,6 +1,8 @@
 module
 
-public import New.UpperBound.Seesaw.EdgePairEvaluation
+public import New.UpperBound.Objects.LiftLawsModuloN
+public import New.UpperBound.Seesaw.AdmissibleCombinations
+public import New.UpperBound.Seesaw.EdgePairEvaluation -- shake: keep (needed public by an exposed definition)
 
 /-!
 # The neighbour lattice of a pair of edges
@@ -654,7 +656,8 @@ lemma exists_class_star_idem_mul_mem_iff [Fact N.Prime] (hP : IsSplitLevel P N)
   -- The map `w ↦ η w̄` preserves integrality in both directions.
   have h_twist (w : 𝔸f E) : η * star w ∈ Ô E ↔ w ∈ Ô E := by
     refine ⟨fun h ↦ ?_, fun h ↦ mul_mem hη_mem (star_mem_Ô h)⟩
-    have h_inv : η * star (η * star w) = -w := by grind [star_mul', star_star]
+    have h_inv : η * star (η * star w) = -w := by
+      rw [star_mul', star_star, ← mul_assoc, mul_comm η (star η), hη_norm, neg_one_mul]
     simpa only [h_inv, neg_mem_iff] using mul_mem hη_mem (star_mem_Ô h)
   -- It turns the left side into `z - y / N` at `P`.
   set z : 𝔸f E := η * ↑π⁻¹ * star t with hz
@@ -732,9 +735,9 @@ lemma kroneckerOne_scalingUnitary_smul (hκ : IsScalingAtM N β δ κ)
   rw [kroneckerOne_smul]
   exact mulVec_diagonal κ _ i.1
 
-/-- At a level prime `N` split as `P` and its conjugate, the matrix of `latticeUnitary` is
+/-- For a split level `N` with chosen places `P`, the matrix of `latticeUnitary` is
 `(diagonal κ * γ) ⊗ 1`, where `γ = neighbourMatrix X X'' P π`. -/
-lemma coe_latticeUnitary [Fact N.Prime] (hP : IsSplitLevel P N)
+lemma coe_latticeUnitary (hP : IsSplitLevel P N)
     (hπ : IsSplitSquarefree P (N : E) π) (hκ : IsScalingAtM N β δ κ) :
     (latticeUnitary X' hπ hκ : Matrix (PairIndex X X'' × X') (PairIndex X X'' × X') (𝔸f E)) =
       (diagonal κ * neighbourMatrix X X'' P π) ⊗ₖ (1 : Matrix X' X' (𝔸f E)) := by

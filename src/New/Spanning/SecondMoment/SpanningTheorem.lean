@@ -1,10 +1,12 @@
 module
 
-public import New.Determinant.AuxiliaryForms.RegularParameters
-public import New.Spanning.MainTerm.BadTypes
-public import New.Spanning.Multiplicities.EqualMultiplicities
+import Mathlib.Data.Rat.Cast.OfScientific
 public import New.Spanning.Unfolding.Moments
 public import New.Spanning.Unfolding.SeriesPeriod
+import Lib.DiscreteSeries.Character.FormalDegree
+import New.Determinant.AuxiliaryForms.RegularParameters
+import New.Spanning.MainTerm.BadTypes
+import New.Spanning.Multiplicities.EqualMultiplicities
 
 /-!
 # The dimension of the target and one good translate of the Poincaré map
@@ -200,7 +202,7 @@ lemma levelRepresentation_goodIdempotentAbove_eq :
     D.levelRepresentation.asAlgebraHom (piTensorElem D.goodIdempotentAbove) =
       (D.principalRep (D.spaceY 0)).asAlgebraHom D.e₀ := by
   classical
-  have : Fintype D.chosenGL := .ofFinite D.chosenGL
+  let : Fintype D.chosenGL := .ofFinite D.chosenGL
   -- Both coefficients are the sum over the families of the products over all chosen places.
   have h_tensor (s : D.filling.ResidueGL) : (piTensorElem D.goodIdempotentAbove).coeff s =
       ∑ c ∈ piFinset fun _ : Fin 2 ↦ goodTuples (P.q₂ D.towerExp) (card D.RowIndex),
@@ -212,7 +214,7 @@ lemma levelRepresentation_goodIdempotentAbove_eq :
         ∏ i : Fin 2, ∏ w : D.ChosenPlace i,
           (labelIdem D.RowIndex (c i w)).coeff (t ⟨i, w⟩) := by
     simp [e₀, goodTupleFamilies, tupleIdem, prod_sigma, Sigma.uncurry]
-  simp_rw [asAlgebraHom_eq_sum]
+  simp_rw [Representation.asAlgebraHom_eq_sum]
   refine Fintype.sum_equiv (κ := D.chosenGL) (Equiv.piCurry _).symm _ _ fun s ↦ ?_
   rw [h_tensor, h_proj, levelRepresentation_apply]
   rfl -- the definition of `Sigma.uncurry`
@@ -339,7 +341,7 @@ dimension of the target, the preimage of `F` under one of them has dimension at 
 `(1 + α + 3 ε₀) / 2 · D_X`, where `ε₀ = b⁻² / 8`. Here `b = D.b` is the weight at the places
 `D.bPlaces`, and `D_X` is the dimension of `D.SourceForm`. -/
 theorem isSpread_goodPoincare : IsSpread D.goodPoincare (3 / 2 * (8 * D.b ^ 2)⁻¹) := by
-  have : Fintype D.chosenGL := .ofFinite D.chosenGL
+  let : Fintype D.chosenGL := .ofFinite D.chosenGL
   let ρ : Representation ℂ D.chosenGL (D.principalForms (D.spaceY 0)) := D.principalRep (D.spaceY 0)
   have h_unitary (s : D.chosenGL) (x y : D.principalForms (D.spaceY 0)) :
       inner ℂ (ρ s x) (ρ s y) = inner ℂ x y := Space.inner_formRep ..

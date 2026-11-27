@@ -1,12 +1,14 @@
 module
 
-public import Mathlib.Algebra.Order.Antidiag.FinsuppEquiv
-public import Lib.General.Groups.IndexOfProduct
+import Mathlib.Algebra.Order.Antidiag.FinsuppEquiv
+import Mathlib.Data.Rat.Cast.OfScientific
 public import New.Spanning.Unfolding.FrameMass
 public import New.Spanning.Unfolding.PoincareSeries
-public import New.Spanning.Unfolding.ReducedGroups
 public import New.UpperBound.Seesaw.EdgePairEvaluation
 public import New.UpperBound.Size.ShortColumns
+import Lib.General.Groups.IndexOfProduct
+import New.Spanning.Unfolding.Climbing
+import New.Spanning.Unfolding.ReducedGroups
 
 /-!
 # Filling data for admissible data: fit to Y₀, Bessel bounds, standing hypotheses
@@ -30,8 +32,7 @@ general filling theorem applies.
   the Bessel systems.
 * `New.Data.card_mul_card_classes_mul_prod_le`, `New.Data.card_sq_mul_mass_mul_prod_le`: two
   products built from group orders, class number, masses, dimensions and degrees are at most
-  `(1 + b⁻⁹)` times `New.Filling.mainSecondMoment`. `New.Data.card_mul_prod_frameMass_le` states
-  both.
+  `(1 + b⁻⁹)` times `New.Filling.mainSecondMoment`.
 
 Notions from other files:
 * `New.Data.spaceY`: for an index `j`, the hermitian space `Y_j` with its adelic frame, hence its

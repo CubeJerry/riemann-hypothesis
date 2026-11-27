@@ -1,8 +1,8 @@
 module
 
-public import Lib.ClassField.GaloisCohomology.TameSelmerCocycles
 public import Lib.General.NumberTheory.PadicLimitsValuation
 public import New.Congruences.Selmer.AuxiliaryPrimes
+import Lib.ClassField.GaloisCohomology.TameSelmerCocycles
 
 /-!
 # Even classes and auxiliary places for Selmer cocycles
@@ -73,7 +73,7 @@ def IsTameGeneratorFamily (ν : ℕ) (w : J → FinPlace E) (τ φ : J → Gal(�
     ∃ A : ValuationSubring Ω, ∃ h : IsPlaceOver A (w j), h.tameGenerator = τ j
 
 /-- The family indexed by two copies `J × Bool` of `J`, with value `τ j` at `(j, true)` and
-`(conjGal (τ j))⁻¹` at `(j, false)`; see `withConjInv_true` and `withConjInv_false`. -/
+`(conjGal (τ j))⁻¹` at `(j, false)`. -/
 noncomputable abbrev withConjInv (τ : J → Gal(Ω/E)) (k : J × Bool) : Gal(Ω/E) :=
   idOrConjInv k.2 (τ k.1)
 

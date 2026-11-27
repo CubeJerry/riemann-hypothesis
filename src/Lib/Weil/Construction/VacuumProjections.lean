@@ -1,8 +1,10 @@
 module
 
 public import Lib.Weil.Construction.AdelicRepresentation
-public import Lib.Weil.Fock.PolynomialVectors
 public import Lib.Weil.MixedModel.SchwartzBruhat
+import Lib.General.Measure.HaarNormalisation
+import Lib.Weil.Construction.FiniteCocycle
+import Lib.Weil.Fock.PolynomialVectors
 
 /-!
 # Vacuum projections and the finite part of the Weil representation
@@ -32,9 +34,6 @@ above S. The finite part `New.Space.finitePart` is the span of the ϱ_f-translat
 * The finite part is stable under ϱ_f, under the projections `New.Space.projOn` and under the finite
   unitary group (`New.Space.omega_mem_finitePart`). The real vacuum projection `New.Space.projReal`
   fixes it.
-* `New.Space.dataInner_finHeisenbergOp_rep_vacElem`, `New.Space.span_finHeisenbergOp_rep_vacElem`:
-  the translates of vac by representatives of the classes modulo Ô^n are orthonormal and span the
-  finite part.
 * `New.Space.exists_eq_smul_omega_vacElem`: a vector of the finite part fixed by the lattice `g Ô^n`
   is a multiple of `ω(g) vacElem`.
 
@@ -205,7 +204,9 @@ lemma omega_finHeisenbergOp (g : G E s) (x : n → 𝔸f E) (f : 𝒮 V) :
 
 omit [WeilData E] in
 @[simp]
-lemma idem_univ : idem univ = (1 : 𝔸f E) := by aesop
+lemma idem_univ : idem univ = (1 : 𝔸f E) := by
+  ext w
+  simp
 
 omit [WeilData E] in
 /-- If the finite unitary `g` lies in `GL_n(O_w)` at every place `w` of `S`, then `g x` lies in
@@ -463,7 +464,6 @@ lemma projOn_vacElem : V.projOn S V.vacElem = V.vacElem :=
   V.map_projOn_eq_const 1 fun _ hy ↦
     finHeisenbergOp_vacElem (smul_mem_stdLattice (idem_mem_Ô S.conjClosure) hy)
 
-@[simp]
 lemma projReal_vacElem : V.projReal V.vacElem = V.vacElem := by
   simpa using (V.dataInner_vacElem_smul_vacElem V.vacElem).symm
 
@@ -474,17 +474,6 @@ lemma dataInner_omega_left (g : G E s) (f f' : 𝒮 V) :
 
 /-! ### Values of the projection, and the Weil operators on its image -/
 
-omit [DecidableEq n] in
-/-- The indicator of the vectors y that are integral at every place of T is the integral of the
-character x ↦ ψ₀(y_T* x) over the standard lattice, where y_T = `idem T • y` is the part of y
-above T. -/
-private lemma boxIndicator_eq_integral_selfDualAddChar (T : Set (FinPlace E)) (y : n → 𝔸f E) :
-    boxIndicator n T y = ∫ x : n → 𝔸f E in stdLattice E n,
-      selfDualAddChar E (star (idem T • y) ⬝ᵥ x) ∂latticeMeasure E n := by
-  rw [integral_selfDualAddChar_stdLattice, boxIndicator]
-  -- `y ∈ integralBox n T` is `idem T • y ∈ stdLattice E n` by definition.
-  rfl
-
 /-- Let P^S = `New.Space.projOn` S be the projection on vacua above the finite places S ∪ S̄, and
 let ϱ_f(y) = `New.Space.finHeisenbergOp` y. If P^S f = f, then P^S ϱ_f(y)f is ϱ_f(y)f when y is
 integral at every place of S ∪ S̄ (`New.boxIndicator` is its indicator), and 0 otherwise. -/
@@ -493,7 +482,9 @@ lemma projOn_finHeisenbergOp {f : 𝒮 V} (hf_fix : V.projOn S f = f) (y : n →
       boxIndicator n S.conjClosure y • V.finHeisenbergOp y f := by
   -- Moving `finHeisenbergOp y` past the operators that `projOn S` averages leaves the mean of a
   -- character of the lattice, which is `1` or `0` (`integral_selfDualAddChar_stdLattice`).
-  rw [boxIndicator_eq_integral_selfDualAddChar, ← integral_smul_const, ← hf_fix]
+  classical
+  change _ = (if idem S.conjClosure • y ∈ stdLattice E n then (1 : ℂ) else 0) • _
+  rw [← integral_selfDualAddChar_stdLattice, ← integral_smul_const, ← hf_fix]
   refine V.map_projOn 1 fun x hx ↦ ?_
   simp [finHeisenbergOp_comm, V.finHeisenbergOp_projOn hx]
 
@@ -504,7 +495,7 @@ lemma exists_rho_vacElem_eq_integrated (y : n → 𝔸 E) :
       V.ϱ y V.vacElem = V.integrated w (V.finHeisenbergOp (finCoord y) V.vacElem) := by
   refine (V.exists_rho_integrated_eq y Fock.vacVector).imp fun w hw ↦ ?_
   -- The vector `integrated vacVector vacElem` is the vacuum.
-  simpa using hw V.vacElem
+  simpa [projReal_vacElem] using hw V.vacElem
 
 open scoped Classical in
 /-- P^S is the operator on 𝒮(V) given by the mean over y in Ô^n of the finite Heisenberg operators

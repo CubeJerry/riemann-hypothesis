@@ -1,7 +1,17 @@
 module
 
-public import New.Spanning.Bessel.Orthonormality
-public import New.Spanning.Unfolding.CutoffIntegral
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.MeasureTheory.SpecificCodomains.WithLp
+import TauCeti.MeasureTheory.Integral.Pi
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
+public import Lib.DiscreteSeries.Bessel.UnipotentHaarMeasure
+public import New.Spanning.Unfolding.Setup
+import Lib.Cohomology.Etale.Basic
+import New.Spanning.Bessel.Orthonormality
+import New.Spanning.Unfolding.CutoffIntegral
+import New.Spanning.Unfolding.Packing
 
 /-!
 # Sums of amplitudes over blocks
@@ -585,7 +595,7 @@ theorem tsum_amplitudeMajorant_lt_top (T : Set (S.G E)) (c : S.Classes) (s : S.R
   refine lt_of_le_of_lt (le_trans ?_ (tsum_lintegral_classCutoff_mul_majorant_le T c s hw))
     (by finiteness)
   simp_rw [amplitudeMajorant, enorm_besselKernel]
-  refine ENNReal.tsum_le_tsum fun d ↦ ENNReal.tsum_le_tsum fun γ ↦ lintegral_mono fun y ↦ ?_
+  refine tsum_le_tsum fun d ↦ tsum_le_tsum fun γ ↦ lintegral_mono fun y ↦ ?_
   exact mul_le_mul' le_rfl (mul_le_mul'
     ((le_scaledBesselLengthProd_pow_mul y _ _).trans (pow_mul_prod_enorm_le_majorant hw y))
     ((le_scaledBesselLengthProd_pow_mul _ _ _).trans (pow_mul_prod_enorm_le_bound hw _)))

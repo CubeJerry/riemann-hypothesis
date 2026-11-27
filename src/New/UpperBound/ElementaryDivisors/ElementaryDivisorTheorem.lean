@@ -1,10 +1,23 @@
 module
 
-public import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Topology.Sheaves.Presheaf
+import Std.Tactic.BVDecide.Normalize.Bool
 public import New.Reduction.Lattices.Colength
-public import New.UpperBound.ElementaryDivisors.AveragingMap
-public import New.UpperBound.ElementaryDivisors.DefectCount
 public import New.UpperBound.ElementaryDivisors.Depth
+public import New.UpperBound.ElementaryDivisors.Edges
+import Lib.General.LinearAlgebra.HermiteForm
+import New.UpperBound.ElementaryDivisors.AveragingMap
+import New.UpperBound.ElementaryDivisors.DefectCount
 
 /-!
 # Elementary divisors of the edge Hecke operator
@@ -12,8 +25,7 @@ public import New.UpperBound.ElementaryDivisors.Depth
 The main result `New.FrobeniusCycle.elementary_divisors` bounds the mean exponent of the elementary
 divisors of an edge Hecke operator `A`, outside a small proportion of them, under the size
 conditions `New.FrobeniusCycle.IsLargeDegree`. Colengths in the sense of `New.ColengthDvd` take
-the place of lengths, because the ring of coefficients need not be discrete;
-`New.FrobeniusCycle.elementary_divisors_length` is the statement in lengths.
+the place of lengths, because the ring of coefficients need not be discrete.
 
 Let `w ^ 2 = p`, let `N` be the number of letters of the Frobenius cycle `T` and
 `c₀ = T.multinomialExponent k`. Write `M` for the integral functions on lattices, `M_all` for the

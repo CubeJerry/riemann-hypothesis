@@ -1,8 +1,21 @@
 module
 
-public import Mathlib.Order.Interval.Finset.Box
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Convex.Integral
+import Mathlib.Analysis.Normed.Group.Tannery
+import Mathlib.Order.Interval.Finset.Box
+import Mathlib.Topology.Sheaves.Presheaf
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.SiegelWeil.Formula.LagrangianZeroTerms
-public import Lib.Weil.DualPair.ThetaIntegrals
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.Adelic.Witt.WittTheorem
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.Weil.DualPair.ThetaIntegrals
+import Lib.Weil.DualPair.ThetaLiftConvergence
+import Lib.Weil.DualPair.WeilAction
 
 /-!
 # Siegel sets and the Siegel–Weil formula in Weil's range
@@ -808,7 +821,7 @@ theorem New.SiegelWeil.siegel_weil (P : SiegelWeil.CompleteSplitting S p)
     obtain ⟨n₁, s₁, S₁, D₁, hk⟩ := S.exists_splitting (HasLeftInv.of_ne_zero hk_ne) hk_isotropic
     obtain ⟨σ, -⟩ := exists_lagrangian_equiv_col_mem T P D₁ hk
     let L₁ := σ.symm ⟨P.lagrangian, Pi.single ι 1, mulVec_single_one P.k ι⟩
-    have P₁ : CompleteSplitting S₁ (Fin L₁.numPlanes) := L₁.chosenSplitting
+    let P₁ : CompleteSplitting S₁ (Fin L₁.numPlanes) := L₁.chosenSplitting
     obtain ⟨-, ih⟩ := IH _ (by simp [← h_card, D₁.card_eq]) P₁
       (by linarith [P.card_eq, P₁.card_eq, D₁.card_eq]) rfl
     simpa only [hℓ] using tendsto_tsum_zeroTerm_sub_integral_theta T P hm

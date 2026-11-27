@@ -1,10 +1,8 @@
 module
 
-public import Mathlib.Algebra.Order.Star.Rat
-public import Mathlib.CategoryTheory.Shift.Basic
-public import Mathlib.GroupTheory.Nilpotent
-public import Mathlib.RingTheory.Coalgebra.CoassocSimps
-public import Mathlib.Tactic.ENatToNat
+import Mathlib.CategoryTheory.Shift.Basic
+import Mathlib.GroupTheory.Nilpotent
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
 public import Lib.ClassField.GaloisCohomology.ContinuousCocycles
 
 /-!
@@ -59,7 +57,7 @@ variable {R G : Type} [CommRing R] [Group G] [TopologicalSpace G]
 /-- Higman's criterion for the discrete `G`-module `A` relative to a subgroup `Q` of finite index:
 some additive `τ : A → A` has `∑ g τ g⁻¹ = 1`, summed over the chosen representatives `g.out` of the
 cosets in `G ⧸ Q`. The map `τ` is not asked to commute with `Q`. If `Q` acts trivially on `A`, the
-choice of representatives does not matter, see `TrivialOn.isHigmanProjective_iff`. -/
+choice of representatives does not matter. -/
 def IsHigmanProjective (Q : Subgroup G) [Finite (G ⧸ Q)] (A : DiscreteModule R G) : Prop :=
   ∃ τ : A →+ A, ∀ a : A.V, ∑ g : G ⧸ Q, A.ρ g.out (τ (A.ρ g.out⁻¹ a)) = a
 
@@ -621,7 +619,7 @@ lemma IsMultiplicative.eq_one_of_eq_one_on_isHigmanProjective (l : ℕ) [Fact l.
   -- `A` is the module of functions on the point `Δ ⧸ ⊤`
   have h_point : φ A hA = f (Δ ⧸ (⊤ : Subgroup Δ)) := by
     have : Subsingleton (Δ ⧸ (⊤ : Subgroup Δ)) := subsingleton_quotient_top
-    have : Unique (Δ ⧸ (⊤ : Subgroup Δ)) := uniqueOfSubsingleton ⟦1⟧
+    let : Unique (Δ ⧸ (⊤ : Subgroup Δ)) := uniqueOfSubsingleton ⟦1⟧
     exact apply_eq_of_equiv h_mul h_higman (.mk (LinearEquiv.funUnique _ R A).symm fun _ ↦ rfl)
   have h_zero : (0 : V) ∈ MulAction.fixedPoints Δ V := fun g ↦
     Subtype.ext <| funext fun d ↦ (hyperplaneAction_toPerm_apply 0 g 0 d).trans (by simp)

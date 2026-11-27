@@ -1,8 +1,9 @@
 module
 
 public import TauCeti.RepresentationTheory.Homological.ContCohomology.CohomologyComparison
+public import Aesop.BuiltinRules
 public import Lib.ClassField.GaloisCohomology.ContinuousCocycles
-public import Lib.General.Algebra.FittingIdealsAndLengths
+import Lib.General.Algebra.FittingIdealsAndLengths
 
 /-!
 # Counting cocycles through their cohomology classes
@@ -155,12 +156,9 @@ vanish at `γ` map onto the image of `W`. -/
 theorem map_inf_vanishingAt_eq_map_of_linear {H : Type*} [AddCommGroup H] [Module R H]
     (π : Z1 ρ →ₗ[R] H) (hπ : LinearMap.ker π = B1 ρ) {W : Submodule R (Z1 ρ)} (hBW : B1 ρ ≤ W) :
     (W ⊓ vanishingAt ρ γ).map π = W.map π := by
-  refine le_antisymm (Submodule.map_mono inf_le_left) ?_
-  rintro _ ⟨z, hz, rfl⟩
-  obtain ⟨b, hb, hzb⟩ := exists_sub_mem_B1_apply_eq_zero hγ hζ hρ z
-  have hπb : π b = 0 := LinearMap.mem_ker.1 (hπ ▸ hb)
-  exact ⟨z - b, Submodule.mem_inf.2 ⟨W.sub_mem hz (hBW hb), hzb⟩, by
-    rw [map_sub, hπb, sub_zero]⟩
+  apply Submodule.toAddSubgroup_injective
+  exact map_inf_vanishingAt_eq_map hγ hζ hρ π.toAddMonoidHom
+    (congrArg Submodule.toAddSubgroup hπ) ((Submodule.toAddSubgroup_le _ _).2 hBW)
 
 variable {H : Type*} [AddGroup H] (π : Z1 ρ →+ H) (hπ : π.ker = (B1 ρ).toAddSubgroup)
 include hπ
@@ -172,13 +170,13 @@ def infVanishingAtEquivMap {W : AddSubgroup (Z1 ρ)} (hBW : (B1 ρ).toAddSubgrou
     ↥(W ⊓ (vanishingAt ρ γ).toAddSubgroup) ≃+ W.map π :=
   AddEquiv.ofBijective
     ((π.comp (W ⊓ (vanishingAt ρ γ).toAddSubgroup).subtype).codRestrict (W.map π) fun z ↦
-      AddSubgroup.mem_map_of_mem π (AddSubgroup.mem_inf.1 z.2).1)
+      AddSubgroup.mem_map_of_mem π (AddSubgroup.mem_inf.1 z.property).1)
     ⟨fun z z' h ↦ by
       have h' : π ((z : Z1 ρ) - z') = 0 := by
         rw [map_sub, sub_eq_zero]
         exact congrArg Subtype.val h
       have hv : (z : Z1 ρ) - z' ∈ vanishingAt ρ γ :=
-        sub_mem (AddSubgroup.mem_inf.1 z.2).2 (AddSubgroup.mem_inf.1 z'.2).2
+        sub_mem (AddSubgroup.mem_inf.1 z.property).2 (AddSubgroup.mem_inf.1 z'.property).2
       have hB : (z : Z1 ρ) - z' ∈ B1 ρ := by
         rw [← Submodule.mem_toAddSubgroup, ← hπ]
         exact h'
@@ -249,7 +247,7 @@ variable [IsTopologicalGroup Γ]
 `continuousCohomology 1` of `A`, through Tau Ceti's explicit `H¹`. -/
 def classMap : Z1 A.ρ →+ continuousCohomology 1 A.toTopRep :=
   (explicitH1AddEquivContinuousCohomology Γ A).toAddMonoidHom.comp <| (H1pi Γ A).comp
-    { toFun z := ⟨z, A.Z1_toAddSubgroup ▸ z.2⟩
+    { toFun z := ⟨z, A.Z1_toAddSubgroup ▸ z.property⟩
       map_zero' := rfl
       map_add' _ _ := rfl }
 
@@ -257,7 +255,7 @@ theorem classMap_surjective : Function.Surjective A.classMap := by
   refine (explicitH1AddEquivContinuousCohomology Γ A).surjective.comp <|
     (QuotientAddGroup.mk'_surjective _).comp fun z ↦ ⟨⟨z, ?_⟩, rfl⟩
   rw [← Submodule.mem_toAddSubgroup, A.Z1_toAddSubgroup]
-  exact z.2
+  exact z.property
 
 /-- A continuous 1-cocycle has class `0` in `continuousCohomology 1` exactly when it is a
 coboundary. -/

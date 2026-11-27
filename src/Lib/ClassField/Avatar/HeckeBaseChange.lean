@@ -1,9 +1,18 @@
 module
 
 public import Lib.ClassField.HeckeCharacter.AlgebraicValues
-public import Lib.ClassField.HeckeCharacter.SplitTameCharacters
-public import Lib.PadicHodge.Characters
 public import Lib.PadicHodge.Limit.CrystallineLimit
+public import Lib.GaloisRep.Main.Defs
+public import Lib.GaloisRep.Main.LocalConditions
+import Lib.ClassField.Global.AlbertBrauerHasseNoether
+import Lib.ClassField.HeckeCharacter.SplitTameCharacters
+import Lib.ClassField.HeckeL.ContinuationAtOne
+import Lib.ClassField.Places.TameInertia
+import Lib.GaloisRep.Pseudocharacter.SemisimpleRepresentations
+import Lib.PadicHodge.Characters
+import Lib.PadicHodge.Crystalline.HodgeTateJumps
+import Lib.PadicHodge.Crystalline.Regularity
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
 
 /-!
 # Base change of U(1) and Hecke characters, their L-functions and parallel twists
@@ -65,10 +74,6 @@ section AutCharLFunction
 open WeilData Finset Complex Real Variety
 
 variable {E : Type _} [Field E] [CMType E] {e : NumberField.InfinitePlace E → ℤ} (ν : AutChar E)
-
-lemma WeilData.charUnramifiedAt_upsilon [SplittingChar E] (v : FinPlace E) :
-    CharUnramifiedAt υ.finPart v := by
-  simp_all [CharUnramifiedAt, HeckeChar.finPart, upsilon_eq_atUniformizer_zpow v]
 
 /-- The Euler product of the character `x ↦ ν (x / x̄)` of `E`, without the factors at `S ∪ S̄`.
 It is the partial Hecke `L`-function if `S ∪ S̄` contains the ramified places. -/
@@ -327,7 +332,7 @@ q ≠ 0. If X − q^d c kills s at A for the one-dimensional representation μ, 
 for χ_ℓ^d · μ, where χ_ℓ is the ℓ-adic cyclotomic character. "P kills s at A" (`PolyKillsAt`) means
 P(r(s)) = 0 when ℓ is a unit at A, and otherwise the Weil-pair condition `New.Period.IsKilledBy`
 along every local datum at A. -/
-lemma polyKillsAt_scalarRep_cyclotomicCharIn_pow_mul [PadicIso ℓ]
+lemma polyKillsAt_scalarRep_cyclotomicCharIn_pow_mul
     (μ : Gal(Ω/E) →* (PadicAlgCl ℓ)ˣ) (A : ClosurePlace) (d : ℕ) (s : Gal(Ω/E)) (q : ℕ)
     (c : PadicAlgCl ℓ) (hq : q ≠ 0) (hs : IsFrob A q s⁻¹)
     (h : PolyKillsAt (scalarRep μ) A s (X - C (q ^ d * c))) :

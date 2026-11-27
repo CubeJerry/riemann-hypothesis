@@ -1,8 +1,9 @@
 module
 
 public import New.Determinant.AuxiliaryForms.PathData
-public import New.Determinant.Exchange.RemovingPlanes
-public import Lib.SiegelWeil.RallisInner.SharpData
+public import Lib.SiegelWeil.RallisInner.Doubling
+import Lib.SiegelWeil.RallisInner.SharpData
+import New.Determinant.Exchange.RemovingPlanes
 
 /-!
 # Theta lifts as a triangle of arrows: spaces, lifts, descents and the first lift
@@ -86,6 +87,13 @@ lemma formNegEquiv_apply_neg (l : NumberField.InfinitePlace E → N → ℤ)
   have h_symm (F : S.neg.Form (typeKernel l (-s))) :
       ((formNegEquiv S l).symm F).val g = F.val (G.neg g) := rfl
   rw [← h_symm, LinearIsometryEquiv.symm_apply_apply]
+
+/-- The isometry `formNegEquiv` commutes with right translation by the finite adelic group. -/
+lemma formNegEquiv_formRep (l : NumberField.InfinitePlace E → N → ℤ) (k : Gf E N)
+    (y : S.Form (typeKernel l s)) :
+    formNegEquiv S l (S.formRep (typeKernel l s) k y) =
+      S.neg.formRep (typeKernel l (-s)) k (formNegEquiv S l y) :=
+  rfl
 
 /-- The transposed lift `modTransposedLift S T α Φ Ψ e' e y` is linear in `Ψ`: it is the sum over
 matrices `x` of `Ψ x` times the transposed lift for the indicator function `Pi.single x 1` of
@@ -282,7 +290,8 @@ theorem triangleNegEquiv_triangleRep (k : Gf D.E (D.GridIndex z 0 0)) (y : D.Tri
   | zero => rfl
   | succ i ih =>
     rw [triangleNegEquiv_succ_apply, triangleNegEquiv_succ_apply, ih]
-    rfl
+    exact formNegEquiv_formRep (D.gridSpace i z 0 0) (D.gridParam z i 0 0) k
+      (D.triangleNegEquiv z i y)
 
 /-! ### The first lift -/
 

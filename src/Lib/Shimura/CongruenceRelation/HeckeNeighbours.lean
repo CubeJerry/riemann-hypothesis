@@ -1,7 +1,14 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.CategoryTheory.ExtremalEpi
 public import Lib.Shimura.CongruenceRelation.KernelReduction
 public import Lib.Shimura.IntegralModel.UniversalFamily
+public import Lib.General.Geometry.SerreTheorem
+import Lib.General.Algebra.MultivariatePolynomials
+import Lib.General.LinearAlgebra.HermiteForm
+import Lib.Shimura.AbelianScheme.IsogenyFlatness
+import Lib.Shimura.AbelianScheme.Pairings
 
 /-!
 # Hecke elements on adelic torsion and reductions of Frobenius twists of Hecke neighbours
@@ -84,9 +91,9 @@ lemma exists_residue_torsion_emb (w : HeightOneSpectrum (𝓞 E)) :
   have h_ker : f.ker = p.ker := ext fun c ↦ h_class_eq_zero_iff (algebraMap _ _ ∘ c)
   have hp : (⇑p).Surjective := (algebraMap_ResField_surjective w).comp_left
   let ρ : (n → ResField w) →ₗ[𝓞 E] AdelicTorsion E n :=
-    p.ker.liftQ f h_ker.ge ∘ₗ (p.quotKerEquivOfSurjective hp).symm.toLinearMap
+    p.liftOfSurjective hp ⟨f, h_ker.ge⟩
   have h_inj : (⇑ρ).Injective :=
-    ρ.ker_eq_bot.mp (by simp [ρ, LinearMap.ker_comp, ker_liftQ, h_ker])
+    ρ.ker_eq_bot.mp (by simp [ρ, LinearMap.liftOfSurjective, LinearMap.ker_comp, ker_liftQ, h_ker])
   have hρ (c : n → 𝓞 E) : ρ (p c) = f c := by simp [ρ]
   refine ⟨ρ, h_inj, ?_, hp.forall.mpr fun c ↦
     ⟨(singleAdele w (uniformizer w)⁻¹ • (Algebra.linearMap (𝓞 E) (𝔸f E)).compLeft n) c, hρ c,
@@ -143,7 +150,10 @@ lemma invHeckeIsogeny_inv_mulVec_of_ne {u : FinPlace E} (hu : u ≠ w.val)
   -- Both factors of `invHeckeIsogeny` have component `1` at `u`: the central one lives above the
   -- conjugate of the place below `w`, the local one at `w` and its conjugate.
   refine ((evalAt u).map_mulVec (invHeckeIsogeny w C)⁻¹.val v i).trans ?_
-  have h_star_ne : star u ≠ w.val := by grind [below_star, star_star]
+  have h_star_ne : star u ≠ w.val := by
+    intro h
+    apply h_below
+    rw [← h, below_star, star_star]
   rw [← val_map_apply, invHeckeIsogeny, map_inv, map_mul, map_inv, map_pow, map_inv, map_pow,
     evalAt_centralScalar_of_ne h_below, evalAt_conjAtSplit_of_ne _ hu h_star_ne]
   simp
@@ -184,8 +194,8 @@ lemma torsionClass_inv_mulVec_eq_of_mem_levelTorsion
   refine torsionClass_eq_iff.mpr fun i ↦ mem_Ô.mpr fun (u : FinPlace E) ↦ ?_
   by_cases h𝔑 : D.level ∈ u.asIdeal
   · -- At a place dividing the level the matrix acts trivially, since `w` is safe.
-    have hu_ne : u ≠ w.val := by grind [IsSafe]
-    obtain ⟨-, -, h_level_conj⟩ := hw
+    obtain ⟨-, h_level, h_level_conj⟩ := hw
+    have hu_ne : u ≠ w.val := fun h_eq ↦ h_level (h_eq ▸ h𝔑)
     have h_below : u.below (QuadField d₀) ≠ star (w.val.below (QuadField d₀)) :=
       fun h_eq ↦ h_level_conj u h_eq h𝔑
     simp [-coe_units_inv, invHeckeIsogeny_inv_mulVec_of_ne hu_ne h_below]
@@ -322,7 +332,7 @@ lemma iterateFrobenius_comp_eq_of_ker_eq {w : FinPlace E} {ρ : 𝓞 E →+* k}
     (h_ker : w.asIdeal = RingHom.ker ρ) {l f r : ℕ} [Fact l.Prime] [CharP k l]
     (h_pow : l ^ f = w.q ^ r) : (iterateFrobenius k l f).comp ρ = ρ := by
   ext c
-  have := Fintype.ofFinite (ResField w)
+  let := Fintype.ofFinite (ResField w)
   have h_mem : c ^ w.q ^ r - c ∈ w.asIdeal := by
     simp [← card_ResField, ← algebraMap_ResField_eq_zero, pow_card_pow]
   simpa [h_ker, iterateFrobenius, h_pow, sub_eq_zero] using h_mem

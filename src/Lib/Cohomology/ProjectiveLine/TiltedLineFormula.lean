@@ -1,8 +1,12 @@
 module
 
-public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Kernels
+import Mathlib.Algebra.Category.Grp.Zero
+import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Kernels
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
 public import Lib.Cohomology.ProjectiveLine.PerfectLine
 public import Lib.Cohomology.ProperBaseChange.Theorem
+public import Lib.PadicComparison.Primitive.PeriodCoefficients
+import Lib.Cohomology.Etale.DenseSubfunctors
 
 /-!
 # Leray–Hirsch bases and the projective line formula for the tilted theory
@@ -84,6 +88,16 @@ lemma IsDetectedAtPoints.isOpen_setOf_map_eq_zero {F : AbFunctor D}
     IsOpen {P : PrimeSpectrum c.obj |
       H.map F (freeAb.map (g.whiskerLeft (reprMap (residueTest c P).hom))) n x = 0} :=
   (h_detect.isOpen_zero_set_and_eq_zero c n x).1
+
+/-- For a coefficient `F` that satisfies `New.Variety.IsDetectedAtPoints`, a class `x` over a test
+`c` that vanishes at the residue field of every prime of `c` is zero. -/
+lemma IsDetectedAtPoints.eq_zero_of_setOf_map_eq_zero_eq_univ {F : AbFunctor D}
+    (h_detect : IsDetectedAtPoints g F) (c : TestOver A) (n : ℕ)
+    (x : H (freeAb.obj (g ⋙ reprFunctor.obj (Opposite.op c))) F n)
+    (h_univ : {P : PrimeSpectrum c.obj |
+      H.map F (freeAb.map (g.whiskerLeft (reprMap (residueTest c P).hom))) n x = 0} = Set.univ) :
+    x = 0 :=
+  (h_detect.isOpen_zero_set_and_eq_zero c n x).2 h_univ
 
 /-- The Yoneda isomorphism `sectionEquiv` is natural: for `φ : e ⟶ e'`, pulling the class of a
 section `t ∈ G(e)` back along `ℤ[h_e'] → ℤ[h_e]` gives the class of the image of `t` in `G(e')`. -/
@@ -188,7 +202,7 @@ lemma isLerayHirschBasis_of_forall_isField [InvertsPrime A ℓ] {F : AbFunctor D
     not_imp_comm.mp fun hi ↦ congrArg ULift.up (LocallyConstant.ext (h_coef_zero i hi))
   refine ⟨m, (sub_eq_zero.mp (DFinsupp.ext fun n ↦ ?_)).symm, fun m' hm' ↦ ?_⟩
   · -- `y - lerayHirsch θ _ (s c m)` vanishes at every prime, hence is zero
-    exact (h_detect.isOpen_zero_set_and_eq_zero c n _).2
+    exact h_detect.eq_zero_of_setOf_map_eq_zero_eq_univ c n _
       (top_unique fun P _ ↦ (coef_iff m P).mp (ext fun _ ↦ rfl) n)
   · ext i P
     have h_coef : coef P = ev P m' := (coef_iff m' P).mpr fun n ↦ by simp [← hm']
@@ -221,7 +235,7 @@ lemma exists_isLerayHirschBasis_of_isCohomDense [InvertsPrime A ℓ] (M : Torsio
         IsLerayHirschBasis (fun i : b ↦ i.val.snd) (freeAb (reprBy c)) := by
   -- The values `u i = i(1)` of homogeneous classes span the cohomology of the point, a vector
   -- space over `ZMod ℓ`. Let `b` index a basis among them, containing `j` if `u j ≠ 0`.
-  have module_zmod {N : AbFunctor D} : Module (ZMod ℓ) (TotalH N M.functor) :=
+  let module_zmod {N : AbFunctor D} : Module (ZMod ℓ) (TotalH N M.functor) :=
     AddCommGroup.zmodModule M.nsmul_totalH_eq_zero
   let u (i : Σ n : ℕ, H (locConstAlong g) M.functor n) :
     TotalH (freeAb (onePointFunctor D)) M.functor :=
@@ -621,7 +635,8 @@ lemma TorsionCoeff.sliceEquiv_mulClass (v : TotalH S M.functor) :
   -- Restricting and then evaluating at the tautological point is the definition of `sliceEquiv`.
   change pullbackAlong (tensorPoint (freeAb.map tautologicalSection) (π ⋙ S))
     (TotalH.map (restrictAlong π) (M.mulClass (etaClass g).toTotalH v)) = _
-  refine (congrArg (pullbackAlong (tensorPoint (freeAb.map tautologicalSection) (π ⋙ S))) h_res).trans ?_
+  refine (congrArg (pullbackAlong (tensorPoint (freeAb.map tautologicalSection) (π ⋙ S)))
+      h_res).trans ?_
   exact M.onElements.mulClass_eq_comp_etaAt (S := π ⋙ S) η _ rfl _
 
 
@@ -730,7 +745,6 @@ lemma isLerayHirschBasis_lineBasis_of_injective
       congrArg (fun ξ ↦ comp ξ Θ.onElements.cupClass.toTotalH) map_pullbackAlong
     exact h_first.trans ((etaAt_swap Θ.onElements.onElements x' h_inf' a b).trans
       ((comp_assoc ..).trans (congrArg (pullbackAlong _) h_cup.symm)))
-
   -- Restriction `r` from the points of the line to the base point undoes the pull-back, and it
   -- corresponds to `at_inf` under `sliceEquiv`.
   let r {N : AbFunctor C} : TotalH (elementsProj (projLineAlong g) ⋙ N)
@@ -761,8 +775,9 @@ lemma isLerayHirschBasis_lineBasis_of_injective
   let π := elementsProj (projLineAlong g)
   change _ = sliceEquiv
     (Θ.mulClass (etaClass g).toTotalH p.1 + sliceEquiv.symm (TotalH.map (restrictAlong π) p.2))
-  erw [map_add, Θ.sliceEquiv_mulClass, AddEquiv.apply_symm_apply]
-  exact add_comm _ _
+  refine (add_comm _ _).trans ?_
+  exact ((map_add sliceEquiv _ _).trans
+    (congrArg₂ (· + ·) (Θ.sliceEquiv_mulClass ..) (sliceEquiv.apply_symm_apply _))).symm
 
 
 -- Keeps definitional checks from unfolding the group structure of the Ext groups.
@@ -816,28 +831,31 @@ lemma hasLineFormula_of_isTodaCancellation {B K : AbFunctor C} {i : W' ⟶ W} {�
       comp (TotalH.map Φ ω) s := by
     have h_eta : comp (TotalH.map Φ (etaClass g).toTotalH) m =
         comp (TotalH.map (restrictAlong π) x) Θ.cupClass.toTotalH := by
-      -- `erw`: the left side is the product by `η` of `hx` only up to unfolding `Φ` and `m`.
-      erw [← TotalH.map_map, map_restrictAlong_etaClass, hx]
-    have h_restrict :
-        comp (TotalH.map (restrictAlong π) (pullbackAlong ((abTensor S).map j) x))
-          Θ.cupClass.toTotalH =
+      change comp
+        (TotalH.map (restrictAlong π ⋙ abTensor (π ⋙ S)) (etaClass g).toTotalH) m = _
+      rw [← TotalH.map_map, map_restrictAlong_etaClass]
+      exact hx
+    have h_lhs :
+        pullbackAlong (Φ.map j) (comp (TotalH.map (restrictAlong π) x) Θ.cupClass.toTotalH) =
+          comp (TotalH.map (restrictAlong π) (pullbackAlong ((abTensor S).map j) x))
+            Θ.cupClass.toTotalH :=
+      (comp_assoc ..).symm.trans (congrArg (comp · Θ.cupClass.toTotalH)
+        (map_pullbackAlong (Φ := restrictAlong π) (f := (abTensor S).map j) (x := x)).symm)
+    have h_rhs :
         comp (TotalH.map (restrictAlong π) (comp (TotalH.map (abTensor S) ω) w))
-          Θ.cupClass.toTotalH := by rw [hw]
-    rw [h_eta]
-    -- `using!`: restriction along the points of `ℙ¹` matches `Φ` only up to unfolding.
-    erw [map_pullbackAlong, comp_assoc, map_comp_assoc, TotalH.map_map] at h_restrict
-    exact h_restrict
+          Θ.cupClass.toTotalH = comp (TotalH.map Φ ω) s :=
+      (map_comp_assoc ..).trans (congrArg (comp · s) (TotalH.map_map ..))
+    have h_mid :=
+      congrArg (fun z ↦ comp (TotalH.map (restrictAlong π) z) Θ.cupClass.toTotalH) hw.symm
+    exact (congrArg (pullbackAlong (Φ.map j)) h_eta).trans <|
+      h_lhs.trans (h_mid.trans h_rhs)
   -- Acyclicity over the points of `ℙ¹` is that of `h_c × ℙ¹`, after swapping two tensor factors.
   have h_acyclic_Φ (n : ℕ) : Subsingleton (H (Φ (cokernel i)) Θ.onElements.functor n) := by
     let swap : abTensor (abTensor S L) (cokernel i) ≅
         abTensor (abTensor S (cokernel i)) L :=
-      NatIso.ofComponents (fun _ ↦ (rightComm ℤ _ _ _).toAddCommGrpIso) fun _ ↦ by
-        refine addCommGrp_tensor_hom_ext fun t ↦ ?_
-        induction t using TensorProduct.inductionOn with
-        | tmul x l => exact fun r ↦ rfl
-        | add x x' h₁ h₂ =>
-          intro r
-          erw [add_tmul, _root_.map_add, _root_.map_add, h₁ r, h₂ r]
+      NatIso.ofComponents (fun _ ↦ (rightComm ℤ _ _ _).toAddCommGrpIso) fun _ ↦
+        AddCommGrpCat.hom_ext <| AddMonoidHom.toIntLinearMap_injective <|
+          TensorProduct.ext_threefold fun _ _ _ ↦ rfl
     have h_line (k : ℕ) : Subsingleton (H (abTensor (abTensor S L) (cokernel i)) Θ.functor k) :=
       h_acyclic (abTensor S L) k
     have h_swapped : Subsingleton (TotalH (abTensor (abTensor S (cokernel i)) L) Θ.functor) :=
@@ -847,9 +865,9 @@ lemma hasLineFormula_of_isTodaCancellation {B K : AbFunctor C} {i : W' ⟶ W} {�
     exact (DirectSum.of_injective (β := H (Φ (cokernel i)) Θ.onElements.functor) n).subsingleton
   have h_first :
       sliceEquiv (Θ.mulClass (S := S) (etaClass g).toTotalH (pullbackAlong (tensorPoint y S) w)) =
-        pullbackAlong (tensorPoint (𝟙 _) (π ⋙ S) ≫ Φ.map y) s := by
-    erw [Θ.sliceEquiv_mulClass, map_pullbackAlong, comp_assoc]
-    rfl
+        pullbackAlong (tensorPoint (𝟙 _) (π ⋙ S) ≫ Φ.map y) s :=
+    (Θ.sliceEquiv_mulClass _).trans <|
+      (congrArg (comp · Θ.cupClass.toTotalH) map_pullbackAlong).trans (comp_assoc ..)
   exact h_first.trans ((h_toda.pullbackAlong_comp_map_eq Φ h_acyclic_Φ _ m s h_eq).symm.trans
     (Θ.onElements.pullbackAlong_tensorPoint_comp_tateAction (S := π ⋙ S) _))
 
@@ -980,18 +998,20 @@ lemma exists_isTodaCancellation_etaClass [Algebra A ℂ_[ℓ]] :
       · let x := y.down.hom (single 1 1)
         change F d (0, 0) - F d (0, ρ d (tiltMap j.toRingHom x)) =
           ((cocycle _).extension.X₂.map j).hom (F c (0, 0) - F c (0, ρ c x))
-        erw [_root_.map_sub, F_nat c d j (0, 0), F_nat c d j (0, ρ c x)]
+        rw [_root_.map_sub, F_nat c d j (0, 0), F_nat c d j (0, ρ c x)]
         simp [ρ_nat]
       · let x := y.down.hom (single 1 1)
         let xc : R c := ρ c x
         let xd : R d := ρ d (tiltMap j.toRingHom x)
         change F d (0, 0) - F d (xd - 1, 1) =
           ((cocycle _).extension.X₂.map j).hom (F c (0, 0) - F c (xc - 1, 1))
-        erw [_root_.map_sub, F_nat c d j (0, 0), F_nat c d j (xc - 1, 1)]
+        rw [_root_.map_sub, F_nat c d j (0, 0), F_nat c d j (xc - 1, 1)]
         simp [xc, xd]
-        erw [map_sub, map_one, ρ_nat]
-        rfl)
-
+        have h_coordinate :
+            R.map j (xc - 1) = xd - 1 :=
+          (map_sub (R.map j).hom _ _).trans
+            (congrArg₂ (· - ·) (ρ_nat c d j x) (map_one (R.map j).hom))
+        exact congrArg (fun a : R d ↦ F d (a, 1)) h_coordinate.symm)
   -- `α` sends a point `t` of the torus to `pow c t`, the untilts of the powers of the coordinate.
   let pow (c : PadicTest) (t : (PadicTest.tilt ⋙ reprBy (monoidAlg ℚ)).obj c) :
       (kummerSeq (genericTestOver A)).X₂ c :=
@@ -1014,7 +1034,8 @@ lemma exists_isTodaCancellation_etaClass [Algebra A ℂ_[ℓ]] :
     let r : (tiltPointsSum pointOrTorus).obj c := ⟨⟨true⟩, q⟩
     change FreeAddCommGroup.lift (pow c)
       (((projFirst (B := pointOrTorus)).app c).hom (FreeAddCommGroup.of r)) = _
-    erw [projFirst_true (B := pointOrTorus) c q, FreeAddCommGroup.lift_apply_of]
+    exact (congrArg (FreeAddCommGroup.lift (pow c))
+      (projFirst_true (B := pointOrTorus) c q)).trans (FreeAddCommGroup.lift_apply_of ..)
   have h_torus : (α ≫ (kummerSeq (genericTestOver A)).g) ≫
       (cocycle (genericTestOver A)).extension.f = gluing ≫ f := by
     -- On the torus the frames `(X, 1)` and `(1, X⁻¹)` differ by the unit `X`.
@@ -1027,13 +1048,15 @@ lemma exists_isTodaCancellation_etaClass [Algebra A ℂ_[ℓ]] :
       have h_a : (α.app c).hom (FreeAddCommGroup.of y₀) = 0 := by
         change FreeAddCommGroup.lift (pow c)
           (((projFirst (B := pointOrTorus)).app c).hom (FreeAddCommGroup.of y₀)) = 0
-        erw [projFirst_false (B := pointOrTorus) c y, map_zero]
+        exact (congrArg (FreeAddCommGroup.lift (pow c))
+          (projFirst_false (B := pointOrTorus) c y)).trans (map_zero _)
       change ((cocycle _).extension.f.app c).hom
           (((kummerSeq (genericTestOver A)).g.app c).hom ((α.app c).hom (FreeAddCommGroup.of y₀))) =
         (f.app c).hom ((gluing.app c).hom (FreeAddCommGroup.of y₀))
-      erw [h_a, h_glue, h_f_app]
+      rw [h_a, h_glue, h_f_app]
       simp [z, evalZero]
-      erw [map_zero, sub_self]
+      exact (map_zero ((cocycle (genericTestOver A)).extension.f.app c).hom).trans
+        (sub_self _).symm
     · let X : R c := ρ c (y.down.hom (single 1 1))
       let X' : R c := ρ c (y.down.hom (single (-1) 1))
       let v : (cocycle (genericTestOver A)).extension.X₂ c :=
@@ -1061,20 +1084,20 @@ lemma exists_isTodaCancellation_etaClass [Algebra A ℂ_[ℓ]] :
       have h_coord (g : ℚ≥0 →+ ℚ) :
           (discToTorus g ≫ y.down).hom (single 1 1) = y.down.hom (single (g 1) 1) := by
         change y.down.hom (mapDomain g (single 1 1)) = _
-        erw [AddMonoidAlgebra.mapDomain_single]
-      simp only [z₀, z₁, Bool.cond_false, Bool.cond_true, h_coord]
+        exact congrArg y.down.hom (AddMonoidAlgebra.mapDomain_single ..)
+      simp only [Bool.cond_false, Bool.cond_true, h_coord]
       change v = (F c (0, 0) - F c (0, X')) - (F c (0, 0) - F c (X - 1, 1))
       simpa only [sub_sub_sub_cancel_left, eq_sub_iff_add_eq] using h_frame
-
   have h_disc : oneSub (discTwist χ) ≫ f = 0 := by
     -- `charTwist χ` fixes `X`, as the roots of unity are trivial at `1` and `-1`.
     refine freeAb.hom_ext fun c y ↦ ?_
     let y' : twoDiscs.obj c := ⟨y.fst, ⟨discTwist χ y.fst ≫ y.snd.down⟩⟩
-    erw [NatTrans.comp_app, AddCommGrpCat.comp_apply]
-    change (f.app c).hom (FreeAddCommGroup.lift _ (FreeAddCommGroup.of y)) = _
-    rw [FreeAddCommGroup.lift_apply_of]
-    change (f.app c).hom (FreeAddCommGroup.of y - FreeAddCommGroup.of y') = 0
-    erw [_root_.map_sub, h_f_app, h_f_app]
+    change (f.app c).hom (((oneSub (discTwist χ)).app c).hom (.of y)) = 0
+    have h_sub : ((oneSub (discTwist χ)).app c).hom (.of y) = .of y - .of y' :=
+      freeAb.desc_of ..
+    refine (congrArg (f.app c).hom h_sub).trans ?_
+    refine (_root_.map_sub (f.app c).hom _ _).trans ?_
+    refine (congrArg₂ (· - ·) (h_f_app c y) (h_f_app c y')).trans ?_
     rcases y with ⟨⟨_ | _⟩, y⟩ <;>
       simp [y', discTwist, charTwist, ρ_const, hχ, h_root, -coe_algebraMap, -Functor.comp_obj]
   have h_kummer : oneSub (pointOrTorusTwist χ) ≫ α =
@@ -1087,21 +1110,21 @@ lemma exists_isTodaCancellation_etaClass [Algebra A ℂ_[ℓ]] :
       have h_twist : ((oneSub (pointOrTorusTwist χ)).app c).hom
           (FreeAddCommGroup.of y₀) = 0 := by
         change FreeAddCommGroup.lift _ (FreeAddCommGroup.of y₀) = _
-        erw [FreeAddCommGroup.lift_apply_of]
+        rw [FreeAddCommGroup.lift_apply_of]
         change Sub.sub (FreeAddCommGroup.of y₀)
           (FreeAddCommGroup.of (⟨⟨false⟩, ⟨𝟙 _ ≫ y.down⟩⟩ : (tiltPointsSum pointOrTorus).obj c)) = 0
-        erw [Category.id_comp]
+        rw [Category.id_comp]
         exact sub_self _
       have h_glue : (gluing.app c).hom (FreeAddCommGroup.of y₀) = FreeAddCommGroup.of z := by
         simpa only [y₀, z, evalZero_comp] using gluing_apply_point c y
       change (α.app c).hom (((oneSub (pointOrTorusTwist χ)).app c).hom (FreeAddCommGroup.of y₀)) =
         ((kummerSeq (genericTestOver A)).f.app c).hom
           ((κ.app c).hom ((gluing.app c).hom (FreeAddCommGroup.of y₀)))
-      erw [h_twist, h_glue]
+      rw [h_twist, h_glue]
       change _ = ((kummerSeq (genericTestOver A)).f.app c).hom
         (((tateGen (genericTestOver A)).app c).hom ((freeAb.map (toUnit _)).app c
           (((projFirst (B := fun _ ↦ monoidAlg ℚ≥0)).app c).hom (FreeAddCommGroup.of z))))
-      erw [projFirst_false (B := fun _ ↦ monoidAlg ℚ≥0) c z.snd]
+      rw [projFirst_false (B := fun _ ↦ monoidAlg ℚ≥0) c z.snd]
       simp only [map_zero]
     · let y₁ : (tiltPointsSum pointOrTorus).obj c := ⟨⟨true⟩, y⟩
       let t : (PadicTest.tilt ⋙ reprBy (monoidAlg ℚ)).obj c :=
@@ -1114,15 +1137,15 @@ lemma exists_isTodaCancellation_etaClass [Algebra A ℂ_[ℓ]] :
       have h_zero : (κ.app c).hom (FreeAddCommGroup.of z₀) = 0 := by
         change τ (π (((projFirst (B := fun _ ↦ monoidAlg ℚ≥0)).app c).hom
           (FreeAddCommGroup.of z₀))) = 0
-        erw [projFirst_false (B := fun _ ↦ monoidAlg ℚ≥0) c z₀.snd]
+        rw [projFirst_false (B := fun _ ↦ monoidAlg ℚ≥0) c z₀.snd]
         simp only [map_zero]
       have h_one : (κ.app c).hom (FreeAddCommGroup.of z₁) = τ (FreeAddCommGroup.of PUnit.unit) := by
         change τ (π (((projFirst (B := fun _ ↦ monoidAlg ℚ≥0)).app c).hom
           (FreeAddCommGroup.of z₁))) = _
-        erw [projFirst_true (B := fun _ ↦ monoidAlg ℚ≥0) c z₁.snd]
+        rw [projFirst_true (B := fun _ ↦ monoidAlg ℚ≥0) c z₁.snd]
         change τ ((freeAb.map (toUnit (PadicTest.tilt ⋙ reprBy (monoidAlg ℚ≥0)))).app c
           (FreeAddCommGroup.of z₁.snd)) = _
-        erw [freeAb.map_of]
+        rw [freeAb.map_of]
         rfl
       change (α.app c).hom (((oneSub (pointOrTorusTwist χ)).app c).hom (FreeAddCommGroup.of y₁)) =
         ((kummerSeq (genericTestOver A)).f.app c).hom

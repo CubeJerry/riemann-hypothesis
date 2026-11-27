@@ -1,19 +1,14 @@
 module
 
-public import Mathlib.Analysis.Matrix.MeasurableSpace -- shake: keep (Mathlib's instance must precede the `MeasurableSpace (Matrix m n R)` instance below)
-public import TauCeti.Analysis.Matrix.IndefiniteUnitaryGroup
-public import TauCeti.Topology.Algebra.Group.Units
-public import Aesop.Frontend.Tactic
-public import Aesop.Main
-public import Mathlib.RingTheory.WittVector.IsPoly
-public import Mathlib.Tactic.Basify
-public import Mathlib.Tactic.ENatToNat
-public import Mathlib.Tactic.Polynomial.Basic
-public import Mathlib.Tactic.ReduceModChar
-public import Mathlib.Topology.Algebra.Group.Matrix
-public import Mathlib.Topology.Separation.CompletelyRegular
-public import Std.Internal.Order.Automation
-public import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.Analysis.Matrix.MeasurableSpace
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import TauCeti.Data.Matrix.Countable
+public import TauCeti.LinearAlgebra.Matrix.IndefiniteUnitaryGroup
+public import TauCeti.MeasureTheory.Constructions.Polish.Units
+public import TauCeti.Topology.Instances.Matrix
+public import TauCeti.Topology.MetricSpace.Polish.Matrix
+import Mathlib.Topology.Algebra.Group.Matrix
+import TauCeti.Analysis.Matrix.IndefiniteUnitaryGroup
 public import Lib.Speed
 
 /-!
@@ -31,9 +26,10 @@ integrability.
   bound on the entries of a unitary matrix, the complex unitary group of the identity matrix is
   compact.
 
-The file also supplies the Polish and Borel instances on units, the measurable and measure space
-structures on matrices, the Polish instance on unitary groups and the Borel instance on complex
-ones, local compactness of unitary groups, and the additive Haar measure on matrices.
+The file also supplies the measure space structure on matrices with its additive Haar measure, the
+Polish instance on unitary groups and the Borel instance on complex ones, and local compactness of
+unitary groups. The Polish, countability, local compactness and Borel instances on matrices and
+units come from Mathlib and Tau Ceti.
 -/
 
 @[expose] public section
@@ -118,33 +114,9 @@ section Matrices
 
 variable {m n R S : Type*} [DecidableEq n]
 
-section
-
-variable [Countable m] [Countable n] [Monoid R] [TopologicalSpace R] [ContinuousMul R]
-  [PolishSpace R]
-
-deriving instance PolishSpace for Matrix m n R
-
-variable [MeasurableSpace R] [BorelSpace R]
-
-instance : MeasurableSpace (Matrix m n R) := .pi
-
-instance : BorelSpace Rˣ := by
-  borelize Rˣ
-  use (continuous_val.measurableEmbedding val_injective).comap_eq
-
-end
-
-section
-
-variable [Countable m] [Countable n] [TopologicalSpace R] [SecondCountableTopology R]
-  [MeasurableSpace R] [BorelSpace R] [Finite m] [Finite n] [Countable R] [LocallyCompactSpace R]
-
-deriving instance Countable, LocallyCompactSpace, BorelSpace for Matrix m n R
-
-end
-
-instance [Fintype m] [Fintype n] [MeasureSpace R] : MeasureSpace (Matrix m n R) := .pi
+/-- The product measure on matrices, over Mathlib's `σ`-algebra `Matrix.instMeasurableSpace`. -/
+instance [Fintype m] [Fintype n] [MeasureSpace R] : MeasureSpace (Matrix m n R) where
+  volume := (volume : Measure (m → n → R))
 
 /-! ### Special matrices -/
 
@@ -169,6 +141,19 @@ variable [Fintype n] [CommRing R] [CommRing S] {O : Subring R}
 lemma mul_inclMatrix {l : Type*} (M : Matrix l n R) (u : m → n) :
     M * inclMatrix R u = M.submatrix id u := mul_submatrix_one (Equiv.refl n) u M
 
+/-- Multiplying on the left by the adjoint of an inclusion matrix selects rows. -/
+lemma conjTranspose_inclMatrix_mul [StarRing R] {l : Type*} (u : l → n) (M : Matrix n m R) :
+    (inclMatrix R u)ᴴ * M = M.submatrix u id := by
+  rw [inclMatrix, conjTranspose_submatrix, conjTranspose_one]
+  exact one_submatrix_mul u (Equiv.refl n) M
+
+/-- Multiplying by inclusion matrices on both sides selects a submatrix. -/
+lemma conjTranspose_inclMatrix_mul_mul_inclMatrix [StarRing R] {l p : Type*} [Fintype m]
+    [DecidableEq m] (M : Matrix n m R) (u : l → n) (v : p → m) :
+    (inclMatrix R u)ᴴ * M * inclMatrix R v = M.submatrix u v := by
+  simp only [conjTranspose_inclMatrix_mul, mul_inclMatrix, submatrix_submatrix,
+    Function.comp_id, Function.id_comp]
+
 omit [Fintype n] in
 lemma one_map_ringHom (f : R →+* S) : (1 : Matrix n n R).map f = 1 :=
   Matrix.map_one f f.map_zero f.map_one
@@ -186,21 +171,25 @@ def diagGL : (n → Rˣ) →* GL n R :=
 lemma coe_diagGL (t : n → Rˣ) : (diagGL t).val = Matrix.diagonal fun i : n ↦ ↑(t i) := rfl
 
 /-- The transpose of g, as an element of GL_n(R). -/
-@[simps]
+@[simps -isSimp]
 def transposeGL (g : GL n R) : GL n R where
   val := gᵀ
   inv := g⁻¹.valᵀ
   val_inv := by simp [← transpose_mul]
   inv_val := by simp [← transpose_mul]
 
+attribute [simp] val_transposeGL
+
 /-- For distinct indices i, j and a in R, the element 1 + aE_{ij} of GL_n(R), with inverse
 1 − aE_{ij}. -/
-@[simps]
+@[simps -isSimp]
 def transvectionGL {i j : n} (h : i ≠ j) (a : R) : GL n R where
   val := transvection i j a
   inv := transvection i j (-a)
   val_inv := by simp [transvection_mul_transvection_same, h]
   inv_val := by simp [transvection_mul_transvection_same, h]
+
+attribute [simp] val_transvectionGL
 
 /-! ### Integral matrices and congruence subgroups -/
 

@@ -1,9 +1,21 @@
 module
 
-public import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
-public import Mathlib.MeasureTheory.Group.GeometryOfNumbers
-public import Lib.Adelic.Unitary.RationalPoints
-public import Lib.General.NumberTheory.SUnitsAndClassNumber
+public import Mathlib.Analysis.CStarAlgebra.Matrix
+import Mathlib.Algebra.Order.Archimedean.Real.Hom
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.Group.GeometryOfNumbers
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Topology.Algebra.ProperConstSMul
+import Mathlib.Topology.Separation.Connected
+public import Lib.Adelic.Unitary.ComponentsAndBlockSums
+public import Lib.General.NumberTheory.EmbeddingsAndDifferent
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.Unitary.GramMatrix
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Base
+import Lib.General.Measure.HaarModulus
+import Lib.General.NumberTheory.SUnitsAndClassNumber
 
 /-!
 # Transference, first minima and short bases of lattices of hermitian spaces
@@ -279,7 +291,7 @@ is the length of y. -/
 def archCoords : (n → E) →+ EuclideanSpace ℂ (InfinitePlace E × n) :=
   AddMonoidHom.mk'
     (fun y : n → E ↦ WithLp.toLp 2 fun p : InfinitePlace E × n ↦ (V.vecAtPoint y p.2).1 p.1)
-    (by aesop)
+    (fun x y ↦ by ext p; simp)
 
 /-- The set of vectors `y` of the lattice `V.baseLattice` whose length `‖V.archCoords y‖` is at most
 `r`. -/

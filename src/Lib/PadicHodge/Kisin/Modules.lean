@@ -1,8 +1,14 @@
 module
 
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.GroupTheory.Nilpotent
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.Topology.Separation.CompletelyRegular
 public import Lib.ClassField.LocalDuality.CrystallineDuality
 public import Lib.PadicHodge.ArtinSchreierSequence
 public import Lib.PadicHodge.Kisin.KummerChartDeRham
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.PadicHodge.Crystalline.HodgeTateForms
 
 /-!
 # Kisin modules of Kummer charts: lattices with jump sets, letter projectors, invariant forms
@@ -85,9 +91,6 @@ open Period WittVector Submodule Set FrobGroup Module Fintype Algebra
 
 variable {p : ℕ} [ThePrime p] [Γ : GroupOverGp p] [k : KummerChart Γ]
   {R X : Type*} [CommRing R] [AddCommGroup X] [Module R X] {Q : Submodule R X}
-
-/-- The actions of ℤ_p and of A_inf on W(C^♭) commute. -/
-instance : SMulCommClass ℤ_[p] Ainf WittCFlat := inferInstance
 
 /-! ### Saturation of a submodule -/
 
@@ -619,10 +622,13 @@ lemma letterProj_mk_mem_ainfLattice (t : Rep.of (overZp L.ρ)) :
 lemma comp_letterProj_mem_forms (h : μ ∈ L.forms) : μ ∘ₗ L.letterProj i ∈ L.forms := by
   intro t g
   -- `μ` commutes with `g` on `fracSpan`, and `g` commutes with `letterProj i`
-  -- Elaborator: `erw`, as the goal carries `letterProj i` with its scalars restricted to A_inf.
-  erw [← form_gal_smul ⟨_, g, rfl⟩ h (mem_saturateBy_of_mem (letterProj_mk_mem_ainfLattice t)),
-    gal_smul_letterProj]
-  simp
+  let γ : k.galMonoid := ⟨inr g.val, g, rfl⟩
+  have h_mk : γ.val • (DiagTensor.mk 1 t : L.Ambient) = DiagTensor.mk 1 (L.ρ g t) := by
+    simp [γ]
+  change μ (L.letterProj i (DiagTensor.mk 1 (L.ρ g t))) =
+    γ • μ (L.letterProj i (DiagTensor.mk 1 t))
+  rw [← h_mk, ← gal_smul_letterProj γ]
+  exact form_gal_smul γ h (mem_saturateBy_of_mem (letterProj_mk_mem_ainfLattice t))
 
 lemma valueAt_comp_wittMap {μ : L'.Ambient →ₗ[Ainf] BdR} :
     valueAt a (μ ∘ₗ F.wittMap) x = valueAt a μ (F.wittMap x) := by simp [valueAt]
@@ -676,28 +682,35 @@ lemma exists_span_formsOfType_mod_pred (i : Letter) (u : ℤ) :
     mem_span_singleton.1 (μ.property.2 t)
   -- Write `μ (letterProj i (1 ⊗ t)) = a μ t • tUnit ^ (-u)` with `a μ t` in `B_dR⁺`.
   choose a ha using h_type
-  -- The leading coefficient can be computed from any expression `y • tUnit ^ (-u)`.
+  -- The leading coefficient can be computed from any expression `y • tUnit ^ (-u)`. (`hz` is an
+  -- explicit argument: as a default tactic it was slow to elaborate.)
   have theta_a {μ : L.formsOfType i u} {t : Rep.of (overZp L.ρ)} {z : ℂ_[p]} {y : BdRPlus}
       (h : μ.val (L.letterProj i (.mk 1 t)) = y • (tUnit ^ (-u)).val)
-      (hz : thetaBdR y = z := by simp +zetaDelta [smul_def', -toRingHom_ofId]) :
+      (hz : thetaBdR y = z) :
       thetaBdR (a μ t) = z := by
     rw [show a μ t = y from (smul_left_inj (Units.ne_zero _)).1 ((ha μ t).trans h), hz]
   let f (μ : L.formsOfType i u) : L.Carrier →ₛₗ[(ofId ℤ_[p] ℂ_[p] : ℤ_[p] →+* ℂ_[p])] ℂ_[p] :=
     { toFun := thetaBdR ∘ a μ
       map_add' _ _ := theta_a (by simp [add_smul, ← ha]) (map_add ..)
-      map_smul' c t := theta_a (y := c • a μ t) (by simp [← ha]) }
+      map_smul' c t := theta_a (y := c • a μ t) (by simp [← ha])
+        (by simp +zetaDelta [smul_def', -toRingHom_ofId]) }
   -- `g` multiplies `tUnit ^ (-u)` by the cyclotomic character to the power `-u`, and `ζ` acts on
   -- the letter `i` by `letterTeich i`.
   have f_gal (μ : L.formsOfType i u) (t : Rep.of (overZp L.ρ)) (g : k.subgroup) :
       f μ (L.ρ g t) = (χ g ^ (-u)).val • toGp g • f μ t :=
-    theta_a <| by
-      erw [comp_letterProj_mem_forms μ.property.1, ← ha, smul_distrib_smul, smul_tUnit_zpow,
-        smul_comm, ← smul_assoc]
+    theta_a (hz := by simp +zetaDelta [smul_def', -toRingHom_ofId]) <| by
+      have h_inv : μ.val (L.letterProj i (.mk 1 (L.ρ g t))) =
+          toGp g.val • μ.val (L.letterProj i (.mk 1 t)) :=
+        comp_letterProj_mem_forms μ.property.1 t g
+      rw [h_inv, ← ha, smul_distrib_smul, smul_tUnit_zpow, smul_comm, ← smul_assoc]
   have f_ζ (μ : L.formsOfType i u) (t : Rep.of (overZp L.ρ)) :
       f μ (O.ζ.val • t) = theta (k.letterTeich i) * f μ t :=
-    theta_a (by
-      erw [← mulZeta.wittMap_letterProj (.mk 1 t),
-        mem_letterPart_iff_mulZeta.1 letterProj_mem_letterPart, μ.val.map_smul, ← ha, ← smul_assoc])
+    theta_a (hz := by simp +zetaDelta [smul_def', -toRingHom_ofId]) <| by
+      have h_mk : (DiagTensor.mk 1 (O.ζ.val • t) : L.Ambient) = L.mulZeta.wittMap (.mk 1 t) := by
+        simp [mulZeta]
+      rw [h_mk, ← mulZeta.wittMap_letterProj (.mk 1 t),
+        mem_letterPart_iff_mulZeta.1 letterProj_mem_letterPart, smul_eq_val_smul,
+        μ.val.map_smul, ← ha, ← smul_assoc]
   -- A basis `b` of the span of the symbols, made of symbols `b m = f (ν m)`.
   obtain ⟨b, hb, span_b, b_indep⟩ := exists_fun_fin_finrank_span_eq ℂ_[p] (.range f)
   choose ν hν using hb
@@ -722,7 +735,10 @@ lemma exists_span_formsOfType_mod_pred (i : Letter) (u : ℤ) :
     c_fixed g m
   refine ⟨c', fun t g ↦ ?_, fun t ↦ ?_⟩
   · -- The difference is invariant, since `Γ'` fixes the coefficients.
-    simp_all [μ.property.1 t, (ν _).property.1 t, smul_sub, smul_sum, smul_def', -toRingHom_ofId]
+    have c'_fixed (m) : toGp g.val • algebraMap _ BdR (c' m) = algebraMap _ BdR (c' m) :=
+      (BdR.smul_algebraMap_padicAlgCl _ _).trans (congrArg _ (mem_localFieldOf.1 (hc' m) g))
+    simp only [LinearMap.sub_apply, LinearMap.coe_sum, Finset.sum_apply, LinearMap.smul_apply,
+      μ.property.1 t, (ν _).property.1 t, smul_sub, smul_sum, smul_def', smul_mul', c'_fixed]
   · -- The leading coefficient of the difference vanishes, so its pole has order at most `u - 1`.
     have lead : thetaBdR (a μ t - ∑ m, c' m • a (ν m) t) = 0 := by
       simpa [← hν, c_eq, smul_def', sub_eq_zero, -toRingHom_ofId] using!

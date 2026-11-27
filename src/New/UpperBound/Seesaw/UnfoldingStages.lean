@@ -1,13 +1,24 @@
 module
 
-public import Lib.Weil.Periods.Unfolding
-public import New.UpperBound.Objects.CharactersAtLevel
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import New.UpperBound.Objects.RowChain
-public import New.UpperBound.Seesaw.Frequency
-public import New.UpperBound.Seesaw.GluedLevel
-public import New.UpperBound.Seesaw.LevelIdeles
 public import New.UpperBound.Seesaw.Sandwich
-public import Lib.General.Algebra.MultivariatePolynomials
+public import Lib.Weil.Periods.ConstantTerm
+public import New.UpperBound.Seesaw.EdgePairEvaluation
+public import New.UpperBound.Size.ShortColumns
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.General.Algebra.MultivariatePolynomials
+import Lib.General.Measure.IntegralOperators
+import Lib.Weil.CompactLift.DefiniteThetaLift
+import Lib.Weil.Periods.Unfolding
+import New.OneLift.ComparisonOperator.ExchangeData
+import New.UpperBound.Objects.CharactersAtLevel
+import New.UpperBound.Seesaw.Frequency
+import New.UpperBound.Seesaw.GluedLevel
+import New.UpperBound.Seesaw.LevelIdeles
+import New.UpperBound.Seesaw.StandardLines
 
 /-!
 # Unfolding the chain of lifts: double lifts and the functions of the unfolding
@@ -78,8 +89,8 @@ omit [WeilData E] in
 private lemma continuous_pairChar (a b : AutChar E) :
     Continuous (pairChar (E := E) (s := ε) (s' := ε') a b) :=
   continuous_subtypeVal.comp
-    (((b⁻¹.1.continuous.comp G.continuous_det).comp continuous_fst).mul
-      ((a.1.continuous.comp G.continuous_det).comp continuous_snd))
+    (((b⁻¹.val.continuous.comp G.continuous_det).comp continuous_fst).mul
+      ((a.val.continuous.comp G.continuous_det).comp continuous_snd))
 
 private lemma continuous_theta_tripleWeil (a b : AutChar E)
     (f : 𝒮 (V'.hom (flipSum V V''))) :
@@ -719,7 +730,7 @@ lemma unfoldStageOn_update {l : ℕ} (a : GInf D.E (D.signsY l)) (b : Gf D.E (D.
 /-- The function `𝒲_{k+1}` (`unfoldStage`) depends only on the outer variables `g_j = (ξ j, y j)`
 for `j ≤ k`: changing `ξ` and `y` at an index `l > k` does not change it. -/
 lemma unfoldStage_update {l : ℕ} (a : GInf D.E (D.signsY l)) (b : Gf D.E (D.Y l)) (k : ℕ)
-    (hk : k ≤ 2 * D.ϱ + 1) (hkl : k < l) {X : Type} {s : ℕ} [Fintype X] [DecidableEq X]
+    (hk : k ≤ 2 * D.ϱ + 1) (hkl : k < l) {X : Type} {s : ℕ} [DecidableEq X]
     (Y' : Grading (D.spaceY (k + 1)) D.N X s) :
     unfoldStage ϑ t φ (update ξ l a) (update y l b) k hk Y' = unfoldStage ϑ t φ ξ y k hk Y' := by
   simp only [unfoldStage, movedDatum, unfoldStageOn_update ϑ t φ ξ y a b k hk hkl,
@@ -775,6 +786,9 @@ lemma integral_unfoldStageOn (ϑ : D.TameChar)
     using integral_besselGroup_unfold Y' (rankTwist (D.chainChar ϑ (k + 1))) (movedDatum ϑ ξ y k)
       (isEquivariant_unfoldStageOn ϑ t φ ξ y k hk) hz_aut hz_rapid
 
+/-- Decidable equality on the sum of `q × X_{2i+1}` and the type of pairs `(a, b)` of an index `a`
+of `Y_{2i} ⊕ Y_{2i+2}` and an index `b` of `Y_{2i+1}` whose grades have positive difference, built
+from the instances for sums, products and subtypes. -/
 noncomputable local instance instDecidableEqDoubleLiftSplitting (i : ℕ) (hi : 2 * i < 2 * D.ϱ + 1)
     {X q : Type} {s : ℕ} [Fintype X] [DecidableEq X] [Fintype q] [DecidableEq q]
     {Y : Grading (D.spaceY (2 * i + 2)) D.N X s} :
@@ -997,16 +1011,12 @@ lemma map_evaluatedDatum_of_conj_mem (ϑ : D.TameChar) (y : ∀ k : ℕ, Gf D.E 
   -- The evaluation carries `ω(1, z)` on the data for the `Y_k` to `ω(1, u)`, where `z` is the image
   -- of `u`; the former fixes the translated datum, as the level fixes `pointDatumY`.
   let Φ (j : ℕ) : ((D.spaceY j).hom (D.spaceY (j + 1))).finitePart := translatedPointDatumY ϑ y j
-  let z : Gf D.E (D.Y (2 * i + 1 + 1)) := (D.gradingY _ hi).inclXFin u
   have fix_lower :
-      liftWeilFin (D.chainChar ϑ (2 * i + 1 + 1)) (1, z) (Φ (2 * i + 1)) = Φ (2 * i + 1) :=
+      liftWeilFin (D.chainChar ϑ (2 * i + 1 + 1)) (1, (D.gradingY _ hi).inclXFin u)
+        (Φ (2 * i + 1)) = Φ (2 * i + 1) :=
     liftWeilFin_translatedPointDatumY ϑ y (2 * i + 1) hu
-  have equivariant :
-      D.doubleLiftEvalY i (arrowProduct (Φ (2 * i)).val
-          (liftWeilFin (D.chainChar ϑ (2 * i + 1 + 1)) (1, z) (Φ (2 * i + 1))).val) =
-        TensorProduct.map .id (liftWeilFin (D.chainChar ϑ (2 * i + 1 + 1)) (1, u))
-          (D.doubleLiftEvalY i (arrowProduct (Φ (2 * i)).val (Φ (2 * i + 1)).val)) :=
-    doubleLiftEvalY_inclXFin i hi (D.chainChar ϑ (2 * i + 1 + 1)) u (Φ (2 * i)) (Φ (2 * i + 1))
+  have equivariant := doubleLiftEvalY_inclXFin i hi (D.chainChar ϑ (2 * i + 1 + 1)) u
+    (Φ (2 * i)) (Φ (2 * i + 1))
   rw [fix_lower] at equivariant
   exact equivariant.symm
 
@@ -1040,7 +1050,7 @@ lemma valued_twistIdele (w : FinPlace D.E) :
       simp [count_map_eq_count', asIdeal_injective, count_eq_of_nodup ϑ.Q.nodup]
     have h_ideal : 𝔪.ideal = Ideal.span {D.piM} * ∏ v ∈ ϑ.Q, v.asIdeal := by
       change ((∏ i : (k : Fin 2) × D.ChosenPlace k, (D.chosenPlace i).asIdeal) ^ 1) *
-        ∏ v : ϑ.Q, v.1.asIdeal = _
+        ∏ v : ϑ.Q, v.val.asIdeal = _
       rw [pow_one, ← span_piM, ϑ.Q.prod_coe_sort]
     rw [h_ideal, multiplicity_mul w.prime (.of_prime_left w.prime (h_ideal ▸ 𝔪.ne_bot)), h_Q]
   have h_mul : (twistIdele ϑ).val * D.chosenIdele.val = 𝔪.generator.val := by

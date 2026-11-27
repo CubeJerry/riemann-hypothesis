@@ -1,9 +1,23 @@
 module
 
-public import Lib.GaloisRep.Pseudocharacter.Pseudorepresentations
-public import Lib.PadicHodge.Characters
-public import Lib.PadicHodge.Limit.TraceLimit
+import Mathlib.FieldTheory.Finite.Extension
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Topology.Algebra.Group.Units
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 public import Lib.Shimura.HeckeTower.HeckeData
+public import Lib.GaloisRep.Main.LocalConditions
+public import Lib.GaloisRep.Pseudocharacter.SemisimpleRepresentations
+public import Lib.PadicHodge.Limit.CrystallineLimit
+import Lib.GaloisRep.Pseudocharacter.Pseudorepresentations
+import Lib.General.LinearAlgebra.HermiteForm
+import Lib.General.NumberTheory.SUnitsAndClassNumber
+import Lib.PadicHodge.Characters
+import Lib.PadicHodge.Crystalline.HodgeTateJumps
+import Lib.PadicHodge.Limit.TraceLimit
 
 /-!
 # Cuspidal types, multiplicity-free sums and the Hodge–Tate cocharacter
@@ -166,8 +180,8 @@ lemma exists_eq_one_add_mul_mul_and_map_trace_ne_zero (N : ℕ) {a : LocField w}
         using h_ne_zero
     have h_trace : (b.map Subtype.val * (K.val * (diagonal d * (s * K⁻¹.val)))).trace =
         (k⁻¹ * b * k) j i * d i * t := by
-      simp [s, ← hk, ← mul_assoc, trace_mul_cycle _ s, trace_mul_single, Matrix.mul_apply, ← map_inv,
-        diagonal]
+      simp [s, ← hk, ← mul_assoc, trace_mul_cycle _ s, trace_mul_single, Matrix.mul_apply,
+        ← map_inv, diagonal]
     rwa [h_trace]
 
 /-- For N ≥ 1 and a finite place w, some character of 1 + ϖM_N(O_w) is nontrivial on every

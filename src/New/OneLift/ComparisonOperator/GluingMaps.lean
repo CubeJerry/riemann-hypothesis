@@ -1,9 +1,20 @@
 module
 
+public import Mathlib.Analysis.Matrix.PosDef
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.Tactic.Monotonicity.Lemmas
 public import New.OneLift.ComparisonOperator.GluedForms
 public import New.OneLift.ComparisonOperator.ProductsSpan
-public import New.OneLift.FalseLifts.PeriodsOfFalseLifts
-public import New.Spanning.SecondMoment.SpanningTheorem
+public import New.Determinant.Twist.FitTwists
+public import New.OneLift.ComparisonOperator.FirstFactors
+public import New.OneLift.ComparisonOperator.ThreeExchanges
+import Lib.General.LinearAlgebra.MatrixNormBounds
+import New.OneLift.FalseLifts.PeriodsOfFalseLifts
+import New.Spanning.Multiplicities.EqualMultiplicities
+import New.Spanning.SecondMoment.SpanningTheorem
+import New.UpperBound.Kernels.ThetaLiftGauge
+import New.UpperBound.Size.Estimates
 
 /-!
 # The first factors and the gluing maps
@@ -610,6 +621,11 @@ lemma card_secondFactorIndex_le : card D.SecondFactorIndex ≤ D.t := by
   rw [Fintype.card_sum, Fintype.card_fin, D.card_rowIndex]
   grind [D.hundred_mul_m_add_nine_lt_k, D.r_add_one, D.t_eq_five_mul_r]
 
+variable (D) in
+private lemma card_secondFactorIndex_le_two_mul_n : card D.SecondFactorIndex ≤ 2 * D.n D.m := by
+  have ht : D.t ≤ 6 * D.r := by rw [D.t_eq_five_mul_r]; omega
+  exact (card_secondFactorIndex_le D).trans (ht.trans (D.six_mul_r_le_n.trans (by omega)))
+
 /-- The diagram `μ⁻` has few boxes: at each place it has at most `D.gap` columns of each height, and
 the heights are below the rank of `V°`, which is at most `t`. -/
 lemma sum_mul_colsMinus_le :
@@ -707,8 +723,7 @@ lemma M_pow_denominatorExponent_sq_mul_le_exp :
         grind [Fintype.card_fin, D.six_mul_r_le_n, D.hundred_mul_m_add_nine_lt_k, D.r_add_one])
     have h_second :
         Nat.card (StdClasses (principalLevel D.SecondFactorIndex (D.piM ^ 2))) ≤ exp D.b :=
-      card_stdClasses_le_exp_of_le le_rfl (by
-        grind [card_secondFactorIndex_le D, D.six_mul_r_le_n, D.t_eq_five_mul_r])
+      card_stdClasses_le_exp_of_le le_rfl (card_secondFactorIndex_le_two_mul_n D)
     nth_grw 1 [← h_flat]
     grw [← h_second]
     -- What is left counts the matrices, the two sets of classes and the selections of rows.
@@ -918,7 +933,7 @@ lemma sum_slice_eq_zero_of_mem_falseLiftsAt {w : FinPlace D.E} {hw : star w ≠ 
   have h_small (h' : Gf D.E D.SecondFactorIndex) :
       classAut stdRatPoints (principalLevel D.SecondFactorIndex (D.piM ^ 2)) h' = ⊥ :=
     D.classAut_eq_bot_of_le_chosenLevel (D.principalLevel_le_chosenLevel ⟨_, sq _⟩)
-      (by grind [card_secondFactorIndex_le D, D.six_mul_r_le_n, D.t_eq_five_mul_r]) h'
+      (card_secondFactorIndex_le_two_mul_n D) h'
   -- The inner product with a form supported on one class is the pairing with the value there.
   simpa [↓h_small, classSum, ↓ finsum_eq_sum_of_fintype, DividedSplitting.productForm,
     inner_classForm] using! h_period
@@ -948,7 +963,7 @@ lemma thetaKernelPairing_adjoint_glue_eq_zero {w : FinPlace D.E} {hw : star w �
     by_cases hi : i' = i
     · simp only [η, ite_eq_left hi]
       exact sum_slice_eq_zero_of_mem_falseLiftsAt j ϑ hΞ (glueLattice j ϑ i') h _ _ _ g
-    · simp [η, hi]
+    · simp only [η, hi, ↓reduceIte, map_zero]
       exact Finset.sum_eq_zero fun _ _ ↦ rfl
   refine star_eq_zero.1 ?_
   calc star (thetaKernelPairing j (fun c ↦ (glue j ϑ).adjoint Ξ (i, c)) g)

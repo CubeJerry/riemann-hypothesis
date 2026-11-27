@@ -1,7 +1,16 @@
 module
 
-public import Lib.Adelic.Reduction.DefiniteClassSums
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.NumberTheory.NumberField.Countable
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import New.Spanning.Bessel.Basic
+public import Lib.Adelic.Hecke.ClassSums
+public import Lib.General.NumberTheory.EmbeddingsAndDifferent
+public import Lib.Adelic.Reduction.DefiniteClassSums -- shake: keep (needed public by an exposed definition)
 
 /-!
 # The data, standing hypotheses and amplitudes of the filling theorem
@@ -224,7 +233,7 @@ def latticeStabilizer : Subgroup S.GFin := (intGL 𝔰.BesselIndex (Ô E)).subgr
 entries modulo each chosen place above p₀ and p₁. -/
 protected def reduction : S.latticeStabilizer →* S.ResidueGL :=
   MonoidHom.pi fun _ ↦ MonoidHom.pi fun v ↦
-    (intGL.map (reduceAt v.1)).comp (S.GFin.subtype.subgroupComap (intGL 𝔰.BesselIndex (Ô E)))
+    (intGL.map (reduceAt v.val)).comp (S.GFin.subtype.subgroupComap (intGL 𝔰.BesselIndex (Ô E)))
 
 /-- The principal congruence subgroup K(M): the kernel of the reduction from K to `ResidueGL`, as a
 subgroup of the finite adelic unitary group. -/

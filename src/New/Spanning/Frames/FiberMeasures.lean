@@ -1,6 +1,9 @@
 module
 
 public import New.Spanning.Frames.StandardLevel
+import Lib.Base
+import Lib.Shimura.ComplexTheta.AppellHumbertData
+import Lib.SiegelWeil.OneVector.StandardQuadrics
 
 /-!
 # Fiber measures of the standard form, and the top quadric by its last entry
@@ -178,14 +181,14 @@ lemma gram_middleBasisMatrix {N : A} (hN : π * star (π : A) = N) :
   have h_cancel : star (↑π⁻¹ : A) * N = π := by rw [← hN, mul_left_comm, h_inv, mul_one]
   ext (i | ⟨⟩) (j | ⟨⟩)
   · simp [middleBasisMatrix, middleInclusionMatrix, latticeMiddleGram, Matrix.mul_apply,
-      diagonal, Matrix.one_apply, apply_ite star, h_cancel, h_inv, eq_comm]
-    split_ifs <;> simp_all [h_cancel, h_inv]
+      diagonal, Matrix.one_apply, apply_ite star, h_cancel, eq_comm]
+    split_ifs <;> simp_all
   · by_cases hi : i = 𝔰.k₀ <;>
       simp [middleBasisMatrix, middleInclusionMatrix, latticeMiddleGram, Matrix.mul_apply,
         diagonal, apply_ite star, h_cancel, hi, eq_comm]
   · by_cases hj : j = 𝔰.k₀ <;>
       simp [middleBasisMatrix, middleInclusionMatrix, latticeMiddleGram, Matrix.mul_apply,
-        diagonal, apply_ite star, h_cancel, h_inv, hj, eq_comm]
+        diagonal, h_cancel, h_inv, hj, eq_comm]
   · simp [middleBasisMatrix, latticeMiddleGram, Matrix.mul_apply, h_cancel]
 
 /-- In the basis `middleBasisMatrix`, the orthonormal basis of `X₀` followed by `π⁻¹ z`, the vector
@@ -309,10 +312,12 @@ lemma HyperbolicBasis.measurePreserving_inclMatrix_flatChart {T : 𝔰.Form A}
       (volume.prod P.skewMeasure) (F.floorQuadricMeasure 𝔰.top b) := by
   -- Both families of measures disintegrate the volume of `X₀ ⊕ A z`, so they agree.
   let ι₀ : Matrix 𝔰.BesselIndex 𝔰.MiddleIndex A := inclMatrix A (inr ∘ inl)
-  have h_form : ι₀ᴴ * T.splitGram * ι₀ = T := gram_inclMatrix (inr ∘ inl) T.splitGram
+  have h_form : ι₀ᴴ * T.splitGram * ι₀ = T :=
+    conjTranspose_inclMatrix_mul_mul_inclMatrix T.splitGram (inr ∘ inl) (inr ∘ inl)
   have h_left : ι₀ᴴ * ι₀ = 1 := by
     simpa [ι₀, ← ext_iff, Matrix.one_apply] using
-      gram_inclMatrix (inr ∘ inl) (1 : Matrix 𝔰.BesselIndex 𝔰.BesselIndex A)
+      conjTranspose_inclMatrix_mul_mul_inclMatrix (1 : Matrix 𝔰.BesselIndex 𝔰.BesselIndex A)
+        (inr ∘ inl) (inr ∘ inl)
   have h_chart : P.IsDisintegration (volume.map (ι₀ *ᵥ ·)) T.splitGram
       fun b' : skewAdjoint A ↦ ((P.quadricMeasure S b').map (E *ᵥ ·)).map (ι₀ *ᵥ ·) :=
     (isDisintegration_map_quadricMeasure hE h_card F.modulus_det hS hS_sq).map h_form h_left

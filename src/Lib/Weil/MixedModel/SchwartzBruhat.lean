@@ -1,7 +1,8 @@
 module
 
-public import Mathlib.Topology.LocallyConstant.Algebra
+import Mathlib.Topology.LocallyConstant.Algebra
 public import Lib.Weil.Construction.FiniteMultiplier
+import Lib.General.Measure.HaarNormalisation
 
 /-!
 # Schwartz–Bruhat functions on a set of places and the Schrödinger model there
@@ -235,7 +236,9 @@ lemma eq_sum_cosetIndicator (t : (𝔸f E)ˣ)
       (mem_box_iff.mp (by simp +contextual [mem_integralBox, idem_mul_mem_Ô])).trans q.out_eq⟩
   refine ⟨h_fin.toFinset.image out, by simp, ?_⟩
   -- At `x` only the class of `x` contributes, and `Ψ` is constant on each class.
-  simp [funext_iff, mem_box_iff]
+  suffices h : ∀ x : n → 𝔸f E, Ψ x = if Ψ (out (x : (n → 𝔸f E) ⧸ U.toAddSubgroup)) = 0 then 0
+      else Ψ (out (x : (n → 𝔸f E) ⧸ U.toAddSubgroup)) by
+    simpa [funext_iff, mem_box_iff] using h
   intro x
   split_ifs with hq
   · exact by_contra fun hx ↦ hx ((h_per x hx _ (mem_box_iff.mpr (out_eq _))).symm.trans hq)
@@ -527,7 +530,7 @@ lemma _root_.New.Space.mem_range_schrodingerCombination {S : Set (FinPlace E)}
   let B : OpenAddSubgroup (n → 𝔸f E) :=
     comap (smulAddHom (𝔸f E) (n → 𝔸f E) (star t⁻¹.val)) (continuous_const_smul _)
       ⟨stdLattice E n, isOpen_stdLattice⟩
-  have h_fintype : Fintype (stdLattice E n ⧸ B.toAddSubgroup.addSubgroupOf (stdLattice E n)) :=
+  let h_fintype : Fintype (stdLattice E n ⧸ B.toAddSubgroup.addSubgroupOf (stdLattice E n)) :=
     fintypeOfIndexNeZero (isCompact_stdLattice.relIndex_ne_zero_add B.isOpen)
   let f (q : stdLattice E n ⧸ B.toAddSubgroup.addSubgroupOf (stdLattice E n)) : (n → 𝔸f E) → ℂ :=
     schrodingerAct S (idem S • -z)

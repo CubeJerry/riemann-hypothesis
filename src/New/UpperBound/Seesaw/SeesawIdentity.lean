@@ -1,11 +1,12 @@
 module
 
-public import Lib.Adelic.AutomorphicForms.BlockPeriods
-public import Lib.DiscreteSeries.Bruhat.ComplexPlace
-public import New.UpperBound.Divisibility.ChainValuation
 public import New.UpperBound.Objects.PoincareMap
 public import New.UpperBound.Seesaw.Cut
-public import New.UpperBound.Seesaw.GoodDatum
+import Lib.Adelic.AutomorphicForms.BlockPeriods
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.DiscreteSeries.Bruhat.ComplexPlace
+import New.UpperBound.Divisibility.ChainValuation
+import New.UpperBound.Seesaw.GoodDatum
 
 /-!
 # The seesaw identity and the top of the chain
@@ -275,7 +276,7 @@ group of `Y`. -/
 def unfoldedPeriod (ϑ : D.TameChar)
     (t : (WeylIndex (D.X 0) D.columnCount → ℂ) →ₗ[ℂ] ℂ) (φ : D.SourceForm)
     (ξ : ∀ i : ℕ, GInf D.E (D.signsY i)) (y : ∀ i : ℕ, Gf D.E (D.Y i))
-    (k : ℕ) (hk : k ≤ 2 * D.ϱ + 1) {X : Type} {s : ℕ} [Fintype X] [DecidableEq X]
+    (k : ℕ) (hk : k ≤ 2 * D.ϱ + 1) {X : Type} {s : ℕ} [DecidableEq X]
     (Y : Grading (D.spaceY (k + 1)) D.N X s) (z : D.ConjFormY (k + 1)) : ℂ :=
   ∫ h : New.G D.E (D.signsY (k + 1)),
     (unfoldStage ϑ t φ ξ y k hk Y * z.val) h ∂Y.ratBessel.quotMeasure
@@ -374,7 +375,7 @@ lemma integral_mul_liftY_poincareAt (ϑ : D.TameChar)
     Subgroup.relIndex_mul_relIndex J _ _ (levelY_le_chosenLevel ϑ 0) levelOf_le_stdLevel
   have h_ne : stdLevelIndex J ≠ 0 := isCompact_stdLevel.relIndex_ne_zero IsLevel.isOpen
   have h_rel_ne : J.relIndex D.chosenLevel ≠ 0 := left_ne_zero_of_mul (h_index.trans_ne h_ne)
-  have : Fintype (D.chosenLevel ⧸ J.subgroupOf D.chosenLevel) :=
+  let : Fintype (D.chosenLevel ⧸ J.subgroupOf D.chosenLevel) :=
     Subgroup.fintypeOfIndexNeZero h_rel_ne
   -- The period over `[R_0]` at `(g, x)` depends only on the class of `x` modulo `J`.
   let period (x : Gf D.E (D.Y 0)) : ℂ :=

@@ -1,9 +1,13 @@
 module
 
-public import Mathlib.LinearAlgebra.Matrix.AbsoluteValue
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.LinearAlgebra.Matrix.AbsoluteValue
 public import New.Spanning.RemainingTerms.Box
 public import New.Spanning.RemainingTerms.SiegelLemma
 public import New.Spanning.Unfolding.BesselLevelStructure
+import Lib.SiegelWeil.Mass
 
 /-!
 # Near terms in the filling theorem: frames, cell ranks, nearness and integrality
@@ -24,7 +28,7 @@ algebraic integers.
   the unipotent character, the vectors common to the two flags of a term, and its cell rank.
 * `New.Filling.IsNear`: `γ` is near if some boxed point `y` (`New.Filling.boxedPoints`) has `γ⁻¹ y`
   boxed.
-* `New.Filling.norm_sq_middle_part_eq`, `New.Filling.map_termDisc_eq_norm`: a norm identity, which
+* `New.Filling.map_termDisc_eq_norm`: a norm identity, which
   makes `S.termDisc γ` real and nonnegative at every infinite place. So `S.termDisc γ` is totally
   positive or zero (`New.Filling.termDisc_pos_or_eq_zero`).
 * `New.Filling.IsNear.norm_frameProducts_le`, `New.Filling.IsNear.norm_map_leadingMinor_sq_le`: for

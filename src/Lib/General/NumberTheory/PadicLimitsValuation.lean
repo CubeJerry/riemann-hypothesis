@@ -1,11 +1,21 @@
 module
 
-public import Mathlib.Algebra.AlgebraicCard
-public import Mathlib.Algebra.Polynomial.Basis
 public import Mathlib.NumberTheory.Padics.AddChar
+import Mathlib.Algebra.AlgebraicCard
+import Mathlib.Algebra.Polynomial.Basis
+import Mathlib.Algebra.Ring.IsFormallyReal
+public import Mathlib.Topology.Algebra.Ring.Compact -- shake: keep (needed public by an exposed definition)
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import TauCeti.NumberTheory.NumberField.Countable
+import TauCeti.RingTheory.Huber.Normed
 public import Lib.GaloisRep.Main.SelmerModules
-public import Lib.General.Geometry.GaloisCovers
 public import Lib.General.NumberTheory.CoefficientRings
+public import Lib.Cohomology.Etale.Basic
+public import Lib.General.NumberTheory.ImaginaryQuadraticField
+import Lib.General.Geometry.GaloisCovers
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.PadicHodge.Crystalline.Basic
 
 /-!
 # Algebraicity from ℓ-adic bounds, roots of unity as limits, and the ℓ-adic valuation
@@ -298,8 +308,7 @@ variable (O) in
 lemma irreducible_uniformizer : Irreducible O.uniformizer := (exists_irreducible O).choose_spec
 
 /-- Normalised length: the additive map sending n to n·v(ϖ) and ∞ to ∞, where ϖ is the chosen
-uniformiser `O.uniformizer` and v(ℓ) = 1. The value does not depend on the choice of ϖ
-(`normLength_natCast_of_irreducible`). -/
+uniformiser `O.uniformizer` and v(ℓ) = 1. -/
 noncomputable def normLength : ℕ∞ →+ ℝ≥0∞ :=
   AddMonoidHom.ENatMap
     { toFun n := n * (-logb ℓ ‖O.uniformizer.val‖).toNNReal

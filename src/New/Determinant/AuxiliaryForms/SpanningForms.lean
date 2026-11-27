@@ -1,9 +1,18 @@
 module
 
-public import New.Determinant.AuxiliaryForms.DiagonalTurns
-public import New.Determinant.AuxiliaryForms.FirstPath
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.Tactic.PNatToNat
+import Std.Tactic.BVDecide.Normalize.Bool
 public import New.Determinant.AuxiliaryForms.LastPath
-public import New.OneLift.ComparisonOperator.FirstFactors
+public import New.Determinant.AuxiliaryForms.Turns
+public import New.UpperBound.Kernels.ThetaLiftGauge
+public import New.UpperBound.Objects.RowChain
+public import New.UpperBound.Size.ShortColumns
+import New.Determinant.AuxiliaryForms.DiagonalTurns
+import New.Determinant.AuxiliaryForms.FirstPath
+import New.OneLift.ComparisonOperator.FirstFactors
+import New.UpperBound.Size.Estimates
 
 /-!
 # Denominators and sizes on the last path, and the auxiliary forms
@@ -256,7 +265,6 @@ lemma exists_norm_mul_lastPathPairing_le_one : ∃ N ≠ (0 : ℕ),
       congr 1
       simp only [LinearMap.compl₂_apply, Matrix.mulVecLin_apply, dotProductBilin_apply_apply,
         dotProduct, mulVec, map_sum, map_mul, map_intCast, Matrix.map_apply, Function.comp_apply]
-
   calc _ = (∏ τ, ‖N τ * (χ τ)⁻¹.val‖) * ‖w' ⬝ᵥ D.lastPathBranching.map (↑) *ᵥ w‖ := by
         rw [h_char, ← norm_prod, ← norm_mul, ← mul_assoc, Units.coe_prod, ← prod_mul_distrib]
         simp only [mul_assoc, Units.inv_mul, mul_one, map_mul, map_natCast, map_prod,
@@ -584,10 +592,9 @@ lemma weylNormSq_le_of_dualPairing (σ : ℂ ≃+* ℂ) {ζ : WeylIndex (D.Y D.m
             Function.comp_apply, RingEquiv.apply_symm_apply]
   have h_le : weylNormSq w ≤ K * √(weylNormSq w) :=
     calc weylNormSq w = ‖(weylNormSq w : ℂ)‖ := by simp [abs_of_nonneg]
-      _ ≤ K * √(weylNormSq (σ ∘ σ.symm ∘ w)) := by
+      _ ≤ K * √(weylNormSq w) := by
         rw [h_eq]
-        exact hζ _
-      _ = _ := by simp [Function.comp_def]
+        simpa [Function.comp_def] using hζ (σ.symm ∘ w)
   have h_root : √(weylNormSq w) ≤ K :=
     div_sqrt.ge.trans (div_le_of_le_mul₀ (sqrt_nonneg _) hK h_le)
   rw [← hw_norm]

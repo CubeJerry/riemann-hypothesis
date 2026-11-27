@@ -1,7 +1,13 @@
 module
 
 import TauCeti.NumberTheory.Padics.Complex.TateTwist
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.Topology.Separation.CompletelyRegular
 public import Lib.PadicHodge.Crystalline.Basic
+public import Lib.PadicHodge.PeriodRings.DeRhamPeriods
+import Lib.ClassField.Places.DecompositionCompletion
+import Lib.General.Groups.ProfiniteCharacters
 
 /-!
 # Tate's vanishing theorem, Hodge–Tate elimination and the filtration of B_dR
@@ -20,8 +26,8 @@ Rham period field B_dR = `New.Period.BdR`.
 * `New.Period.hodgeFil`: the step tⁿ B_dR⁺, with t = `New.Period.tPeriod` a uniformiser of the
   discrete valuation ring B_dR⁺ = `New.Period.BdRPlus`, on which g acts by g t = χ(g) t
   (`New.Period.smul_tUnit_zpow`).
-* `New.Period.exists_mem_localFieldOf_of_forall_smul_eq`: an element of ℂ_p fixed by an open subgroup lies in its fixed
-  field K in Q̄_p.
+* `New.Period.exists_mem_localFieldOf_of_forall_smul_eq`: an element of ℂ_p fixed by an open
+  subgroup lies in its fixed field K in Q̄_p.
 * `New.Period.BdR.exists_sub_mem_of_smul_sub_mem`: an element of B_dR that is invariant modulo a
   B_dR⁺-submodule S is congruent modulo S to an element of K; S = 0 gives the invariants of B_dR.
 

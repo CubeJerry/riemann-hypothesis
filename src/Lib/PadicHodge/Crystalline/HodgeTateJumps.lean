@@ -1,11 +1,20 @@
 module
 
-public import Mathlib.Data.Finsupp.Pointwise
-public import Mathlib.LinearAlgebra.LinearIndependent.BaseChange
-public import Mathlib.RingTheory.Coalgebra.CoassocSimps
-public import Lib.General.Measure.HaarModulus
-public import Lib.PadicHodge.Crystalline.HodgeTateForms
+public import Aesop.BuiltinRules
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Data.Finsupp.Pointwise
+import Mathlib.LinearAlgebra.LinearIndependent.BaseChange
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Topology.Separation.CompletelyRegular
 public import Lib.Adelic.Hecke.ClassSums
+public import Lib.PadicHodge.TateSen
+import Lib.ClassField.Places.DecompositionCompletion
+import Lib.General.Measure.HaarModulus
+import Lib.General.NumberTheory.CoefficientRings
+import Lib.PadicHodge.Crystalline.HodgeTateForms
 
 /-!
 # Hodge frames and Hodge–Tate jumps under operations on representations
@@ -778,7 +787,7 @@ lemma linearIndependent_algHom_coord (h_inj : ∀ x : T', (∀ i : ι, f i x = 0
     exact ⟨b, funext hb⟩
   let c (k : κ) : ℤ_[p] := ⟨b k, by simpa using h_norm k⟩
   -- One embedding `γ` is enough: it is injective, as `R` is an algebraic domain.
-  have γ : R →ₐ[ℤ_[p]] ℂ_[p] := IsAlgClosed.lift
+  let γ : R →ₐ[ℤ_[p]] ℂ_[p] := IsAlgClosed.lift
   algebraize [γ.toRingHom]
   have hγ : Function.Injective γ := (faithfulSMul_tower_top ℤ_[p] R _).algebraMap_injective
   have h_coord (i : ι) (l : Fin (finrank R (S i))) :
@@ -831,7 +840,7 @@ lemma IsPotentiallyCrystalline.sum_jump_eq_jump_overZp (h : IsPotentiallyCrystal
   -- The Hodge–Tate bases `b γ` of the `γ`-semilinear maps, over all embeddings `γ`, together form a
   -- basis `B` of the `ℤ_[p]`-linear maps: they span by `top_le_span_pullback`, and their number is
   -- right.
-  have e : Basis (Fin (finrank ℤ_[p] R) × Fin (finrank R T)) ℤ_[p] T :=
+  let e : Basis (Fin (finrank ℤ_[p] R) × Fin (finrank R T)) ℤ_[p] T :=
     (finBasis ℤ_[p] R).smulTower (finBasis R T)
   have : Module.Finite ℤ_[p] T := of_basis e
   -- For each embedding `γ`: weights `k γ` and a basis `b γ` of forms of these weights.

@@ -1,10 +1,17 @@
 module
 
-public import Lib.Shimura.AbelianScheme.IsogenyFlatness
+import Mathlib.AlgebraicGeometry.Morphisms.WeaklyEtale
+import Mathlib.CategoryTheory.EffectiveEpi.Comp
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Topology.Algebra.Group.Units
+import TauCeti.Analysis.Normed.Ring.Ultra
 public import Lib.Shimura.HeckeTower.HeckeData
 public import Lib.Shimura.ThetaModuli.ThetaFamilyRigidity
-public import Lib.Shimura.Uniformisation.LieExponential
-public import Lib.Weil.Unramified.SplitHecke
+import Lib.Shimura.AbelianScheme.IsogenyFlatness
+import Lib.Shimura.AbelianScheme.Pairings
+import Lib.Shimura.Uniformisation.LieExponential
+import Lib.Weil.Unramified.SplitHecke
 
 /-!
 # Properties of a Kuga–Sato tower, Hecke operators at split places, torsion counts and levels
@@ -268,7 +275,8 @@ lemma mem_levelGU_of_map_evalAt_eq {g : GL n (𝔸f E)} (hGU : g ∈ GU E n) (hi
   -- there `g` agrees with an element `κ` of the level.
   have h_entry (i j : n) : (g.val - 1) i j ∈ Ô E ∙ algebraMap (𝓞 E) (𝔸f E) 𝔑 := by
     refine mem_span_iff_valuation_le.mpr ⟨?_, fun u hu ↦ ?_⟩
-    · aesop (add simp [mem_intGL, Matrix.one_apply])
+    · exact sub_mem ((mem_intGL.mp hint).1 i j)
+        ((mem_intGL.mp (one_mem (intGL n (Ô E)))).1 i j)
     obtain ⟨κ, hκ, h_loc⟩ := h_places u hu
     have hκ_entries : ∀ i j : n, (κ.val - 1) i j ∈ Ô E ∙ algebraMap (𝓞 E) (𝔸f E) 𝔑 :=
       (Subgroup.mem_inf.mp hκ).right.right

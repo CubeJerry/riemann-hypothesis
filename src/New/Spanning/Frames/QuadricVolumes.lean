@@ -1,8 +1,11 @@
 module
 
-public import Lib.DiscreteSeries.Bruhat.FourierKernels
+import Mathlib.CategoryTheory.Countable
+import Mathlib.Topology.Algebra.Group.Units
 public import New.Spanning.Frames.Correlations
-public import New.Spanning.Frames.TwoGauges
+public import Lib.DiscreteSeries.Bruhat.QuadricBlocks
+import Lib.DiscreteSeries.Bruhat.FourierKernels
+import New.Spanning.Frames.TwoGauges
 
 /-!
 # Volumes on quadrics and on sections
@@ -18,8 +21,8 @@ G^(l), U_(<l) and Y^(l) are those of the head of `New.Spanning.Frames.Lengths`.
 * `New.Floors.Gauge.setLIntegral_orthonormalPart_le`: integrals of functions of the orthonormal
   coordinates.
 * `New.Floors.Gauge.lintegral_heisenbergMeasure_le`: integrals over a Heisenberg group.
-* `New.Floors.sectionPoint`, `New.Floors.PlaceData.lintegral_floorQuadricMeasure_eq`,
-  `New.Floors.Gauge.setLIntegral_sectionMeasure_le`: sections and their measures.
+* `New.Floors.sectionPoint`, `New.Floors.Gauge.setLIntegral_sectionMeasure_le`: sections and their
+  measures.
 
 Notions from other files:
 

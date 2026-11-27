@@ -1,8 +1,12 @@
 module
 
+public import Mathlib.Topology.Algebra.Group.Units
+import TauCeti.Analysis.Matrix.IndefiniteUnitaryGroup
 public import Lib.Adelic.Adeles.LocalFactors
-public import Lib.Shimura.HeckeTower.HeckeData
 public import New.Spanning.Unfolding.Setup
+public import Lib.DiscreteSeries.Bruhat.FloorMeasures
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Shimura.HeckeTower.HeckeData
 
 /-!
 # Bessel data: level subgroup, Eichler maps and strong approximation for the unipotent group
@@ -28,10 +32,6 @@ with `S.translateByClassReps c d γ` integral of reduction s.
   along x and v, with ς = τ h(v, v), lies in the unipotent group `New.Shape.Form.besselU`; the lemma
   also computes its `New.simpleRootSum`.
 * `New.besselU_dense`, `New.Filling.exists_besselU_approx`: strong approximation for 𝖴.
-* `New.Filling.mem_reducedImage_besselU_iff_exists_termsOver`,
-  `New.Filling.prod_wave_eq_star_unipotentChar`: the rational points of 𝖴 that are integral for a
-  class map onto the reduction of the integral points of 𝖴(𝔸_f), and on them the character at
-  infinity is the conjugate of the finite character at an integral point with the same reduction.
 * `New.Filling.exists_besselS_mem_termsOver`: each reduction `s` of an integral element of
   `New.Shape.Form.besselS` is reached from each class c by a rational element of
   `New.Shape.Form.besselS`.
@@ -668,7 +668,8 @@ function of its parameter `p`, a pair of a vector and a skew element. -/
 lemma New.continuous_heisenbergElem_finAdele {T : 𝔰.Form (𝔸f E)} [IsHermitianUnit T.splitGram]
     (a : Fin 𝔰.ϱ) : Continuous (heisenbergElem (T := T) a) := by
   rw [(Matrix.unitaryGroupOf.isClosedEmbedding_val isUnit).continuous_iff]
-  simp [comp_def, heisenbergElem, eichlerMap]
+  simp only [comp_def, heisenbergElem, eichlerMap, star_neg, mulVec_mulVec, Pi.star_single,
+    star_one, single_vecMul, one_smul, U.val_of_coe]
   fun_prop
 
 /-- The skew elements `t - t̄` with `t ∈ E` are dense in the skew finite adeles. -/

@@ -1,7 +1,11 @@
 module
 
+import Mathlib.CategoryTheory.Countable
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.DiscreteSeries.Bruhat.FloorMeasures
 public import New.Spanning.Frames.Lengths
+import Lib.Base
 
 /-!
 # Place data, floor measures and depth
@@ -218,7 +222,7 @@ def stableProducts (a : Fin 𝔰.ϱ) (x y : T.G) : Set A :=
 
 /-- The depth of the vector e_a at the points x and x y: the inverse of the volume of 𝔡_a. In the
 place data that are used it is as follows. At the finite places it is the index of the ideal 𝔡_a if
-x is near at a + 1 (`New.Floors.IntegralPlace.IsLargeLatticeData.exists_ideal_depth_eq`). At a real
+x is near at a + 1. At a real
 place it is 1 / π times the infimum of |ζ|² at x plus |ζ|² at x y over the duals ζ of e_a in Y^(a)
 (`New.Floors.RealPlaceSizes.depth_eq`). -/
 def depth (a : Fin 𝔰.ϱ) (x y : T.G) : ℝ≥0∞ := (volume (F.stableProducts a x y))⁻¹
@@ -306,7 +310,7 @@ form `upperGram (a + 1)` on the higher floors. -/
 lemma gram_inclMatrix_floorIndexEnum (a : Fin 𝔰.ϱ) :
     (inclMatrix A (floorIndexEnum a))ᴴ * T.splitGram * inclMatrix A (floorIndexEnum a) =
       planeSumGram (upperGram (T := T) (a + 1)) := by
-  rw [gram_inclMatrix]
+  rw [conjTranspose_inclMatrix_mul_mul_inclMatrix]
   -- the pair of floor `a` is orthogonal to the higher pairs
   suffices (∀ c : Fin 𝔰.ϱ, a < c → a = c → (1 : A) = 0) ∧
       ∀ c : Fin 𝔰.ϱ, a < c → c = a → (1 : A) = 0 by
@@ -327,7 +331,7 @@ lemma floorQuadricMeasure_castSucc_eq_map (a : Fin 𝔰.ϱ) :
     inclMatrix A (floorIndexEnum a)
   have h_left : Eᴴ * E = 1 := by
     simpa [submatrix_one _ (floorIndexEnum_injective a)] using
-      gram_inclMatrix (A := A) (floorIndexEnum a) 1
+      conjTranspose_inclMatrix_mul_mul_inclMatrix (R := A) 1 (floorIndexEnum a) (floorIndexEnum a)
   have h_vol : volume.map (E *ᵥ ·) = floorVolume a.castSucc :=
     map_inclMatrix_eq_floorVolume _ (floorIndexEnum_injective a) (mem_range_floorIndexEnum a)
   have h_herm : (upperGram (T := T) (a + 1)).IsHermitian :=
@@ -362,7 +366,8 @@ lemma inclMatrix_mulVec_flatChart_eq_heisenbergElem_mulVec (a : Fin 𝔰.ϱ) (t 
   set c : A := star u ⬝ᵥ upperGram (T := T) (a + 1) *ᵥ u with hc
   have h_form : star (inclMatrix A Subtype.val *ᵥ u) ⬝ᵥ T.splitGram *ᵥ inclMatrix A Subtype.val *ᵥ u
       = c := by
-    rw [hc, upperGram, ← gram_inclMatrix, star_mulVec_dotProduct, mulVec_mulVec, mulVec_mulVec]
+    rw [hc, upperGram, ← conjTranspose_inclMatrix_mul_mul_inclMatrix, star_mulVec_dotProduct,
+      mulVec_mulVec, mulVec_mulVec]
   -- the coordinates of the chart point, where `h(t u, t u) = t̄ t c`
   have h_chart : flatChart (upperGram (T := T) (a + 1)) 0 ((t, t.val • u), β) =
       ![(β - element * c) * t, t] ⊕ᵥ t.val • u := by
@@ -407,16 +412,15 @@ lemma measurePreserving_orbitPoint {F : PlaceData ι T m} (b : Fin 𝔰.n) :
       ∫⁻ t : A, modulus t ^ d * ∫⁻ u : V, ∫⁻ β : skewAdjoint A,
         Φ (orbitPoint a.castSucc ((floorWeyl a t : T.G)⁻¹ * heisenbergElem a (u, β)))
           ∂P.skewMeasure := by
-    simp (disch := fun_prop) [floorMeasure, heisenbergMeasure, lintegral_map,
-      mconv, lintegral_prod, hd, V]
+    simp (disch := fun_prop) only [floorMeasure, Fin.val_castSucc, Fin.is_lt, ↓reduceIte, mconv,
+      heisenbergMeasure, ↓reduceDIte, lintegral_map, lintegral_prod, hd]
     rw [weylLaw, lintegral_map (by fun_prop) (by fun_prop),
       lintegral_withDensity_eq_lintegral_mul _ (by fun_prop) (by fun_prop)]
     rfl
   have h_quadric : ∫⁻ v, Φ v ∂F.floorQuadricMeasure a.castSucc =
       ∫⁻ t : A, ∫⁻ u : V, ∫⁻ β : skewAdjoint A, Φ (χ t u β) ∂P.skewMeasure := by
     rw [floorQuadricMeasure_castSucc_eq_map]
-    simp (disch := fun_prop)
-      [lintegral_map, lintegral_prod, volume_eq_prod, χ, V]
+    simp (disch := fun_prop) only [lintegral_map, volume_eq_prod, lintegral_prod, V, χ]
     rw [lintegral_prod _ (by fun_prop)]
   rw [h_floor, h_quadric]
   refine lintegral_congr_of_ae_imp ae_isUnit ?_

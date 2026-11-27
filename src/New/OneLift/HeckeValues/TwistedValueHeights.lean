@@ -1,11 +1,17 @@
 module
 
-public import New.Congruences.GaloisRepresentations.SelmerHypotheses
-public import New.Derivatives.Sharpness.BoundAttained
+import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
+import Mathlib.Data.Rat.Cast.OfScientific
 public import New.OneLift.ComparisonOperator.ThreeExchanges
-public import New.OneLift.FalseLifts.PeriodsOfFalseLifts
 public import New.OneLift.HeckeValues.AlgebraicPartSize
-public import New.OneLift.HeckeValues.CentralAction
+public import Lib.DiscreteSeries.Bruhat.ComplexPlace
+public import New.OneLift.HeckeValues.TwistedRatio
+public import New.UpperBound.Size.ShortColumns
+import New.Congruences.GaloisRepresentations.SelmerHypotheses
+import New.Derivatives.Sharpness.BoundAttained
+import New.OneLift.FalseLifts.PeriodsOfFalseLifts
+import New.OneLift.HeckeValues.CentralAction
+import New.UpperBound.Size.Estimates
 
 /-!
 # Heights of ratios of twisted to untwisted Hecke values via rank-one theta lifts
@@ -120,7 +126,7 @@ theorem _root_.New.exists_norm_le_norm_twisted_classSum {l : ℕ} [Fact l.Prime]
   have : Finite (_root_.Quotient (leftRel (Γ ⊔ K))) := by
     rw [← h_setoid]
     exact HasFiniteType.finite_classes
-  have : Fintype (Gf E Unit ⧸ Γ ⊔ K) := ofFinite (_root_.Quotient _)
+  let : Fintype (Gf E Unit ⧸ Γ ⊔ K) := ofFinite (_root_.Quotient _)
   have h_sum (f : Gf E Unit → ℂ) : classSum Γ K f = ∑ o : Gf E Unit ⧸ Γ ⊔ K, f o.out :=
     calc classSum Γ K f = ∑ᶠ c : _root_.Quotient (setoid Γ K), f c.out := by
           simp only [classSum, h_aut, Subgroup.card_bot, Nat.cast_one, inv_one, one_smul]
@@ -850,7 +856,7 @@ theorem exists_isTestForm_le_norm_inner_trivialLift {j : D.LiftIndex} {p q₂ : 
   -- `ψ`, times values of pairs with empty row on the other three. `c₀` is the product of the
   -- number `t` of `exists_rpow_neg_localPrimeSumTotal_le_norm_coeff`, the untwisted value `L_twist`
   -- of the second block and the geometric mean `L` of the values of the last two blocks.
-  have fin : Fintype (tameChars D.finite_isChosen.toFinset) := ofFinite _
+  let fin : Fintype (tameChars D.finite_isChosen.toFinset) := ofFinite _
   have h_large : 10000 ≤ D.m := D.ten_thousand_le_m
   have h_free : ∀ g : Gf D.E Unit, classAut stdRatPoints D.chosenLevel g = ⊥ :=
     D.classAut_eq_bot_of_le_chosenLevel le_rfl (card_unit.trans_le D.nat_le_of_hasLogBound)
@@ -1116,7 +1122,7 @@ theorem heightLe_inv_ratio {θ : PrimePadicIso → D.MFoldTwist} (hθ : D.IsRegu
     set pairings := inner ℂ (Ξ ι) (φ ι) * inner ℂ (φ ι) (Ξ' ι)
     have h_cancel (a b : ℂ) : a * (pairings / b) * (ρ ι)⁻¹ ^ 2 * (ρ ι ^ 2 / pairings) = a / b := by
       rw [inv_pow, div_eq_mul_inv (ρ ι ^ 2), mul_assoc _ (ρ ι ^ 2)⁻¹,
-        ← mul_assoc (ρ ι ^ 2)⁻¹ (ρ ι ^ 2), inv_mul_cancel₀ (pow_ne_zero 2 (hρ ι)), one_mul,
+        inv_mul_cancel_left₀ (pow_ne_zero 2 (hρ ι)),
         ← mul_div_assoc, div_mul_eq_mul_div, mul_inv_cancel_right₀ h_ne]
     rw [h_value, h_norm, h_cancel]
   -- The power of `N(Q)` is an integer, so it has norm at most one.

@@ -1,8 +1,16 @@
 module
 
-public import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
-public import Lib.General.LinearAlgebra.MatrixNormBounds
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Linter.Style
 public import New.Congruences.Lifting.ExponentLattices
+import Lib.General.LinearAlgebra.MatrixNormBounds
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.PadicHodge.Kisin.FrameTheorem
 
 /-!
 # Exponents of lattice elements in a Hodge basis and the length of one step on a line
@@ -23,10 +31,6 @@ parts with raised exponents. The line `u` of a system `c` of exponents is the fa
   `New.Lift.KummerChart.stdOrders l` cut out, at the letter, the span
   `New.Lift.KummerChart.JumpLattice.frobKisinAinf l`, the image of `L.kisinAinf` under `φ^l`.
   On the line `u` these exponents are `0` below level `l` and `-u` from level `l` on.
-* `New.Lift.KummerChart.JumpLattice.prod_frobEUnit_zpow_smul_mem_kisinLoc_and_withOrders_iff`:
-  for a product `F` of integer powers of the `φ^a(E)`, the module `F` times the `S`-span of the
-  image under `φ^l` of the Kisin module `L.kisinModule` is cut out in `L.kisinLoc`, at the letter,
-  by the standard exponents raised by those of `F`.
 * `New.Lift.KummerChart.JumpLattice.wittPairing_mem_withOrders`: exponents add under an
   equivariant bilinear map of lattices.
 * `New.Lift.KummerChart.JumpLattice.raiseOrder`, `New.Lift.KummerChart.JumpLattice.raiseOrdersAt`:

@@ -1,8 +1,24 @@
 module
 
-public import Lib.General.Algebra.LevelModulus
-public import Lib.SiegelWeil.RallisInner.DualDatum
+import Mathlib.Data.Finset.Functor
+import Mathlib.Order.Interval.Finset.Box
+import TauCeti.NumberTheory.NumberField.Countable
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
+public import Lib.ClassField.HeckeCharacter.TameModulus
 public import Lib.SiegelWeil.UnramifiedSeries.RallisSeries
+public import Lib.ClassField.Avatar.HeckeBaseChange
+public import Lib.SiegelWeil.RallisInner.Doubling
+public import Lib.Weil.Lift
+import Lib.ClassField.HeckeL.ContinuationAtOne
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.General.Algebra.LevelModulus
+import Lib.General.LinearAlgebra.HermiteForm
+import Lib.General.LinearAlgebra.PartnerAlgebra
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
+import Lib.SiegelWeil.RallisInner.DualDatum
+import Lib.SiegelWeil.RallisInner.VacuumSummability
+import Lib.Weil.Unramified.HeckeTransfer
 
 /-!
 # Rallis' inner product formula for sharp data and injectivity of the theta lift
@@ -777,7 +793,11 @@ lemma mem_localIntGL_unit_iff (g : GL Unit (LocField w)) :
     g ∈ localIntGL Unit w ↔ (v g.val.det).log = 0 := by
   have h_ne : v g.val.det ≠ 0 := by simp [-det_unique, GeneralLinearGroup.det_ne_zero]
   rw [← WithZero.exp_eq_one, WithZero.exp_log h_ne]
-  exact mem_intGL_iff_det.trans (by aesop)
+  refine mem_intGL_iff_det.trans ⟨And.right, fun hv ↦ ⟨?_, hv⟩⟩
+  intro i j
+  cases i
+  cases j
+  simpa only [Matrix.det_unique] using hv.le
 
 /-- The vacuum coefficient in rank one at a split place `w`. Here `vacuumCoeff M b g = (b(det g) *
 finMultiplier g ^ M)⁻¹` is the factor by which `g` changes the matrix coefficient of a vacuum. Let

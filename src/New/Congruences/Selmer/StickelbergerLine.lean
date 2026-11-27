@@ -1,7 +1,14 @@
 module
 
+public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
+import Mathlib.LinearAlgebra.Lagrange
+import Mathlib.Topology.Algebra.Valued.LocallyCompact
 public import New.Congruences.Selmer.OneSystem
 public import New.Congruences.Selmer.StickelbergerSystems
+public import Lib.General.NumberTheory.GaussValuation
+import Lib.General.NumberTheory.PadicLimitsValuation
 
 /-!
 # Stickelberger systems on a line
@@ -157,16 +164,11 @@ lemma ellVal_eulerFactor_le {q : ℕ} (exps : List ℤ) (ha : ‖a‖ = 1) (hb :
   | nil => simp [ellVal, eulerFactor_nil]
   | cons e exps ih =>
     rw [List.length_cons, Nat.cast_succ, add_one_mul] at hM ⊢
-    have hb_lt : ellVal (b - 1) < M :=
-      calc ellVal (b - 1) ≤ 2 * ellVal (b - 1) := le_self_add.trans_eq (two_mul _).symm
-        _ < M := le_add_self.trans_lt hM
-    have h_tail : ellVal (eulerFactor exps a q) ≤ exps.length * (2 * ellVal (b - 1)) :=
-      ih (le_self_add.trans_lt hM)
-    have h_head : ellVal ((1 - a * (q : PadicAlgCl ℓ) ^ (-e)) *
-        (1 - a⁻¹ * (q : PadicAlgCl ℓ) ^ (-e))) ≤ 2 * ellVal (b - 1) :=
-      ellVal_one_sub_mul_one_sub_inv_le (-e) ha hb hq_norm hab hq hb_lt
     rw [eulerFactor_cons, add_comm]
-    exact ellVal_mul_le.trans (add_le_add h_head h_tail)
+    exact ellVal_mul_le.trans (add_le_add
+      (ellVal_one_sub_mul_one_sub_inv_le (-e) ha hb hq_norm hab hq <|
+        (le_self_add.trans_eq (two_mul _).symm).trans_lt (le_add_self.trans_lt hM))
+      (ih (le_self_add.trans_lt hM)))
 
 end Valuation
 

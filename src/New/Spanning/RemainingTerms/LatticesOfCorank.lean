@@ -1,7 +1,13 @@
 module
 
-public import New.Spanning.RemainingTerms.FramesOverLattice
-public import New.Spanning.Unfolding.Climbing
+import Mathlib.CategoryTheory.Shift.Basic
+import Mathlib.RingTheory.PicardGroup
+public import Lib.General.LinearAlgebra.PartnerAlgebra
+public import New.Spanning.RemainingTerms.Data
+import Lib.Adelic.Reduction.DefiniteClassSums
+import New.Spanning.RemainingTerms.FramesOverLattice
+import New.Spanning.Unfolding.Climbing
+import New.Spanning.Unfolding.ReducedPoints
 
 /-!
 # Sums over lattices of given corank and small discriminant
@@ -788,7 +794,7 @@ theorem sum_discriminant_inv_le {S : Filling E 𝔰} [S.IsAdmissible] {r l : ℕ
   have h_card : (S.N ^ 𝔰.k / S.b) ^ numInfPlaces E ≤ (Nat.card S.LatticeStabilizerCoset : ℝ) :=
     IsAdmissible.le_relIndex
   have h_card_pos : (0 : ℝ) < Nat.card S.LatticeStabilizerCoset := h_card.trans_lt' (by positivity)
-  have : Fintype S.LatticeStabilizerCoset :=
+  let : Fintype S.LatticeStabilizerCoset :=
     Subgroup.fintypeOfIndexNeZero (Nat.cast_pos.1 h_card_pos).ne'
   rw [mul_comm_div]
   refine sum_classes_le_of_sum_translates_le (fun φ : S.LatticeStabilizerCoset ↦ φ.out.val) _

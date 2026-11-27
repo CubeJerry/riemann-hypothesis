@@ -1,7 +1,23 @@
 module
 
-public import Lib.PadicHodge.Crystalline.FixedRatios
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Topology.Algebra.Group.Units
+import TauCeti.FieldTheory.Galois.IsometricAction
 public import Lib.PadicHodge.Crystalline.HodgeTateJumps
+public import Lib.ClassField.GaloisCohomology.ShapiroCorestriction
+public import Lib.ClassField.Places.DecompositionCyclotomic
+public import Lib.General.Algebra.FittingIdealsAndLengths
+import Lib.ClassField.GaloisCohomology.KummerCyclicClasses
+import Lib.ClassField.Places.DecompositionCompletion
+import Lib.General.Measure.HaarModulus
+import Lib.PadicHodge.Crystalline.FixedRatios
+import Lib.PadicHodge.Crystalline.HodgeTateForms
 
 /-!
 # Bloch–Kato crystalline cocycles: reduction modulo p^m, rank and vanishing
@@ -347,7 +363,7 @@ is close enough to `1` (the filter `nearOne Γ`). -/
 lemma crysCocycles.eventually_eq_pow_smul [Module.Finite ℤ_[p] T] (h : IsPotentiallyCrystalline ρ)
     {c : Γ → T} (hc : c ∈ crysCocycles ρ) (m : ℕ) :
     ∀ᶠ g : Γ in nearOne Γ, ∃ y : T, c g = p ^ m • y := by
-  have e : Module.Basis (Fin (finrank ℤ_[p] T)) ℤ_[p] T := finBasis ℤ_[p] T
+  let e : Module.Basis (Fin (finrank ℤ_[p] T)) ℤ_[p] T := finBasis ℤ_[p] T
   have h_chi : Continuous cyclotomicGp := continuous_cyclotomicChar p
   -- `ℤ_[p]` acts on `ℂ_[p]` through `ℚ_[p]`, so the norm is multiplicative.
   have inst_normSMul : NormSMulClass ℤ_[p] ℂ_[p] := ⟨fun r ↦ norm_smul (r : ℚ_[p])⟩

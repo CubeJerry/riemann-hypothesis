@@ -1,8 +1,12 @@
 module
 
 public import Aesop.BuiltinRules
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
 public import Lib.Cohomology.Hodge.DepthVanishing
-public import Lib.PadicComparison.HodgeTate.ExtCocycles
+public import Lib.Cohomology.Etale.RelativeChains
+import Lib.Cohomology.Etale.DenseSubfunctors
+import Lib.PadicComparison.HodgeTate.ExtCocycles
 
 /-!
 # Grothendieck's symbol [dT/T], cut-out loci and Hodge classes of points
@@ -359,8 +363,12 @@ lemma smul_grothendieckSymbol_eq_fractionClass (hf : U ≤ unimodularLocus f)
     (fun C t ↦ ?_) fun _ _ ↦ rfl
   -- The cocycles agree since `det (l * σ M) = det l * σ (det M)`.
   simp [volumeForm, formOfExteriorPower, w]
-  -- (`erw`: the rows `l i ᵥ* σ M` are the product matrix only up to unfolding `Matrix.mul`)
-  erw [det_mul, ← map_det]
+  let rows : Matrix (Fin d) (Fin d) C.baseAlg := fun i ↦ (t.val.2 i).down
+  conv in (det (fun i ↦ _)) =>
+    change det (rows * M.map t.val.1.down.fst)
+    tactic =>
+      exact (det_mul rows _).trans
+        (congrArg (rows.det * ·) (t.val.1.down.fst.hom.toRingHom.map_det M).symm)
   refine congrArg ULift.up (.trans ?_
     (congrArg (_ • ·) ((add_zero _).trans (exteriorMap_smul ..))).symm)
   simp [exteriorMap_iotaMulti, mul_smul, ← smul_comm a]
@@ -948,7 +956,11 @@ lemma exists_isOpenSubfunctor_le_offPoints (hz : z ∈ U.obj (CommAlgCat.of k k)
     ∃ O : Subfunctor X, IsOpenSubfunctor O ∧ x ∈ O K ∧ O ≤ offPoints {z} := by
   -- The image of `z` lies in `U K`, so it is not `x`; take `O = offPoints {z}`.
   have hz_mem : X.map structureMap z ∈ U K := U.map structureMap hz
-  have hx_off : x ∈ offPoints {z} K := by aesop (add simp [mem_offPoints_iff, ComesFromPoints])
+  have hx_off : x ∈ offPoints {z} K := by
+    apply (mem_offPoints_iff hK).2
+    rintro ⟨w, hw, rfl⟩
+    obtain rfl := Set.mem_singleton_iff.mp hw
+    exact hx hz_mem
   exact ⟨offPoints {z}, isOpenSubfunctor_offPoints, hx_off, le_rfl⟩
 
 /-- Let `X` be separated, `a` a chart of dimension `e` that contains `z`, and `g` functions on `a`
@@ -1060,7 +1072,8 @@ lemma IsPointSum.map_eq_sum_pointClass {s : Finset (X (CommAlgCat.of k k))}
     simp only [Set.mem_singleton_iff, Set.mem_sdiff, Finset.mem_coe, Finset.mem_insert]
     exact ⟨fun hw ↦ ⟨Or.inl hw, hw ▸ hz⟩, fun ⟨h, hns⟩ ↦ h.resolve_right hns⟩)
   have hy_sum : IsPointSum s n y := h_isPointSum_of_eq_add {z} (add_comm ..) rfl (by
-    rw [Finset.coe_insert, Set.insert_sdiff_self_of_notMem (by simpa only [Finset.mem_coe] using hz)])
+    rw [Finset.coe_insert,
+      Set.insert_sdiff_self_of_notMem (by simpa only [Finset.mem_coe] using hz)])
   simp [V, hz, ← ih hy_sum, ← hx_sum.map_eq_smul_pointClass, π_map]
 
 end PointClass

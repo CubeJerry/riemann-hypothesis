@@ -1,8 +1,13 @@
 module
 
 import TauCeti.Analysis.SpecialFunctions.Elliptic.LatticeClassification
-public import Mathlib.RingTheory.PowerSeries.Ideal
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.PowerSeries.Ideal
 public import Lib.CM.GoodReduction
+public import Lib.CM.Sigma.ThetaSections
+import Lib.General.NumberTheory.SUnitsAndClassNumber
 
 /-!
 # Galois conjugates of CM curves: conjugate sections, isogenies and translates of θ
@@ -341,7 +346,7 @@ lemma mul_t_mem_of_conj_isogeny_mul_t_mem {C' D' : CMLattice d'} {N : ℕ}
 
 omit [PrimeSevenModEight d] in
 /-- An automorphism of `ℂ` over `K` fixes the elements of `quadInt d`, the image of `𝓞_K` in `ℂ`. -/
-@[simp, grind]
+@[simp, grind =]
 lemma map_eq_self_of_mem_quadInt (ha : a ∈ quadInt d) : σ a = a := by
   obtain ⟨x, rfl⟩ := ha
   exact σ.commutes (x : QuadField d)

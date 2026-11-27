@@ -1,7 +1,9 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.RingTheory.SimpleRing.Principal
 public import Lib.DiscreteSeries.Character.MultiplicityOrbitalIntegral
-public import Lib.DiscreteSeries.Character.OpenOrbitIntegral
+import Lib.DiscreteSeries.Character.OpenOrbitIntegral
 
 /-!
 # Harish-Chandra's formula for formal degrees and stable orbital integrals
@@ -13,8 +15,7 @@ parameter `l = 2λ` of gap `500 n³ + 10 n⁵`; `New.Orbital.harish_chandra_degr
 the two together. By `New.Orbital.exists_laurent_orbital_integral` the orbital integral times a
 product of roots is a Laurent polynomial; it is identified by comparing monomials of low level
 (`New.Orbital.orbital_eq_char_sub_offOrbitIntegral`, `New.Orbital.coeff_eq_zero_of_low_level`).
-The formal degree, with its constant, is read off from one coefficient in this comparison. The
-orbital integrals converge absolutely by `New.Orbital.integrable_dsCoeff_conj`.
+The formal degree, with its constant, is read off from one coefficient in this comparison.
 
 Conventions: `New.HCParam.rootProd l r` is the product of `x_a - x_b` over the pairs with
 `r (ε a) (ε b)` and `l b < l a`, and `New.HCParam.lowerCount l r a` counts these `b`;
@@ -490,8 +491,8 @@ times the conjugate of Weyl's character of `U(n)` of highest weight `l.compactFo
 Here `oppositePairs ε` is the set of pairs `(a, b)` with `ε a = 1` and `ε b = -1`.
 
 This is a consequence of Harish-Chandra's elliptic orbital integral formula for discrete series
-coefficients. It gives only the sum over all permutations, and the integrals converge absolutely by
-`integrable_dsCoeff_conj`. -/
+coefficients. It gives only the sum over all permutations, and the integrals converge
+absolutely. -/
 theorem neg_one_pow_mul_sum_integral_dsKernel [Nonempty n] {ε : n → ℤˣ} {l : HCParam ε}
     (hg : l.HasLargeGap (10 * card n ^ 5)) {x : n → Circle} (x_inj : x.Injective) :
     (-1) ^ #(oppositePairs ε) *
@@ -545,7 +546,7 @@ theorem neg_one_pow_mul_sum_integral_dsKernel [Nonempty n] {ε : n → ℤˣ} {l
 `500 n³ + 10 n⁵`. Then (a) the formal degree, the reciprocal of `∫ |c_λ|²` over `USign ε`, equals
 `weylDimensionPoly l`; (b) at every regular point `x` of the compact torus (`x` injective), the sum
 over all permutations `σ` of the orbital integrals `∫ l.dsKernel (g⁻¹ diag(x ∘ σ) g) dg`, which
-converge absolutely by `integrable_dsCoeff_conj`, times `(-1)` to the number of pairs `(a, b)` with
+converge absolutely, times `(-1)` to the number of pairs `(a, b)` with
 `ε a = 1` and `ε b = -1`, equals `#{σ | ε ∘ σ = ε}` (the order of the Weyl group of `K`) times the
 conjugate of Weyl's character `l.compactForm.lowestKType.kTypeChar` of the compact form at
 `diag(x)`. Here `c_λ` is `l.dsCoeff`, `deg_λ` is `l.formalDegree`, and `l.dsKernel` is `deg_λ` times

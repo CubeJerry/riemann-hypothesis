@@ -1,11 +1,22 @@
 module
 
-public import Lib.Cyclotomic.OddSha
-public import New.Congruences.FirstOrder.TateTwistCocycles
-public import New.Congruences.GaloisRepresentations.RowsAndColumnsFromLabels
-public import New.Congruences.LocalLoss.CrystallineDefect
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.Topology.Algebra.Module.Compact
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 public import New.Congruences.LocalLoss.LocalLattices
-public import New.Congruences.LocalLoss.TateDualBound
+public import New.Congruences.FirstOrder.EvenClasses
+public import New.Congruences.FirstOrder.FittingBlock
+import Lib.ClassField.GaloisCohomology.TameSelmerCocycles
+public import Lib.Cyclotomic.OddSha -- shake: keep (needed public by an exposed definition)
+import New.Congruences.FirstOrder.TateTwistCocycles
+import New.Congruences.GaloisRepresentations.AttachedRepresentations
+import New.Congruences.GaloisRepresentations.RowsAndColumnsFromLabels
+import New.Congruences.LocalLoss.CrystallineDefect
+import New.Congruences.LocalLoss.TateDualBound
 
 /-!
 # Constants, trace relations, lattices and local defects for Ribet's method
@@ -657,7 +668,7 @@ lemma isTameType_of_mem_placesAboveM {V : DescentPair D.E r n}
         ∀ R : GalRep ℓ D.E n,
           IsRepOfType V t J (fun i : V.ChosenIndex ↦ scaledTypePoly V c i * (X - 1) ^ t) S R →
           IsKilledBy (decompRep R (placeOver v.val)) s 0 (Q.map O.val.val) := by
-  have ⟨k, hk⟩ :
+  let ⟨k, hk⟩ :
       ∃ k : Fin 2, (D.levelPrime k : NumberField.RingOfIntegers D.E) ∈ v.val.asIdeal := hv
   have hℓ : D.levelPrime k = ℓ := (v.val.charP_quotient hk).eq _ (v.val.charP_quotient v.property)
   refine ⟨k, hℓ.symm, fun s hs ↦ ?_⟩

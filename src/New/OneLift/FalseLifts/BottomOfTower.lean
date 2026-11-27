@@ -1,7 +1,14 @@
 module
 
+import Mathlib.Analysis.CStarAlgebra.CStarMatrix
+import Mathlib.NumberTheory.MulChar.Lemmas
+import Mathlib.Topology.Algebra.Group.Matrix
+public import Lib.LocalGL.Green.TauFunctions
 public import Lib.Weil.Periods.DescentVanishing
 public import New.UpperBound.Objects.AuxiliaryPair
+import Lib.Adelic.AutomorphicForms.AutomorphicAsAlgebraic
+import Lib.ClassField.HeckeCharacter.TameModulus
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
 
 /-!
 # The bottom of the tower: from the block datum to all data
@@ -250,8 +257,9 @@ lemma asAlgebraHom_hyperplaneSum [Finite k] {V : Type*} [AddCommGroup V] [Module
     σ.asAlgebraHom (hyperplaneSum χ l) y =
       ∑ s : hyperplaneGroup l, χ⁻¹ ((s : GL r k) : Matrix r r k).det • σ (s : GL r k) y := by
   classical
-  have : Fintype (GL r k) := .ofFinite _
-  calc _ = ∑ s : GL r k, (hyperplaneSum χ l).coeff s • σ s y := by simp [asAlgebraHom_eq_sum]
+  let : Fintype (GL r k) := .ofFinite _
+  calc _ = ∑ s : GL r k, (hyperplaneSum χ l).coeff s • σ s y := by
+        simp [Representation.asAlgebraHom_eq_sum]
     _ = ∑ s : GL r k with s ∈ hyperplaneGroup l, χ⁻¹ (s : Matrix r r k).det • σ s y := by
       simp [coeff_hyperplaneSum_eq_ite, sum_filter]
     _ = _ := sum_subtype _ (fun s ↦ mem_filter_univ s) _

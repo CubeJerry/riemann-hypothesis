@@ -1,10 +1,18 @@
 module
 
-public import Lib.ClassField.HeckeCharacter.SplitTameCharacters
+import Mathlib.Algebra.Ring.IsFormallyReal
 public import Lib.Weil.CompactLift.ThetaKernelDefs
 public import Lib.Weil.DualPair.GaloisLaw
-public import New.Derivatives.Vacuum.ShortVectors
 public import New.UpperBound.Seesaw.AdmissibleCombinations
+public import Lib.GLn.SchurModule.GramMatrix
+public import New.Reduction.Data.AdmissibleData
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.ClassField.HeckeCharacter.AlgebraicValues
+import Lib.ClassField.HeckeCharacter.SplitTameCharacters
+import Lib.GLn.SchurModule.SchurNorm
+import Lib.General.Analysis.PackingAndSobolev
+import Lib.General.LinearAlgebra.MatrixNormBounds
+import New.Derivatives.Vacuum.ShortVectors
 
 /-!
 # Galois conjugates of jets of theta functions and archimedean bounds for jets
@@ -305,18 +313,11 @@ lemma New.Parameters.exists_intCast_eq_norm_archCoords_sq {P : Parameters} {s : 
   have h_fin : (toAdele h).2 = ∑ i : n, star (W.vecAtPoint γ i).2 * (W.vecAtPoint γ i).2 := by
     rw [← W.stdForm_vecAtPoint]
     simp [dotProduct, stdForm, Matrix.mulVec_diagonal, Prod.snd_sum]
-  have h_gen : (P.α s).val * star (P.α s).val * (P.relDifferentGen s).val ∈ Ô (P.E s) :=
-    mem_Ô.2 fun w ↦ (v_alpha_mul_star_mul_relDifferentGen w).le
-  have h_factor (x : 𝔸f (P.E s)) : star x * x * (P.relDifferentGen s).val =
-      (P.α s).val * star (P.α s).val * (P.relDifferentGen s).val *
-        (star ((P.α s)⁻¹.val * x) * ((P.α s)⁻¹.val * x)) := by
-    have h_star : star (P.α s).val * star (P.α s)⁻¹.val = 1 := by simp [← star_mul']
-    grind [star_mul', Units.mul_inv]
   have h_int : IsIntegral ℤ (h * (P.relDifferentGen s).val) := by
     rw [← algebraMap_mem_Ô, map_mul, ← toAdele_apply_snd h, h_fin, Finset.sum_mul]
     refine sum_mem fun i _ ↦ ?_
-    rw [h_factor]
-    exact mul_mem h_gen (mul_mem (star_mem_Ô (hγ i)) (hγ i))
+    rw [mul_comm (star _)]
+    exact mul_star_mul_relDifferentGen_mem (hγ i) (hγ i)
   obtain ⟨c, hc⟩ : ∃ c : NumberField.RingOfIntegers P.K,
       (c : P.K) = Algebra.trace P.K (P.E s) h := exists_coe_eq_trace_of_isIntegral h_int
   have h_trace : ((c : P.K) : ℂ) = (‖W.archCoords γ‖ ^ 2 : ℝ) := by

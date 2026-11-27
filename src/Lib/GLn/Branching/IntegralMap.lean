@@ -1,6 +1,15 @@
 module
 
+import Mathlib.Algebra.AffineMonoid.Basic
+import Mathlib.LinearAlgebra.Matrix.Bilinear
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Linter.Style
 public import Lib.GLn.Branching.NormBound
+public import Lib.GLn.SchurModule.SchurMatrix
+import Lib.General.Analysis.HolomorphicIntegrals
 
 /-!
 # Branching from GL(n+1) to GL(n) × GL(1): integral equivariant branching maps
@@ -501,7 +510,7 @@ lemma spansBranchingMaps_of_equivariant {c : ℤ} (hc : c ≠ 0) {e e₀ : Φ �
         isUnit_iff_ne_zero, ne_eq, prod_eq_zero_iff, mem_univ, pow_eq_zero_iff',
         GeneralLinearGroup.det_ne_zero, false_and, and_false, exists_false, not_false_eq_true,
         IsUnit.smul_eq_zero] using (h_row fun τ ↦ (g τ).valᵀ).symm
-    have G₀_invertible : Invertible G₀ := weylGramOver_posDef.isUnit.invertible (a := G₀)
+    let G₀_invertible : Invertible G₀ := weylGramOver_posDef.isUnit.invertible (a := G₀)
     simpa using congrArg (fun M ↦ M * ⅟G₀) T_mul_gram
   -- `T` is equivariant for unitary `g`, hence for all `g` by Zariski density: an entry of the
   -- defect is a polynomial in `g`, and at a unitary `g` the factor `det ^ e` cancels from `hT`.

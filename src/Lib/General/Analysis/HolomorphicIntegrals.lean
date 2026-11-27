@@ -1,30 +1,38 @@
 module
 
-public import TauCeti.Analysis.MvPolynomial.Jacobian
 import TauCeti.Analysis.Complex.CauchyIntegralPolydisc
 import TauCeti.Analysis.Complex.WeaklyHolomorphic
 import TauCeti.MeasureTheory.Function.StronglyMeasurable.FiniteDimensional
-public import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
 public import Mathlib.Analysis.CStarAlgebra.ContinuousMap
-public import Mathlib.Analysis.Calculus.LineDeriv.Basic
-public import Mathlib.Analysis.Complex.Schwarz
-public import Mathlib.Analysis.Convex.Contractible
 public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
-public import Mathlib.Analysis.Real.Pi.Bounds
-public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousFunctions
-public import Mathlib.RingTheory.Coalgebra.IsFrobenius
-public import Mathlib.RingTheory.HopfAlgebra.Basic
-public import Lib.General.Analysis.GaussianIntegral
-public import Lib.General.Groups.CongruenceSubgroups
-public import Lib.General.Measure.HaarNormalisation
-public import Lib.General.Topology
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
+import Mathlib.Analysis.Calculus.LineDeriv.Basic
+import Mathlib.Analysis.Complex.Schwarz
+import Mathlib.Analysis.Convex.Contractible
+import Mathlib.Analysis.Matrix.Order
+import Mathlib.Analysis.Real.Pi.Bounds
+import Mathlib.MeasureTheory.Function.LpSpace.ContinuousFunctions
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Complex
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import TauCeti.Analysis.MvPolynomial.Jacobian
+import TauCeti.Topology.Instances.Matrix
+public import Lib.Speed
+import Lib.General.Analysis.GaussianIntegral
+import Lib.General.Groups.CongruenceSubgroups
+import Lib.General.Measure.HaarNormalisation
+import Lib.General.Topology
 
 /-!
 # Strong operator integrals, analyticity of parameter integrals, and Hua's integral bound
 
 In the strong integral, operator-valued functions are integrated vector by vector, so no
 measurability in the operator norm is needed. In the results on analytic families, E is a
-finite-dimensional complex normed space, K a compact R₁ space and f : E → K → ℂ a family of
+finite-dimensional complex normed space, K a compact space and f : E → K → ℂ a family of
 functions on K with parameter in E. The file also contains the Schwarz lemma in normed spaces,
 holomorphy of dominated parameter integrals, a uniqueness result for analytic functions along
 submersions, and Hua's bound for negative powers of determinants.
@@ -169,11 +177,11 @@ lemma DiscreteSeries.IsAnalyticFamily.analyticAt_integral {mK : MeasurableSpace 
     (h_eq.mono fun x hx ↦ ?_)
   simp [strongIntegral_eval, hx]
 
-/-- Let E be a finite-dimensional complex normed space and K a compact R₁ space. If, for all x near
+/-- Let E be a finite-dimensional complex normed space and K a compact space. If, for all x near
 p ∈ E and all k ∈ K, f : E → K → ℂ is jointly continuous at (x, k) and f(·, k) is complex
 differentiable at x, then x ↦ f(x, ·) is analytic at p as a map to the Banach space C(K, ℂ), that
 is, `IsAnalyticFamily f p`. -/
-lemma isAnalyticFamily_of_continuousAt_of_differentiableAt [R1Space K] {f : E → K → ℂ} {p : E}
+lemma isAnalyticFamily_of_continuousAt_of_differentiableAt {f : E → K → ℂ} {p : E}
     (hf_cont : ∀ᶠ x : E in nhds p, ∀ k : K, ContinuousAt f.uncurry (x, k))
     (hf_diff : ∀ᶠ x : E in nhds p, ∀ k : K, DifferentiableAt ℂ (fun z : E ↦ f z k) x) :
     DiscreteSeries.IsAnalyticFamily f p := by
@@ -205,11 +213,11 @@ lemma isAnalyticFamily_of_continuousAt_of_differentiableAt [R1Space K] {f : E �
       exact (((hU (line z) hz).2 k).comp z (hline z)).differentiableWithinAt
   simpa only [Function.comp_def, e.symm_apply_apply] using h.comp (e.analyticAt p)
 
-/-- Let E be a finite-dimensional complex normed space, K a compact R₁ space and f : E → K → ℂ. If,
+/-- Let E be a finite-dimensional complex normed space, K a compact space and f : E → K → ℂ. If,
 for all x near p ∈ E and all k ∈ K, f is jointly continuous at (x, k) and f(·, k) is complex
 differentiable at x, then x ↦ f(x, ·) is analytic at p as a map to C(K, ℂ). The two hypotheses of
 `New.isAnalyticFamily_of_continuousAt_of_differentiableAt` are here joined in one. -/
-lemma isAnalyticFamily_of_differentiable [R1Space K]
+lemma isAnalyticFamily_of_differentiable
     (hf : ∀ᶠ x : E in nhds p, ∀ k : K,
       ContinuousAt f.uncurry (x, k) ∧ DifferentiableAt ℂ (fun z : E ↦ f z k) x) :
     DiscreteSeries.IsAnalyticFamily f p :=
@@ -217,9 +225,9 @@ lemma isAnalyticFamily_of_differentiable [R1Space K]
     (hf.mono fun _ hx k ↦ (hx k).2)
 
 /-- Let E be a finite-dimensional complex normed space and F a complex normed space. If ι : K → F is
-continuous, K is compact and R₁, and Θ is analytic at (p, ι k) for every k, then x ↦ Θ(x, ι ·) is
+continuous, K is compact, and Θ is analytic at (p, ι k) for every k, then x ↦ Θ(x, ι ·) is
 analytic at p ∈ E as a map to C(K, ℂ), that is, an `IsAnalyticFamily` at p. -/
-lemma DiscreteSeries.IsAnalyticFamily.of_analyticAt [R1Space K] {ι : K → F} (hι : Continuous ι)
+lemma DiscreteSeries.IsAnalyticFamily.of_analyticAt {ι : K → F} (hι : Continuous ι)
     (Θ : E × F → ℂ) (hΘ : ∀ k : K, AnalyticAt ℂ Θ (p, ι k)) :
     IsAnalyticFamily (fun (x : E) (k : K) ↦ Θ (x, ι k)) p := by
   -- By compactness of `K`, `Θ` is analytic at `(x, ι k)` for all `k` and all `x` near `p`.

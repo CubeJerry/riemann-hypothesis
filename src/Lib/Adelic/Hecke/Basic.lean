@@ -1,16 +1,10 @@
 module
 
-public import Mathlib.Algebra.FiniteSupport.Basic
-public import Mathlib.CategoryTheory.Shift.Basic
+import TauCeti.RepresentationTheory.Induction.Mackey.Subgroup
 public import Mathlib.GroupTheory.DoubleCoset
 public import Mathlib.RepresentationTheory.Coinduced
-public import Mathlib.RingTheory.WittVector.IsPoly
-public import Mathlib.Tactic.Basify
-public import Mathlib.Tactic.ENatToNat
-public import Mathlib.Tactic.Polynomial.Basic
-public import Mathlib.Tactic.ReduceModChar
-public import Std.Internal.Order.Automation
-public import Std.Tactic.BVDecide.Normalize.Prop
+import Mathlib.Algebra.FiniteSupport.Basic
+import Mathlib.CategoryTheory.Shift.Basic
 public import Lib.Speed
 
 /-!
@@ -143,21 +137,18 @@ lemma eq_and_eq_one_of_doubleCoset_rep {e : Δ →* G}
 
 /-- The class sum of f: the sum over the double cosets c in Γ\G/K of f(g_c)/#(Γ ∩ g_c K g_c⁻¹), g_c
 a chosen representative. For f left invariant under Γ and right invariant under K the choice of
-representatives does not matter (`New.classSum_eq_finsum_of_rep`). -/
+representatives does not matter. -/
 def classSum [Module ℚ W] (Γ K : Subgroup G) (f : G → W) : W :=
   ∑ᶠ c : DoubleCoset.Quotient (Γ : Set G) K, (Nat.card (classAut Γ K c.out) : ℚ)⁻¹ • f c.out
 
 /-- The order of the stabiliser Γ ∩ gKg⁻¹ depends only on the double coset ΓgK. -/
 lemma card_classAut_mul_mul {γ k : G} (hγ : γ ∈ Γ) (hk : k ∈ K) (g : G) :
     Nat.card (classAut Γ K (γ * g * k)) = Nat.card (classAut Γ K g) := by
-  -- Conjugation `δ ↦ γ⁻¹ * δ * γ` carries the first stabiliser onto the second.
-  refine Nat.card_congr ((MulAut.conj γ⁻¹).toEquiv.subtypeEquiv fun δ ↦ ?_)
-  change δ ∈ classAut Γ K (γ * g * k) ↔ γ⁻¹ * δ * γ⁻¹⁻¹ ∈ classAut Γ K g
-  have h_left : γ⁻¹ * δ * γ ∈ Γ ↔ δ ∈ Γ := by
-    rw [mul_mem_cancel_right hγ, mul_mem_cancel_left (inv_mem hγ)]
-  have h_conj : (γ * g * k)⁻¹ * δ * (γ * g * k) = k⁻¹ * (g⁻¹ * (γ⁻¹ * δ * γ) * g) * k := by group
-  rw [inv_inv, mem_classAut, mem_classAut, h_left, h_conj, mul_mem_cancel_right hk,
-    mul_mem_cancel_left (inv_mem hk)]
+  have hAut (x : G) : classAut Γ K x = TauCeti.mackeySubgroup x K Γ := by
+    ext δ
+    simp [mem_classAut]
+  rw [hAut, hAut]
+  exact Nat.card_congr (TauCeti.mackeySubgroupCongr hγ hk g).symm.toEquiv
 
 variable [TopologicalSpace G] [IsTopologicalGroup G]
 

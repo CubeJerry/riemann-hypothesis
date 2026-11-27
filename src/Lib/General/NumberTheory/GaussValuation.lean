@@ -1,8 +1,13 @@
 module
 
-public import TauCeti.Algebra.Ring.GeomSum
-public import Lib.General.NumberTheory.PadicLimitsValuation
-import Lib.General.Algebra.AbsIntegrallyClosed
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
+import Mathlib.RingTheory.Valuation.LocalSubring
+import Mathlib.Topology.Algebra.Valued.LocallyCompact
+import TauCeti.Algebra.Ring.GeomSum
+import TauCeti.Topology.Algebra.Valued.ResidueField
+public import Lib.GaloisRep.Main.SelmerModules
+import Lib.General.NumberTheory.PadicLimitsValuation
 
 /-!
 # The Gauss valuation of a polynomial over the ring of integers of ℚ̄_ℓ
@@ -159,8 +164,7 @@ lemma exists_ellVal_eq (ρ : ℚ≥0) : ∃ π : intQpBar ℓ, ellVal π.val = (
 /-- The residue field of `ℤ̄_ℓ = intQpBar ℓ`, the ring of integral elements of `ℚ̄_ℓ`, is
 algebraically closed. -/
 instance isAlgClosed_residueField : IsAlgClosed (ResidueField (intQpBar ℓ)) :=
-  ((Variety.IsAbsIntegrallyClosed.of_isIntegrallyClosedIn (PadicAlgCl ℓ)).of_surjective
-    residue_surjective).isAlgClosed
+  Valued.instIsAlgClosedResidueField (K := PadicAlgCl ℓ)
 
 /-! ### The Gauss valuation -/
 

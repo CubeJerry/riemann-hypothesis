@@ -1,8 +1,15 @@
 module
 
-public import Lib.SiegelWeil.Reproduction
 public import New.Determinant.Exchange.ExplicitMatching
-public import New.OneLift.ComparisonOperator.FirstFactors
+public import New.OneLift.ComparisonOperator.LineCoordinates
+import Lib.Adelic.AutomorphicForms.Cuspidality
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+import Lib.SiegelWeil.RallisInner.SharpData
+import Lib.SiegelWeil.Reproduction
+import New.OneLift.ComparisonOperator.FirstFactors
 
 /-!
 # Three exchanges: the carrier, the third exchange and its left side as a theta series
@@ -365,10 +372,9 @@ lemma exists_mul_stdClassSum_eq_carrierForm {m : ℕ} [NeZero m] (hm_even : Even
     rw [mul_one, one_mul] at ht
     change modKernel H (stdSpace E (Fin (2 * m) ⊕ Fin m)) (upsilonU1 ^ m) 1 𝔪 (χ ·.det) 1 x (1, h) =
       cx * modKernel H (stdSpace E (Fin (2 * m) ⊕ Fin m)) (upsilonU1 ^ m) c 𝔪 (χ ·.det) 1 x (1, h)
-    rw [ht, ← mul_assoc]
+    rw [ht]
     have h1 : (((1 : AutChar E).val (G.det (s := 1) (1, h)) : Circle) : ℂ) = 1 := rfl
-    rw [h1, one_div]
-    exact (mul_inv_cancel₀ hcx_ne ▸ one_mul _).symm
+    rw [h1, one_div, mul_inv_cancel_left₀ hcx_ne]
   have h_mod3 (y : G E (-1)) :
       modKernel J.neg H (c * upsilonU1 ^ m) 1 𝔪 1
           (∏ τ, variableMinor τ Sum.inr id ^ (2 * m)) y x =
@@ -445,7 +451,7 @@ lemma carrierForm_mem_rapidOfLevel_and_isAdelicHol {m : ℕ} [NeZero m] (hm_even
     -- the class sum is now a finite sum: read off the index type, the coefficients and the points
     exact ⟨_, _, _, _, h_class_sum⟩
   -- `hψ` is the weight instance that `isAdelicHol_pairTheta` needs.
-  have ⟨h𝔪, ψ, hψ, _⟩ := h_tame
+  let ⟨h𝔪, ψ, hψ, _⟩ := h_tame
   have h_mem (N : RingOfIntegers E) (g : Gf E (Fin (2 * m) ⊕ Fin m)) : θ g ∈ rapidOfLevel V N := by
     -- Level one: on `stdLevel` the factor `c (det k)⁻¹` cancels against `χ (det k)`.
     have h_level : HasLevel (θ g) (⟨stdLevel E _, isOpen_stdLevel⟩ : OpenSubgroup _) := by
@@ -592,7 +598,8 @@ private lemma carrierChar_inv_div_twistedChiMPow_mul_upsilonU1_pow (ϑ : D.Twist
       (2 * D.m + D.m + D.mainPairPoint) =
       ϑ.toAutChar⁻¹ / (D.untwistedLiftChar j * upsilonU1 ^ (j.val + (D.t - 11 * D.m - 1) / 2)) := by
   apply_fun ofMul
-  simp [twistedChiMPow, carrierChar, untwistedLiftChar]
+  simp only [twistedChiMPow, carrierChar, untwistedLiftChar, ofMul_mul, ofMul_div, ofMul_inv,
+    ofMul_zpow, ofMul_pow]
   -- compare the exponents of each character
   match_scalars <;> grind [mainPairPoint]
 
@@ -697,7 +704,8 @@ def thirdExchangeLeftSide (i : ChoiceIndex j) (g : New.G D.E (D.signsW j)) : ℂ
 lemma firstFactorChar_mul_upsilonU1_pow :
     firstFactorChar ϑ j * upsilonU1 ^ D.m = twistedChiMPow ϑ j * carrierChar j := by
   apply_fun ofMul
-  simp [firstFactorChar, liftChar, twistedChiMPow, carrierChar, untwistedLiftChar]
+  simp only [firstFactorChar, liftChar, twistedChiMPow, carrierChar, untwistedLiftChar, ofMul_mul,
+    ofMul_zpow, ofMul_pow]
   -- compare the exponents of each character
   match_scalars <;> grind
 
@@ -826,9 +834,6 @@ lemma exists_mul_thirdExchangeLeftSide_eq_choiceFn : ∃ (C : ℂ) (c : D.Twist 
   refine ⟨C₃ * (C₁₂ / N ^ 2),
     fun ϑ ↦ c₃ (h_tame₃ ϑ) * (c₁₂ (h_tame ϑ) / N), fun ϑ ↦ ⟨?_, fun i g ↦ ?_⟩⟩
   · -- the three products of Hecke values are the three factors of `heckeValueProd`
-    simp [← Complex.ofReal_pow, mul_pow, div_pow, heckeValueProd, places_twistModulus,
-      exchangePair,
-      hc₃_norm, hc₁₂_norm, signPoint, ← division_def, div_right_comm _ (_ * _), div_mul_div_comm]
     -- what is left are the characters of the three pairs
     have h_inv : (twistedChiMPow ϑ.toTameChar j)⁻¹ * upsilonU1 ^ D.m =
         ϑ.toAutChar⁻¹ / ((upsilonU1 ^ D.m)⁻¹ * D.chiM ^ j.val) := by
@@ -836,8 +841,12 @@ lemma exists_mul_thirdExchangeLeftSide_eq_choiceFn : ∃ (C : ℂ) (c : D.Twist 
         inv_inv, mul_assoc]
     have h_half : twistedChiMPow ϑ.toTameChar j * upsilonU1 ^ (D.m / 2) =
         ϑ.toAutChar / ((upsilonU1 ^ (D.m / 2))⁻¹ / D.chiM ^ j.val) := by
-      rw [twistedChiMPow, div_eq_mul_inv ϑ.toAutChar, inv_div, div_inv_eq_mul, mul_left_comm, mul_assoc]
-    rw [carrierChar_inv_div_twistedChiMPow_mul_upsilonU1_pow, h_inv, h_half]
+      rw [twistedChiMPow, div_eq_mul_inv ϑ.toAutChar, inv_div, div_inv_eq_mul, mul_left_comm,
+        mul_assoc]
+    simp [← Complex.ofReal_pow, mul_pow, div_pow, heckeValueProd, places_twistModulus,
+      exchangePair,
+      hc₃_norm, hc₁₂_norm, signPoint, ← division_def, div_right_comm _ (_ * _), div_mul_div_comm,
+      carrierChar_inv_div_twistedChiMPow_mul_upsilonU1_pow, h_inv, h_half]
   · have hN : (N : ℂ) ≠ 0 := Nat.cast_ne_zero.2 card_ne_zero
     suffices h_mul : c₃ (h_tame₃ ϑ) * c₁₂ (h_tame ϑ) * thirdExchangeLeftSide ϑ j i g =
         N * choiceFn j i g by
@@ -880,7 +889,7 @@ that lift times a power of the splitting character), its datum is `columnDatum` 
 polynomial is `letterPoly` of the vector `leftSideSeries ϑ j i h` of the Weyl module with column
 counts `colsPlus`. The coordinates of this vector are formed from the kernels at `h` of the summands
 of `W` other than `W_j`. -/
-lemma stdClassSum_thirdExchangeKernel_productDatum {a : Type} [Fintype a]
+lemma stdClassSum_thirdExchangeKernel_productDatum {a : Type}
     (w : Matrix a (FirstFactorIndex j) (D.untwistedModulus 2).ResidueRing) (i : ChoiceIndex j)
     (g : New.G D.E (D.signsW j)) (h : Gf D.E (FirstFactorIndex j)) :
     stdClassSum (stdLevel D.E D.CarrierIndex) (fun h' : Gf D.E D.CarrierIndex ↦ carrierCoeff D.m
@@ -903,9 +912,10 @@ lemma stdClassSum_thirdExchangeKernel_productDatum {a : Type} [Fintype a]
   have h_sign : ((1 : D.CarrierIndex → ℤˣ) ⊕ᵥ (padSigns j ⊕ᵥ 1)) ∘ regroupEquiv j =
       D.signsW j ⊕ᵥ (-1 ⊕ᵥ 1) := by
     ext1 (_ | _ | _ | _ | _) <;> rfl
-  -- `erw` is needed: the kernels are stated on index types that agree only after unfolding
-  erw [← modKernel_reindex (regroupEquiv ..).symm h_sign (.refl _) rfl,
-    ← map_sum ((modKernelBilin ..) _), modKernelBilin_apply]
+  rw [← modKernel_reindex (regroupEquiv ..).symm h_sign (.refl _) rfl]
+  conv_rhs =>
+    simp only [← modKernelBilin_apply]
+    rw [← map_sum, modKernelBilin_apply]
   -- compare the two kernels argument by argument
   congr! 1
   · -- the first spaces

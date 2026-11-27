@@ -1,8 +1,9 @@
 module
 
 public import Mathlib.GroupTheory.SemidirectProduct
-public import Lib.GaloisRep.Hilbert90.TameActions
 public import Lib.General.Groups.CharacterTheory
+import Lib.GaloisRep.Hilbert90.TameActions
+public import TauCeti.GroupTheory.SemidirectProduct
 
 /-!
 # Root choices in a coset, induction, and extension of invariant characters
@@ -33,9 +34,8 @@ and `New.virtualChars` is the span of the characters.
 * `New.DescendsOnCoset.induce`: descent commutes with induction.
 
 Notions from other files:
-* `New.IsIrreducibleChar`: `f` is an irreducible character, stated as three conditions: (a) `f` is a
-  character, (b) `New.classInner f f = 1`, and (c) for every class function `h` and every `y`, `f 1
-  * New.classInner f (h (· * y)) = New.classInner f h * f y`.
+* `New.IsIrreducibleChar`: `f` is the character of a simple finite-dimensional complex
+  representation.
 
 ## Relation to the literature
 
@@ -245,7 +245,8 @@ theorem exists_isRootChoice {k k' S : Type*} [Field k] [Field k'] [Algebra k k']
   -- z(γ) is a polynomial in j γ, so it follows conjugation
   have h_conj {γ : G} (δ : G) (u : Sˣ) (h_eq : j γ = u * j δ * u⁻¹) :
       z.map ↑(ev γ) = u * z.map ↑(ev δ) * u⁻¹ := by
-    simp [Units.ext_iff, ev, lift_apply, Finsupp.sum, h_eq, u.conj_pow, mul_sum, sum_mul]
+    simp [Units.ext_iff, ev, AddMonoidAlgebra.lift_apply, Finsupp.sum, h_eq, u.conj_pow, mul_sum,
+      sum_mul]
   refine ⟨fun γ ↦ ⟨z.map ↑(ev γ), σ⟩,
     ⟨inl_injective.comp hj, fun γ ↦ rfl, h_root, fun v γ ↦ ?_, ?_⟩, fun B γ hγ ↦ ?_⟩
   · ext <;> simp [(h_range _).1, h_conj γ (j v)]
@@ -261,14 +262,7 @@ theorem exists_isRootChoice {k k' S : Type*} [Field k] [Field k'] [Algebra k k']
       simpa [h_conj δ u h_j] using congrArg SemidirectProduct.left h_conj_root
     obtain ⟨a, ha⟩ : ∃ a : G, j a = u := (h_range u).mpr h_fixed
     exact ⟨a, congrArg inl ha⟩
-  · simp [ev, lift_apply, Finsupp.sum, sum_mem, B.smul_mem, pow_mem hγ]
-
-variable [Finite Γ] in
-/-- A semidirect product of finite groups is finite. -/
-instance : Finite (G ⋊[α] Γ) := .of_equiv _ equivProd.symm
-
-omit [Finite G] in
-private lemma equivProd_symm_mk_one (g : G) : (equivProd.symm (g, 1) : G ⋊[α] Γ) = inl g := rfl
+  · simp [ev, AddMonoidAlgebra.lift_apply, Finsupp.sum, sum_mem, B.smul_mem, pow_mem hγ]
 
 open scoped Classical in
 /-- On a semidirect product `G ⋊ Γ`, take the function equal to `u` on `G` and to `w` off `G`. Its
@@ -282,7 +276,8 @@ lemma finMean_ite [Finite Γ] (u w : G ⋊[α] Γ → ℂ) :
   -- The difference of the two sums is carried by the copy of G, and |G ⋊ Γ| = |G| |Γ|. The mean
   -- over `G ⋊ Γ` is moved to `G × Γ` (`↓`) before `finMean` is unfolded.
   simp [↓finMean_equiv equivProd.symm, finMean, ite_sub, ← sub_eq_iff_eq_add', ← sum_sub_distrib,
-    field, finsum_eq_sum_of_fintype, Fintype.sum_prod_type, equivProd_symm_mk_one]
+    field, finsum_eq_sum_of_fintype, Fintype.sum_prod_type]
+  rfl
 
 open scoped Classical in
 /-- Let Y be a Γ-invariant irreducible character of G, Φ a virtual character of G⋊Γ with
@@ -299,7 +294,8 @@ lemma IsIrreducibleChar.extend_semidirect [Finite Γ] (hY : IsIrreducibleChar Y)
   -- I be class functions, ⟨I, f⟩ ≠ 0, ⟨f, f⟩ = 1, 0 ≤ re f(1), and ⟨χ, f⟩ ∈ ℤ for every character χ
   -- with ⟨χ, I⟩ ≠ 0 and χ(1) ⟨χ, I(· y)⟩ = ⟨χ, I⟩ χ(y). Means over G ⋊ Γ are split by the simp
   -- lemma `finMean_ite`.
-  obtain ⟨hY_char, hY_norm, hY_conv⟩ := hY
+  have hY_char := hY.isChar
+  have hY_norm := hY.classInner_self
   have hf_class : IsClassFunction fun x : G ⋊[α] Γ ↦ if x.right = 1 then Y x.left else Φ x := by
     simp +contextual [hY_char.isClassFunction, isClassFunction_of_mem_virtualChars hΦ, h_stable]
   have hI_class : IsClassFunction fun x : G ⋊[α] Γ ↦ if x.right = 1 then Y x.left else 0 := by
@@ -332,15 +328,13 @@ lemma IsIrreducibleChar.extend_semidirect [Finite Γ] (hY : IsIrreducibleChar Y)
     rw [h_split, hY_norm]
     field_simp
     linear_combination h_self
-  · -- the value at 1 is `Y 1`, the dimension of a representation
-    obtain ⟨V, hV⟩ := hY_char
-    simp [← hV]
+  · simpa using hY.re_apply_one_pos.le
   -- χ meets I, so its restriction to G is a multiple of Y: compare the two convolution identities
   have h_res (g : G) : χ (inl g) = χ 1 / Y 1 * Y g := by
-    -- the identity `hY_conv` for χ|G at g⁻¹, translated by g and conjugated
+    -- `IsIrreducibleChar.mul_classInner_translate` for χ|G at g⁻¹, translated by g and conjugated
     have h_convY : conj (Y 1 * finMean fun t ↦ conj (Y (t * g)) * χ (inl (t * g * g⁻¹))) =
         conj (classInner Y (χ ∘ inl) * Y g⁻¹) := by
-      rw [← hY_conv _ (hχ.comp inl).isClassFunction]
+      rw [← hY.mul_classInner_translate (hχ.comp inl).isClassFunction]
       congr 2
       exact (finMean_equiv (.mulRight g) (by simp)).symm
     have h_conv_g : χ 1 * (finMean fun t : G ↦ conj (χ (inl t)) * Y (t * g)) =
@@ -353,10 +347,7 @@ lemma IsIrreducibleChar.extend_semidirect [Finite Γ] (hY : IsIrreducibleChar Y)
     have h_pair_ne : (finMean fun t : G ↦ conj (χ (inl t)) * Y t) ≠ 0 := by
       simpa [← finMean_conj, ← hY_char.apply_inv, field, classInner] using h_ne
     have hY_one_ne : Y 1 ≠ 0 := fun h_zero ↦ by
-      -- otherwise `hY_conv` for `Y` itself gives `Y = 0`, against `⟨Y, Y⟩ = 1`
-      have hY_zero (t : G) : Y t = 0 := by
-        simpa [h_zero, hY_norm] using (hY_conv Y hY_char.isClassFunction t).symm
-      simp [classInner, hY_zero, finMean_eq] at hY_norm
+      simpa [h_zero] using hY.re_apply_one_pos
     -- the two identities share the left mean: eliminate it and cancel the pairing
     field_simp
     refine mul_left_cancel₀ h_pair_ne ?_
@@ -532,6 +523,9 @@ private lemma IsRootChoice.conjCount_root (R : IsRootChoice π σ j r) [Fintype 
   · -- `↓`: `eq_inv_smul_iff` must act before the action is unfolded to `v⁻¹ * γ * v`
     simp [R.apply_emb_eq_one, ← R.map_conj, ↓eq_inv_smul_iff, h_r_inj.eq_iff]
 
+private lemma conj_classInner {X : Type*} [Finite X] (u v : X → ℂ) :
+    conj (classInner u v) = classInner v u := by
+  simp [classInner, ← finMean_conj, mul_comm]
 /-- Descent commutes with induction. Let `ρ₀ : G' → G` be compatible with `ρ : E' →* E`, with
 choices of roots on both sides. If the class function `h` descends to `f`, and the class function
 `F` is induced from `f` along `ρ₀` in the sense of Frobenius reciprocity (`hF`), then
@@ -588,9 +582,6 @@ lemma DescendsOnCoset.induce [Finite Γ]
   have h_count_class : IsClassFunction (conjCount π s ∘ r) := fun γ v ↦ by
     change conjCount π s (r (v * γ * v⁻¹)) = conjCount π s (r γ)
     rw [R.map_conj, h_conj_snd _ _ (R.apply_emb_eq_one v)]
-  -- the count is real, so swapping the two sides of a pairing with it conjugates the pairing
-  have h_count_real (t : E) : conj (conjCount π s t) = conjCount π s t := by
-    simp [conjCount]
   -- `F` is a class function, so the mean over `δ` of the count at `r δ` times `F δ` is `F γ`
   have h_mean_count : classInner (conjCount π s ∘ r) F = F γ := by
     -- each `v` contributes `F (v⁻¹ * γ * v) = F γ`
@@ -602,11 +593,9 @@ lemma DescendsOnCoset.induce [Finite Γ]
     simp [classInner, finMean_eq, h_sum, ← Nat.card_eq_fintype_card, Nat.card_pos.ne']
   calc induceClassFn π ρ h s
       = classInner ((conjCount π s ∘ r) ∘ ρ₀) f := h_induce
-    _ = conj (classInner f ((conjCount π s ∘ r) ∘ ρ₀)) := by
-        simp [classInner, ← finMean_conj, h_count_real, mul_comm]
+    _ = conj (classInner f ((conjCount π s ∘ r) ∘ ρ₀)) := (conj_classInner _ _).symm
     _ = conj (classInner F (conjCount π s ∘ r)) := by rw [hF _ h_count_class]
-    _ = classInner (conjCount π s ∘ r) F := by
-        simp [classInner, ← finMean_conj, h_count_real, mul_comm]
+    _ = classInner (conjCount π s ∘ r) F := conj_classInner _ _
     _ = F γ := h_mean_count
 
 end CosetRoots

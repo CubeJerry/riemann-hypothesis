@@ -1,14 +1,23 @@
 module
 
-public import TauCeti.LinearAlgebra.Trace.Idempotent
-public import Mathlib.Algebra.Algebra.Subalgebra.Matrix
-public import Mathlib.RingTheory.SimpleModule.IsAlgClosed
-public import Mathlib.Topology.Baire.LocallyCompactRegular
-public import Lib.ClassField.Places.DecompositionCompletion
-public import Lib.General.LinearAlgebra.MatrixNormBounds
+import Mathlib.Algebra.Algebra.Subalgebra.Matrix
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.SimpleModule.IsAlgClosed
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Topology.Algebra.Group.Matrix
+import Mathlib.Topology.Baire.LocallyCompactRegular
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import TauCeti.LinearAlgebra.Trace.Idempotent
 public import Lib.General.NumberTheory.CoefficientRings
-public import Lib.PadicComparison.Descent.TestCategory
 public import Lib.General.LinearAlgebra.MatrixPolynomials
+import Lib.ClassField.Places.DecompositionCompletion
+import Lib.General.LinearAlgebra.MatrixNormBounds
+import Lib.PadicComparison.Descent.TestCategory
 
 /-!
 # Semisimple representations: conjugacy, continuity, cancellation and stable lattices
@@ -255,8 +264,6 @@ lemma exists_piMatrix_retract
       simp only [retract, ← map_mul, unit_mul]
     _ = 1 := by simp only [← map_sum, sum_piMatrixUnit, map_one]
 
-variable [IsAlgClosed k]
-
 variable (k) in
 /-- The span of ρ(G) in B is semiprime: any x in it with x ρ(g) x = 0 for all g is zero. -/
 def HasSemiprimeSpan : Prop := ∀ x ∈ span k (Set.range ρ), (∀ g : G, x * ρ g * x = 0) → x = 0
@@ -266,8 +273,8 @@ def HasSemiprimeSpan : Prop := ∀ x ∈ span k (Set.range ρ), (∀ g : G, x * 
 /-- The Wedderburn–Artin theorem for the span of `ρ ∘ f`. Let `ρ : G →* B` have semiprime span and
 let `f : H →* G` have normal range. Then `ρ ∘ f = F ∘ s`, where the image of `s` spans a product of
 matrix algebras and the algebra map `F` kills no block of that product. -/
-lemma exists_wedderburn [CharZero k] (f : H →* G) (h_semiprime : HasSemiprimeSpan k ρ)
-    (h_normal : f.range.Normal) :
+lemma exists_wedderburn [IsAlgClosed k] [CharZero k] (f : H →* G)
+    (h_semiprime : HasSemiprimeSpan k ρ) (h_normal : f.range.Normal) :
     ∃ (b : ℕ) (d : Fin b → ℕ) (_ : ∀ i : Fin b, NeZero (d i))
       (s : H →* PiMatrix k d) (F : PiMatrix k d →ₐ[k] B),
       (∀ i : Fin b, F (piMatrixUnit i) ≠ 0) ∧
@@ -328,6 +335,8 @@ lemma IsTraceNondeg.hasSemiprimeSpan (h : IsTraceNondeg r) :
     rw [sq, ← mul_assoc, h_sandwich, zero_mul]
   have h_nilpotent : IsNilpotent (x * (r g).val) := ⟨2, h_square_zero⟩
   exact (Matrix.isNilpotent_trace_of_isNilpotent h_nilpotent).eq_zero
+
+variable [IsAlgClosed k]
 
 /-- Clifford's theorem for the trace form. Let `k` be algebraically closed of characteristic zero.
 If the trace form of `r : G →* GL n k` is non-degenerate and `f : H →* G` has normal range, then

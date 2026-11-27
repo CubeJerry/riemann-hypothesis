@@ -1,6 +1,14 @@
 module
 
-public import Lib.LocalGL.Green.LabelCharacters
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.FieldTheory.Finite.Extension
+import Mathlib.RingTheory.PicardGroup
+public import Lib.LocalGL.Green.TauFunctions
+public import Lib.LocalGL.Shintani.CosetDescent
+import Lib.General.NumberTheory.FrobeniusOrbits
+import Lib.LocalGL.Green.CuspidalFunctions
+import Lib.LocalGL.Green.LabelCharacters
 
 /-!
 # Shintani lifting of Green's characters along extensions of prime degree
@@ -146,7 +154,7 @@ attribute [local instance low] Fintype.ofFinite
 variable {k L K : Type*} {r : ℕ}
   (k' : Type*) [Field k] [Field k'] [Algebra k k'] [Finite k] [Finite k'] [Field L]
   [Algebra k L] [Field K] [Algebra k K] [Algebra k' K] [IsScalarTower k k' K]
-  (T : MulChar K ℂ) [IsFaithfulMulChar K T] {P : k[X]} {x : K}
+  (T : MulChar K ℂ) {P : k[X]} {x : K}
 
 omit [IsScalarTower k k' K] in
 /-- Let irreducible polynomials `S` over `k'` and `P` over `k` have a common root `z`. Then
@@ -167,7 +175,7 @@ multiplication by `u` times `∏ j, conj` of the `thetaChar` of `x ^ |k| ^ a j` 
 `mulMoebius B = B · μ`. -/
 lemma exists_rankInner_labelChar_eq_finMean (hP : Irreducible P) (hx : Polynomial.aeval x P = 0)
     (hx_int : IsIntegral k' x) [FiniteDimensional k' k'⟮x⟯] [Finite k'⟮x⟯] {n : ℕ} {c : k'[X]}
-    (hc : IsLabel n c) (h_dvd : c ∣ P.map (algebraMap k k')) :
+    [IsFaithfulMulChar K T] (hc : IsLabel n c) (h_dvd : c ∣ P.map (algebraMap k k')) :
     ∃ b : ℕ, ∃ a : Fin b → ℕ,
       -- (a) the roots
       (∀ z : K, Polynomial.aeval z c = 0 → ∃ j : Fin b, ∃ v < finrank k' k'⟮x⟯,
@@ -337,7 +345,7 @@ the semidirect product `GL_r(k') ⋊ Gal(k'/k)` that descends (`DescendsTo`) to 
 cuspidal function `greenCuspidal k θ_x`, where `θ_x = thetaChar T (|k| ^ r) x`. The same `Φ`
 descends to `(-1) ^ r Ξ_P μ`, with `Ξ_P = labelChar T P` formed over `k'`. -/
 lemma exists_isChar_descendsTo_labelChar [Finite L] (hP : Irreducible P) (hP_label : IsLabel r P)
-    (hx : Polynomial.aeval x P = 0) (hL_rank : finrank k L = r) :
+    [IsFaithfulMulChar K T] (hx : Polynomial.aeval x P = 0) (hL_rank : finrank k L = r) :
     ∃ Φ : GalSemidirect k k' (Fin r) → ℂ,
       -- (a) a character
       IsChar Φ ∧
@@ -475,7 +483,7 @@ private lemma lift_labelChar_map_of_forall_eq_one [Algebra k' k']
     rw [labelChar_eq_greenTau T hP hP_monic, labelChar_eq_greenTau T hPσ (hP_monic.map _),
       greenTau_eq hP hP_coeff hx, greenTau_eq hPσ (by simpa using hP_coeff) hx_pow, natDegree_map,
       rankPart_greenCuspidal_pow hP hP_coeff hx]
-    exact (lift_brauerLift_pow_of_forall_eq_one T h_gal h_roots _).rankPart_mulMoebius_mul_constOne
+    exact (lift_brauerLift_pow_of_forall_eq_one h_gal h_roots _).rankPart_mulMoebius_mul_constOne
   simpa using h_lift_P.mul h_lift_c
 
 omit [Finite k'] in
@@ -699,7 +707,7 @@ private lemma lift_labelChar_of_not_isRoot_one {P : k[X]} {m : ℕ} (hL : IsLabe
   -- `Ψ` is `Y'` on `GL m k'`, and `Φ`, which descends to `Y` (`hΦ_down`), over the `σ ≠ 1`.
   have h_on_cosets : DescendsTo Ψ Y := by
     simpa +contextual [Ψ, DescendsTo, DescendsOnCoset, hasFixedField_iff_ne_one hp] using hΦ_down
-  exact .rankPart_of_hasCommonLift ⟨Ψ, h_irr.left.mem_virtualChars, h_on_cosets, by simp [Ψ, Y']⟩
+  exact .rankPart_of_hasCommonLift ⟨Ψ, h_irr.isChar.mem_virtualChars, h_on_cosets, by simp [Ψ, Y']⟩
 
 /-- Shintani lifting: let `k'/k` be an extension of finite fields of prime degree (`hp`), `T`
 injective (`IsFaithfulMulChar`) and `c` a label over `k` (`IsLabel`: monic, squarefree,

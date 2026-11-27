@@ -1,7 +1,15 @@
 module
 
-public import Mathlib.RingTheory.Ideal.MinimalPrime.Colon
-public import Lib.Cohomology.PointClass.ProjectiveNonvanishing
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Ideal.MinimalPrime.Colon
+import Mathlib.RingTheory.TotallySplit
+public import Lib.Cohomology.Hodge.FixedPointFormula
+public import Lib.Cohomology.PointClass.ProjectiveSpace
+public import Lib.PadicComparison.HodgeTate.Map
+import Lib.Cohomology.Etale.DenseSubfunctors
+import Lib.Cohomology.PointClass.ProjectiveNonvanishing
+import Lib.General.Algebra.MultivariatePolynomials
+import Lib.General.Geometry.GeometricPoints
 
 /-!
 # The Hodge–Tate map keeps classes of points on a projective variety linearly independent
@@ -107,7 +115,7 @@ lemma New.Variety.exists_generic_chart {k : Type} [Field k] [CharZero k] {R : Co
     ⟨algHom .., q.ker_algebraMap_residueField.symm⟩
   have hψ_iff (x : a.coordRing) : ψ x = 0 ↔ x * γ = 0 := by simpa [hψ] using Ideal.ext_iff.mp hγ x
   rw [hψ] at hζ
-  have ⟨_, i, hi⟩ := hw₀
+  let ⟨_, i, hi⟩ := hw₀
   have h_ψw_ne : (fun i : ι ↦ ψ (w₀ i)) ≠ 0 := ne_iff.mpr ⟨i, (hi.map ψ).ne_zero⟩
   obtain ⟨n, Λ, hΛ_ne, hΛ⟩ := exists_isNoetherNormalization (k := k) h_ψw_ne
   -- Invert `β`, the product of `γ` and the value of `Λ 0`. Neither factor is in `q` (`γ * γ ≠ 0`),
@@ -172,7 +180,7 @@ lemma New.Variety.injective_aeval_of_isNoetherNormalization {k A F ι : Type} [F
 constant term. If an open `V` contains `η`, then for some `q`, every field point `x` of `Y` lies in
 `V` when its `L`-coordinates `v` lie on the cone of `κ ∘ w` (homogeneous polynomials vanishing at
 `κ ∘ w` vanish at `v`) and satisfy `Λ v = [1 : q]`. -/
-lemma New.Variety.exists_fibre_mem_of_isOpenSubfunctor {k : Type} [Field k] [CharZero k]
+lemma New.Variety.exists_fiber_mem_of_isOpenSubfunctor {k : Type} [Field k] [CharZero k]
     {R : CommRingCat} [Algebra R.carrier k] {Y : Over (AlgebraicGeometry.Spec R)} {ι : Type}
     [Finite ι] {L : LineBundle Y.left ι} [Fact (L.IsProjEmbedding Y.hom)] {A : CommAlg k} {F : Type}
     [Field F] [Algebra k F] {κ : A ⟶ of k F} (hκ : Function.Injective κ) {w : ι → A} {n : ℕ}
@@ -328,7 +336,7 @@ lemma New.Variety.exists_etale_projection {k : Type} [Field k] [CharZero k] {R :
     (h_alg.isAlgebraic r).exists_coeff_ne_zero_and_aeval_eq_zero (mem_nonZeroDivisors_of_ne_zero hr)
   have h_memU : PointsIn.map κ c.point ∈ U.locus.obj (of k F) := ⟨⟨χ⟩, hχ⟩
   obtain ⟨q, h_fibre⟩ :=
-    exists_fibre_mem_of_isOpenSubfunctor hκ hw₁ h_root (hw.comp κ) U.isOpenSubfunctor h_memU
+    exists_fiber_mem_of_isOpenSubfunctor hκ hw₁ h_root (hw.comp κ) U.isOpenSubfunctor h_memU
   -- As `κ` is injective, `w` satisfies the equations of `κ ∘ w`.
   have hw_hom : IsHomogeneousSolution k (κ ∘ w) w :=
     .of_ker κ.hom' 1 (fun r hr ↦ (map_eq_zero_iff κ.hom' hκ).mp hr) .refl
@@ -584,10 +592,9 @@ lemma New.Variety.exists_map_separating_class {p : ℕ} {k : Type} [Field k] [Em
     have hψ : (ψ ≫ SqZeroExt.fst) ≫ structureMap = ψ := by
       refine U.lift_unique (π := SqZeroExt.fst) fst_surjective_and_kerIdeal_sq_eq_bot (by rfl)
         fun i ↦ ?_
-      have h_coord := mk_eq_mk_iff_cross_mul (v := ψ ∘ _).mp hy i.succ 0
-      simp [hw₁, hU] at h_coord ⊢
-      rw [h_coord]
-      rfl
+      have h_coord : ψ (evalForms Λ w i.succ) = algebraMap k _ (q i) := by
+        simpa [hw₁, hU] using mk_eq_mk_iff_cross_mul (v := ψ ∘ _).mp hy i.succ 0
+      simp [hU, h_coord]
     let A := of k (DualNumber k)
     let σ : A ⟶ A := SqZeroExt.fst ≫ structureMap
     let α := pointMap C.point

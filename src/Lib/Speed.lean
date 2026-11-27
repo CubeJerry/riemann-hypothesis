@@ -1,4 +1,4 @@
-module
+module -- shake: keep-all (its imports stay public: its settings apply to them, and the tactic extensions below are used by nearly every file)
 
 public import Mathlib.Algebra.DirectSum.Internal
 public import Mathlib.Algebra.Order.Floor.Extended
@@ -47,6 +47,15 @@ public import Mathlib.Tactic.NormNum.Prime
 public import Mathlib.Tactic.NormNum.RealSqrt
 public import Mathlib.Tactic.TypeStar
 public import Mathlib.Topology.Sheaves.Init
+public import Aesop.Frontend.Tactic
+public import Aesop.Main
+public import Mathlib.RingTheory.WittVector.IsPoly
+public import Mathlib.Tactic.Basify
+public import Mathlib.Tactic.ENatToNat
+public import Mathlib.Tactic.Polynomial.Basic
+public import Mathlib.Tactic.ReduceModChar
+public import Std.Internal.Order.Automation
+public import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # Speed settings
@@ -70,6 +79,7 @@ attribute [instance 20] SetLike.GradeZero.instMonoid SetLike.GradeZero.instCommM
 -- and then fail on a side condition. Tagging a lemma in both directions erases both, and, unlike
 -- `attribute [-simp]`, the effect passes to importers. The reversed tags last one command only,
 -- so the warning about their head symbols does not apply.
+set_option warning.simp.varHead false in
 attribute [simp ←, simp] Matrix.conjTranspose_eq_transpose_of_trivial MonoidHom.CompTriple.comp_eq
   LinearMap.identityMapOfZeroModuleIsZero smul_left_cancel_iff mul_cancel_left_mem_nonZeroDivisors
   IsAddKleinFour.card_four' MeasureTheory.lintegral_of_isEmpty Nat.card_eq_zero_of_infinite

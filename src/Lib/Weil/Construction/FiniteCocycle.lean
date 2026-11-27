@@ -1,8 +1,11 @@
 module
 
-public import Lib.General.NumberTheory.FrobeniusOrbits
+import Mathlib.Topology.Algebra.ProperConstSMul
 public import Lib.Weil.Construction.FiniteMultiplier
 public import Lib.Weil.Construction.WeilOperators
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.General.Measure.HaarNormalisation
+import Lib.General.NumberTheory.FrobeniusOrbits
 
 /-!
 # The finite cocycle as a finite Gauss sum, and its triviality
@@ -209,7 +212,7 @@ lemma exists_gauss_sum_finProjAction (g s : Gf E ι) :
       |>.inter_left (isCompact_stdLattice.isClosed.preimage continuous_add)
   have hL : IsOpen (SetLike.coe (L.prod L).toAddSubgroup) :=
     isOpen_stdLattice.prod isOpen_stdLattice
-  have h_fin : Fintype (M.toAddSubgroup ⧸ (L.prod L).toAddSubgroup.addSubgroupOf M.toAddSubgroup) :=
+  let h_fin : Fintype (M.toAddSubgroup ⧸ (L.prod L).toAddSubgroup.addSubgroupOf M.toAddSubgroup) :=
     AddSubgroup.fintypeOfIndexNeZero (hM.relIndex_ne_zero_add hL)
   have h_integrand (x y : ι → 𝔸f E) : (SetLike.coe M.toAddSubgroup).indicator
     (selfDualAddChar E ∘ F) (x, y) =

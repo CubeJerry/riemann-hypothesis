@@ -1,8 +1,19 @@
 module
 
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Data.Int.Log
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Topology.Algebra.Group.Matrix
+import TauCeti.NumberTheory.NumberField.Countable
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Adelic.Reduction.MinkowskiTheorems
-public import Lib.Adelic.Unitary.WeakApproximation
-public import Lib.General.NumberTheory.SUnitsAndClassNumber
+public import Lib.Adelic.Unitary.ComponentsAndBlockSums
+public import Lib.DiscreteSeries.Haar.CayleyChart
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.General.NumberTheory.SUnitsAndClassNumber
 
 /-!
 # Adelic reduction theory, Mahler's criterion and finite volume of the arithmetic quotient
@@ -95,29 +106,22 @@ lemma isCompact_setOf_le_ideleAbs_det {M : Set (Matrix n n (𝔸 E))} (hM : IsCo
       (2 * NumberField.rootDiscr E) ^ numInfPlaces E / c < (2 ^ (2 * numInfPlaces E)) ^ N :=
     pow_unbounded_of_one_lt _ (by simp [one_lt_pow₀])
   let t : 𝔸 E := (twoAtInfinity E ^ N).val
-  let B : Set (𝔸 E) := Metric.closedBall 0 1 ×ˢ Ô E
-  have hB : IsCompact B := isCompact_closedBall_prod_integral
-  let F : Set E := {ξ | toAdele ξ ∈ (fun A ↦ det A * t) '' M * B}
-  have hF : F.Finite := finite_setOf_toAdele_mem ((hM.image_of_continuous fun A ↦ det A * t).mul hB)
-  let T : Set (𝔸 E) := B * (fun ξ ↦ toAdele ξ⁻¹) '' F
-  -- The set is closed, so it is enough to bound the pairs `(A, A⁻¹)` by a compact set `K`.
-  let K : Set (Matrix n n (𝔸 E) × (Matrix n n (𝔸 E))ᵐᵒᵖ) :=
-    (fun (A, b) ↦ (A, MulOpposite.op ((t * b) • A.adjugate))) '' M ×ˢ T
-  have hK : IsCompact K := (hM.prod (hB.mul (hF.image _).isCompact)).image_of_continuous _
-  refine (Units.isClosedEmbedding_embedProduct.isCompact_preimage hK).of_isClosed_subset
+  have hB := isCompact_closedBall_prod_integral (E := E)
+  have hF := finite_setOf_toAdele_mem ((hM.image_of_continuous fun A ↦ det A * t).mul hB)
+  -- The set is closed, so it is enough to bound the pairs `(A, A⁻¹)` by a compact set.
+  refine (Units.isClosedEmbedding_embedProduct.isCompact_preimage
+    ((hM.prod (hB.mul (hF.image (fun ξ ↦ toAdele ξ⁻¹)).isCompact)).image_of_continuous
+      (fun (A, b) ↦ (A, MulOpposite.op ((t * b) • A.adjugate))))).of_isClosed_subset
     (.and hM.isClosed.preimage_of_continuous (isClosed_le continuous_const (by fun_prop))) ?_
-  rintro (A : GL n (𝔸 E)) ⟨hA, hdet⟩
-  have h_lt : (2 * NumberField.rootDiscr E) ^ numInfPlaces E <
-      ideleAbs A.det * (2 ^ (2 * numInfPlaces E)) ^ N := by grw [← hdet, ← div_lt_iff₀' hc, hN]
-  obtain ⟨ξ, hξ, b, hb, hbξ⟩ : ∃ ξ : E, ξ ≠ 0 ∧ ∃ b ∈ B, A.det.val * t * b = toAdele ξ :=
-    exists_mul_twoAtInfinity_pow_mul_eq_toAdele h_lt
-  have hξ_mem : ξ ∈ F := mem_mul.2 ⟨A.val.det * t, mem_image_of_mem _ hA, b, hb, hbξ⟩
-  have h_det_inv : A.det.val * (t * (b * toAdele ξ⁻¹)) = 1 := by
-    rw [← mul_assoc, ← mul_assoc, hbξ, ← map_mul, mul_inv_cancel₀ hξ, map_one]
+  rintro A ⟨hA, hdet⟩
+  obtain ⟨ξ, hξ, b, hb, hbξ⟩ :=
+    exists_mul_twoAtInfinity_pow_mul_eq_toAdele (by grw [← hdet, ← div_lt_iff₀' hc, hN])
   have h_inv : A⁻¹.val = (t * (b * toAdele ξ⁻¹)) • A.val.adjugate := by
     rw [coe_units_inv, inv_def, ← GeneralLinearGroup.val_det_apply, Ring.inverse_unit,
-      Units.inv_eq_of_mul_eq_one_right h_det_inv]
-  exact ⟨(A, b * toAdele ξ⁻¹), ⟨hA, mul_mem_mul hb (mem_image_of_mem _ hξ_mem)⟩,
+      Units.inv_eq_of_mul_eq_one_right
+        (by rw [← mul_assoc, ← mul_assoc, hbξ, ← map_mul, mul_inv_cancel₀ hξ, map_one])]
+  exact ⟨(A, b * toAdele ξ⁻¹),
+    ⟨hA, mul_mem_mul hb (mem_image_of_mem _ ⟨_, mem_image_of_mem _ hA, b, hb, hbξ⟩)⟩,
     Prod.ext rfl (congrArg MulOpposite.op h_inv.symm)⟩
 
 /-- Let `M` and `K` be compact. There is a compact set `B` of adeles such that, whenever the Gram

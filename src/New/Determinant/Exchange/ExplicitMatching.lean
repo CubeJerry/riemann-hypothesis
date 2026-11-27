@@ -1,9 +1,17 @@
 module
 
-public import Lib.GLn.SchurModule.Polarisation
-public import New.Determinant.Exchange.TheoremForPartners
+import Mathlib.Analysis.Complex.MeanValue
+import Mathlib.Topology.UniformSpace.Uniformizable
 public import New.OneLift.ComparisonOperator.DeterminantProducts
-public import New.OneLift.ComparisonOperator.OneExchange
+public import Lib.SiegelWeil.Tower.FiniteTateIntegral
+public import New.Determinant.Exchange.MatchingPartners
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+import Lib.GLn.SchurModule.Polarisation
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.Weil.Construction.CanonicalTheta
+import New.Determinant.Exchange.TheoremForPartners
+import New.OneLift.ComparisonOperator.OneExchange
 
 /-!
 # Explicit real data: the exchange identity for a definite space with determinant data
@@ -88,9 +96,11 @@ abbrev blockSigns : b → ℤˣ := (1 ⊕ᵥ -1) ∘ f.symm
 
 /-- The embedding of the compact groups `U(m)`, one for each infinite place, as the positive block
 of the unitary group of signs `blockSigns j`. -/
-@[simps!]
+@[simps! -isSimp]
 def posBlockEmb : GInf E (1 : m → ℤˣ) →* GInf E (blockSigns j) :=
   ((U.reindex j (by simp [signMatrix])).toMonoidHom.comp (U.inl 1 (-1))).compLeft (InfinitePlace E)
+
+attribute [simp] val_posBlockEmb_apply_coe
 
 omit [NumberField E] in
 /-- At each place, the inverse of the image of `k` has the matrix of the image of `k⁻¹`. -/
@@ -879,7 +889,7 @@ lemma integral_one_quotMeasure_of_isEmpty [IsEmpty b] {t : b → ℤˣ} (V' : Sp
   obtain rfl : t = 1 := Subsingleton.elim t 1
   have h_sub : Subsingleton (DoubleCoset.Quotient (V'.Γf : Set (Gf E b)) (stdLevel E b)) :=
     Quotient.mk''_surjective.subsingleton
-  have h_class : Unique (DoubleCoset.Quotient (V'.Γf : Set (Gf E b)) (stdLevel E b)) :=
+  let h_class : Unique (DoubleCoset.Quotient (V'.Γf : Set (Gf E b)) (stdLevel E b)) :=
     uniqueOfSubsingleton (DoubleCoset.mk V'.Γf (stdLevel E b) 1)
   have h_left : V'.Γ.FixesLeft (fun _ : G E (1 : b → ℤˣ) ↦ (1 : ℂ)) := fun _ _ _ ↦ rfl
   have h_level : stdLevel E b ≤ rightStabilizer fun _ : Gf E b ↦ (1 : ℂ) := fun _ _ _ ↦ rfl

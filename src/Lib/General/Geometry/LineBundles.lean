@@ -1,25 +1,16 @@
 module
 
-public import TauCeti.AlgebraicGeometry.Scheme.AffinePoints
-public import Aesop.Frontend.Tactic
-public import Aesop.Main
 public import Mathlib.Algebra.Group.MinimalAxioms
-public import Mathlib.AlgebraicGeometry.Modules.Sheaf
 public import Mathlib.AlgebraicGeometry.Morphisms.SchemeTheoreticallyDominant
-public import Mathlib.AlgebraicGeometry.Morphisms.WeaklyEtale
-public import Mathlib.AlgebraicGeometry.Sites.Fpqc
-public import Mathlib.CategoryTheory.EffectiveEpi.Comp
-public import Mathlib.CategoryTheory.ExtremalEpi
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
 public import Mathlib.Order.CompletePartialOrder
-public import Mathlib.RingTheory.FreeCommRing
-public import Mathlib.RingTheory.WittVector.IsPoly
-public import Mathlib.Tactic.Basify
-public import Mathlib.Tactic.ENatToNat
-public import Mathlib.Tactic.Polynomial.Basic
-public import Mathlib.Tactic.ReduceModChar
-public import Std.Internal.Order.Automation
-public import Std.Tactic.BVDecide.Normalize.Prop
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.AlgebraicGeometry.Morphisms.WeaklyEtale
+import Mathlib.AlgebraicGeometry.Sites.Fpqc
+import Mathlib.CategoryTheory.EffectiveEpi.Comp
+import Mathlib.CategoryTheory.ExtremalEpi
+import Mathlib.RingTheory.FreeCommRing
+import TauCeti.AlgebraicGeometry.Scheme.AffinePoints
 public import Lib.Speed
 
 /-!
@@ -365,8 +356,8 @@ lemma le_of_cover {V : κ → Y.Opens} (hV : IsOpenCover V) {U W : Y.Opens}
 
 /-! ### Effective epimorphisms -/
 
-/-- A quasi-compact effective epimorphism of schemes is scheme-theoretically dominant. -/
-instance [EffectiveEpi p] [QuasiCompact p] : IsSchemeTheoreticallyDominant p := by
+/-- An effective epimorphism of schemes is scheme-theoretically dominant. -/
+instance [EffectiveEpi p] : IsSchemeTheoreticallyDominant p := by
   -- `p` factors through the closed immersion of its image, which is thus an isomorphism.
   have : IsIso p.imageι := ExtremalEpi.isIso p p.toImage p.imageι p.toImage_imageι
   have h_ker : p.imageι.ker = ⊥ := p.imageι.ker_eq_bot_of_isIso

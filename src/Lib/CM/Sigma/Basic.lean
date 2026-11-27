@@ -2,12 +2,16 @@ module
 
 public import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
 public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
-public import Mathlib.GroupTheory.IndexNSmul
 public import Mathlib.NumberTheory.ModularForms.Discriminant
 import TauCeti.Analysis.SpecialFunctions.Elliptic.AdditionTheorem
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.GroupTheory.IndexNSmul
 public import Lib.General.Analysis.MeanValueAndTaylor
 public import Lib.General.NumberTheory.ImaginaryQuadraticField
-public import Lib.Shimura.ComplexTheta.DimensionFormula
+public import Lib.Shimura.ComplexTheta.AppellHumbertData
+import Lib.Shimura.ComplexTheta.DimensionFormula
 
 /-!
 # Sigma and Weierstrass functions, lattice invariants and lattices with complex multiplication
@@ -22,8 +26,7 @@ of σ and the classical facts on ℘.
 
 * `New.IsAppellHumbert.theta_eq_zero_iff_mem_lattice`, `New.IsAppellHumbert.deriv_theta_ne_zero`,
   `New.IsAppellHumbert.thetaSpace_two_eq_span_pair`: a theta function f ≠ 0 for (H, χ) with
-  f(0) = 0 has simple zeros exactly on Λ, and ℘f² and f² span the theta functions for (2H, χ²);
-  `New.IsAppellHumbert.thetaSpace_two_eq_span` collects the three.
+  f(0) = 0 has simple zeros exactly on Λ, and ℘f² and f² span the theta functions for (2H, χ²).
 * `PeriodPair.σ`, `New.sigma_add_mul_sigma_sub`: for u and v outside Λ,
   σ(u + v)σ(u − v) = (℘(v) − ℘(u))σ(u)²σ(v)².
 * `PeriodPair.exists_weierstrassP_eq_of_cubic`: every point of `y² = 4x³ - g₂x - g₃` is

@@ -1,16 +1,18 @@
 module
 
-public import Mathlib.Analysis.Complex.MeanValue
-public import Mathlib.Analysis.Complex.TaylorSeries
 public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
-public import Mathlib.Analysis.SpecialFunctions.RegularizedHypergeometric
-public import Mathlib.Geometry.Manifold.Algebra.SMul
-public import Mathlib.Geometry.Manifold.BumpFunction
-public import Mathlib.Order.CompletePartialOrder
 public import Mathlib.RingTheory.PowerSeries.Basic
-public import Mathlib.RingTheory.SimpleRing.Principal
-public import Std.Tactic.BVDecide.Normalize.Prop
-public import Lib.General.Measure.IdempotentKernel
+public import Mathlib.Analysis.CStarAlgebra.Classes
+import TauCeti.Analysis.Calculus.Deriv.Second
+import Mathlib.Analysis.Complex.MeanValue
+import Mathlib.Analysis.Complex.TaylorSeries
+import Mathlib.Analysis.SpecialFunctions.RegularizedHypergeometric
+import Mathlib.Geometry.Manifold.Algebra.SMul
+import Mathlib.Geometry.Manifold.BumpFunction
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.SimpleRing.Principal
+public import Lib.Speed
+import Lib.General.Measure.IdempotentKernel
 
 /-!
 # Circle means, Taylor series at zero, a power bound, and smooth matrix operations
@@ -135,16 +137,8 @@ coefficient multiplied by `a ^ n` (`PowerSeries.rescale a`). No analyticity is n
 @[simp]
 lemma taylorAtZero_comp_mul (a : ℂ) (f : ℂ → ℂ) :
     taylorAtZero (fun z : ℂ ↦ f (a * z)) = rescale a (taylorAtZero f) := by
-  -- each derivative of `z ↦ f (a * z)` brings out one factor `a`
-  have h_deriv (n : ℕ) : iteratedDeriv n (fun z : ℂ ↦ f (a * z)) =
-      fun z : ℂ ↦ a ^ n * iteratedDeriv n f (a * z) := by
-    induction n with
-    | zero => simp
-    | succ n ih =>
-      ext z
-      simp [iteratedDeriv_succ, ih, deriv_comp_mul_left, _root_.pow_succ, mul_assoc]
   ext n
-  simp [h_deriv, mul_div_assoc]
+  simp [TauCeti.iteratedDeriv_comp_mul_left, smul_eq_mul, mul_div_assoc]
 
 /-- Two entire functions with the same Taylor series at 0 are equal. -/
 lemma eq_of_taylorAtZero_eq {f g : ℂ → ℂ} (hf_diff : Differentiable ℂ f)

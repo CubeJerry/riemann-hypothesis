@@ -1,6 +1,11 @@
 module
 
+import TauCeti.Analysis.Matrix.OstrowskiTaussky
+import Mathlib.Algebra.Order.Star.Real
 public import New.Spanning.RemainingTerms.BorderedDeterminant
+import Lib.Cohomology.Etale.Basic
+import Lib.General.Analysis.HolomorphicIntegrals
+import Lib.Shimura.ComplexTheta.AppellHumbertData
 
 /-!
 # The weight of Schur's test at one real place
@@ -655,7 +660,7 @@ lemma norm_det_mul_le_volumeRatio (h : IsTriangularBasis hi y Z ω L)
         (inclMatrix ℂ (subframeIndex hi) * (subframeBlock hi Z)⁻¹ * L)
   have h_ostrowski : ‖(1 + vᴴ * v).det‖ ≤ 2 ^ (i + 1) * ‖(-K).det‖ := by
     simpa only [Fintype.card_fin] using
-      ostrowski_taussky (PosSemidef.one.add v.posSemidef_conjTranspose_mul_self) h_negative
+      (PosSemidef.one.add v.posSemidef_conjTranspose_mul_self).norm_det_le_two_pow_mul h_negative
   have hL : 0 < ‖L.det‖ := norm_pos_iff.2 h.det_ne_zero
   have h_det : ‖(-K).det‖ = volumeRatio γ y * ‖L.det‖ ^ 2 / ‖(subframeBlock hi Z).det‖ := by
     have h_factor : K = ((γ.val.val * subframeCols hi)ᴴ * 𝔰.J₁ * ω)ᴴ * (subframeBlock hi Z)⁻¹ *
@@ -732,11 +737,11 @@ lemma RealPlace.exists_common_vector_of_normOnePairOccursFrom (hi_le : i ≤ �
       simp_all [inclMatrix, mulVec, dotProduct, eq_comm]
   have h_block_mulVec : subframeBlock hi_le Z *ᵥ c = Pi.single (last i) (-x 𝔰.top) := by
     have hZx' : Z *ᵥ x' = Pi.single 𝔰.top (-x 𝔰.top) := by
-      rw [← hZ, realFrameGram_eq_conjTranspose_mul, ← mulVec_mulVec, ← mulVec_mulVec x', h_frames,
-        mulVec_mulVec, frameCols_J₁_gram]
-      ext a
-      rw [mulVec_diagonal]
-      cases a using lastCases <;> simp
+      have h_inverse : γ⁻¹.val.val *ᵥ 𝔰.frameCols *ᵥ x = 𝔰.frameCols *ᵥ x' := by
+        simpa [mulVec_mulVec, ← Units.val_mul, ← Subgroup.coe_mul] using
+          congrArg (γ⁻¹.val.val *ᵥ ·) h_frames.symm
+      simpa only [← hZ, realFrameGram, Filling.frameGram_inv, conjTranspose_conjTranspose] using
+        (conjTranspose_realFrameGram_mulVec h_inverse).1
     rw [← hc, mulVec_mulVec, mul_inclMatrix] at hZx'
     ext l
     -- The block is made of the rows of the subframe in `Z.submatrix id (subframeIndex hi_le)`.

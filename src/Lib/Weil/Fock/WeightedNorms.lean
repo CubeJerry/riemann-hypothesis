@@ -1,7 +1,10 @@
 module
 
-public import Mathlib.Analysis.Distribution.TemperateGrowth
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Distribution.TemperateGrowth
+import Mathlib.Topology.Separation.CompletelyRegular
 public import Lib.Weil.Fock.Basic
+import Lib.General.Analysis.HolomorphicIntegrals
 
 /-!
 # Moments on Fock space, approximation by polynomial vectors, bounds for functionals
@@ -366,7 +369,7 @@ lemma exists_tendsto_fockMoment (hv : Exchange.IsSchwartzVector v) :
   refine (fockMoment_integral_le N).trans_eq ?_
   rw [lintegral_prod _ (by fun_prop)]
   simp (disch := positivity) only [fockMoment_eq, smul_one_sub_partialKernelOp_apply,
-    G, g, s, ← smul_sub, ← mul_sub, norm_smul, norm_mul, norm_sub_rev (NormedSpace.exp _),
+    s, ← smul_sub, ← mul_sub, norm_smul, norm_mul, norm_sub_rev (NormedSpace.exp _),
     norm_of_nonneg]
 
 /-! ### The Weil representation -/
@@ -378,15 +381,6 @@ lemma one_add_enorm_mulVec_le {p : Type*} [Fintype p] (A : Matrix ι p ℂ) (y :
     1 + ‖A *ᵥ y‖ₑ ≤ (1 + ‖A‖ₑ) * (1 + ‖y‖ₑ) := by
   grw [eNorm_eq_nnNorm, linfty_opNNNorm_mulVec, mul_one_add, ENNReal.coe_mul]
   bound
-
-/-- The Weil operator of `u` as an integral: `realWeil u v` is `realMultiplier u` times
-`∫ v(y) realHeisenbergOp (u y) vacVector dy`. This is the definition of the Weil representation. -/
-private lemma realWeil_eq_integral (u : USign ε) (v : fockSpace ε) :
-    realWeil u v = realMultiplier u • ∫ y : ι → ℂ,
-      v y • realHeisenbergOp ((u : Matrix ι ι ℂ) *ᵥ y) (vacVector : fockSpace ε)
-        ∂normalizedVolume ι := by
-  rw [realWeil, weilRep]
-  rfl
 
 /-- The Weil representation of `u` multiplies the `N`-th moment `fockMoment N v` = ∫ (1 + ‖y‖)ᴺ
 |v(y)| dy in [0, ∞] (sup norm ‖y‖, Lebesgue measure divided by π^|ι|) by at most
@@ -411,7 +405,9 @@ lemma fockMoment_realWeil_le (u : USign ε) :
   calc
     fockMoment N (realWeil u v) = ‖realMultiplier u‖ₑ * fockMoment N
         (∫ y, v y • realHeisenbergOp ((u : Matrix ι ι ℂ) *ᵥ y) (vacVector : fockSpace ε)
-          ∂normalizedVolume ι) := by rw [realWeil_eq_integral, fockMoment_smul]
+          ∂normalizedVolume ι) := by
+      rw [realWeil, weilRep]
+      exact fockMoment_smul ..
     _ ≤ ‖realMultiplier u‖ₑ * ∫⁻ y, fockMoment N
         (v y • realHeisenbergOp ((u : Matrix ι ι ℂ) *ᵥ y) (vacVector : fockSpace ε))
           ∂normalizedVolume ι := by

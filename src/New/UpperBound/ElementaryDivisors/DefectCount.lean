@@ -1,12 +1,16 @@
 module
 
-public import Mathlib.Algebra.Order.Antidiag.FinsuppEquiv
-public import Mathlib.Analysis.Convex.Measure
-public import Std.Tactic.BVDecide.Normalize.Bool
-public import Lib.General.Measure.IntegralOperators
-public import Lib.LocalGL.Green.CuspidalFunctions
+import Mathlib.Algebra.Order.Antidiag.FinsuppEquiv
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.BoxIntegral.UnitPartition
+import Mathlib.Analysis.Convex.Measure
+import Mathlib.RingTheory.Etale.Weakly
+import Std.Tactic.BVDecide.Normalize.Bool
 public import New.UpperBound.ElementaryDivisors.PieriCone
 public import New.UpperBound.ElementaryDivisors.RootLemma
+import Lib.General.Measure.IntegralOperators
+import Lib.LocalGL.Green.CuspidalFunctions
 
 /-!
 # The dimension of the forms of bounded defect
@@ -693,8 +697,8 @@ lemma FrobeniusCycle.finrank_defectConditions_mul_pow_le (T : FrobeniusCycle N W
   have : NeZero m := ⟨hm_pos.ne'⟩
   obtain ⟨R, hR, -⟩ :=
     ((parahoric W Fin.val).subgroupOf (levi W (twoBlock k a'))).exists_isComplement_right 1
-  have : Fintype R := hR.finite_right.fintype
-  have : Fintype Λ := ((ZSpan.setFinite_inter _ (isBounded_inter_degreeSlab ..)).subset
+  let : Fintype R := hR.finite_right.fintype
+  let : Fintype Λ := ((ZSpan.setFinite_inter _ (isBounded_inter_degreeSlab ..)).subset
     (inf_le_inf_left _ (ZSpan.smul _ (NeZero.ne _)).le)).fintype
   let pack : ((Fin k × ZMod N → Fin m) → S) →ₗ[K] MvPolynomial (Fin k × ZMod N) K :=
     powerPacking a n m ∘ₗ S.subtype.compLeft _
@@ -873,10 +877,14 @@ lemma FrobeniusCycle.index_mul_relIndex_le (T : FrobeniusCycle N W K) (r : ℕ) 
   -- The entries of the Levi subgroup between the blocks vanish, and
   -- `twoBlock k r i < twoBlock k r j` implies `i < j`.
   have h_levi : levi W (twoBlock k r) ≤ parahoric W (twoBlock k r) := fun g hg ↦ by
-    simp [parahoric, parabolic, BlockTriangular]
+    suffices ∀ ⦃i j⦄, twoBlock k r i < twoBlock k r j → g.val i j ∈ IsLocalRing.maximalIdeal W by
+      simpa [parahoric, parabolic, BlockTriangular]
     exact fun i j h ↦ by simp [hg i j h.ne]
   have h_iwahori_le : parahoric W Fin.val ≤ parahoric W (twoBlock k r) := fun g hg ↦ by
-    simp [parahoric, parabolic, BlockTriangular] at hg ⊢
+    replace hg : ∀ ⦃i j : Fin k⦄, i < j → g.val i j ∈ IsLocalRing.maximalIdeal W := by
+      simpa [parahoric, parabolic, BlockTriangular] using hg
+    suffices ∀ ⦃i j⦄, twoBlock k r i < twoBlock k r j → g.val i j ∈ IsLocalRing.maximalIdeal W by
+      simpa [parahoric, parabolic, BlockTriangular]
     exact fun i j h ↦ hg (by grind [twoBlock])
   grw [relIndex_le_of_le_right h_levi index_ne_zero_of_finite, mul_comm, ← cast_mul,
     relIndex_mul_index h_iwahori_le, parahoric, index_comap,
@@ -896,6 +904,15 @@ lemma FrobeniusCycle.permStep_mem_defectCone_iff (T : FrobeniusCycle N W K) {a' 
       permStep T.isEven T.P 1 ν ((if T.isEven i then b' else b), i) ≤ ν (b, i) - ν (b', i)
   refine forall₄_congr fun i b b' hb ↦ ?_
   rw [defectWeight_dotProduct_permStep, ite_self, sub_nonpos, rootVar]
+
+/-- For a Frobenius cycle `T` with `q = T.P ^ N`, the cone `T.defectCone a 0` of Pieri's
+inequalities fills the part `∏ (q - 1) / (q ^ (l + 1) - 1)`, over `l < k`, of the volume of every
+slab of vectors `β ≥ 0` with degrees in `[D s - 1, D s]`. -/
+lemma FrobeniusCycle.prod_mul_volume_defectCone_inter_degreeSlab (T : FrobeniusCycle N W K)
+    {a : Fin k} (D : ZMod N → ℝ) :
+    (∏ l : Fin k, (((T.P : ℝ) ^ N) ^ (l.val + 1) - 1) / (T.P ^ N - 1)) *
+      volume.real (T.defectCone a 0 ∩ degreeSlab k D) = volume.real (degreeSlab k D) :=
+  prod_mul_volume_real_inter_degreeSlab T.one_lt_P D T.permStep_mem_defectCone_iff
 
 /-- Few forms have bounded defect. Let `T` be a Frobenius cycle from the local ring `W` to the field
 `K` of characteristic `T.p`: ring maps `ι s : W → K`, one for each letter `s ∈ ℤ/N`, with
@@ -949,8 +966,7 @@ lemma FrobeniusCycle.index_mul_finrank_defectConditions_le (T : FrobeniusCycle N
           (parahoric W Fin.val).relIndex (levi W (twoBlock (k' + 1) a')) *
           volume.real (T.defectCone a 0 ∩ degreeSlab (k' + 1) D) := by grw [h_flags, mul_assoc]
     _ ≤ volume.real (degreeSlab (k' + 1) D) := by
-        grw [T.index_mul_relIndex_le,
-          prod_mul_volume_real_inter_degreeSlab T.one_lt_P D T.permStep_mem_defectCone_iff]
+        grw [T.index_mul_relIndex_le, T.prod_mul_volume_defectCone_inter_degreeSlab]
     _ ≤ rexp x * (n ^ k' / k' !) ^ N := by
         refine (ENNReal.toReal_le_of_le_ofReal (b := ((rexp (E / n) * n) ^ k' / k' !) ^ N)
           (by positivity) ?_).trans_eq ?_

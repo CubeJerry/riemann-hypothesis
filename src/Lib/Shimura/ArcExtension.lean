@@ -1,11 +1,20 @@
 module
 
-public import Lib.General.Geometry.GeometricPoints
+import Mathlib.AlgebraicGeometry.Morphisms.WeaklyEtale
+import Mathlib.AlgebraicGeometry.Sites.Fpqc
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.TotallySplit
+import TauCeti.AlgebraicGeometry.Morphisms.Smooth.GeometricallyReduced
 public import Lib.Shimura.ThetaGroup
-public import Lib.Shimura.ThetaNormality.NormalGeneration
 public import Lib.Shimura.Uniformisation.HolomorphicFamilies
-public import Lib.PadicComparison.Descent.TestCategory
-public import Lib.Shimura.AbelianScheme.Pairings
+public import Lib.General.Geometry.DenseComplexPoints
+import Lib.General.Analysis.HolomorphicIntegrals
+import Lib.General.Geometry.GeometricPoints
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.Shimura.AbelianScheme.Pairings
+import Lib.Shimura.ThetaNormality.NormalGeneration
 
 /-!
 # Uniformisations over an arc: theta coordinates, Weil pairing and extension of maps
@@ -69,13 +78,6 @@ variable {X : Scheme.{0}} {ι : Type} {L : LineBundle X ι} {R : Type} [CommRing
 
 private lemma _root_.New.LineBundle.H0.isSection_val (r : L.H0 R) : L.IsSection r.val :=
   r.prop.left
-
-/-- At a point that lands in the charts `i` and `j`, the components of a global section `r`
-differ by the transition function: `r i = g_ij · r j`. -/
-private lemma _root_.New.LineBundle.H0.val_eq_transition_mul (r : L.H0 R) (i j : ι)
-    (A : CommRingCat) (t : Spec A ⟶ X) (hi : LandsIn t (L.opens i)) (hj : LandsIn t (L.opens j)) :
-    r.val i A t = L.transition i j A t * r.val j A t :=
-  (LineBundle.H0.isSection_val r).right i j A t hi hj
 
 /-- A component `r.val i` of a global section vanishes at the points outside the chart `i`. -/
 private lemma _root_.New.LineBundle.H0.val_eq_zero_of_not_landsIn (r : L.H0 R) (i : ι)
@@ -164,7 +166,7 @@ lemma thetaEval_eq_iff (h : HasThetaCoords Λ (atGeneric s) L B χ θ) (r : L.H0
   -- the chart does not matter: `θ z i * r i = θ z j * r j` if `θ z i` and `θ z j` are not zero
   constructor
   · rintro rfl i z hi
-    simp [thetaEval, LineBundle.H0.val_eq_transition_mul r i (thetaChart h z),
+    simp [thetaEval, (LineBundle.H0.isSection_val r).right i (thetaChart h z),
       h.hasFieldCoords .., field, apply_thetaChart_ne_zero h, hi]
   · -- at each `z` the value of `thetaEval h r` is read in the chart `thetaChart h z`
     intro h_val
@@ -409,14 +411,6 @@ private lemma exists_isTranslationLift_top_of_dualLattice :
         (⊤ : Submodule O (N.H0 O)) ≤ (⊤ : Submodule O (N.H0 O)).comap Φ :=
   fun a ha ↦ (h_tors_lift a ha).right.imp fun _ hΦ ↦ ⟨hΦ, le_top⟩
 
-omit h hn h_tors_lift hM [IsProper A'.hom] in
-/-- If `n • z₀` lies in the lattice `u.lattice`, which `s'` kills, then the translation of `A'` by
-`s' z₀` followed by `ν`, multiplication by `n`, is `ν`. -/
-private lemma translation_comp_eq_of_nsmul_mem {ν : A'.left ⟶ A'.left}
-    (hν_def : (n • 𝟙 A').left = ν) {z₀ : V} (h_mem : n • z₀ ∈ u.lattice) :
-    (translation (s' z₀)).left ≫ ν = ν := by
-  simp [← hν_def, ← comp_nsmul _, ← map_nsmul, hs' _ h_mem, ← comp_left, comp_nsmul]
-
 /-- Assume the standing hypotheses from the section head (`h`, `IsPosRiemann B`, unit `n` with
 `h_tors_lift`, `s'` killing `u.lattice`, `A'` proper, `hM`). Let `π : A' ⟶ A` be a homomorphism that
 sends `s' z` to `u.expMap z`. Let the theta coordinates `f` of `M` along `s'` have the same type
@@ -484,7 +478,8 @@ lemma exists_section_of_hasThetaCoords (π : A' ⟶ A) [IsAdditive π] {f : V �
     -- `T` is the translation by `s' z₀`; `T ≫ ν = ν` because `n • z₀` lies in the lattice.
     obtain ⟨h_tors, -⟩ := h_tors_lift z₀ hz₀
     let T : A'.left ⟶ A'.left := (translation (s' z₀)).left
-    have hTν : T ≫ ν = ν := translation_comp_eq_of_nsmul_mem u hs' hν_def h_tors
+    have hTν : T ≫ ν = ν := by
+      simp [T, ← hν_def, ← comp_nsmul _, ← map_nsmul, hs' _ h_tors, ← comp_left, comp_nsmul]
     have hT (x : V) : atGeneric s' x ≫ T = atGeneric s' (x + z₀) := by
       simp [T, atGeneric, ← comp_left, comp_add]
     have hTπ : π.left ≫ (translation (u.expMap z₀)).left = T ≫ π.left := by

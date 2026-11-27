@@ -534,7 +534,7 @@ The heads of these files give an overview of a theory: `Lib/ClassField/Global/Ar
 
 ### Analytic: Analytic number theory
 
-- `Lib/Analytic/ZeroSymmetry` (47): Zeros of L(s, χ) and of L(1 − s, χ⁻¹)
+- `Lib/Analytic/ZeroSymmetry` (16): Dirichlet characters and the primitive characters that induce them
 - `Lib/Analytic/PolyaVinogradov` (146): Gauss sums of primitive characters and the Pólya–Vinogradov bound
 - `Lib/Analytic/DirichletTheta` (373): Theta series of Dirichlet characters, Poisson summation, and `L(s, χ)` as a Mellin transform
 - `Lib/Analytic/EntireLFunction` (123): Quadratic twists, polar functions and logarithmic derivatives of Dirichlet L-functions
@@ -647,6 +647,7 @@ The heads of these files give an overview of a theory: `Lib/ClassField/Global/Ar
 - `Lib/ClassField/Places/ProfiniteGalois` (135): Profinite Galois groups: continuity, restriction maps and the Galois correspondence
 - `Lib/ClassField/Places/DecompositionCyclotomic` (199): Decomposition and inertia groups, and cyclotomic characters at Frobenii and inertia
 - `Lib/ClassField/Places/ValuationSubrings` (341): Valuation subrings over primes, primes from p-adic embeddings, and the efg formula
+- `Lib/ClassField/Places/AbsoluteValues` (62): Places as valuation subrings and as absolute values
 - `Lib/ClassField/Places/LocalFields` (445): Local fields: Frobenius, uniformisers, normalised valuation, extensions, unramified characters
 - `Lib/ClassField/Places/DecompositionCompletion` (497): Decomposition groups of places above p as Galois groups of local fields in ℚ̄_p
 - `Lib/ClassField/Places/Ideles` (237): Finite ideles, principal ideles and the class group; finite index of open subgroups
@@ -866,7 +867,7 @@ The heads of these files give an overview of a theory: `Lib/ClassField/Global/Ar
 **Analysis**: Real and complex analysis
 
 - `Lib/General/Analysis/FiniteFourier` (148): Orthogonality, Fourier inversion and matrix Gauss sums over a finite ring
-- `Lib/General/Analysis/GaussianIntegral` (146): Matrix norm estimates, the Ostrowski–Taussky inequality, and the complex Gaussian integral
+- `Lib/General/Analysis/GaussianIntegral` (146): Matrix norm estimates and the complex Gaussian integral
 - `Lib/General/Analysis/FourierTransforms` (207): Fourier inversion for periodic functions and decay of Fourier transforms
 - `Lib/General/Analysis/HolomorphicIntegrals` (456): Strong operator integrals, analyticity of parameter integrals, and Hua's integral bound
 - `Lib/General/Analysis/PackingAndSobolev` (173): Packing bounds for separated points and Sobolev trace inequalities

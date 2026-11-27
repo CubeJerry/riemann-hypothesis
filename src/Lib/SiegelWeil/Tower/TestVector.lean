@@ -1,7 +1,11 @@
 module
 
-public import Mathlib.LinearAlgebra.AffineSpace.MidpointZero
+import Mathlib.LinearAlgebra.AffineSpace.MidpointZero
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import TauCeti.Topology.Algebra.Group.Units
 public import Lib.SiegelWeil.Tower.RealConeIntegral
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+import Lib.SiegelWeil.Tower.PrincipalIdeles
 
 /-!
 # Determinant vectors: the test vectors of the cone integral
@@ -106,9 +110,8 @@ lemma framePoint_eq_mulVec (h : D.IsAdapted 1 b) (a : InfinitePlace E × r → �
       fun ((w, i) : InfinitePlace E × ((r ⊕ r) ⊕ n')) ↦
         (vecToMatrix a w ⊕ᵥ vecToMatrix c w ⊕ᵥ vecToMatrix z w) i := by
   ext ⟨w, i⟩
-  simp [vecToMatrix, framePoint, IsAdapted.mixedModel, mulVec, dotProduct, sum_prod_type,
-    Splitting.frameAt, realMatrix, blockDiagonal, G.adeleMatrix_one]
-  exact add_right_comm ..
+  simpa [vecToMatrix, framePoint, IsAdapted.mixedModel, mulVec, dotProduct, sum_prod_type,
+    Splitting.frameAt, realMatrix, blockDiagonal, G.adeleMatrix_one] using add_right_comm ..
 
 /-- At the infinite place `w`, the point `framePoint h a z c`, which is `L a + I z + K c`, is the
 image under the component at `w` of the adapted frame `D.frameAt 1 b` of the three blocks of
@@ -352,7 +355,7 @@ def detPolyMatrix (s : n → ℤˣ) (t : r → ℤˣ) (F : InfinitePlace E → M
     (w : InfinitePlace E) (σ : ℤˣ) : Matrix {i : r // t i = σ} {i : r // t i = σ}
       (MvPolynomial {c : InfinitePlace E × r × n // realSigns E (homSigns s t) c = 1} ℂ) :=
   of fun l i ↦ ∑ j : {j : n // s j = σ},
-    C (star (F w j l)) * X ⟨(w, i, j), by simp [pairSign, i.2, j.2]⟩
+    C (star (F w j l)) * X ⟨(w, i, j), by simp [pairSign, i.property, j.property]⟩
 
 /-- The determinant polynomial: the product over the infinite places `w` of the `m w`-th power of
 the determinant of `detPolyMatrix` on the positive block and the `(m w + 2 k)`-th power of that on
@@ -387,12 +390,11 @@ lemma detVector_apply (k : ℕ) (m : InfinitePlace E → ℕ) (F : InfinitePlace
       (starRingEnd ℂ) (F w j l) * (starRingEnd ℂ) (if σ * s j = 1 then u (w, i, j) else 0)
     have h_zero : ∑ j : {j : n // ¬s j = σ},
         (starRingEnd ℂ) (F w j l) * (starRingEnd ℂ) (if σ * s j = 1 then u (w, i, j) else 0) = 0 :=
-      Fintype.sum_eq_zero _ fun j ↦ by simp [units_int_mul_eq_one_iff, Ne.symm j.2]
+      Fintype.sum_eq_zero _ fun j ↦ by simp [units_int_mul_eq_one_iff, Ne.symm j.property]
     rw [h_zero, add_zero] at h_split
     simp [detPolyMatrix, posCoordMatrix, toSquareBlockProp, Matrix.mul_apply, holomorphicCoord_eq,
-      posProj, mulVec_diagonal, pairSign, i.2, mul_comm]
-    rw [← h_split]
-    exact Fintype.sum_congr _ _ fun j ↦ by simp [j.2]
+      posProj, mulVec_diagonal, pairSign, i.property, mul_comm, ← h_split,
+      fun j : {j // s j = σ} ↦ j.property]
   have h_minor (w : InfinitePlace E) (σ : ℤˣ) :
       eval (holomorphicCoord (realSigns E (homSigns s t)) u ∘ Subtype.val)
         (detPolyMatrix s t F w σ).det =
@@ -424,8 +426,8 @@ lemma aeval_det_detPolyMatrix (F : InfinitePlace E → Matrix n r ℂ) {g : GInf
       have h_zero : ∑ i : {i : r // ¬t i = σ}, (g w : Matrix r r ℂ) i a •
           (X (w, (i : r), (j : n)) : MvPolynomial (InfinitePlace E × r × n) ℂ) = 0 :=
         Fintype.sum_eq_zero _ fun i ↦ by
-          rw [mem_blockDiagAlg.1 (hg w) i a (fun h ↦ i.2 (h.trans a.2)), zero_smul]
-      rw [h_sub w a j (a.2.trans j.2.symm), ← h_split, h_zero, add_zero]
+          rw [mem_blockDiagAlg.1 (hg w) i a (fun h ↦ i.property (h.trans a.property)), zero_smul]
+      rw [h_sub w a j (a.property.trans j.property.symm), ← h_split, h_zero, add_zero]
       simp [smul_eq_C_mul]
     simp [detPolyMatrix, Matrix.mul_apply, toSquareBlockProp, h_var, Finset.mul_sum, Finset.sum_mul]
     rw [Finset.sum_comm]
@@ -564,9 +566,8 @@ lemma posCoordMatrix_liftFrame (β : Bool) (a : InfinitePlace E → ℂ)
         (w, i, j)) = -(a w • (xp * cp)) + xi * U * ci := by
     rw [posProj_mulVec_framePoint, midpoint_self]
     ext i j
-    simp [framePoint_lineTermSplitting_apply, Matrix.mul_apply, Fintype.sum_sum_type, hxp, hcp,
-      hxi, hci, hU, Finset.sum_mul]
-    rw [Finset.sum_comm]
+    simpa [framePoint_lineTermSplitting_apply, Matrix.mul_apply, Fintype.sum_sum_type, hxp, hcp,
+      hxi, hci, hU, Finset.sum_mul] using Finset.sum_comm
   -- The coordinates of `A` are dual to its frames.
   obtain ⟨⟨h_kk, h_kl, h_ki⟩, ⟨h_lk, h_ll, h_li⟩, h_ik, h_il, h_ii⟩ := A.coord_mul_frame
   have h_pp : cp * ap = 1 := by

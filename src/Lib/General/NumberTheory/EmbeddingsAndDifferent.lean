@@ -1,7 +1,10 @@
 module
 
 public import Mathlib.Algebra.AffineMonoid.Basic
-public import Mathlib.RingTheory.Ideal.Int
+public import Mathlib.NumberTheory.NumberField.Discriminant.Basic
+public import Mathlib.RingTheory.DedekindDomain.Different
+import Mathlib.NumberTheory.NumberField.Discriminant.Different
+import Mathlib.RingTheory.Ideal.Int
 public import Lib.Adelic.Adeles.AdditiveCharacter
 
 /-!
@@ -259,7 +262,7 @@ open NumberField Polynomial ComplexEmbedding InfinitePlace Finset IsTotallyCompl
 
 namespace New.Variety
 
-@[simp, grind]
+@[simp, grind .]
 lemma conjugate_ne_self {E : Type*} [Field E] [IsTotallyComplex E] (σ : E →+* ℂ) :
     conjugate σ ≠ σ :=
   complexEmbedding_not_isReal _

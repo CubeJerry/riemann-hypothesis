@@ -1,10 +1,16 @@
 module
 
-public import Mathlib.Analysis.Normed.Group.Completeness
-public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Function.LpSpace.InfiniteSum
-public import Mathlib.Tactic.Monotonicity.Lemmas
-public import Lib.General.Analysis.HolomorphicIntegrals
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Normed.Group.Completeness
+import Mathlib.MeasureTheory.Function.L2Space
+import Mathlib.MeasureTheory.Function.LpSpace.InfiniteSum
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Monotonicity.Lemmas
+public import Lib.Speed
+import Lib.General.Analysis.HolomorphicIntegrals
 
 /-!
 # Heisenberg cocycles, vacua, the reproducing model and Schur's lemma
@@ -26,10 +32,10 @@ by a Heisenberg representation `ρ`. The file proves superposition and Schur's l
 * `New.Heisenberg.IsVacuum.Model`: integrable v with v x = ∫ v y β(y, x) e(x - y), a Banach space
   for the L¹ norm, with the representation `New.Heisenberg.IsVacuum.heisenbergRep`, the vector
   `New.Heisenberg.IsVacuum.vacElem` and the form `New.Heisenberg.IsVacuum.modelInner`.
-* `New.Heisenberg.IsVacuum.form_eq_mul_modelInner`,
-  `New.Heisenberg.IsVacuum.eq_smul_one_of_commute`: Schur's lemma. An invariant form is a multiple
-  of the inner product, and a bounded operator that commutes with the representation is a scalar.
-  `New.Heisenberg.IsVacuum.integral_form_eq_mul_modelInner` treats a form given as an integral.
+* `New.Heisenberg.IsVacuum.eq_smul_one_of_commute`,
+  `New.Heisenberg.IsVacuum.integral_form_eq_mul_modelInner`: Schur's lemma. A bounded operator that
+  commutes with the representation is a scalar, and an invariant form given as an integral of
+  bounded forms is a multiple of the inner product.
 
 ## Relation to the literature
 

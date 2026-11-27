@@ -1,6 +1,11 @@
 module
 
-public import New.Spanning.Unfolding.Climbing
+import Mathlib.RingTheory.PicardGroup
+import TauCeti.LinearAlgebra.Matrix.Rank
+public import New.Spanning.Unfolding.Link
+import Lib.Cohomology.Etale.Basic
+import New.Spanning.RemainingTerms.BorderedDeterminant
+import New.Spanning.Unfolding.Climbing
 
 /-!
 # The structure of a term
@@ -386,8 +391,8 @@ lemma commonIsotropic_eq_bot (h_disc : S.termDisc γ ≠ 0) : commonIsotropic γ
 `n = ϱ + 1`. -/
 lemma finrank_colSpan_frameImage (γ : S.G E) :
     finrank E (colSpan (frameImage (γ : Matrix 𝔰.BesselIndex 𝔰.BesselIndex E))) = 𝔰.n := by
-  rw [LinearMap.finrank_range_of_inj ((injective_iff_map_eq_zero _).2 fun _ ↦
-    frameImage_mulVec_eq_zero_iff.1), finrank_fin_fun]
+  rw [colSpan, range_mulVecLin, finrank_span_eq_card (linearIndependent_col_frameImage γ),
+    Fintype.card_fin]
 
 /-- The ranks of `frameSum γ` = `A⁺_γ = A⁺ + γ A⁺` (the span of the frame and of its image under
 `γ`) and of its orthogonal complement `framePerp γ` add up to `𝔰.r`, the rank of the whole space. -/
@@ -471,15 +476,8 @@ lemma mem_isotropicSpan {M : Matrix 𝔰.BesselIndex 𝔰.BesselIndex E} :
 `e_1, …, e_ϱ, z_N` has rank `j`. -/
 lemma finrank_flagSpan_coe (γ : S.G E) (j : Fin (𝔰.ϱ + 2)) :
     finrank E (flagSpan (γ : Matrix 𝔰.BesselIndex 𝔰.BesselIndex E) j) = j := by
-  let g : GL 𝔰.BesselIndex E := γ
-  let e : Fin j → 𝔰.BesselIndex := 𝔰.besselFrame ∘ castLE j.is_le
-  have he : Injective e := besselFrame_injective.comp (castLE_injective j.is_le)
-  -- The rows of `γ⁻¹` at the indices `e` form a left inverse of the columns of `γ` at `e`.
-  have h_left : g⁻¹.val.submatrix e id * g.val.submatrix id e = 1 := by
-    rw [← submatrix_mul _ _ e id e bijective_id, g.inv_mul, submatrix_one e he]
-  rw [flagSpan, submatrix_submatrix, id_comp,
-    LinearMap.finrank_range_of_inj (HasLeftInv.injective_mulVec ⟨g⁻¹.val.submatrix e id, h_left⟩),
-    finrank_fin_fun]
+  rw [flagSpan, colSpan, range_mulVecLin, finrank_span_eq_card, Fintype.card_fin]
+  exact (linearIndependent_col_frameImage γ).comp _ (castLE_injective j.is_le)
 
 /-- A vector with the coefficients `x` in the frame `e_1, …, e_ϱ, z_N` and `x'` in its image under
 `γ` lies in `I_γ = A ∩ γ A` if one of its coefficients at `z_N` and `γ z_N` vanishes, because the
@@ -755,11 +753,11 @@ lemma _root_.New.NormOnePairOccursFrom.notMem_remainingTerms
     rw [flagSpan_zero, bot_sup_eq] at h_one h_coe
     exact h_ne (h_one.symm.trans h_coe)
 
-/-- Let `E` contain a primitive root of unity of order `5040`. If `γ` agrees and is not in the set
+/-- If `γ` agrees and is not in the set
 `Γ*` of the remaining terms, then a norm-one pair occurs for `γ` from the index `0` on: for one `ζ`
 with `ζ ζ̄ = 1`, the frame and its image under `γ` share a vector with the leading coefficients `ζ`
 and `1` at every index. -/
-lemma CharsAgree.normOnePairOccursFrom_zero [HasPrimitiveRoot5040 E] (h_agree : S.CharsAgree γ)
+lemma CharsAgree.normOnePairOccursFrom_zero (h_agree : S.CharsAgree γ)
     (hγ : γ ∉ S.remainingTerms) : NormOnePairOccursFrom 0 γ := by
   have h_disc : S.termDisc γ = 0 := by_contra fun h ↦ hγ (.inl h)
   have h_span : isotropicSpan 1 = isotropicSpan (γ : Matrix 𝔰.BesselIndex 𝔰.BesselIndex E) :=

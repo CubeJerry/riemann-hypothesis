@@ -1,9 +1,15 @@
 module
 
 public import Mathlib.Tactic.Monotonicity.Lemmas
-public import Lib.Cohomology.Hodge.DiagonalClass
-public import Lib.Cohomology.Hodge.Kunneth
-public import Lib.General.Algebra.MultivariatePolynomials
+public import Mathlib.Algebra.DualNumber
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+public import Lib.Cohomology.Hodge.GrothendieckSymbol
+import Lib.Cohomology.Hodge.DiagonalClass
+import Lib.Cohomology.Hodge.Kunneth
+import Lib.General.Algebra.MultivariatePolynomials
 
 /-!
 # Reduced coincidences and the fixed point formula in Hodge cohomology
@@ -357,7 +363,7 @@ lemma IsTangentPoly.hasJacobianRatio_eval_div {X : CommAlg E ⥤ Type 1}
       simp only [N, LinearMap.comp_apply, LinearEquiv.coe_coe, map_neg,
         LinearEquiv.symm_apply_apply, LinearMap.sub_apply, LinearMap.smul_apply,
         one_apply_eq_self]
-      module
+      exact neg_sub φ (t • (φ - S φ))
     calc
       t • ξ α - ξ γ = D (t • (φ - S φ) - φ) := by
         rw [hα_coord, hγ_coord, map_sub D (t • (φ - S φ)) φ, map_smul]

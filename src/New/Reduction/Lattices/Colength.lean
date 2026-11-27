@@ -1,7 +1,9 @@
 module
 
-public import Mathlib.LinearAlgebra.Matrix.Module
-public import Lib.General.LinearAlgebra.HermiteForm
+public import Aesop.BuiltinRules
+import Mathlib.LinearAlgebra.Matrix.Module
+public import Lib.Speed
+import Lib.General.LinearAlgebra.HermiteForm
 
 /-!
 # Colength of modules, and endomorphisms surjective up to a bounded colength
@@ -18,8 +20,6 @@ images, preimages, sums of submodules and products of endomorphisms.
   modulo `p ^ n` up to a colength dividing `p ^ l` with `l ≤ c`; the bounds `c` add under products.
 * `New.ColengthDvd.of_det_dvd`: over a valuation domain the image of a square matrix `A` has
   colength dividing every multiple of `det A`, by the Smith normal form.
-* `New.ColengthDvd.relLength_le`, `New.IsOntoUpToColength.exists_relLength_le`: over a discrete
-  valuation ring `New.ColengthDvd` bounds a length.
 -/
 
 @[expose] public section

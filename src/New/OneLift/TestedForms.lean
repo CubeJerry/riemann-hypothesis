@@ -1,7 +1,11 @@
 module
 
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.CStarAlgebra.CStarMatrix
 public import Lib.LocalGL.Green.LabelCharacters
 public import New.UpperBound.Objects.AuxiliaryPair
+import Lib.ClassField.HeckeCharacter.TameModulus
+import Lib.GLn.SchurModule.SchurNorm
 
 /-!
 # Point forms, Hecke adjoints and false lifts on the definite space of a descent pair
@@ -466,13 +470,13 @@ omit [WeilData E] in
 lemma range_groupAlgAction_mem_invtSubmodule {e₀ : MonoidAlgebra ℂ (O.ChosenGL r)}
     {f : End ℂ O.FormV} (h_comm : ∀ g : O.ChosenGL r, Commute f (O.formAction g)) :
     (O.groupAlgAction e₀).range ∈ End.invtSubmodule f := by
-  have : Fintype (O.ChosenGL r) := Fintype.ofFinite _
+  let : Fintype (O.ChosenGL r) := Fintype.ofFinite _
   rintro _ ⟨y, rfl⟩
   have h_apply (g : O.ChosenGL r) : f (O.formAction g y) = O.formAction g (f y) :=
     LinearMap.congr_fun (h_comm g).eq y
   -- `O.groupAlgAction e₀` is a linear combination of the `O.formAction g`.
   have h_alg : O.groupAlgAction e₀ (f y) = f (O.groupAlgAction e₀ y) := by
-    simp [asAlgebraHom_eq_sum, h_apply]
+    simp [Representation.asAlgebraHom_eq_sum, h_apply]
   exact ⟨f y, h_alg⟩
 
 omit [WeilData E] in
@@ -503,7 +507,7 @@ self-adjointly for the pairing `innerAt σ`, for every σ: ⟨e₀x, y⟩_σ = �
 lemma innerAt_groupAlgAction {e₀ : MonoidAlgebra ℂ (O.ChosenGL r)} (he : IsCentralProj e₀)
     (σ : ℂ ≃+* ℂ) (x y : O.FormV) :
     innerAt σ (O.groupAlgAction e₀ x) y = innerAt σ x (O.groupAlgAction e₀ y) := by
-  have : Fintype (O.ChosenGL r) := Fintype.ofFinite _
+  let : Fintype (O.ChosenGL r) := Fintype.ofFinite _
   exact he.self_adjoint O.formAction σ (innerAt σ) (O.innerAt_formAction σ) x y
 
 omit [WeilData E] in

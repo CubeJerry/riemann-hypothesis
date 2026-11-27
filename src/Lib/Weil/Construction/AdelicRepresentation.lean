@@ -1,10 +1,23 @@
 module
 
-public import Mathlib.Analysis.LocallyConvex.Barrelled
-public import Mathlib.Data.Finset.Functor
-public import Lib.Adelic.Unitary.RationalPoints
-public import Lib.Weil.Construction.FiniteCocycle
+import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
+import Mathlib.Analysis.LocallyConvex.Barrelled
+import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.Basic
+import Mathlib.Data.Finset.Functor
+import Mathlib.Topology.Algebra.ProperConstSMul
+import TauCeti.Algebra.Group.AddChar.Basic
+import TauCeti.NumberTheory.NumberField.Countable
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Weil.Fock.Basic
+public import Lib.General.Analysis.FourierTransforms
+public import Lib.General.Analysis.HolomorphicIntegrals
+public import Lib.Weil.Construction.FiniteMultiplier
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.Unitary.GramMatrix
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Base
+public import Lib.Weil.Construction.FiniteCocycle -- shake: keep (needed public by an exposed definition)
 
 /-!
 # The adelic Weil representation on 𝒮(V) and its theta functional
@@ -295,8 +308,7 @@ omit [Fintype n] [DecidableEq n] in
 /-- An adelic vector `y` is the real vector of its archimedean coordinates plus its finite part. -/
 lemma realVec_realCoord_add : realVec (realCoord y) + (fun i : n ↦ (0, (y i).2)) = y := by
   -- The real part is `κ * (y / κ)` with `κ = scaleIdele E`, and `κ ≠ 0` at every infinite place.
-  have h_ne (w : InfinitePlace E) : (scaleIdele E).val.1 w ≠ 0 := by
-    grind [conj_scaleIdele_mul]
+  have h_ne (w : InfinitePlace E) : (scaleIdele E).val.1 w ≠ 0 := Units.ne_zero _
   ext <;> simp [realVec, realCoord, mul_div_cancel₀ _ (h_ne _)]
 
 /-- Along `adelicSum`, real coordinates `y` with zero finite part give the adelic vector
@@ -475,7 +487,7 @@ lemma mem_ratVectors_iff {y : n → 𝔸 E} : y ∈ V.ratVectors ↔ V.x *ᵥ y 
 instance : CompactSpace ((n → 𝔸 E) ⧸ V.ratVectors) := by
   -- Multiplication by `V.x⁻¹` carries the lattice `ratVectors E n`, which is cocompact, onto
   -- `V.ratVectors`.
-  have e : ((n → 𝔸 E) ⧸ New.ratVectors E n) ≃ₜ ((n → 𝔸 E) ⧸ V.ratVectors) := by
+  let e : ((n → 𝔸 E) ⧸ New.ratVectors E n) ≃ₜ ((n → 𝔸 E) ⧸ V.ratVectors) := by
     refine Homeomorph.Quotient.congr (.smul V.x⁻¹) ?_
     simp [QuotientAddGroup.leftRel_eq, mem_ratVectors_iff, mulVec_neg, Units.smul_def, mulVec_add]
   exact e.compactSpace

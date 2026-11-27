@@ -1,8 +1,21 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.CategoryTheory.Countable
+import Mathlib.Topology.Connected.Separation
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Weil.DualPair.Flip
-public import New.Determinant.Exchange.RealVectors
 public import New.Determinant.Exchange.VanishingDescends
+public import Lib.ClassField.HeckeCharacter.TameModulus
+public import New.Determinant.Exchange.LargeTriple
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.ClassField.HeckeCharacter.SplittingCharacters
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
+import Lib.Weil.DualPair.ThetaLiftConvergence
+import New.Determinant.Exchange.RealVectors
+import New.Determinant.Exchange.RemovingPlanes
 
 /-!
 # Exchange of theta integrals for matched functions and for data modulo an ideal
@@ -586,7 +599,6 @@ lemma exists_equalRankThetaRatio_ne_zero (μ : InfinitePlace E → ℤ) {k : ℕ
     simpa [detVector_of_isEmpty] using h_bottom 1 0 1 .one 1
   have h_value : stdRowDatum (sumEmpty m Empty) 𝔠.semilocalChar 1 0 = 1 := stdColDatum_one_one 𝔠
   rw [thetaLarge_stdSpace_empty_vacVector_one, h_value, mul_one, Complex.ofReal_eq_zero] at h_vanish
-  have : SecondCountableTopology (G E (1 : Empty → ℤˣ)) := inferInstance
   exact measureReal_univ_ne_zero h_vanish
 
 /-- Let `J` be positive definite. Let the integral of the theta kernel of `(J, J)` over the target
@@ -728,7 +740,6 @@ lemma exists_equalRankThetaRatio_sq_eq (μ : InfinitePlace E → ℤ) {k : ℕ} 
     ∃ D : ℝ, ∀ 𝔠 : SplitTameChar E μ, equalRankThetaRatio (hyperbolicSum Unit X) 𝔠 v ^ 2 = D := by
   let ratio (𝔠 : SplitTameChar E μ) : ℝ := equalRankThetaRatio (hyperbolicSum Unit X) 𝔠 v
   let vol : ℝ := (stdSpace E Empty).quotMeasure.real Set.univ
-  have : SecondCountableTopology (G E (1 : Empty → ℤˣ)) := inferInstance
   have h_vol : (vol : ℂ) ≠ 0 := Complex.ofReal_ne_zero.2 measureReal_univ_ne_zero
   obtain ⟨B, y, hy, h_forward_exchange⟩ :=
     exists_thetaLarge_eq_mul_quotMeasure μ hm J X A h_planes hv
@@ -999,8 +1010,7 @@ lemma exchange_theorem (σ : b ⊕ a ≃ n) (h_signs : negCount s = negCount t +
   obtain ⟨c, hc, h_exch⟩ := h_core 𝔠
   -- the size of `c`: the right side below is not zero, so neither `C` nor `c` is
   have hL : lValueProdInt 𝔠 e = lValueProd 𝔪.places ν e := by
-    rw [lValueProdInt_natCast]
-    exact congrArg (fun S : Set (FinPlace E) ↦ lValueProd S ν e) h_places
+    rw [lValueProdInt_natCast, h_places]
   replace hc : C * ‖c‖ ^ 2 = lValueProd 𝔪.places ν e * C₀ := by
     rw [hc, show (card a - card n / 2 : ℤ) = e by omega, hL, h_value]
   have hL_ne : lValueProd 𝔪.places ν e ≠ 0 := hL.symm.trans_ne (lValueProdInt_pos 𝔠 e).ne'

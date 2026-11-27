@@ -1,6 +1,7 @@
 module
 
-public import Std.Tactic.BVDecide.Normalize.Bool
+import Mathlib.Data.Rat.Cast.OfScientific
+import Std.Tactic.BVDecide.Normalize.Bool
 public import Lib.Weil.Lift
 public import New.UpperBound.Objects.InsertBlock
 public import New.UpperBound.Objects.LabelsAndIndexTypes
@@ -155,7 +156,7 @@ def gridWeight (c : Bool) (l : ℕ) (n : Type) [Fintype n] (τ : D.Φ) : ℤ :=
 polynomials (`New.jointHarmonic`) for the nodes `(a, b)` and `(i, j)` of grid `z` with offset `o`.
 The weights are `D.gridWeight c l`, where `l` gives the centre `±w_{l+1}` of the step and `c` the
 rounding. The parameters are negated (`negIf`) if `d` is true, as for the step from `(i, j)` to
-`(i + 1, j)` (see `paramsCorrespond_grid`). -/
+`(i + 1, j)`. -/
 def gridHarmonic (o : ℕ) (d c : Bool) (l : ℕ) (z : Bool) (a b i j : ℕ) :
     MvPolynomial (NumberField.InfinitePlace D.E × D.GridIndex z i j × D.GridIndex z a b) ℂ :=
   jointHarmonic (D.gridWeight c l (D.GridIndex z a b)) (D.gridWeight c l (D.GridIndex z i j))
@@ -215,8 +216,8 @@ lemma exists_equiv_diagonal_signs (j : ℕ) :
   · rw [negCount_sumElim, negCount_gridSigns, negCount_gridSigns]
     rcases Nat.even_or_odd (min j D.m) with h | h <;>
       simp [negCount, h.neg_one_pow]
-    · grind [Nat.even_iff]
-    · grind [Nat.odd_iff]
+    · grind
+    · grind
 
 /-- A bijection from the index set of `Y` at `(j, j)` plus one point to that of `Ỹ`. It is the
 identity for `j = 0`. Otherwise it is chosen to match the signs (`exists_equiv_diagonal_signs`). -/
@@ -477,7 +478,7 @@ grid `Ỹ`. The stem is the parameter on the base. In grid `Ỹ` this is the neg
 the spaces `Ỹ^i_j`, whose up and down centres are exchanged. -/
 def gridCentres (z : Bool) : CentreSystem (ℕ ⊕ ℕ) where
   centres := (range D.m).disjSum (range D.m)
-  centre := Sum.elim (fun l : ℕ ↦ D.liftWeight (l + 1) τ) fun l : ℕ ↦ -D.liftWeight (l + 1) τ
+  center := Sum.elim (fun l : ℕ ↦ D.liftWeight (l + 1) τ) fun l : ℕ ↦ -D.liftWeight (l + 1) τ
   length := Sum.elim (fun _ : ℕ ↦ D.t + z.toNat) fun _ : ℕ ↦ D.t - z.toNat
   isUp := Sum.isLeft
   stem := (range (D.r + z.toNat)).image fun n : ℕ ↦ 2 * D.targetParameter τ n + z.toNat
@@ -545,7 +546,7 @@ private lemma isSeparated_gridCentres_on {P : Parameters} (D : Data P) (τ : D.�
     -- in all four cases the two centres are at least `D.gap` apart
     rintro (l | l) - (l' | l') - hne y hy
     all_goals
-      obtain ⟨b, hb, rfl⟩ := mem_centredBlock.1 hy
+      obtain ⟨b, hb, rfl⟩ := mem_centeredBlock.1 hy
       have h_centre : D.gap ≤ D.liftWeight (l + 1) τ := D.gap_le_liftWeight_succ τ l
       have h_centre' : D.gap ≤ D.liftWeight (l' + 1) τ := D.gap_le_liftWeight_succ τ l'
       have h_lt : l < l' → D.liftWeight (l + 1) τ + D.gap ≤ D.liftWeight (l' + 1) τ :=
@@ -670,7 +671,7 @@ private lemma isParam_compactForm_gridParam {j : ℕ} {P : Parameters} (D : Data
     ext y
     simp only [gridParam_add_lowering, mem_image, mem_univ, true_and]
     rw [D.gridBlockEquiv.exists_congr_left]
-    simp [CentreSystem.entries, CentreSystem.block, gridCentres, gridBlocks, mem_centredBlock,
+    simp [CentreSystem.entries, CentreSystem.block, gridCentres, gridBlocks, mem_centeredBlock,
       Fin.exists_iff, h_shift, or_assoc, eq_comm (a := y)]
 
 private lemma hasGap_compactForm_gridParam {j : ℕ} {P : Parameters} (D : Data P) {o i : ℕ}
@@ -809,7 +810,7 @@ lemma paramsCorrespond_grid_succ_left (z : Bool) (i j : ℕ) (hi : i + 1 ≤ D.m
   intro τ
   -- In grid `Ỹ` (`z = true`) the ranks are even, so the two roundings of half the rank agree.
   have h_weight (a : ℕ) : D.gridWeight z i (D.GridIndex z a j) τ =
-      -(D.gridCentres τ z).centre (.inl i) + ((card (D.GridIndex z a j) : ℤ) + 1) / 2 := by
+      -(D.gridCentres τ z).center (.inl i) + ((card (D.GridIndex z a j) : ℤ) + 1) / 2 := by
     simp only [gridWeight, gridCentres, Sum.elim_inl]
     grind [D.card_gridIndex_mod_two z a j]
   have h_param (a : ℕ) :
@@ -825,7 +826,7 @@ lemma paramsCorrespond_grid_succ_left (z : Bool) (i j : ℕ) (hi : i + 1 ≤ D.m
 this centre plus half the rank of the node, rounded down. -/
 lemma gridWeight_not (z : Bool) (l i j : ℕ) :
     D.gridWeight (!z) l (D.GridIndex z i j) τ =
-      (D.gridCentres τ z).centre (.inr l) + (card (D.GridIndex z i j) : ℤ) / 2 := by
+      (D.gridCentres τ z).center (.inr l) + (card (D.GridIndex z i j) : ℤ) / 2 := by
   -- In grid `Ỹ` (`z = true`) the ranks are even, so the two roundings of half the rank agree.
   simp only [gridWeight, gridCentres, Sum.elim_inr]
   grind [D.card_gridIndex_mod_two z i j]

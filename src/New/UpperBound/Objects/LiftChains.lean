@@ -1,12 +1,13 @@
 module
 
-public import Lib.Adelic.AutomorphicForms.PAdicGauge
-public import Lib.General.LinearAlgebra.BlockEmbeddings
-public import Lib.Shimura.HeckeTower.HeckeData
+import Mathlib.Data.Rat.Cast.OfScientific
+public import Lib.Adelic.Reduction.DefiniteClassSums
 public import Lib.Weil.CompactLift.ThetaKernelDefs
-public import New.Reduction.Data.Sizes
 public import New.UpperBound.Objects.LabelsAndIndexTypes
 public import Lib.General.LinearAlgebra.TensorChains
+import Lib.General.LinearAlgebra.BlockEmbeddings
+import Lib.Shimura.HeckeTower.HeckeData
+import New.Reduction.Data.Sizes
 
 /-!
 # Chains of theta lifts, jointly invariant combinations, and free levels
@@ -318,7 +319,7 @@ lemma apply_kernelProduct_le_prod_mul (size : ∀ j : ℕ, Gf E (n j) → (WeylI
 pure tensors of the data `Φ x` under one linear map. Then the value at `p` of the combination of the
 chains applied to `φ` is a sum of elements of `A`, one for each tuple of double cosets in
 `StdClasses (K j)`, `j < m`. -/
-lemma IsJointlyInvariant.sum_chain_mem_nsmul [WeilData E] {X : Type*} {m : ℕ} {s : Finset X}
+lemma IsJointlyInvariant.sum_chain_mem_nsmul {X : Type*} {m : ℕ} {s : Finset X}
     {L : X → (WeylIndex (n m) κ → ℂ) →ₗ[ℂ] M} {Φ : X → ∀ j : ℕ, S j}
     (h_inv : IsJointlyInvariant k m s L Φ)
     (h_free : ∀ j < m, ∀ g : Gf E (n j), classAut stdRatPoints (K j) g = ⊥)
@@ -436,10 +437,10 @@ lemma card_GL_resField_eq_card_GL_zmod (w : D.ChosenPlace i) (l : ℕ) :
     Nat.card (GL (Fin l) (ResField w.val)) = Nat.card (GL (Fin l) (ZMod (D.levelPrime i))) := by
   -- The residue field has p_i elements, and p_i is prime, so it is isomorphic to
   -- `ZMod (D.levelPrime i)`.
-  have : Fintype (ResField w.val) := Fintype.ofFinite _
+  let : Fintype (ResField w.val) := Fintype.ofFinite _
   have h_card : Fintype.card (ResField w.val) = D.levelPrime i := by
     rw [Fintype.card_eq_nat_card, card_ResField, D.q_eq_levelPrime w.property.right]
-  have e : ZMod (D.levelPrime i) ≃+* ResField w.val :=
+  let e : ZMod (D.levelPrime i) ≃+* ResField w.val :=
     ZMod.ringEquivOfPrime _ (D.levelPrime_prime i) h_card
   exact Nat.card_congr (Units.mapEquiv e.symm.mapMatrix.toMulEquiv).toEquiv
 

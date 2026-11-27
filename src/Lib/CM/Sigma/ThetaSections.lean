@@ -1,7 +1,13 @@
 module
 
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.TotallySplit
 public import Lib.CM.Sigma.Basic
-public import Lib.General.NumberTheory.SUnitsAndClassNumber
+public import Lib.Shimura.ComplexTheta.DimensionFormula
+import Lib.General.Groups.CongruenceSubgroups
+import Lib.General.NumberTheory.SUnitsAndClassNumber
 
 /-!
 # Theta functions of a CM elliptic curve: Weierstrass equation and spanning monomials
@@ -918,7 +924,6 @@ variable [CharZero K]
 
 /-- The Taylor series at `0` of `x = C.translatedX` and `y = C.translatedY`, moved to `K` along
 `ι`, satisfy `x' = 2 y + a₁ x`. -/
-@[simp]
 lemma derivative_taylorVia_translatedX :
     d⁄dX (taylorVia ι C.translatedX) =
       2 * taylorVia ι C.translatedY + PowerSeries.C (ι C.a₁) * taylorVia ι C.translatedX := by
@@ -926,7 +931,6 @@ lemma derivative_taylorVia_translatedX :
 
 /-- The Taylor series at `0` of `x = C.translatedX` and `y = C.translatedY`, moved to `K` along
 `ι`, satisfy `y' = 1 + 3 x² - a₁ y`. -/
-@[simp]
 lemma derivative_taylorVia_translatedY :
     d⁄dX (taylorVia ι C.translatedY) =
       1 + 3 * taylorVia ι C.translatedX ^ 2 -

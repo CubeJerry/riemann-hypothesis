@@ -1,5 +1,6 @@
 module
 
+import Mathlib.Order.CompletePartialOrder
 public import Lib.Adelic.Witt.WittTheorem
 
 /-!
@@ -325,7 +326,6 @@ lemma mem_partialUnitriangularGroup_succ_iff (hs : s ∈ floorGroup b) :
     · -- A row of level below `b` has floor below `b`, so there `s` agrees with `1`.
       have hi_lt : level i < b := not_le.1 (by rwa [level_besselFrame] at hi)
       have h_cases := floorOf_level_cases i
-      have hb_le : b.val ≤ 𝔰.ϱ := b.is_le
       obtain ⟨h_low, h_pair⟩ : floorOf i < b ∧ floorOf i < 𝔰.ϱ := ⟨by lia, by lia⟩
       exact floorGroup_apply_row hs i _ h_low h_pair
   · by_cases h_floor : floorOf j < b
@@ -446,7 +446,6 @@ lemma partialUnitriangularGroup_inf_floorGroup_last :
     g ∈ partialUnitriangularGroup l :=
   mem_partialUnitriangularGroup.2 fun i j _ hj ↦ mem_floorGroup.1 hg i j <| by
     have := floorOf_level_cases j
-    have : 𝔰.ϱ < 𝔰.n := Nat.lt_succ_self _
     rcases hj with ⟨h1, h2⟩ | hn <;> lia
 
 /-- The fixer `H_l` of the floors below `l` meets the unitriangular group `𝒩_{<j}` of the floors
@@ -474,7 +473,6 @@ lemma floorUnipotent_superdiag_eq_zero (a : Fin 𝔰.ϱ) (hs : s ∈ floorUnipot
   · -- Both indices are given the middle level `ϱ`.
     refine mem_unipotentBelow.1 h_unipotent _ _ ?_
     simp only [floorOf_besselFrame, level_besselFrame, Fin.val_castSucc, Fin.val_succ]
-    have := a.is_lt
     split_ifs <;> lia
 
 /-! ### Conjugation and projections -/
@@ -612,7 +610,7 @@ lemma inclMatrix_mulVec_floor_block (hl : l ≤ 𝔰.ϱ) (hs : s ∈ floorGroup 
   split_ifs with hi
   · rfl
   · rw [apply_eq_one_apply_of_mem_floorGroup hs i j (.inl (by lia)),
-      one_apply_ne (by rintro rfl; exact hi j.2)]
+      one_apply_ne (by rintro rfl; exact hi j.property)]
 
 /-- For `σ` in the fixer `H_b` of the floors below `b` and `s` in `Q_{b+1}`, the column of `σ` at
 the frame vector `f_b` vanishes in the rows of floor below `b` and is that of `σ * s` in the other
@@ -634,7 +632,6 @@ lemma floorGroup_apply_besselFrame (hσ : σ ∈ floorGroup b)
         one_apply_ne (by rintro rfl; exact hi hk),
         zero_mul, zero_mul]
     · have hk_cases := floorOf_level_cases k
-      have hb_le : b.val ≤ 𝔰.ϱ := b.is_le
       have := level_besselFrame b
       rw [mem_partialUnitriangularGroup.1 hs k _ (by lia)
         (.inl ⟨by simp only [floorOf_besselFrame, lt_add_one],
@@ -972,7 +969,7 @@ lemma unipotentBelow_mulVec_apply (hg : g ∈ unipotentBelow j)
   refine Finset.sum_congr rfl fun k _ ↦ ?_
   change g.val i k * v k = (1 : Matrix 𝔰.BesselIndex 𝔰.BesselIndex A) i k * v k
   have h_key_i : 𝔰.ϱ ≤ if floorOf i < j then level i else 𝔰.ϱ := by
-    have := floorOf_level_cases i; split_ifs <;> lia
+    split_ifs <;> lia
   obtain hk_le | ⟨b, rfl, hkb⟩ := level_le_or_exists_eq_eStar k
   · have h_le : (if floorOf k < j then level k else 𝔰.ϱ) ≤
         if floorOf i < j then level i else 𝔰.ϱ := by split_ifs <;> lia
@@ -1200,36 +1197,17 @@ lemma simpleRootSum_mul (hh : h ∈ besselS) (hu : u ∈ besselS) :
     refine Fintype.sum_eq_add y x (besselFrame_injective.ne i.castSucc_lt_succ.ne.symm)
       fun z ⟨hzy, hzx⟩ ↦ ?_
     dsimp only
-    have hzx_cases := floorOf_level_cases z
-    have hx_fl : floorOf x = i.val := floorOf_besselFrame
-    have hx_lv : BesselIndex.level x = i.val := level_besselFrame i.castSucc
-    have hy_fl : floorOf y = i.val + 1 := by simp only [y, floorOf_besselFrame, Fin.val_succ]
-    have hy_lv : BesselIndex.level y = i.val + 1 := by
-      simp only [y, level_besselFrame, Fin.val_succ]
-    have := i.is_lt
-    have : 𝔰.ϱ < 𝔰.n := Nat.lt_succ_self _
-    by_cases hz_lt : BesselIndex.level z ≤ i.val
-    · rw [mem_partialUnitriangularGroup.1 hh x z (by lia)
+    by_cases hz : BesselIndex.level z ≤ i.val
+    · have h_cases := floorOf_level_cases z
+      rw [mem_partialUnitriangularGroup.1 hh x z ((level_besselFrame i.castSucc).symm ▸ hz)
         (.inl ⟨by lia, by lia⟩), one_apply_ne hzx.symm, zero_mul]
-    · rw [mem_partialUnitriangularGroup.1 hu z y (by lia)
-        (.inl ⟨by lia, by lia⟩), one_apply_ne hzy, mul_zero]
-  have h_diag : h.val x x = 1 :=
-    (mem_partialUnitriangularGroup.1 hh x x le_rfl (.inl
-      ⟨by
-        simp only [x, floorOf_besselFrame, Fin.val_castSucc]
-        exact i.is_lt.trans (Nat.lt_succ_self _),
-       by
-        simp only [x, level_besselFrame, Fin.val_castSucc]
-        exact i.is_lt.trans (Nat.lt_succ_self _)⟩)).trans (one_apply_eq x)
-  have hu_diag : u.val y y = 1 :=
-    (mem_partialUnitriangularGroup.1 hu y y le_rfl (.inl
-      ⟨by
-        simp only [y, floorOf_besselFrame, Fin.val_succ, Nat.succ_lt_succ_iff]
-        exact i.is_lt,
-       by
-        simp only [y, level_besselFrame, Fin.val_succ, Nat.succ_lt_succ_iff]
-        exact i.is_lt⟩)).trans (one_apply_eq y)
-  rw [h_entry, h_diag, hu_diag, mul_one, one_mul]
+    · have h_col : u.val z y = (1 : Matrix 𝔰.BesselIndex 𝔰.BesselIndex R) z y :=
+        Filling.mem_besselS_iff_frameImage.mp hu z i.succ (Nat.lt_of_not_ge hz)
+      rw [h_col, one_apply_ne hzy, mul_zero]
+  have diag {s : T.G} (hs : s ∈ besselS) (b : Fin 𝔰.n) :
+      s.val (𝔰.besselFrame b) (𝔰.besselFrame b) = 1 :=
+    (Filling.mem_besselS_iff_frameImage.mp hs _ b (level_besselFrame b).ge).trans (one_apply_eq _)
+  rw [h_entry, diag hh i.castSucc, diag hu i.succ, mul_one, one_mul]
 
 /-! ### Principal congruence subgroups and the factor `H` -/
 

@@ -1,10 +1,13 @@
 module
 
-public import New.Reduction.Data.Existence
-public import New.Reduction.MainInequality
-public import New.Reduction.Zeros.Criterion
-public import New.Reduction.Zeros.PrimeNumberTheorem
 public import Statements
+public import New.Reduction.Data.AdmissibleData
+import New.Reduction.Data.Existence
+import New.Reduction.Data.Magnitudes
+import New.Reduction.MainInequality
+import New.Reduction.Zeros.Criterion
+import New.Reduction.Zeros.PrimeNumberTheorem
+public import TauCeti.NumberTheory.DirichletCharacter.LFunction.ZeroReflection -- shake: keep (`New.Main` uses it)
 
 /-!
 # The one-sided bound, and the theorem in half-plane form
@@ -238,7 +241,8 @@ theorem eventually_primeRemainder_le_mul_rpow {q₀ : ℕ} [NeZero q₀] (hq₀ 
         exact natFloor_rpow_le_two_mul_rpow hy ht_ge ht_le
     _ = (128 * q₀.totient + 32) * y ^ t := by dsimp [C]; ring
     _ ≤ (128 * q₀.totient + 32) * y ^ (-1 / 2 + ε) :=
-      mul_le_mul_of_nonneg_left (rpow_le_rpow_of_exponent_le hy_one (by linarith [ht])) (by positivity)
+      mul_le_mul_of_nonneg_left (rpow_le_rpow_of_exponent_le hy_one (by linarith [ht]))
+          (by positivity)
 
 /-- **Main theorem**, in half-plane form: no Dirichlet `L`-function vanishes in `re s > 1/2`
 (with `s ≠ 1` for a principal character). -/
