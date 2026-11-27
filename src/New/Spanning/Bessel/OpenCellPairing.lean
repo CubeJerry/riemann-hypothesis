@@ -225,7 +225,7 @@ functions of the systems `X` for `σ = .full`, or of their cuts for `σ = .cut`.
 this matrix is the adjoint of `piKernel X σ γ⁻¹ y`. -/
 noncomputable def pairKernel (X : ι → BesselSystem 𝔰 b f) (σ : FullOrCut) (γ y : ι → 𝔰.G₁) :
     EuclideanSpace ℂ (((v : ι) → (X v).Index) × ((v : ι) → (X v).Index)) :=
-  delta% piKernel X σ γ (γ⁻¹ * y)
+  piKernel X σ γ (γ⁻¹ * y)
 
 /-- The passage to the adjoint (conjugate transpose) of a complex matrix indexed by `I × I`, a real
 linear isometry for the Hilbert–Schmidt norm. -/
