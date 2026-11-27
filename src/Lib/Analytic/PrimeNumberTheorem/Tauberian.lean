@@ -177,8 +177,9 @@ private lemma integral_abs_sub_mean_le_stdDev {Ω : Type*} [MeasurableSpace Ω]
   rw [variance_eq_integral hX.aemeasurable]
   simpa [Y, Real.norm_eq_abs] using sub_nonneg.mp h
 
-/-- The normalised Taylor coefficient is the expectation against the Gamma law of shape
-`k + 1` and rate `H`. -/
+/-- Suppose `Φ s = ∫₀^∞ R(v) e^{(1 - s) v} dv` for `re s > 2`, where `R` is measurable and
+`|R(v)| ≤ C e^v` for `v ≥ 0`. For `H > 1`, the coefficient `(-H)^k H Φ⁽ᵏ⁾(1 + H) / k!` is
+the expectation of `R` under the Gamma law of shape `k + 1` and rate `H`. -/
 lemma taylorCoeff_transform_eq_integral_gammaMeasure {H : ℝ} (hR : Measurable R)
     (R_le : ∀ v : ℝ, 0 ≤ v → |R v| ≤ C * rexp v)
     (Φ_eq : ∀ s : ℂ, 2 < s.re → Φ s = ∫ v in Ioi (0 : ℝ), R v * cexp ((1 - s) * v))
@@ -199,9 +200,10 @@ lemma taylorCoeff_transform_eq_integral_gammaMeasure {H : ℝ} (hR : Measurable 
   simp only [sub_add_cancel_left, Complex.ofReal_neg, Complex.ofReal_mul, neg_mul]
   linear_combination (H / k ! * (R v : ℂ) * cexp (-(H * v : ℂ))) * hsign
 
-/-- For an `L`-Lipschitz function `R` on `[0, ∞)`, the normalised Taylor coefficient of its
-transform differs from `R u` by at most `L` times the standard deviation of the Gamma density.
-At rate `H = (k + 1) / u` the mean is `u` and the standard deviation is `u / √(k + 1)`. -/
+/-- Let `R` be measurable and `L`-Lipschitz on `[0, ∞)`, with transform
+`Φ s = ∫₀^∞ R(v) e^{(1 - s) v} dv` for `re s > 2`. For `u > 0` and `H = (k + 1) / u > 1`,
+`(-H)^k H Φ⁽ᵏ⁾(1 + H) / k!` differs from `R(u)` by at most `L u / √(k + 1)`, the Lipschitz
+constant times the standard deviation of the Gamma law. -/
 lemma norm_taylorCoeff_transform_sub_le_of_lipschitz (hR : Measurable R)
     (h_lip : ∀ x : ℝ, 0 ≤ x → ∀ y : ℝ, 0 ≤ y → |R y - R x| ≤ L * |y - x|)
     (Φ_eq : ∀ s : ℂ, 2 < s.re → Φ s = ∫ v in Ioi (0 : ℝ), R v * cexp ((1 - s) * v))
