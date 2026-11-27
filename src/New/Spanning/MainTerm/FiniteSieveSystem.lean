@@ -265,8 +265,7 @@ lemma IsFillingData.posSemidef_lastEntryDensity {E : Type} {𝔰 : Shape} [Field
   · -- the quadratic form of `x` is the integral of a nonnegative function
     have h_nonneg : 0 ≤ ∑ i : κ, ∑ j : κ,
         Matrix.vecMulVec (star ⇑x) ⇑x i j * F.lastEntryDensity (S.piNAt T) Z (a i) (a j) :=
-      (sum_lastEntryDensity_nonneg_and_eq_inv_mul_lintegral Z piNAt_mul_star
-        (Matrix.posSemidef_vecMulVec_star_self x) a ha).1
+      sum_lastEntryDensity_nonneg Z piNAt_mul_star (Matrix.posSemidef_vecMulVec_star_self x) a ha
     simpa [x.sum_fintype, Matrix.vecMulVec_apply, mul_right_comm] using h_nonneg
 
 /-- Let `F` be a filling datum of admissible data `S` on the unitary group over `LocProd T`, the
