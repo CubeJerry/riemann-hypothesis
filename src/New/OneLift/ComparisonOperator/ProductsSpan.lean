@@ -601,9 +601,12 @@ lemma integral_mul_polyMatrixCoeff_paddedMinorProd {o : D.CarrierIndex → ℤ}
   simp only [h_integrand] at h_int ⊢
   simpa [m₁, m₂, m₃] using h_hol.integral_mul_conj_holMinorsPi ho h_dom₃ h_int
 
-/-- At a peak `g₁` of the carrier form, the integral over the real group of `S` of the carrier at
-`g₁ * (h', 1)` times a continuous `A` with `|A h'| ≤ c |h'| ^ (6 n_*)` times the minors `m_u₁` is
-integrable, and the norm of that integral is at most `2 |carrier(g₁)| c b ^ n_* ∫ |m_u₃|²`. -/
+/-- Let `g₁` be a peak of the carrier form and `A` a continuous function on `GInf D.E (1 ⊕ᵥ -1)`
+with `‖A h'‖ ≤ c * maxOpNorm h' ^ (6 * nStar D)`. Then the carrier form at `g₁ * (h', 1)` times
+`A h'` times `holMinorsPi (1 ⊕ᵥ -1) (flatKernelWeight D) h'` is integrable over
+`GInf D.E (1 ⊕ᵥ -1)`, and the norm of its integral is at most
+`2 * ‖carrierForm D.E D.m g₁‖ * c * D.b ^ nStar D` times the integral of
+`‖holMinorsPi (1 ⊕ᵥ -1) (antiholomorphicWeight j) h‖ ^ 2`. -/
 private lemma integral_peak_mul_holMinorsPi
     (g₁ : New.G D.E (1 ⊕ᵥ -1 : D.CarrierIndex → ℤˣ))
     (hg₁ : IsPeak (carrierForm D.E D.m) g₁)
