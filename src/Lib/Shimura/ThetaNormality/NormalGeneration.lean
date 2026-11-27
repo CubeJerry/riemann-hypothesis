@@ -647,8 +647,8 @@ private lemma finrank_range_eq_spanFinrank {R k M Q : Type*} [CommRing R] [IsLoc
   have hinj := LinearMap.ker_eq_bot.mp (I.ker_liftQ_eq_bot f hI hker)
   calc
     finrank k f.range = (⊤ : Submodule R (P ⧸ I)).spanFinrank := by
-      simpa only [Module.finrank_eq_spanFinrank_of_free, Submodule.spanFinrank_top, Submodule.map_top,
-        I.range_liftQ] using
+      simpa only [Module.finrank_eq_spanFinrank_of_free, Submodule.spanFinrank_top,
+        Submodule.map_top, I.range_liftQ] using
         (Submodule.spanFinrank_map_eq_of_injective (I.liftQ f hI) hinj (p := ⊤))
     _ = finrank (R ⧸ maximalIdeal R) (P ⧸ I) := by
       rw [Module.finrank_eq_spanFinrank_of_free]
