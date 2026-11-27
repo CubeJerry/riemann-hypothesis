@@ -255,7 +255,9 @@ lemma IsWeakChainDatum.gaugeLe_pow_collisionExponent_smul (hΨ : IsWeakChainDatu
 and let `Y` be the product of the scaled Hecke operators at its members. The restricted chain on
 `(Y ^ m) v`, for an integral source form `v`, has valuation at least
 `gain p - 2 * loss p - m * C`. Each lift pays the collision sum `C` outside the places inducing
-`Λ`. A full mark covers every conjugate pair and gives `C = 0`. -/
+`Λ`. A full mark covers every conjugate pair and gives `C = 0`. Equivalently, the `p`-adic
+gauge is at most `p ^ (m * C + 2 * loss p - gain p)`. Here `gain p` is the divisibility asked of
+the chain. At an exceptional prime `loss p = f a (log b)² / p` since `p ≢ ±1` modulo `m`. -/
 theorem IsWeakChainDatum.gaugeLe_restrictedChain_of_isMarked (hΨ : IsWeakChainDatum ϑ Ψ)
     (hQ : p.Coprime ϑ.normQ) {v : D.SourceForm} (hv : v ∈ D.integralSourceForms)
     (hΛ : D.IsMarked Λ) :
@@ -272,8 +274,11 @@ theorem IsWeakChainDatum.gaugeLe_restrictedChain_of_isMarked (hΨ : IsWeakChainD
       have h_ne : p ≠ P.d := ne_of_chiK_ne_zero (by simp [hΛ.isExceptional.chiK_eq_neg_one])
       simpa [C, piPrimeValuation_of_ne h_ne] using
         le_divisibilityBound (mem_range.1 hj) hΛ.isSmallNonsplit (placesInducing Λ)
-    have h_low := hΛ.card_mul_transferExponent_add_sum_lowColumns_le (mem_range.1 hj)
-    have h_loss := div_le_div_of_nonneg_right (D.le_loss p) hm_pos.le
+    have h_low : #Λ * D.transferExponent p + D.ceilLogLifts p * ∑ σ ∈ placesInducing Λ,
+        D.lowColumns j σ ≤ D.loss p / D.m + #(D.aPlaces ∩ placesInducing Λ) * (D.a / D.x₁) :=
+      hΛ.card_mul_transferExponent_add_sum_lowColumns_le (mem_range.1 hj)
+    have h_loss : D.f * D.logB ^ 2 * (D.a / p) / D.m ≤ D.loss p / D.m :=
+      div_le_div_of_nonneg_right (D.le_loss p) hm_pos.le
     rw [liftLoss, sub_div, mul_div_assoc]
     linarith
   refine (hΨ.gaugeLe_scaledHeckeOperator_pow hQ hΛ hv).rpow_mono ?_
