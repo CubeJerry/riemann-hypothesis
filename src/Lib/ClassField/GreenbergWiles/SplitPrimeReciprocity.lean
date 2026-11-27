@@ -213,7 +213,11 @@ lemma corestrict_mem [IsTopologicalGroup G] (P : OpenSubgroup G) [Fintype (G ⧸
       fun g : G ↦ ∑ x : G ⧸ P.toSubgroup, V.ρ x.out
         (c ⟨x.out⁻¹ * g * (g⁻¹ • x).out, out_inv_mul_mul_out_mem P.toSubgroup g x⟩)) ∈
       V.trivializedCocycles X I := by
-  obtain ⟨h_cont, h_triv, h_zero⟩ := mem_trivializedCocycles.mp h_mem
+  obtain ⟨h_cont, h_triv, h_zero⟩ :
+      Continuous c ∧
+        (∀ (u : P.toSubgroup) (y : X), (V.restrictTo P).ρ u (f y) = f (u • y) + c u) ∧
+        ∀ u ∈ Subtype.val ⁻¹' I, c u = 0 :=
+    mem_trivializedCocycles.mp h_mem
   let word (x : G ⧸ P.toSubgroup) (g : G) : P.toSubgroup :=
     ⟨x.out⁻¹ * g * (g⁻¹ • x).out, out_inv_mul_mul_out_mem _ _ _⟩
   let F (y : X) (x : G ⧸ P.toSubgroup) : V := V.ρ x.out (f (x.out⁻¹ • y))
@@ -224,22 +228,26 @@ lemma corestrict_mem [IsTopologicalGroup G] (P : OpenSubgroup G) [Fintype (G ⧸
       ⟨?_, fun g y ↦ funext fun x ↦ ?_, fun g hg ↦ funext fun x ↦ ?_⟩
     · dsimp [C, word]
       fun_prop
-    · change V.ρ g (V.ρ (g⁻¹ • x).out (f ((g⁻¹ • x).out⁻¹ • y))) =
+    · -- Match the term of the coset `g⁻¹ • x` on the left with the term of `x` on the right.
+      change V.ρ g (V.ρ (g⁻¹ • x).out (f ((g⁻¹ • x).out⁻¹ • y))) =
           V.ρ x.out (f (x.out⁻¹ • g • y)) + V.ρ x.out (c (word x g))
+      -- The trivialisation of `c` for `u = (s x)⁻¹ * g * s (g⁻¹ • x)` in `P`, moved by `s x`.
       have hw : V.ρ (word x g : G) (f ((g⁻¹ • x).out⁻¹ • y)) =
           f ((word x g : G) • ((g⁻¹ • x).out⁻¹ • y)) + c (word x g) :=
         h_triv (word x g) ((g⁻¹ • x).out⁻¹ • y)
       simpa [word, ← mul_apply_eq_comp, ← map_mul, mul_assoc, mul_smul] using
         congrArg (V.ρ x.out) hw
-    · have h_fix : g⁻¹ • x = x := by
+    · -- All conjugates of `g` lie in `I`, hence in `P`: `g` fixes every coset and each term is `0`.
+      have h_fix : g⁻¹ • x = x := by
         induction x using QuotientGroup.induction_on with
         | H s => simpa [QuotientGroup.eq] using (hI _ ((hI g hg).2 s)).1
       have hw : (word x g : G) ∈ I := by simpa [word, h_fix] using (hI g hg).2 x.out
       change V.ρ x.out (c (word x g)) = 0
       rw [h_zero _ hw, map_zero]
-  have h_univ : @Finset.univ (G ⧸ P.toSubgroup) (Fintype.ofFinite _) =
-      (Finset.univ : Finset (G ⧸ P.toSubgroup)) := Finset.ext fun _ ↦ by simp
-  simpa [map, DiscreteModule.sum, Function.comp_def, Finset.sum_apply, h_univ, F, C, word] using
+  -- Use the coset enumeration chosen by the equivariant sum in the conclusion as well.
+  rename_i cosetFintype
+  rw [show cosetFintype = Fintype.ofFinite (G ⧸ P.toSubgroup) from Subsingleton.elim _ _]
+  simpa [map, DiscreteModule.sum, Function.comp_def, Finset.sum_apply] using
     (map X I (V.sum P.toSubgroup) ⟨(F, C), h_lift⟩).property
 
 /-- Let `0 → A → B → C → 0` be a short exact sequence such that `A` and `C` have few trivialised
