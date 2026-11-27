@@ -286,15 +286,17 @@ lemma sum_ite_lt_add_two_mul (x A : ℤ) (n : ℕ) :
   | zero => simp
   | succ n ih => grind [Fin.sum_univ_castSucc]
 
-/-- The two step-two blocks centred at `c`, of lengths `n + 1` and `n`, alternate in decreasing
-order from `c + n` to `c - n`, starting with the longer block. The entries strictly above `x` form
-a prefix. Each complete pair cancels in the difference of the two counts, leaving the parity of
-the prefix length. Below `low ≤ c - n` the whole odd-length row remains. At or above
-`high ≥ c + n` it is empty. -/
+/-- Two blocks with step `2` and the same centre `c`, of lengths `n + 1` and `n`, interlace. The
+left side is the number of entries above `x` of the longer block, less that of the shorter one. It
+is `1` if `x` is below an integer `low ≤ c - n`, it is `0` if `x` is not below an integer
+`high ≥ c + n`, and it is always `0` or `1`. -/
 lemma max_min_succ_sub_max_min_mem_Icc (x : ℤ) {n c low high : ℤ} (hn : 0 ≤ n)
     (h_low : low ≤ c - n) (h_high : c + n ≤ high) :
     max 0 (min (n + 1) ((c + n + 1 - x) / 2)) - max 0 (min n ((c + n - x) / 2)) ∈
       Icc (if x < low then 1 else 0 : ℤ) (if x < high then 1 else 0) := by
+  -- Merge the alternating blocks from `c + n` down to `c - n`, with the longer block first.
+  -- The entries strictly above `x` form a prefix. Complete pairs cancel, so the excess is
+  -- the parity of its length.
   convert_to max 0 (min (2 * n + 1) (c + n - x)) % 2 ∈ Icc _ _ using 1
   · omega
   grind
