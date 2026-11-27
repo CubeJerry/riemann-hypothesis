@@ -400,13 +400,25 @@ lemma Comparison.pull_hom_covariant (hS : S.ShortExact) (hS' : S'.ShortExact) {�
 /-- For 0 → X₁ → X₂ → X₃ → 0 short exact, X₁ → X₂ induces bijections on Extⁿ(-, F) for all n (it is
 a cohomological equivalence for F) exactly when Extⁿ(X₃, F) = 0 for all n. -/
 lemma isCohomEquiv_iff_subsingleton (hS : S.ShortExact) :
-    IsCohomEquiv F S.f ↔ ∀ n : ℕ, Subsingleton (H S.X₃ F n) :=
-  ⟨fun h n ↦ ⟨fun x x' ↦ hS.precomp_mk₀_g_injective F (fun m _ ↦ (h m).2) ((h n).1 <| by
-      simp [H.map, mk₀_comp_mk₀_assoc, S.zero])⟩,
-    fun h n ↦ ⟨(injective_iff_map_eq_zero _).2 fun x hx ↦
-      let ⟨z, hz⟩ := contravariant_sequence_exact₂ hS F x hx
-      hz ▸ (h n).elim z 0 ▸ comp_zero ..,
-      fun x ↦ contravariant_sequence_exact₁ hS F x (add_comm 1 n) ((h (n + 1)).elim _ _)⟩⟩
+    IsCohomEquiv F S.f ↔ ∀ n : ℕ, Subsingleton (H S.X₃ F n) := by
+  -- The long exact sequence `contravariant hS F` is Hⁿ(X₃) → Hⁿ(X₂) → Hⁿ(X₁) → Hⁿ⁺¹(X₃), and its
+  -- middle map is the pull-back along `S.f`.
+  refine ⟨fun h n ↦ ?_, fun h n ↦ ⟨?_, fun y ↦ ?_⟩⟩
+  · -- The middle map is onto in all degrees, so Hⁿ(X₃) → Hⁿ(X₂) is injective; its image is killed
+    -- by the injective middle map, so it is zero.
+    have hf_inj : Function.Injective ((contravariant hS F).f n) :=
+      (contravariant hS F).f_injective_of_g_surjective fun m _ ↦ (h m).surjective
+    have h_comp (x : H S.X₃ F n) : H.map F S.f n ((contravariant hS F).f n x) = 0 :=
+      ((contravariant hS F).exact_f_g n).apply_apply_eq_zero x
+    exact ⟨fun x y ↦ hf_inj ((h n).injective ((h_comp x).trans (h_comp y).symm))⟩
+  · -- injective: the kernel is the image of Hⁿ(X₃) = 0
+    have h_inj (L : LongExactSeq) (hA : Subsingleton (L.A n)) : Function.Injective (L.g n) := by
+      refine (injective_iff_map_eq_zero _).2 fun x hx ↦ ?_
+      obtain ⟨z, rfl⟩ := (L.exact_f_g n x).1 hx
+      exact (congrArg _ (hA.elim z 0)).trans (map_zero _)
+    exact fun x y hxy ↦ h_inj (contravariant hS F) (h n) hxy
+  · -- onto: the connecting map lands in Hⁿ⁺¹(X₃) = 0
+    exact ((contravariant hS F).exact_g_delta n y).1 ((h (n + 1)).allEq _ _)
 
 /-- For a short exact sequence 0 → X₁ → X₂ → X₃ → 0 of functors with Extⁿ(X₁,F) = 0 for all n,
 the pull-back Extⁿ(X₃,F) → Extⁿ(X₂,F) is bijective for all n. -/
