@@ -348,6 +348,8 @@ lemma IsLine.of_acyclic {Y : TimesBNat C ⥤ Type 1} {ψ : C ⥤ C'} {A : C} {E 
   -- `h_koszul` gives the cohomology of `Y`.
   let S : ShortComplex (TimesBNat C ⥤ AddCommGrpCat.{1}) := wangComplex Y
   have hS : S.ShortExact := shortExact_wangComplex Y
+  -- `r z` is the section `(x, k) ↦ F'(e⁻¹ x) z` on `S.X₂`. By `isBijective_reprBy_iff`, a
+  -- comparison from `reprBy E` is bijective iff this map is and the higher cohomology vanishes.
   let r : F'.obj E →+ (S.X₂ ⟶ TimesBNat.fst C ⋙ ψ ⋙ F') :=
     homOfValue (.restrict (TimesBNat.fst C ⋙ ψ) F') (wangProj e)
   obtain ⟨hr_bij, h_high⟩ :
@@ -371,6 +373,7 @@ lemma IsLine.of_acyclic {Y : TimesBNat C ⥤ Type 1} {ψ : C ⥤ C'} {A : C} {E 
     exact ⟨y, hS.epi_g.left_cancellation _ _ ((hq y).trans hz)⟩
   · -- `S.f` is onto on cohomology in all degrees, so that of `Y` embeds in that of `S.X₂`.
     refine subsingleton_H_succ_of_shortExact hS _ h_high (fun φ ↦ ?_) (h_high n)
+    -- a class of degree `0` is some `r (F'.map g z - z)`, the image of `r z`
     obtain ⟨z, rfl⟩ : ∃ z : F'.obj E, r (F'.map g z - z) = φ := hr_bij.surjective.comp h_surj φ
     exact ⟨r z, hf z⟩
 
