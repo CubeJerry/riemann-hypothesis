@@ -301,7 +301,7 @@ variable {z J B x}
 lemma placeGraph_unique {c d : C} (hc : (t, c) ∈ placeGraph x) (hd : (t, d) ∈ placeGraph x) :
     c = d := by
   obtain ⟨⟨f⟩⟩ := x
-  -- A finite value gives the divisibility needed to cancel the denominator.
+  -- `f (denominator t)` divides `f (numerator t)` and is coprime to it, so it is a unit and cancels
   have hc_eq : f (numerator t) = f (denominator t) * c := mem_fractionGraph.mp hc
   have h_unit : IsUnit (f (denominator t)) :=
     (isUnit_denominator_iff_dvd_numerator f t).2 ⟨c, hc_eq⟩
