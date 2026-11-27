@@ -676,23 +676,6 @@ lemma _root_.New.Floors.PlaceData.sum_lastEntryDensity_eq
           (lastEntrySphereIndex π t) := by
   simp only [lastEntryDensity, ht, mul_sum, mul_left_comm (R _ _)]
 
-/-- Let `π * star π = N`, and let `F` be a large lattice datum of `latticeMiddleGram 𝔰 N`. Suppose
-the heads `ω a` have a common last entry `ω a 𝔰.ϱ = t`, and `R` is a positive semidefinite matrix.
-Then the sum `∑ a, ∑ b, R a b * lastEntryDensity π Z (ω a) (ω b)` is a nonnegative real. -/
-lemma sum_lastEntryDensity_nonneg {F : PlaceData ι (latticeMiddleGram 𝔰 N) (m + 1)}
-    (Z : F.IntermediateGroup) [h : P.IsLargeLatticeData F] [IsOpenUnits A] (hN : π * star ↑π = N)
-    {R : Matrix j j ℂ} (hR : R.PosSemidef) (ω : j → ℕ → Aˣ)
-    {t : Aˣ} (ht : ∀ a : j, ω a 𝔰.ϱ = t) :
-    0 ≤ ∑ a : j, ∑ b : j, R a b * lastEntryDensity π Z (ω a) (ω b) := by
-  have h_sphere : 0 ≤ ∑ a : j, ∑ b : j, R a b * ∫ x : 𝔰.κ → A,
-      fiberPairing Z (ω a) (ω b) (vectorOfLastEntry π t x) ∂P.normFiberMeasure 𝔰.κ
-        (lastEntrySphereIndex π t) :=
-    sum_sum_mul_integral_nonneg (fun a b ↦
-      integrable_fiberPairing_vectorOfLastEntry Z (ω a) (ω b) hN t)
-      fun x ↦ sum_fiberPairing_nonneg Z hR ω (vectorOfLastEntry π t x)
-  rw [sum_lastEntryDensity_eq Z R ω ht]
-  exact mul_nonneg (Complex.zero_le_real.2 toReal_nonneg) h_sphere
-
 /-- Let `π * star π = N`, and let `F` be a large lattice datum of `latticeMiddleGram 𝔰 N`. Take
 heads `ω a` (sequences of units) with a common last entry `ω a 𝔰.ϱ = t` and a positive semidefinite
 matrix `R`. Then the sum of `lastEntryDensity π Z (ω a) (ω b)` against `R` is nonnegative. It is
@@ -710,16 +693,16 @@ lemma sum_lastEntryDensity_nonneg_and_eq_inv_mul_lintegral
         (P.modulus π)⁻¹ * ∫⁻ x : 𝔰.κ → A, ENNReal.ofReal
             (∑ a : j, ∑ b : j, R a b * fiberPairing Z (ω a) (ω b) (vectorOfLastEntry π t x)).re
           ∂P.normFiberMeasure 𝔰.κ (lastEntrySphereIndex π t) := by
-  refine ⟨sum_lastEntryDensity_nonneg Z hN hR ω ht, ?_⟩
   let μ : Measure (𝔰.κ → A) := P.normFiberMeasure 𝔰.κ (lastEntrySphereIndex π t)
-  have h_sphere : ∫⁻ x : 𝔰.κ → A, ENNReal.ofReal
-      (∑ a : j, ∑ b : j, R a b * fiberPairing Z (ω a) (ω b) (vectorOfLastEntry π t x)).re ∂μ =
-        ENNReal.ofReal (∑ a : j, ∑ b : j, R a b * ∫ x : 𝔰.κ → A,
-          fiberPairing Z (ω a) (ω b) (vectorOfLastEntry π t x) ∂μ).re :=
-    lintegral_ofReal_re_sum_sum_mul
-      (fun a b ↦ integrable_fiberPairing_vectorOfLastEntry Z (ω a) (ω b) hN t)
-      fun x ↦ sum_fiberPairing_nonneg Z hR ω (vectorOfLastEntry π t x)
-  rw [sum_lastEntryDensity_eq Z R ω ht, h_sphere, Complex.re_ofReal_mul, ofReal_mul toReal_nonneg,
+  let f (a b : j) (x : 𝔰.κ → A) := fiberPairing Z (ω a) (ω b) (vectorOfLastEntry π t x)
+  have hf (a b : j) : Integrable (f a b) μ :=
+    integrable_fiberPairing_vectorOfLastEntry Z (ω a) (ω b) hN t
+  have hpos (x : 𝔰.κ → A) : 0 ≤ ∑ a : j, ∑ b : j, R a b * f a b x :=
+    sum_fiberPairing_nonneg Z hR ω (vectorOfLastEntry π t x)
+  rw [sum_lastEntryDensity_eq Z R ω ht]
+  refine ⟨mul_nonneg (Complex.zero_le_real.2 toReal_nonneg)
+    (sum_sum_mul_integral_nonneg hf hpos), ?_⟩
+  rw [lintegral_ofReal_re_sum_sum_mul hf hpos, Complex.re_ofReal_mul, ofReal_mul toReal_nonneg,
     ofReal_toReal (by simp)]
 
 end IntegralPlace.IsLargeLatticeData
