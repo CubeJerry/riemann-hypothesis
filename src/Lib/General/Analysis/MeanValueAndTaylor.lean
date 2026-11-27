@@ -4,11 +4,10 @@ public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 public import Mathlib.RingTheory.PowerSeries.Basic
 public import Mathlib.Analysis.CStarAlgebra.Classes
 import TauCeti.Analysis.Calculus.Deriv.Second
+import TauCeti.Analysis.Calculus.BumpFunction.FiniteDimension
 import Mathlib.Analysis.Complex.MeanValue
 import Mathlib.Analysis.Complex.TaylorSeries
 import Mathlib.Analysis.SpecialFunctions.RegularizedHypergeometric
-import Mathlib.Geometry.Manifold.Algebra.SMul
-import Mathlib.Geometry.Manifold.BumpFunction
 import Mathlib.Order.CompletePartialOrder
 import Mathlib.RingTheory.SimpleRing.Principal
 public import Lib.Speed
@@ -232,14 +231,9 @@ variable {X l m o : Type*}
 lemma exists_contDiff_eventuallyEq {Y : Type*} [FiniteDimensional ℝ X] [NormedAddCommGroup Y]
     [NormedSpace ℝ Y] {f : X → Y} {x : X} (hf : ContDiffAt ℝ ω f x) :
     ∃ g : X → Y, ContDiff ℝ ∞ g ∧ g =ᶠ[nhds x] f := by
-  -- Multiply `f` by a bump function supported in the neighbourhood of `x` where `f` is analytic.
-  have h_near : {y : X | ContDiffAt ℝ ω f y} ∈ nhds x := hf.eventually (by simp)
-  obtain ⟨b, -, (h_supp : tsupport b ⊆ {y : X | ContDiffAt ℝ ω f y})⟩ :=
-    (SmoothBumpFunction.nhds_basis_tsupport (I := modelWithCornersSelf ℝ X) x).mem_iff.1 h_near
-  refine ⟨fun y ↦ b y • f y, ?_, b.eventuallyEq_one.mono fun y (hy : b y = 1) ↦ by simp [hy]⟩
-  refine (contMDiff_of_tsupport fun y hy ↦ ?_).contDiff
-  have hf_y : ContDiffAt ℝ ω f y := h_supp (tsupport_smul_subset_left _ _ hy)
-  exact b.contMDiffAt.smul (hf_y.contMDiffAt.of_le le_top)
+  obtain ⟨s, hs, hfs⟩ := hf.contDiffOn (m := ∞) le_top (by simp)
+  obtain ⟨g, hg, -, hgf⟩ := hfs.exists_contDiff_eventuallyEq_of_finiteDimensional hs
+  exact ⟨g, hg, hgf⟩
 
 /-- Complex conjugation is smooth over `ℝ`, of every order `N`. -/
 @[fun_prop]
