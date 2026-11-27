@@ -28,8 +28,9 @@ for `γ ∈ Γ`, and the following.
 * `New.lintegral_rpow_neg_le_of_measure_sublevel_le`: if the sublevel sets `{u ≤ R}` of a measurable
   function `u ≥ 1` have measure at most `(K R^e)^d V`, with `K ≥ 0`, then the integral of `u^(-A)`
   has an explicit bound for `A > e d`. The measure is arbitrary, so the result also bounds sums
-  (counting measure). For finite `V`, `New.DiscreteSeries.integral_rpow_neg_le_of_measure_le`
-  gives integrability and the corresponding bound for the Bochner integral.
+  (counting measure). For finite `V`, `New.integrable_rpow_neg_of_measure_sublevel_le` and
+  `New.integral_rpow_neg_le_of_measure_sublevel_le` are the forms for the Bochner integral;
+  `New.DiscreteSeries.integral_rpow_neg_le_of_measure_le` joins them.
 * `New.integrable_of_isCocompact`: continuous left Γ-invariant functions are integrable for finite
   measures on G.
 * `New.IsL2Contraction`: a finite family of kernels defines an operator of norm at most one between
@@ -77,6 +78,15 @@ open MeasureTheory Set Real Filter
 variable {S : Type*} [MeasurableSpace S] {ν : Measure S} {u : S → ℝ} {K A c : ℝ} {e d : ℕ}
   {V : ENNReal}
 
+/-- Express the sublevel-set bound in the form used by the layer-cake estimates. -/
+private lemma measure_sublevel_le_rpow (hK : 0 ≤ K)
+    (h_vol : ∀ R ≥ (1 : ℝ), ν {s : S | u s ≤ R} ≤ ENNReal.ofReal ((K * R ^ e) ^ d) * V)
+    (R : ℝ) (hR : 1 ≤ R) :
+    ν {s : S | u s ≤ R} ≤ ENNReal.ofReal (R ^ ((e * d : ℕ) : ℝ)) * (ENNReal.ofReal (K ^ d) * V) := by
+  refine (h_vol R hR).trans_eq ?_
+  rw [← mul_assoc, mul_comm (ENNReal.ofReal (R ^ _)), ← ENNReal.ofReal_mul (pow_nonneg hK d),
+    Real.rpow_natCast, mul_pow, ← pow_mul]
+
 /-- Layer cake bound for a negative power. Let `u ≥ 1` be measurable and suppose that
 `ν {u ≤ R} ≤ (K R^e)^d V` for all `R ≥ 1`, where `K ≥ 0`. If `e d < A` and `A ≤ c (A - e d)`, then
 the Lebesgue integral of `u^(-A)` is at most `K^d c V`. -/
@@ -87,16 +97,10 @@ lemma New.lintegral_rpow_neg_le_of_measure_sublevel_le (hu_meas : Measurable u)
     ∫⁻ s : S, ENNReal.ofReal (u s ^ (-A)) ∂ν ≤ ENNReal.ofReal (K ^ d * c) * V := by
   have hA_pos : 0 < A := (show (0 : ℝ) ≤ e * d by positivity).trans_lt hA
   have hc_nonneg : 0 ≤ c := by nlinarith
-  -- The growth hypothesis is the one of Tau Ceti's bound with `ε = e d` and `C = K^d V`.
-  have h_growth (R : ℝ) (hR : 1 ≤ R) : ν {s : S | u s ≤ R} ≤
-      ENNReal.ofReal (R ^ ((e * d : ℕ) : ℝ)) * (ENNReal.ofReal (K ^ d) * V) := by
-    refine (h_vol R hR).trans_eq ?_
-    rw [← mul_assoc, ← ENNReal.ofReal_mul (by positivity), Real.rpow_natCast, mul_pow, ← pow_mul,
-      mul_comm (K ^ d)]
   calc ∫⁻ s : S, ENNReal.ofReal (u s ^ (-A)) ∂ν
       ≤ ENNReal.ofReal (A / (A - ((e * d : ℕ) : ℝ))) * (ENNReal.ofReal (K ^ d) * V) :=
         TauCeti.lintegral_ofReal_rpow_neg_le_of_measure_le_rpow hu_meas.aemeasurable
-          (.of_forall hu) hA_pos (by simpa using hA) h_growth
+          (.of_forall hu) hA_pos (by simpa using hA) (measure_sublevel_le_rpow _hK h_vol)
     _ ≤ ENNReal.ofReal c * (ENNReal.ofReal (K ^ d) * V) := by
         gcongr
         rw [Nat.cast_mul, div_le_iff₀ (by linarith)]
@@ -105,24 +109,41 @@ lemma New.lintegral_rpow_neg_le_of_measure_sublevel_le (hu_meas : Measurable u)
         rw [← mul_assoc, ← ENNReal.ofReal_mul hc_nonneg, mul_comm c]
 
 /-- Let `u ≥ 1` be measurable and suppose that `ν {u ≤ R} ≤ (K R^e)^d V` for all `R ≥ 1`, where
+`K ≥ 0` and `V` is finite. Then `u^(-A)` is integrable for `A > e d`. -/
+lemma New.integrable_rpow_neg_of_measure_sublevel_le (hu_meas : Measurable u)
+    (hu : ∀ s : S, 1 ≤ u s) (hK : 0 ≤ K) (hV : V ≠ ⊤)
+    (h_vol : ∀ R ≥ (1 : ℝ), ν {s : S | u s ≤ R} ≤ ENNReal.ofReal ((K * R ^ e) ^ d) * V)
+    (hA : e * d < A) :
+    Integrable (fun s : S ↦ u s ^ (-A)) ν := by
+  exact TauCeti.integrable_rpow_neg_of_measure_le_rpow hu_meas.aemeasurable (.of_forall hu)
+    ((show (0 : ℝ) ≤ e * d by positivity).trans_lt hA) (by simpa using hA)
+    (by finiteness) (measure_sublevel_le_rpow hK h_vol)
+
+/-- Let `u ≥ 1` be measurable and suppose that `ν {u ≤ R} ≤ (K R^e)^d V` for all `R ≥ 1`, where
+`K ≥ 0` and `V` is finite. If `e d < A` and `A ≤ c (A - e d)`, then `∫ u^(-A) dν ≤ K^d c V`. -/
+lemma New.integral_rpow_neg_le_of_measure_sublevel_le (hu_meas : Measurable u)
+    (hu : ∀ s : S, 1 ≤ u s) (hK : 0 ≤ K) (hV : V ≠ ⊤)
+    (h_vol : ∀ R ≥ (1 : ℝ), ν {s : S | u s ≤ R} ≤ ENNReal.ofReal ((K * R ^ e) ^ d) * V)
+    (hA : e * d < A) (hc : A ≤ c * (A - e * d)) :
+    ∫ s : S, u s ^ (-A) ∂ν ≤ K ^ d * c * V.toReal := by
+  have hc_nonneg : 0 ≤ c := by nlinarith [show (0 : ℝ) ≤ e * d by positivity]
+  rw [integral_eq_lintegral_of_nonneg_ae
+    (.of_forall fun s ↦ rpow_nonneg (zero_le_one.trans (hu s)) (-A))
+    (hu_meas.pow_const (-A)).aestronglyMeasurable]
+  have h_le := lintegral_rpow_neg_le_of_measure_sublevel_le hu_meas hu hK h_vol hA hc
+  simpa only [ENNReal.toReal_mul, ENNReal.toReal_ofReal (by positivity : 0 ≤ K ^ d * c)] using
+    ENNReal.toReal_mono (by finiteness) h_le
+
+/-- Let `u ≥ 1` be measurable and suppose that `ν {u ≤ R} ≤ (K R^e)^d V` for all `R ≥ 1`, where
 `K ≥ 0` and `V` is finite. If `e d < A` and `A ≤ c (A - e d)`, then `u^(-A)` is integrable and
 `∫ u^(-A) dν ≤ K^d c V`. -/
 lemma New.DiscreteSeries.integral_rpow_neg_le_of_measure_le {ν : Measure S} {u : S → ℝ} {K A c : ℝ}
     {e d : ℕ} {V : ENNReal} (hu_meas : Measurable u) (hu : ∀ s : S, 1 ≤ u s) (hK : 0 ≤ K)
     (hV : V ≠ ⊤) (h_vol : ∀ R ≥ (1 : ℝ), ν {s : S | u s ≤ R} ≤ ENNReal.ofReal ((K * R ^ e) ^ d) * V)
     (hA : e * d < A) (hc : A ≤ c * (A - e * d)) :
-    Integrable (fun s : S ↦ u s ^ (-A)) ν ∧ ∫ s : S, u s ^ (-A) ∂ν ≤ K ^ d * c * V.toReal := by
-  have h_le := lintegral_rpow_neg_le_of_measure_sublevel_le hu_meas hu hK h_vol hA hc
-  have h_nonneg : ∀ᵐ s ∂ν, 0 ≤ u s ^ (-A) :=
-    .of_forall fun s ↦ rpow_nonneg (zero_le_one.trans (hu s)) _
-  have h_meas : AEStronglyMeasurable (fun s ↦ u s ^ (-A)) ν :=
-    (hu_meas.pow_const (-A)).aestronglyMeasurable
-  have h_fin : ENNReal.ofReal (K ^ d * c) * V < ⊤ := by finiteness
-  refine ⟨⟨h_meas, (hasFiniteIntegral_iff_ofReal h_nonneg).2 (h_le.trans_lt h_fin)⟩, ?_⟩
-  have hc_nonneg : 0 ≤ c := by nlinarith [show (0 : ℝ) ≤ e * d by positivity]
-  rw [integral_eq_lintegral_of_nonneg_ae h_nonneg h_meas]
-  simpa only [ENNReal.toReal_mul, ENNReal.toReal_ofReal (by positivity : 0 ≤ K ^ d * c)] using
-    ENNReal.toReal_mono h_fin.ne h_le
+    Integrable (fun s : S ↦ u s ^ (-A)) ν ∧ ∫ s : S, u s ^ (-A) ∂ν ≤ K ^ d * c * V.toReal :=
+  ⟨integrable_rpow_neg_of_measure_sublevel_le hu_meas hu hK hV h_vol hA,
+    integral_rpow_neg_le_of_measure_sublevel_le hu_meas hu hK hV h_vol hA hc⟩
 
 end LayerCake
 
