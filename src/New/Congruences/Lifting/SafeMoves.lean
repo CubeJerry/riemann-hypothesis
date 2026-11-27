@@ -851,6 +851,35 @@ lemma neg_le_jump_of_fitsWindows {η β V : ℕ} {σ : ℤˣ} (hU : FitsWindows 
     · exact absurd h_neg (by decide)
     · omega
 
+/-- At a plain cut with opposite far windows, the side with the negative far window can stop,
+allowing the other side to move safely from its Frobenius translate. The intervening letters
+share the sign `ρ`, except where both far windows fit inside the low window. The bound `η₀`
+on the pole at the preceding cut can differ from the bound `η` at the current cut. -/
+lemma SidePairing.exists_stop_of_aligned_windows {ε : k.Letter → ℤˣ} {β : k.Letter → ℕ}
+    {η η₀ V κ e l t : ℕ} {ρ : ℤˣ} (P : S.SidePairing S')
+    (hU : ∀ j : k.Letter, FitsWindows η (-ε j) (β j) V (S.jumpSet j))
+    (hU' : ∀ j : k.Letter, FitsWindows η (ε j) (β j) V (S'.jumpSet j))
+    (hl : 0 < l) (h_kill : P.tateDualSide.KillsCokernel i κ t)
+    (h_sign : ∀ a < l, ε (i.stepBack a) = ρ ∨ β (i.stepBack a) + V ≤ η) {c' : S'.paramLattice}
+    {d₀ d₀' : ℕ → ℤ → ℤ} {x₀ x : S.extensionLattice.Ambient} {x₀' x' : S'.extensionLattice.Ambient}
+    (hx : x ∈ S.pointsOver c i e (raisedOrdersAtZero (-η)) (plainDepth t η l η₀))
+    (hx' : x' ∈ S'.pointsOver c' i e (raisedOrdersAtZero (-η)) (plainDepth t η l η₀))
+    (hx₀ : x₀ ∈ S.pointsOver c (i.stepBack l) e (raisedOrdersAtZero (-η₀)) d₀)
+    (hx₀' : x₀' ∈ S'.pointsOver c' (i.stepBack l) e (raisedOrdersAtZero (-η₀)) d₀') :
+    (∃ q ∈ S.stopPoints c i e η l, P.IsSafeMoveSnd κ q (φ ^ l • x₀' - x')) ∨
+      ∃ q' ∈ S'.stopPoints c' i e η l, P.IsSafeMoveFst κ (φ ^ l • x₀ - x) q' := by
+  obtain rfl | rfl := Int.units_eq_one_or ρ
+  · have h_down (a : ℕ) (ha : a < l) : ∀ u ∈ S.jumpSet (i.stepBack a), u ≤ η :=
+      jump_le_of_fitsWindows (hU _) ((h_sign a ha).imp_left neg_inj.2)
+    have h_up (a : ℕ) (ha : a < l) : ∀ u ∈ S'.jumpSet (i.stepBack a), -η ≤ u :=
+      neg_le_jump_of_fitsWindows (hU' _) (h_sign a ha)
+    exact .inl (P.exists_mem_stopPoints_isSafeMoveSnd hl h_kill h_down h_up hx hx' hx₀')
+  · have h_down (a : ℕ) (ha : a < l) : ∀ u ∈ S'.jumpSet (i.stepBack a), u ≤ η :=
+      jump_le_of_fitsWindows (hU' _) (h_sign a ha)
+    have h_up (a : ℕ) (ha : a < l) : ∀ u ∈ S.jumpSet (i.stepBack a), -η ≤ u :=
+      neg_le_jump_of_fitsWindows (hU _) ((h_sign a ha).imp_left neg_eq_iff_eq_neg.2)
+    exact .inr (P.exists_mem_stopPoints_isSafeMoveFst hl h_kill h_down h_up hx' hx hx₀)
+
 end PairingSide
 
 end New.Lift.KummerChart
