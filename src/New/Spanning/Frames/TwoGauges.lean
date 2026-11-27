@@ -255,8 +255,8 @@ lemma head_prod_mul_dual_mem_ofSize {S : Size T} {K : Set T.G} {j : ℕ} {p : �
       have he_lt : e.val < j ∧ e.val < 𝔰.ϱ := by lia
       simp [L, f, Matrix.mul_apply, c, he_lt, weylElem, weylOn, level]
     change ((s * weylElem j p).val.val * η⁻¹.val.val).submatrix R f = L * C
-    rw [submatrix_mul_of_eq_zero_outside _ _ R f f h_f (fun _ d m hm ↦ by rw [h_zero d m hm, mul_zero]),
-      h_weyl]
+    rw [submatrix_mul_of_eq_zero_outside _ _ R f f h_f
+      (fun _ d m hm ↦ by rw [h_zero d m hm, mul_zero]), h_weyl]
   -- The row of s at e*_b agrees with that of 1 outside the columns e*_d, d < b; so L is lower
   -- triangular, with p b on the diagonal for b < a.
   have s_row (b d : Fin (a + 1)) (hbd : b ≤ d) :
