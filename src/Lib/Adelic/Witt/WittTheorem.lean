@@ -1,6 +1,6 @@
 module
 
-import TauCeti.LinearAlgebra.SesquilinearForm.SignedHermitianSpace.Witt
+import TauCeti.LinearAlgebra.SesquilinearForm.SignedHermitianSpace.Witt.Basic
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.HopfAlgebra.Basic
@@ -168,7 +168,7 @@ lemma witt_of_quasiReflection_mem (hz : ∃ z : R, IsUnit (z - star z)) {J : Mat
   let V : TauCeti.SignedHermitianSpace R (n → R) (starRingEnd R) 1 :=
     { form := B
       form_swap := fun v w ↦ by
-        simpa [hB, starRingEnd_apply] using (IsHermitian.star_dotProduct_mulVec_comm hJ v w).symm
+          simpa [hB, starRingEnd_apply] using (IsHermitian.star_dotProduct_mulVec_comm hJ v w).symm
       separatingLeft := fun v hv ↦ funext fun i ↦ by
         obtain ⟨w, hw⟩ := mulVec_surjective_iff_isUnit.2 hJ' (Pi.single i 1)
         simpa [hB, hw] using hv w }
@@ -183,7 +183,8 @@ lemma witt_of_quasiReflection_mem (hz : ∃ z : R, IsUnit (z - star z)) {J : Mat
       simpa [form, starRingEnd_apply] using hs
     refine ⟨quasiReflection hJ hJ' v s h_trace, hH v s h_trace, ?_⟩
     ext x
-    simp [act_apply, quasiReflection_mulVec, TauCeti.SignedHermitianSpace.quasiReflection_apply, form]
+    simp [act_apply, quasiReflection_mulVec, TauCeti.SignedHermitianSpace.quasiReflection_apply,
+      form]
   have h_col (i j : k) : V.form (X.col i) (X.col j) = V.form (Y.col i) (Y.col j) := by
     rw [form, form, dotProduct_mulVec, dotProduct_mulVec]
     exact congrFun₂ h_gram i j
