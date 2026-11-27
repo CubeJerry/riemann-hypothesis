@@ -230,7 +230,8 @@ theorem DiscreteSeries.polarization_one_eq_of_lt [DecidableEq R] [DecidableEq C]
 omit [Fintype C] in
 /-- If `P` is harmonic for the columns, then the sum over rows of the same sign as `a` of
 its mixed derivatives in columns `c` and `d` vanishes when those variables in row `a` have
-signs `1` and `-1`, respectively. This sum is the negative of the column Laplacian applied to `P`. -/
+signs `1` and `-1`, respectively. This sum is the negative of the column Laplacian applied to
+`P`. -/
 private theorem DiscreteSeries.sum_pderiv_pderiv_eq_zero
     {P : MvPolynomial ι ℂ} (h_harm : T.swap.IsLaplaceHarmonic P) (a : R) (c d : C)
     (hc : T.varSign (a, c) = 1) (hd : T.varSign (a, d) = -1) :
