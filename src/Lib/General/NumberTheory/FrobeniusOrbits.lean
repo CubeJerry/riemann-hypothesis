@@ -206,7 +206,8 @@ lemma root_pow_card_pow_eq_self_iff {P : k[X]} (hP : Irreducible P) {x : K} (hx 
     {n : ℕ} : x ^ Nat.card k ^ n = x ↔ P.natDegree ∣ n := by
   simp [hP.natDegree_dvd_iff_dvd_X_pow_card_pow_sub_X, ← hP.dvd_iff_aeval_eq_zero hx, sub_eq_zero]
 
-/-- The Frobenius orbit of a root of an irreducible polynomial has minimal period equal to the degree. -/
+/-- The Frobenius orbit of a root of an irreducible polynomial has minimal period equal to
+the degree of the polynomial. -/
 private lemma minimalPeriod_frobenius_of_root {P : k[X]} (hP : Irreducible P) {x : K}
     (hx : aeval x P = 0) :
     Function.minimalPeriod (fun y : K ↦ y ^ Nat.card k) x = P.natDegree := by
