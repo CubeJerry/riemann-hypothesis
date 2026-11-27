@@ -40,6 +40,22 @@ invertible matrices g with `gᴴ * T * g = T`.
 
 @[expose] public section
 
+namespace New
+
+open MeasureTheory Measure Set ENNReal
+
+/-- If the product of a measure with itself is scaled by `c ^ 2`, the measure is scaled by `c`.
+Evaluating the product on measurable squares determines each factor. -/
+lemma eq_smul_of_prod_self_eq_sq_smul {X : Type*} [MeasurableSpace X]
+    {μ ν : Measure X} [SFinite μ] [SFinite ν] {c : ℝ≥0∞}
+    (h : μ.prod μ = c ^ 2 • ν.prod ν) : μ = c • ν := by
+  refine Measure.ext fun s _ ↦ (ENNReal.pow_right_strictMono two_ne_zero).injective ?_
+  have hs := congrArg (fun ρ : Measure (X × X) ↦ ρ (s ×ˢ s)) h
+  simp only [prod_prod, smul_apply, smul_eq_mul] at hs ⊢
+  rwa [mul_pow, sq (μ s), sq (ν s)]
+
+end New
+
 namespace New.Floors
 
 /-- A choice of an element τ = `element` with τ + τ̄ = 1 in a commutative ring with involution. -/

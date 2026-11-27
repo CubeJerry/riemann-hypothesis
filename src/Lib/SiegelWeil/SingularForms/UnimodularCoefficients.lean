@@ -5,8 +5,8 @@ public import Lib.SiegelWeil.SingularForms.CentreCoefficients
 public import Lib.Weil.MixedModel.AdaptedSplitting
 import Lib.Adelic.Unitary.WeakApproximation
 import Lib.Cohomology.Etale.Basic
-import Lib.General.Measure.HaarModulus
 import Lib.Shimura.ComplexTheta.AppellHumbertData
+import Lib.General.Measure.QuadricDisintegration
 
 /-!
 # Singular forms governed by unimodular coefficients
@@ -209,8 +209,8 @@ lemma idemAdele_conjClosure_mul_self :
   simp [idem_mul_self]
 
 @[simp]
-lemma star_idemAdele_conjClosure : star (idemAdele S.conjClosure) = idemAdele S.conjClosure := by
-  aesop
+lemma star_idemAdele_conjClosure : star (idemAdele S.conjClosure) = idemAdele S.conjClosure :=
+  Prod.ext (star_zero _) star_idem_conjClosure
 
 /-- Taking the part on S ∪ S̄ of an adele, as a finite adele, is multiplicative. -/
 lemma snd_idemAdele_conjClosure_mul_mul (x y : 𝔸 E) :
