@@ -102,7 +102,8 @@ private lemma weylElem_mul_apply_opposite (M : Matrix 𝔰.BesselIndex 𝔰.Bess
     change (weylElem 𝔰.ϱ p : T.G).val i k * M k j = 0
     by_cases h_floor : floorOf k < 𝔰.ϱ
     · have h_row : i ≠ oppositeIndex k := fun h ↦ hk (by rw [h, oppositeIndex_oppositeIndex])
-      rw [weylElem, weylOn_apply_of_swapped i ⟨h_floor, h_floor, (p _).isUnit⟩, ite_eq_right h_row, zero_mul]
+      rw [weylElem, weylOn_apply_of_swapped i ⟨h_floor, h_floor, (p _).isUnit⟩, ite_eq_right h_row,
+        zero_mul]
     · have h_fixed : oppositeIndex k = k := by
         rcases k with a | m | a
         · exact (h_floor a.is_lt).elim
