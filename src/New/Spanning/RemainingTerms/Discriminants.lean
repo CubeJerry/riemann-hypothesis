@@ -3,7 +3,7 @@ module
 import Mathlib.Algebra.Order.Star.Real
 import TauCeti.LinearAlgebra.Matrix.Range
 import TauCeti.LinearAlgebra.Submodule.Prod.Index
-import TauCeti.LinearAlgebra.Submodule.Zeta
+public import TauCeti.LinearAlgebra.Submodule.Zeta
 import TauCeti.NumberTheory.NumberField.CMField.AdelicLattice
 import TauCeti.RingTheory.Ideal.Norm.AbsNorm
 public import Lib.SiegelWeil.Mass
@@ -41,11 +41,6 @@ section SubmoduleZeta
 
 variable {R N N' : Type*} [CommRing R] [AddCommGroup N] [Module R N] [AddCommGroup N'] [Module R N']
 
-variable (R N) in
-/-- The sum of `[N : M] ^ (-s)` over the submodules `M` of finite index in `N`. -/
-def submoduleZeta (s : ℕ) : ℝ≥0∞ :=
-  ∑' M : {M : Submodule R N // M.cardQuot ≠ 0}, (M.val.cardQuot : ℝ≥0∞)⁻¹ ^ s
-
 /-- The index of the preimage of `M` under `f` is the index of `M ⊓ range f` in the range of `f`. -/
 lemma cardQuot_comap (f : N →ₗ[R] N') (M : Submodule R N') :
     (M.comap f).cardQuot = M.toAddSubgroup.relIndex (LinearMap.range f).toAddSubgroup :=
@@ -68,16 +63,8 @@ lemma tsum_relIndex_range_le_submoduleZeta (f : N →ₗ[R] N') (s : ℕ) :
     simpa [Submodule.map_comap_eq_self, h₁_le, h₂_le] using congrArg (Submodule.map f) h_comap
   calc _ = ∑' M, ((pull M).val.cardQuot : ℝ≥0∞)⁻¹ ^ s :=
         tsum_congr fun M ↦ by simp only [pull, cardQuot_comap]
-    _ ≤ submoduleZeta R N s := tsum_comp_le_tsum_of_injective h_inj fun M ↦
-      (M.val.cardQuot : ℝ≥0∞)⁻¹ ^ s
-
-/-- If the ideals of finite index of `R` are principal, then the sum of `[R ^ r : M] ^ (-(r + μ))`
-over the submodules `M` of finite index is at most the `r`th power of the sum of `[R : I] ^ (-μ)`
-over the ideals `I` of finite index. -/
-lemma submoduleZeta_pi_le (h_principal : ∀ I : Ideal R, I.cardQuot ≠ 0 → I.IsPrincipal)
-    (r μ : ℕ) : submoduleZeta R (Fin r → R) (r + μ) ≤ submoduleZeta R R μ ^ r := by
-  simpa only [submoduleZeta, Module.submoduleZeta_def] using
-    Module.submoduleZeta_pi_le h_principal r μ
+    _ ≤ submoduleZeta R N s := submoduleZeta_def R N s ▸
+      tsum_comp_le_tsum_of_injective h_inj fun M ↦ (M.val.cardQuot : ℝ≥0∞)⁻¹ ^ s
 
 end SubmoduleZeta
 
@@ -591,7 +578,7 @@ lemma tsum_submoduleIndex_colLattice_inv_pow_le (B : Matrix κ (Fin r) (𝔸f E)
         submoduleIndex M (colLattice (Ô E) B) ≠ 0},
       (submoduleIndex M.val (colLattice (Ô E) B) : ℝ≥0∞)⁻¹ ^ (r + μ) ≤ idealZeta (Ô E) μ ^ r := by
   obtain ⟨f, hf⟩ := exists_range_eq_colLattice (R := Ô E) B
-  rw [← hf, show idealZeta (Ô E) μ = submoduleZeta (Ô E) (Ô E) μ from rfl]
+  rw [← hf, show idealZeta (Ô E) μ = submoduleZeta (Ô E) (Ô E) μ from (submoduleZeta_def ..).symm]
   exact (tsum_relIndex_range_le_submoduleZeta f (r + μ)).trans
     (submoduleZeta_pi_le isPrincipal_of_cardQuot_ne_zero r μ)
 
