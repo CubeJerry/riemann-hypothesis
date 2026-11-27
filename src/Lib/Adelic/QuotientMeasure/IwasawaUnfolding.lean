@@ -210,6 +210,21 @@ lemma New.integral_tsum_eq_integral_tsum_block (hi : Function.Injective i) {Γ S
     ∫ x : G, ∑' y : D, k y x ∂Γ.quotMeasure μ = ∫ x : G, ∑' y : C, k y x ∂S.quotMeasure μ :=
   (integral_tsum_block hi hΓ hS hC hD hk_meas hk (Or.inr h_fin)).2.1
 
+/-- Unfolding of a sum of integrals over the translates of a block. Let `i` map `Λ` isomorphically
+onto the discrete subgroup `Γ`, let `γ` carry a point of `C` into `C` exactly when `i γ` lies in
+`S ≤ Γ`, and let `D` be the union of the translates of `C`. Let the `k y` be measurable with
+`k (γ • y) (i γ * x) = k y x`. If `∑_C ‖k y‖` has finite integral over `S \ G`, then the sum over
+`D` of the integrals of `k y` against the measure of `Γ \ G` is the integral of `∑_C k y` over
+`S \ G`. -/
+lemma New.tsum_integral_eq_integral_tsum_block (hi : Function.Injective i) {Γ S : Subgroup G}
+    [DiscreteTopology Γ] (hΓ : i.range = Γ) {μ : Measure G} [IsHaarMeasure μ] {C D : Set Y}
+    (hS : S ≤ Γ) (hC : ∀ γ : Λ, ∀ y ∈ C, γ • y ∈ C ↔ i γ ∈ S)
+    (hD : ∀ y : Y, y ∈ D ↔ ∃ γ : Λ, γ • y ∈ C) {k : Y → G → ℂ} (hk_meas : ∀ y : Y, Measurable (k y))
+    (hk : ∀ (γ : Λ) (y : Y) (x : G), k (γ • y) (i γ * x) = k y x)
+    (h_fin : ∫⁻ x : G, ∑' y : C, ‖k y x‖ₑ ∂S.quotMeasure μ < ∞) :
+    ∑' y : D, ∫ x : G, k y x ∂Γ.quotMeasure μ = ∫ x : G, ∑' y : C, k y x ∂S.quotMeasure μ :=
+  (integral_tsum_block hi hΓ hS hC hD hk_meas hk (Or.inr h_fin)).2.2
+
 omit [TopologicalSpace G] [IsTopologicalGroup G] [LocallyCompactSpace G] [SecondCountableTopology G]
   [T2Space G] [MeasurableSpace G] [BorelSpace G] [Countable Y] in
 /-- If `k (γ • y) (i γ * x) = k y x`, then the term `k y` is invariant on the left under the image
