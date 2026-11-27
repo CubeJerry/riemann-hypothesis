@@ -91,11 +91,15 @@ lemma charpoly_eq_mul_of_trace_pow_add [CharZero k] {r ι : Type*} [Fintype r] [
     simpa [Fintype.card_sum, Nat.cast_add] using h_trace 0
   have hD : A.charpoly = D.charpoly :=
     Matrix.charpoly_eq_of_trace_pow_eq hcard fun m _ _ ↦ by
-      rw [D, fromBlocks_diagonal_pow, trace_fromBlocks, diagonal_pow, trace_diagonal]
+      change (A ^ m).trace = (fromBlocks B 0 0 (diagonal fun e : S ↦ α e) ^ m).trace
+      rw [fromBlocks_diagonal_pow, trace_fromBlocks, diagonal_pow, trace_diagonal]
       change (A ^ m).trace = (B ^ m).trace + ∑ e : S, α e ^ m
       rw [Finset.sum_coe_sort S (fun e ↦ α e ^ m)]
       exact h_trace m
-  rw [hD, D, charpoly_fromBlocks_zero₂₁, charpoly_diagonal,
+  rw [hD]
+  change (fromBlocks B 0 0 (diagonal fun e : S ↦ α e)).charpoly =
+    B.charpoly * ∏ e ∈ S, (X - C (α e))
+  rw [charpoly_fromBlocks_zero₂₁, charpoly_diagonal,
     Finset.prod_coe_sort S (fun e ↦ X - C (α e))]
 
 end New
