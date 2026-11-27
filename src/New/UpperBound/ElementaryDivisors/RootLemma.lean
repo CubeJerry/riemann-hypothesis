@@ -798,19 +798,22 @@ lemma shiftCoeff_aeval_swapTransvection_X [NeZero N]
   unfold shiftCoeff mainSubst crossSubst frobeniusError
   congr 1
   rcases D.var_cases z with rfl | rfl | ⟨s, hs, rfl | rfl⟩ | hz
-  · -- The distinguished Y variable.
-    simp [monomial_eq, card, ZMod.natCast_self, MvPolynomial.uniqueAlgEquiv_apply, Polynomial.taylorAlgHom_apply,
+  · -- `z = Y_i`
+    simp [monomial_eq, card, ZMod.natCast_self,
+      MvPolynomial.uniqueAlgEquiv_apply, Polynomial.taylorAlgHom_apply,
       MvPolynomial.uniqueAlgEquiv_symm_apply]
     ring
-  · -- The distinguished X variable.
+  · -- `z = X_i`
     simp [monomial_eq]
-  · -- Away from the distinguished letter, the Y sign is either 1 or -1.
+  · -- `z = Y_s` with `s ≠ i`, for both signs
     rcases D.sign_varY_eq_one_or_neg_one s with h_sign | h_sign <;>
       simp [h_sign, hs, monomial_eq, card, frobPower, pow_add, ZMod.natCast_self,
         MvPolynomial.uniqueAlgEquiv_apply, Polynomial.taylorAlgHom_apply,
         MvPolynomial.uniqueAlgEquiv_symm_apply] <;> ring
-  · simp [hs, monomial_eq, pow_add]
-  · simp [hz.swapVar_eq, hz.sign_eq_zero, hz.poleOrder_eq_zero, hz.crossSign_eq_zero, monomial_eq]
+  · -- `z = X_s` with `s ≠ i`
+    simp [hs, monomial_eq, pow_add]
+  · -- `z` lies off the root
+    simp [hz.swapVar_eq, hz.sign_eq_zero, hz.poleOrder_eq_zero, hz.crossSign_eq_zero, monomial_eq]
 
 /-- In each letter `s`, `X_s = D.varX s` and `Y_s = D.varY s` are the variables with the two indices
 of the root, and `D.swapVar` swaps them and fixes the others. Let the weights `c` rise from `X_s` to
