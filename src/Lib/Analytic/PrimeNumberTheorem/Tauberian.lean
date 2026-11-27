@@ -1,7 +1,9 @@
 module
 
 import TauCeti.Analysis.Convex.Lipschitz
+import TauCeti.Probability.Distributions.Gamma.Basic
 public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Probability.Distributions.Gamma
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Complex.HalfPlane
 import Mathlib.Order.CompletePartialOrder
@@ -30,7 +32,7 @@ integral is used in place of the Taylor coefficient.
 
 @[expose] public section
 
-open Complex Filter MeasureTheory Metric Set Topology
+open Complex Filter MeasureTheory Metric ProbabilityTheory Set Topology
 
 open scoped Nat Real
 
@@ -86,88 +88,7 @@ lemma iteratedDeriv_transform {R : ℝ → ℝ} {C : ℝ} {Φ : ℂ → ℂ} (hR
     simp only [h_succ, iteratedDeriv_succ]
     exact ⟨h_int, (h_deriv.congr_of_eventuallyEq h_eq).deriv⟩
 
-/-- For `H > 0` the moments of `e^{-H v}` on `(0, ∞)` exist: the function `v ^ j e^{-H v}` is
-integrable there, with integral `j! / H ^ (j + 1)`. -/
-lemma integrableOn_and_integral_pow_mul_exp_neg_mul {H : ℝ} (hH : 0 < H) (j : ℕ) :
-    IntegrableOn (fun v : ℝ ↦ v ^ j * rexp (-H * v)) (Ioi 0) ∧
-      ∫ v in Ioi (0 : ℝ), v ^ j * rexp (-H * v) = j ! / H ^ (j + 1) := by
-  have h_eq : ∫ v in Ioi (0 : ℝ), v ^ j * rexp (-H * v) = j ! / H ^ (j + 1) :=
-    mod_cast laplace_pow (s := H) (by simpa) j
-  exact ⟨.of_integral_ne_zero (h_eq.trans_ne (by positivity)), h_eq⟩
-
-/-- For `H > 0` and the mean `u = (k + 1) / H` of the Gamma density
-`H ^ (k + 1) v ^ k e^{-H v} / k!`, the function `v ^ k e^{-H v} (a + b (v - u)²)` is integrable on
-`(0, ∞)`, with integral `k! / H ^ (k + 1) (a + b (k + 1) / H²)`. -/
-lemma integrableOn_and_integral_gamma_mul_quadratic {H : ℝ} (hH : 0 < H) (k : ℕ) (a b : ℝ) :
-    IntegrableOn (fun v : ℝ ↦ v ^ k * rexp (-H * v) * (a + b * (v - (k + 1) / H) ^ 2)) (Ioi 0) ∧
-      ∫ v in Ioi (0 : ℝ), v ^ k * rexp (-H * v) * (a + b * (v - (k + 1) / H) ^ 2) =
-        k ! / H ^ (k + 1) * (a + b * ((k + 1) / H ^ 2)) := by
-  let f (j : ℕ) (v : ℝ) : ℝ := v ^ j * rexp (-H * v)
-  have h_moment (j : ℕ) : IntegrableOn (f j) (Ioi 0) ∧
-      ∫ v in Ioi (0 : ℝ), f j v = j ! / H ^ (j + 1) :=
-    integrableOn_and_integral_pow_mul_exp_neg_mul hH j
-  have h_expand (v : ℝ) : v ^ k * rexp (-H * v) * (a + b * (v - (k + 1) / H) ^ 2) =
-      (a + b * ((k + 1) / H) ^ 2) * f k v - 2 * b * ((k + 1) / H) * f (k + 1) v +
-        b * f (k + 2) v := by ring
-  have h_int (j : ℕ) (c : ℝ) : IntegrableOn (fun v : ℝ ↦ c * f j v) (Ioi 0) :=
-    (h_moment j).left.const_mul c
-  simp only [h_expand]
-  refine ⟨((h_int k _).sub (h_int (k + 1) _)).add (h_int (k + 2) _), ?_⟩
-  rw [integral_add ((h_int k _).sub' (h_int (k + 1) _)) (h_int (k + 2) _),
-    integral_sub (h_int k _) (h_int (k + 1) _)]
-  simp only [integral_const_mul, (h_moment _).right, Nat.factorial_succ]
-  push_cast
-  field
-
 variable {R : ℝ → ℝ} {F Φ : ℂ → ℂ} {C L : ℝ}
-
-/-- Let `R` be measurable with `|R v| ≤ C e^v` for `v ≥ 0`, let `Φ s` be its transform
-`∫₀^∞ R(v) e^{(1 - s) v} dv` in `re s > 2`, and let `H > 1`. The number
-`(-H) ^ k H Φ⁽ᵏ⁾(1 + H) / k!` is the mean of `R` for the Gamma density
-`H ^ (k + 1) v ^ k e^{-H v} / k!`, which has mean `(k + 1) / H` and variance `(k + 1) / H²`. So if
-`|R v - c| ≤ a + b (v - (k + 1) / H)²` for all `v > 0`, it is within `a + b (k + 1) / H²` of `c`. -/
-lemma norm_taylorCoeff_transform_sub_le (hR : Measurable R)
-    (R_le : ∀ v : ℝ, 0 ≤ v → |R v| ≤ C * rexp v)
-    (Φ_eq : ∀ s : ℂ, 2 < s.re → Φ s = ∫ v in Ioi (0 : ℝ), R v * cexp ((1 - s) * v))
-    {H a b c : ℝ} (hH : 1 < H) (k : ℕ)
-    (h_near : ∀ v : ℝ, 0 < v → |R v - c| ≤ a + b * (v - (k + 1) / H) ^ 2) :
-    ‖(-H) ^ k * H / k ! * iteratedDeriv k Φ (1 + H) - c‖ ≤ a + b * ((k + 1) / H ^ 2) := by
-  have hH_pos : 0 < H := one_pos.trans hH
-  obtain ⟨moment_int, moment⟩ := integrableOn_and_integral_pow_mul_exp_neg_mul hH_pos k
-  obtain ⟨int_major, major_integral⟩ :=
-    integrableOn_and_integral_gamma_mul_quadratic hH_pos k a b
-  have hH_re : 2 < (1 + H : ℂ).re := by simpa using (by linarith : 2 < 1 + H)
-  obtain ⟨h_int, h_deriv⟩ := iteratedDeriv_transform hR R_le Φ_eq k (1 + H) hH_re
-  have h_real (v : ℝ) : (-v) ^ k * R v * cexp ((1 - (1 + H)) * v) =
-      (-1) ^ k * (v ^ k * rexp (-H * v) * R v : ℝ) := by
-    push_cast
-    ring_nf
-  simp only [h_real] at h_int h_deriv
-  rw [IntegrableOn, integrable_const_mul_iff (by simp)] at h_int
-  -- The difference is the mean of `R - c`.
-  have h_split : ∫ v in Ioi (0 : ℝ), v ^ k * rexp (-H * v) * (R v - c) =
-      (∫ v in Ioi (0 : ℝ), v ^ k * rexp (-H * v) * R v) - k ! / H ^ (k + 1) * c := by
-    simp only [mul_sub]
-    rw [integral_sub (mod_cast h_int.re) (moment_int.mul_const c), integral_mul_const, moment]
-  have h_mean : (-H) ^ k * H / k ! * iteratedDeriv k Φ (1 + H) - c =
-      (H ^ (k + 1) / k ! * ∫ v in Ioi (0 : ℝ), v ^ k * rexp (-H * v) * (R v - c) : ℝ) := by
-    have h_pow : ((-H) ^ k * (-1) ^ k : ℂ) = H ^ k := by simp [← mul_pow]
-    have h_sign (z : ℂ) : (-H) ^ k * H / k ! * ((-1) ^ k * z) = H ^ (k + 1) / k ! * z := by
-      linear_combination (H / k ! * z) * h_pow
-    have h_mass : H ^ (k + 1) / k ! * (k ! / H ^ (k + 1) * c) = c := by field
-    rw [h_deriv, integral_const_mul, integral_complex_ofReal, h_sign, h_split, mul_sub, h_mass]
-    norm_num
-  rw [h_mean, norm_real, norm_mul, Real.norm_of_nonneg (by positivity)]
-  calc H ^ (k + 1) / k ! * ‖∫ v in Ioi (0 : ℝ), v ^ k * rexp (-H * v) * (R v - c)‖
-      ≤ H ^ (k + 1) / k ! *
-        ∫ v in Ioi (0 : ℝ), v ^ k * rexp (-H * v) * (a + b * (v - (k + 1) / H) ^ 2) := by
-        gcongr
-        refine norm_integral_le_of_norm_le int_major
-          (ae_restrict_of_forall_mem measurableSet_Ioi fun v (hv : 0 < v) ↦ ?_)
-        grw [norm_mul, Real.norm_of_nonneg (by positivity), Real.norm_eq_abs, h_near v hv]
-    _ = a + b * ((k + 1) / H ^ 2) := by
-        rw [major_integral]
-        field
 
 /-- Cauchy's estimate for the derivatives of the slope `(F s - F 1) / (s - 1)`, written
 `dslope F 1`, at `1 + H`: if `F` is holomorphic and at most `M` in norm on the disc of radius
@@ -244,6 +165,40 @@ lemma abs_sub_le_of_unit_steps
       exact h_step_le y x hy0 hyx (by linarith [hy.1])
   simpa only [Real.dist_eq, NNReal.coe_mk] using h_lip.dist_le_mul v hv u hu
 
+/-- The mean absolute deviation is at most the standard deviation. -/
+private lemma integral_abs_sub_mean_le_stdDev {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] {X : Ω → ℝ} (hX : MemLp X 2 μ) :
+    (∫ x, |X x - ∫ t, X t ∂μ| ∂μ) ≤ √(variance X μ) := by
+  let Y := fun x ↦ X x - ∫ t, X t ∂μ
+  have hY : MemLp Y 2 μ := hX.sub (memLp_const _)
+  have h := variance_nonneg (fun x ↦ ‖Y x‖) μ
+  rw [variance_eq_sub hY.norm] at h
+  apply Real.le_sqrt_of_sq_le
+  rw [variance_eq_integral hX.aemeasurable]
+  simpa [Y, Real.norm_eq_abs] using sub_nonneg.mp h
+
+/-- The normalised Taylor coefficient is the expectation against the Gamma law of shape
+`k + 1` and rate `H`. -/
+lemma taylorCoeff_transform_eq_integral_gammaMeasure {H : ℝ} (hR : Measurable R)
+    (R_le : ∀ v : ℝ, 0 ≤ v → |R v| ≤ C * rexp v)
+    (Φ_eq : ∀ s : ℂ, 2 < s.re → Φ s = ∫ v in Ioi (0 : ℝ), R v * cexp ((1 - s) * v))
+    (hH : 1 < H) (k : ℕ) :
+    (-H) ^ k * H / k ! * iteratedDeriv k Φ (1 + H) =
+      (∫ v, R v ∂gammaMeasure (k + 1) H : ℝ) := by
+  obtain ⟨_, h_deriv⟩ := iteratedDeriv_transform hR R_le Φ_eq k (1 + H)
+    (by simpa using (by linarith : 2 < 1 + H))
+  rw [h_deriv, TauCeti.Probability.integral_gammaMeasure_eq_integral_Ioi
+    (by positivity) (by positivity), ← integral_complex_ofReal, ← integral_const_mul]
+  refine setIntegral_congr_fun measurableSet_Ioi fun v hv ↦ ?_
+  rw [Real.Gamma_nat_eq_factorial, add_sub_cancel_right, Real.rpow_natCast, ← Nat.cast_succ,
+    Real.rpow_natCast, pow_succ]
+  simp only [smul_eq_mul, Complex.ofReal_mul, Complex.ofReal_div, Complex.ofReal_pow,
+    Complex.ofReal_natCast, Complex.ofReal_exp]
+  have hsign : (-(H : ℂ)) ^ k * (-(v : ℂ)) ^ k = (H : ℂ) ^ k * (v : ℂ) ^ k := by
+    simp [← mul_pow]
+  simp only [sub_add_cancel_left, Complex.ofReal_neg, Complex.ofReal_mul, neg_mul]
+  linear_combination (H / k ! * (R v : ℂ) * cexp (-(H * v : ℂ))) * hsign
+
 /-- For an `L`-Lipschitz function `R` on `[0, ∞)`, the normalised Taylor coefficient of its
 transform differs from `R u` by at most `L` times the standard deviation of the Gamma density.
 At rate `H = (k + 1) / u` the mean is `u` and the standard deviation is `u / √(k + 1)`. -/
@@ -256,22 +211,37 @@ lemma norm_taylorCoeff_transform_sub_le_of_lipschitz (hR : Measurable R)
   have R_le (v : ℝ) (hv : 0 ≤ v) : |R v| ≤ (|R 0| + L) * rexp v := by
     have h_sub : |R v - R 0| ≤ L * v := by simpa [abs_of_nonneg hv] using h_lip 0 le_rfl v hv
     nlinarith [abs_sub_abs_le_abs_sub (R v) (R 0), Real.add_one_le_exp v, abs_nonneg (R 0)]
-  let σ := u / √(k + 1 : ℝ)
-  have hσ : 0 < σ := by dsimp [σ]; positivity
-  have hvar : (k + 1) / H ^ 2 = σ ^ 2 := by
-    simp only [H_eq, σ, div_pow, Real.sq_sqrt (by positivity : 0 ≤ (k : ℝ) + 1)]
+  let P := gammaMeasure ((k : ℝ) + 1) H
+  have hshape : 0 < (k : ℝ) + 1 := by positivity
+  have hrate : 0 < H := one_pos.trans hH
+  let _ : IsProbabilityMeasure P := isProbabilityMeasure_gammaMeasure hshape hrate
+  have hX : MemLp id 2 P := TauCeti.Probability.memLp_id_gammaMeasure hshape hrate
+  have hmean : ∫ v, v ∂P = u := by
+    rw [TauCeti.Probability.integral_id_gammaMeasure hshape hrate, H_eq,
+      div_div_cancel₀ (by positivity)]
+  have hvar : variance id P = (u / √(k + 1 : ℝ)) ^ 2 := by
+    rw [TauCeti.Probability.variance_id_gammaMeasure hshape hrate, H_eq]
+    simp only [div_pow, Real.sq_sqrt (by positivity : 0 ≤ (k : ℝ) + 1)]
     field
-  have h_near (v : ℝ) (hv : 0 < v) :
-      |R v - R u| ≤ L * σ / 2 + L / (2 * σ) * (v - (k + 1) / H) ^ 2 := by
-    have h_quad : |v - u| ≤ (σ ^ 2 + (v - u) ^ 2) / (2 * σ) := by
-      apply (le_div_iff₀ (by positivity)).2
-      nlinarith only [sq_nonneg (|v - u| - σ), sq_abs (v - u)]
-    rw [H_eq, div_div_cancel₀ (by positivity)]
-    exact (h_lip u hu.le v hv.le).trans
-      ((mul_le_mul_of_nonneg_left h_quad hL).trans_eq (by field))
-  refine (norm_taylorCoeff_transform_sub_le hR R_le Φ_eq hH k h_near).trans_eq ?_
-  rw [hvar]
-  field
+  have habs : Integrable (fun v ↦ L * |v - u|) P := by
+    simpa [Real.norm_eq_abs] using
+      ((hX.sub (memLp_const u)).norm.integrable (by norm_num)).const_mul L
+  have hbound : ∀ᵐ v ∂P, ‖R v - R u‖ ≤ L * |v - u| := by
+    filter_upwards [TauCeti.Probability.ae_pos_gammaMeasure (k + 1) H] with v hv
+    exact h_lip u hu.le v hv.le
+  have hsub := habs.mono' (show AEStronglyMeasurable (fun v ↦ R v - R u) P by fun_prop) hbound
+  -- Center the integrand before applying the Lipschitz bound.
+  have hcent := integral_add hsub (integrable_const (R u))
+  simp only [sub_add_cancel, integral_const, probReal_univ, one_smul] at hcent
+  rw [taylorCoeff_transform_eq_integral_gammaMeasure hR R_le Φ_eq hH k, ← ofReal_sub, norm_real]
+  change ‖(∫ v, R v ∂P) - R u‖ ≤ _
+  rw [sub_eq_of_eq_add hcent]
+  calc ‖∫ v, R v - R u ∂P‖ ≤ ∫ v, L * |v - u| ∂P := norm_integral_le_of_norm_le habs hbound
+    _ ≤ L * (u / √(k + 1)) := by
+      rw [integral_const_mul]
+      gcongr
+      simpa [id_eq, hmean, hvar, Real.sqrt_sq (by positivity : 0 ≤ u / √(k + 1 : ℝ))]
+        using integral_abs_sub_mean_le_stdDev P hX
 
 /-- For large `u` an even power of `c log u` is at most `u`, and a power of `u` is at most
 `exp (√u / 2)`. -/
