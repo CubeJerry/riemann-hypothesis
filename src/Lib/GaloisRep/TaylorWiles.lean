@@ -4,6 +4,7 @@ import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
 public import Lib.GaloisRep.LocalGlobal.LocalFormTypes
 public import Lib.GaloisRep.Main.AllRanks
+public import Lib.GaloisRep.Main.Defs
 public import Lib.Adelic.AutomorphicForms.PAdicGauge
 import Lib.GaloisRep.Main.QuadraticStep
 import Lib.PadicComparison.Descent.TestCategory
@@ -79,27 +80,7 @@ variable {ℓ : ℕ} (E J : Type)
   {n : Type} [Field E] [CMType E] [Fintype n] [DecidableEq n]
   (V : Space E n 1) (κ : Weight E) (m : ℕ)
 
-/-- Auxiliary places as in the Taylor–Wiles method: for each index `j` a Frobenius datum at a
-finite place `w j` of `E`, such that no two of these places are equal or conjugate and `m` divides
-`q_j − 1`, where `q_j` is the order of the residue field at `w j`. -/
-structure TaylorWilesPlaces (E J : Type) [Field E] [NumberField E] [IsCMField E] (m : ℕ)
-    [Algebra E Ω] where
-  /-- For each index `j`, the Frobenius datum at the place `w j`. -/
-  frobData : J → FrobeniusDatum E
-  /-- No two of the places `w j` are equal or conjugate. -/
-  apart : IsConjApart (frobData · |>.place)
-  /-- `m` divides `q_j − 1` for each `j`. -/
-  dvd_q_sub_one (j : J) : m ∣ (frobData j).place.q - 1
-
 variable {E J}
-
-/-- The place `w j` of `Q`: the finite place of its Frobenius datum with index `j`. -/
-abbrev TaylorWilesPlaces.place {E : Type} [Field E] [NumberField E] [IsCMField E]
-    {m : ℕ} [Algebra E Ω] (Q : TaylorWilesPlaces E J m) (j : J) :
-    FinPlace E :=
-  (Q.frobData j).place
-
-attribute [instance] TaylorWilesPlaces.apart
 
 /-! ### The base level and deeper levels -/
 
