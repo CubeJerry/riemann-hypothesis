@@ -308,6 +308,85 @@ lemma IntegralFrame.stdColDatum_mul_sub_smul (A : IntegralFrame F n m b) (r : Ma
     _ = hχ.resChar (r.map hχ.reduction).det * stdColDatum χ A.dualK x := by
         simp [hx, ← hk, invOnUnits_det_eq_resChar_det, hN_red, stdColDatum]
 
+/-- For each matrix `z`, let `S z` be the sheared datum
+`y ↦ stdColDatum χ A.dualK (y + A.L * z * (A.dualK * y))`. Averaging the shears `S (ϖ⁻¹ • l r)`
+against `hχ.resChar r.det` over the residue ring produces a function in `P`. Every functional `Λ`
+that transforms under shears by `ψ (tr (T z))` and kills `stdColDatum χ A.dualK` when `T` is
+primitive must kill this sum, because `T` is forced to be integral and non-unimodular so the matrix
+Gauss sum vanishes. -/
+private lemma IntegralFrame.sum_resChar_smul_shear_mem (A : IntegralFrame F n m b)
+    [Fintype hχ.ResidueRing] {l : Matrix b b hχ.ResidueRing → Matrix b b V.O}
+    (hl : ∀ r : Matrix b b hχ.ResidueRing, (l r).map hχ.reduction = r)
+    {ψ : AddChar F ℂ} {M : Submodule ℂ (Matrix n b F → ℂ)} (hψ : HasIntegralConductor ψ)
+    (h_shear_mem : ∀ z : Matrix b b F,
+      (fun y : Matrix n b F ↦ stdColDatum χ A.dualK (y + A.L * z * (A.dualK * y))) ∈ M)
+    (h_kill : ∀ f ∈ M, (∀ (T : Matrix b b F) (Λ : (Matrix n b F → ℂ) →ₗ[ℂ] ℂ),
+      (∀ z : Matrix b b F, Λ (fun y : Matrix n b F ↦
+        stdColDatum χ A.dualK (y + A.L * z * (A.dualK * y))) =
+        ψ (T * z).trace • Λ (stdColDatum χ A.dualK)) →
+      (IsPrimitiveMatrix O T → Λ (stdColDatum χ A.dualK) = 0) → Λ f = 0) → f ∈ P) :
+    ∑ r : Matrix b b hχ.ResidueRing,
+      hχ.resChar r.det • (fun y : Matrix n b F ↦
+        stdColDatum χ A.dualK
+          (y + A.L * (V.ϖ.inv • (l r).map Subtype.val) * (A.dualK * y))) ∈ P := by
+  classical
+  let S (z : Matrix b b F) (y : Matrix n b F) : ℂ :=
+    stdColDatum χ A.dualK (y + A.L * z * (A.dualK * y))
+  change ∑ r, hχ.resChar r.det • S (V.ϖ.inv • (l r).map Subtype.val) ∈ P
+  -- `x ↦ ψ (ϖ⁻¹ x)` descends to a primitive character `φ` of the residue ring.
+  obtain ⟨φ, hφ, hφπ⟩ :
+      ∃ φ : AddChar hχ.ResidueRing ℂ,
+        φ.IsPrimitive ∧ ∀ x : V.O, φ (hχ.reduction x) = ψ (V.ϖ⁻¹.val * x) :=
+    exists_primitive_residue_addChar hχ.reduction_surjective_and_eq_zero_iff hψ.right
+  refine h_kill _ (sum_mem fun r _ ↦ M.smul_mem _ (h_shear_mem _)) ?_
+  intro T Λ (hΛ : ∀ z : Matrix b b F, Λ (S z) = ψ (T * z).trace • Λ (stdColDatum χ A.dualK))
+    h_unit
+  by_contra h_ne
+  obtain ⟨h_sum, h_std⟩ :
+      ∑ r, hχ.resChar r.det * ψ (↑V.ϖ⁻¹ * (T * (l r).map Subtype.val).trace) ≠ 0 ∧
+        Λ (stdColDatum χ A.dualK) ≠ 0 := by
+    simpa [hΛ, ← mul_assoc, ← sum_mul] using h_ne
+  -- `T` is integral, because `S z` is the standard datum itself for integral `z`.
+  have hT : IsIntMatrix O T := by
+    refine fun i j ↦ (hψ.2 (T i j)).1 fun a ha ↦ ?_
+    have h_single : IsIntMatrix O (single j i a) := fun _ _ ↦ by simp [single_apply, ite_mem, ha]
+    simpa [S, A.stdColDatum_shear_of_isIntMatrix h_single, h_std, trace_mul_single] using
+      hΛ (single j i a)
+  obtain ⟨T₀, rfl⟩ := exists_integral_lift hT
+  -- `T` is not unimodular, so the Gauss sum of index `T` is zero.
+  have h_det : hχ.resChar (T₀.map hχ.reduction).det = 0 := by
+    rw [← invOnUnits_det_eq_resChar_det, invOnUnits,
+      ite_eq_right fun h ↦ h_std (h_unit (isPrimitiveMatrix_iff_int_and_unit_det.2 ⟨hT, h⟩))]
+  exact h_sum (sum_mul_addChar_lift_eq_zero hχ.isPrimitive_resChar_and_invOnUnits_eq.left hφ hφπ
+    hl h_det)
+
+/-- Let `S z` be the sheared datum `y ↦ stdColDatum χ A.dualK (y + A.L * z * (A.dualK * y))`. At
+`-ϖ⁻¹ • y`, every nonzero term `hχ.resChar r.det * S (ϖ⁻¹ • l_r) (-ϖ⁻¹ • y)` of the Gauss-sum
+average equals `stdColDatum χ A.dualL y`: solving the sheared argument for `y` reduces the identity
+to `IntegralFrame.stdColDatum_mul_sub_smul`. -/
+private lemma IntegralFrame.resChar_smul_shear_eq_stdColDatum (A : IntegralFrame F n m b)
+    {r : Matrix b b hχ.ResidueRing} {l_r : Matrix b b V.O} (hl : l_r.map hχ.reduction = r)
+    (y : Matrix n b F)
+    (hr : hχ.resChar r.det * stdColDatum χ A.dualK
+      ((-V.ϖ⁻¹ • (1 : GL n F)).val * y +
+        A.L * (V.ϖ.inv • l_r.map Subtype.val) *
+          (A.dualK * ((-V.ϖ⁻¹ • (1 : GL n F)).val * y))) ≠ 0) :
+    hχ.resChar r.det * stdColDatum χ A.dualK
+      ((-V.ϖ⁻¹ • (1 : GL n F)).val * y +
+        A.L * (V.ϖ.inv • l_r.map Subtype.val) *
+          (A.dualK * ((-V.ϖ⁻¹ • (1 : GL n F)).val * y))) = stdColDatum χ A.dualL y := by
+  classical
+  let g : GL n F := -V.ϖ⁻¹ • 1
+  let x : Matrix n b F :=
+    g.val * y + A.L * (V.ϖ.inv • l_r.map Subtype.val) * (A.dualK * (g.val * y))
+  have hx_int : IsIntMatrix O x := (ite_ne_right_iff.1 (right_ne_zero_of_mul hr)).1
+  -- `A.dualK * x = A.dualK * (g * y)` as `A.dualK * A.L = 0`; solve the definition of `x` for `y`.
+  have hy : y = A.L * (l_r.map Subtype.val * (A.dualK * x)) - V.ϖ.val • x := by
+    simp [x, g, ← Matrix.mul_assoc, A.blockRelations.dualK_mul_L, Units.smul_def, smul_smul,
+      Matrix.mul_add]
+  calc hχ.resChar r.det * stdColDatum χ A.dualK x
+    _ = stdColDatum χ A.dualL y := by rw [hy, A.stdColDatum_mul_sub_smul l_r hx_int, hl]
+
 /-- Let χ be tame, let ψ have conductor O, and let P be a GL_n(F)-stable space of locally constant,
 compactly supported functions on n × b matrices that vanish outside a set U. The standard datum of
 K' is the function S₀(y) = χ⁻¹(det K' y) at integral y with det K' y a unit of O, 0 elsewhere, and S
@@ -332,62 +411,28 @@ lemma IntegralFrame.match_mem_of_isPrimitiveMatrix_vanishing
     Ψ ∈ P := by
   classical
   -- Sum the `S z` over `z = ϖ⁻¹ r`, `r` a matrix over the residue ring (lifted to `O`), against
-  -- `η (det r)`. The functionals `Λ` kill this sum (a Gauss sum that vanishes off the units), so
-  -- it lies in `P`. Its value at `-ϖ⁻¹ • y` is `stdColDatum χ A.dualL y` times the number of terms
-  -- that do not vanish there; that number is not zero for `y = A.L - ϖ • A.K`, so
+  -- `hχ.resChar r.det`. The functionals `Λ` kill this sum (a Gauss sum that vanishes off the
+  -- units), so it lies in `P`. Its value at `-ϖ⁻¹ • y` is `stdColDatum χ A.dualL y` times the
+  -- number of terms that do not vanish there; that number is not zero for `y = A.L - ϖ • A.K`, so
   -- `match_mem_of_stdColDatum` applies.
   let S (z : Matrix b b F) (y : Matrix n b F) : ℂ :=
     stdColDatum χ A.dualK (y + A.L * z * (A.dualK * y))
-  -- `π : O → R` is the residue map, and `η ∘ π` is `χ⁻¹` on units and zero elsewhere.
+  -- `hχ.reduction : O → R` is the residue map, and `hχ.resChar ∘ hχ.reduction` is `χ⁻¹` on units
+  -- and zero elsewhere.
   let R : Type := hχ.ResidueRing
   let π : V.O →+* R := hχ.reduction
-  let η : MulChar R ℂ := hχ.resChar
   have h_surj : Surjective π := hχ.reduction_surjective_and_eq_zero_iff.left
   let : Fintype R := Fintype.ofFinite R
   obtain ⟨hL', -, hK, hL, -, -, hK'K, -, hL'K, -, -, -, hK'L, -, hL'L⟩ := A.blockRelations
-  -- `x ↦ ψ (ϖ⁻¹ x)` descends to a primitive character `φ` of the residue ring.
-  obtain ⟨φ, hφ, hφπ⟩ : ∃ φ : AddChar R ℂ, φ.IsPrimitive ∧ ∀ x : V.O, φ (π x) = ψ (V.ϖ⁻¹.val * x) :=
-    exists_primitive_residue_addChar hχ.reduction_surjective_and_eq_zero_iff hψ.right
   -- `l r` is a lift of `r` to `O`, with `l 1 = 1`.
   let l (r : Matrix b b R) : Matrix b b V.O := if r = 1 then 1 else r.map (surjInv h_surj)
   have hl (r : Matrix b b R) : (l r).map π = r := by
     ext i j
     by_cases hr : r = 1 <;> simp [l, hr, Matrix.one_apply, surjInv_eq h_surj]
-  let f (r : Matrix b b R) : Matrix n b F → ℂ := η r.det • S (V.ϖ.inv • (l r).map Subtype.val)
-  have h_avg : ∑ r, f r ∈ P := by
-    refine h_kill _ (sum_mem fun r _ ↦ M.smul_mem _ (h_shear_mem _)) ?_
-    intro T Λ (hΛ : ∀ z : Matrix b b F, Λ (S z) = ψ (T * z).trace • Λ (stdColDatum χ A.dualK))
-      h_unit
-    by_contra h_ne
-    obtain ⟨h_sum, h_std⟩ : ∑ r, η r.det * ψ (↑V.ϖ⁻¹ * (T * (l r).map Subtype.val).trace) ≠ 0 ∧
-        Λ (stdColDatum χ A.dualK) ≠ 0 := by
-      simpa [f, hΛ, ← mul_assoc, ← sum_mul] using h_ne
-    -- `T` is integral, because `S z` is the standard datum itself for integral `z`.
-    have hT : IsIntMatrix O T := by
-      refine fun i j ↦ (hψ.2 (T i j)).1 fun a ha ↦ ?_
-      have h_single : IsIntMatrix O (single j i a) := fun _ _ ↦ by simp [single_apply, ite_mem, ha]
-      simpa [S, A.stdColDatum_shear_of_isIntMatrix h_single, h_std, trace_mul_single] using
-        hΛ (single j i a)
-    obtain ⟨T₀, rfl⟩ := exists_integral_lift hT
-    -- `T` is not unimodular, so the Gauss sum of index `T` is zero.
-    have h_det : η (T₀.map π).det = 0 := by
-      rw [← invOnUnits_det_eq_resChar_det, invOnUnits,
-        ite_eq_right fun h ↦ h_std (h_unit (isPrimitiveMatrix_iff_int_and_unit_det.2 ⟨hT, h⟩))]
-    exact h_sum (sum_mul_addChar_lift_eq_zero hχ.isPrimitive_resChar_and_invOnUnits_eq.left hφ hφπ
-      hl h_det)
+  let f (r : Matrix b b R) : Matrix n b F → ℂ :=
+    hχ.resChar r.det • S (V.ϖ.inv • (l r).map Subtype.val)
+  have h_avg : ∑ r, f r ∈ P := A.sum_resChar_smul_shear_mem hl hψ h_shear_mem h_kill
   let g : GL n F := -V.ϖ⁻¹ • 1
-  -- Every nonzero term of the sum at `g * y` equals `stdColDatum χ A.dualL y`.
-  have h_term (y : Matrix n b F) (r : Matrix b b R) (hr : f r (g.val * y) ≠ 0) :
-      f r (g.val * y) = stdColDatum χ A.dualL y := by
-    let x : Matrix n b F := g.val * y + A.L * (V.ϖ.inv • (l r).map Subtype.val) *
-      (A.dualK * (g.val * y))
-    have hx_int : IsIntMatrix O x := (ite_ne_right_iff.1 (right_ne_zero_of_mul hr)).1
-    -- `A.dualK * x = A.dualK * (g * y)` as `A.dualK * A.L = 0`; solve the definition of `x` for
-    -- `y`.
-    have hy : y = A.L * ((l r).map Subtype.val * (A.dualK * x)) - V.ϖ.val • x := by
-      simp [x, g, ← Matrix.mul_assoc, hK'L, Units.smul_def, smul_smul, Matrix.mul_add]
-    calc f r (g.val * y) = η r.det * stdColDatum χ A.dualK x := rfl
-      _ = stdColDatum χ A.dualL y := by rw [hy, A.stdColDatum_mul_sub_smul (l r) hx_int, hl]
   -- The sum translated by `g` is a multiple of `stdColDatum χ A.dualL`, non-zero at
   -- `A.L - ϖ • A.K`.
   have h_ne_one : f 1 (g.val * (A.L - V.ϖ.val • A.K)) ≠ 0 := by
@@ -401,7 +446,8 @@ lemma IntegralFrame.match_mem_of_isPrimitiveMatrix_vanishing
     (by simp [hL'K, hL'L, Matrix.mul_sub]) (fun y ↦ #{r | f r (g.val * y) ≠ 0}) (fun y ↦ ?_)
     (card_ne_zero.2 ⟨1, by simpa using h_ne_one⟩)
   rw [Finset.sum_apply, ← sum_filter_ne_zero]
-  exact sum_eq_card_nsmul (by simpa using h_term y)
+  refine sum_eq_card_nsmul fun r hr ↦ ?_
+  exact A.resChar_smul_shear_eq_stdColDatum (hl r) y (mem_filter.1 hr).2
 
 end New.Exchange
 
