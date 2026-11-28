@@ -713,6 +713,8 @@ private lemma New.IsLargeLevel.SplitPlaces.map_range_eq_top_of_central {K R ι :
       l.Coprime (P.toSubgroup.subgroupOf B).index ∧ l.Coprime B.toSubgroup.index :=
     P.exists_le_normal_mem_coprime_index hcop fun g ↦ hUP (hcentral g)
   have hUB : (U : Subgroup Gal(Ω/K)) ≤ B := hUP.trans hPB
+  -- The data over the fixed field of `B`, where each split place has one place above it for each
+  -- coset of `B`.
   let U' : OpenNormalSubgroup B.1 := ⟨U.1.comap _ (by fun_prop), U.2.subgroupOf B⟩
   let I' : Set B.toSubgroup := (↑) ⁻¹' I
   let z' : B.toSubgroup := ⟨z, hzB⟩
@@ -775,7 +777,8 @@ theorem New.IsLargeLevel.SplitPlaces.hasFewCocycles_of_central {K R ι : Type} [
     (hcentral : ∀ g : Gal(Ω/K), ⁅z, g⁆ ∈ U) (hdetect : s.FrobeniiDetectRoots) :
     V.HasFewCocycles (PlaceAboveLevel N) I (Fintype.card ι + 1) := by
   -- Reduce the split places from `l ^ r` to `l`, then filter `V` by modules killed by `l`; for
-  -- those, cocycles lift (`map_range_eq_top_of_central`) and the count is exact.
+  -- those, cocycles lift (`map_range_eq_top_of_central`), so the count is multiplicative and hence
+  -- exact by `IsMultiplicative.eq_one_of_eq_one_on_isHigmanProjective`.
   have hlr : l ∣ l ^ r := dvd_pow_self l hr
   have hz : (cyclotomicCharMod Ω l z).val = (1 : ℕ) :=
     cyclotomicCharMod_eq_of_dvd hlr (by simp [cyclotomicCharMod_prime_pow_eq, hcyc])
@@ -784,6 +787,7 @@ theorem New.IsLargeLevel.SplitPlaces.hasFewCocycles_of_central {K R ι : Type} [
       ∀ g : Gal(Ω/K), unitsRep g (l • x) = l • x →
         unitsRep g (unitsRep z x - 1 • x) = unitsRep z x - 1 • x :=
     s.fixes_sub_of_frobeniiDetectRoots hlr hdetect hz hcentral x hx hφ
+  -- The split places serve for `l` in place of `l ^ r`.
   let S : SplitPlaces l N I U ι :=
     { s with
       dvd_level := hlr.trans s.dvd_level,
