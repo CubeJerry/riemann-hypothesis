@@ -165,7 +165,8 @@ Its columns form a basis of hΛ₀, where Λ₀ is the lattice spanned by the co
 noncomputable def classBasis (c : S.Classes) : GL 𝔰.BesselIndex (𝔸f E) :=
   (toBesselH 𝔰 (S.N : 𝔸f E) c.out).val * S.latticeBasis
 
-/-- Expressing the class basis in terms of the lattice basis and class representative. -/
+/-- The class basis is the lattice basis times the class representative:
+`classBasis c = S.latticeBasis * S.classRep c`. -/
 lemma classBasis_eq_latticeBasis_mul_classRep (c : S.Classes) :
     classBasis c = S.latticeBasis * (S.classRep c).val := by
   simp [classBasis, classRep, inclHFin, toLatticeBasis, mul_assoc]
