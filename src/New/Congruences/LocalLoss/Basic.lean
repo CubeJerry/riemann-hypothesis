@@ -603,17 +603,39 @@ lemma IsCompletionGroup.complexEmbeddingOf_eq_iff (hj : IsCompletionGroup e j) {
   -- the left side says that `g⁻¹` and `g'⁻¹` agree on `e E`, the right that `g * g'⁻¹` fixes it
   simp [complexEmbeddingOf, g.symm_apply_eq, eq_comm, RingHom.ext_iff, h_range]
 
+/-- Inversion identifies the left cosets of a completion group with the complex embeddings
+at its place. The coset of `g` corresponds to `complexEmbeddingOf e g⁻¹`. -/
+noncomputable def IsCompletionGroup.cosetEquivEmbeddings (hj : IsCompletionGroup e j) :
+    Gp ℓ ⧸ j.range ≃ range (complexEmbeddingOf e) := by
+  -- Two elements give the same embedding iff their inverses lie in one coset of `j.range`.
+  have h_left (g g' : Gp ℓ) : leftRel j.range g g' ↔ ker (complexEmbeddingOf e) g⁻¹ g'⁻¹ := by
+    change leftRel j.range g g' ↔ complexEmbeddingOf e g⁻¹ = complexEmbeddingOf e g'⁻¹
+    rw [hj.complexEmbeddingOf_eq_iff, leftRel_eq, inv_inv]
+  exact (Quotient.congr (Equiv.inv (Gp ℓ)) h_left).trans (quotientKerEquivRange _)
+
+/-- Translating a coset by `g` right-multiplies its inverse representative by `g⁻¹`. -/
+lemma IsCompletionGroup.cosetEquivEmbeddings_smul (hj : IsCompletionGroup e j)
+    (g : Gp ℓ) (q : Gp ℓ ⧸ j.range) :
+    (hj.cosetEquivEmbeddings (g • q) : E →+* ℂ) = complexEmbeddingOf e (q.out⁻¹ * g⁻¹) := by
+  conv_lhs => rw [← q.out_eq]
+  change complexEmbeddingOf e (g * q.out)⁻¹ = _
+  rw [mul_inv_rev]
+
 /-- Let `j : Γ → Gp ℓ` be an open embedding whose image is the group of elements that fix `e E`
 pointwise. The index of this image is the number of distinct complex embeddings
 `complexEmbeddingOf e g = ι⁻¹ ∘ g⁻¹ ∘ e`, for `g` in `Gp ℓ`. -/
 lemma IsCompletionGroup.index_eq_card_range (hj : IsCompletionGroup e j) :
-    j.range.index = Nat.card (range (complexEmbeddingOf e)) := by
-  -- Two elements give the same embedding iff their inverses lie in one coset of `j.range`.
-  have h_left (g g' : Gp ℓ) : leftRel j.range g g' ↔ ker (complexEmbeddingOf e) g⁻¹ g'⁻¹ := by
-    simp [hj.complexEmbeddingOf_eq_iff, leftRel_eq]
-  exact Nat.card_congr
-    ((Quotient.congr (Equiv.inv (Gp ℓ)) h_left).trans
-      (quotientKerEquivRange (complexEmbeddingOf e)))
+    j.range.index = Nat.card (range (complexEmbeddingOf e)) :=
+  Nat.card_congr hj.cosetEquivEmbeddings
+
+/-- The index of a completion group is at most the degree of the number field, since its orbit
+is a subset of the complex embeddings. -/
+lemma IsCompletionGroup.index_le_finrank [NumberField E] (hj : IsCompletionGroup e j) :
+    j.range.index ≤ Module.finrank ℚ E := by
+  rw [hj.index_eq_card_range]
+  calc
+    _ ≤ Nat.card (E →+* ℂ) := Finite.card_subtype_le _
+    _ = _ := by simp [NumberField.Embeddings.card]
 
 /-- Let `E` be an embedded number field, and `ι : ℂ ≃ ℚ̄_ℓ` the isomorphism fixed by `PadicIso ℓ`.
 Let `v` and `w` be places of `E`
@@ -663,6 +685,14 @@ lemma sum_complexEmbeddingOf_le [EmbeddedNumberField E] (a : (E →+* ℂ) → �
       hvw (eq_of_complexEmbeddingOf_localChart_eq (hg.trans hg'.symm))
   rw [← Finset.sum_biUnion h_disj]
   exact Finset.sum_le_sum_of_subset (Finset.subset_univ _)
+
+/-- The sum of the local chart indices over the places above `ℓ` is at most the degree of `E`
+over `ℚ`, since distinct places contribute disjoint sets of complex embeddings. -/
+lemma sum_localChart_index_le_finrank [EmbeddedNumberField E] :
+    ∑ v : placesDividing E ℓ, (localChart ℓ E v).toGp.range.index ≤ Module.finrank ℚ E := by
+  classical
+  simpa [(localChart ℓ E _).inducesPlace.2.index_eq_card_range, Fintype.card_subtype,
+    NumberField.Embeddings.card] using sum_complexEmbeddingOf_le (ℓ := ℓ) fun _ : E →+* ℂ ↦ 1
 
 end LocalEmbeddings
 
