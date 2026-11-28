@@ -302,7 +302,7 @@ variable {n : Type*} [Fintype n] [DecidableEq n] {R : Type*} [CommRing R] {O : S
 noncomputable def invTransposeGL : GL n R ≃* GL n R :=
   ⟨Equiv.mk (fun g ↦ transposeGL g⁻¹) (fun g ↦ transposeGL g⁻¹), by simp [← val_inj]⟩
 
-/-- An invertible matrix has integral entries iff its transpose has integral entries. -/
+/-- A matrix lies in `intGL n O` exactly when its transpose does. -/
 lemma transposeGL_mem_intGL_iff (k : GL n R) : transposeGL k ∈ intGL n O ↔ k ∈ intGL n O := by
   rw [mem_intGL, mem_intGL]
   exact and_congr forall_comm forall_comm
@@ -310,7 +310,7 @@ lemma transposeGL_mem_intGL_iff (k : GL n R) : transposeGL k ∈ intGL n O ↔ k
 /-- The inverse-transpose automorphism `invTransposeGL` evaluates to `(g⁻¹)ᵀ`. -/
 lemma invTransposeGL_apply (g : GL n R) : invTransposeGL g = transposeGL g⁻¹ := rfl
 
-/-- The inverse-transpose of an integral GL matrix is itself an integral GL matrix. -/
+/-- The inverse-transpose of `k` lies in `intGL n O` exactly when `k` does. -/
 @[simp]
 lemma invTransposeGL_mem_intGL (k : GL n R) : invTransposeGL k ∈ intGL n O ↔ k ∈ intGL n O := by
   rw [invTransposeGL_apply, transposeGL_mem_intGL_iff, inv_mem_iff]
