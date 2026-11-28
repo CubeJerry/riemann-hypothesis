@@ -49,13 +49,15 @@ theorem New.sum_entireL_orders_eq_twisted_of_primeRemainder_le
     (∑ χ : DirichletCharacter ℂ q, analyticOrderNatAt (entireL χ) ρ) =
       ∑ χ : DirichletCharacter ℂ q, analyticOrderNatAt (entireL (quadTwist χ d)) ρ := by
   let untwisted (s : ℂ) := ∑ χ : DirichletCharacter ℂ q, analyticOrderNatAt (entireL χ) s
-  let twisted (s : ℂ) := ∑ χ : DirichletCharacter ℂ q, analyticOrderNatAt (entireL (quadTwist χ d)) s
+  let twisted (s : ℂ) :=
+    ∑ χ : DirichletCharacter ℂ q, analyticOrderNatAt (entireL (quadTwist χ d)) s
   have vanish (s : ℂ) (hs : 1 ≤ s.re) : untwisted s = 0 ∧ twisted s = 0 := by
     constructor <;> exact Finset.sum_eq_zero fun χ _ ↦
       (analyticOrderNatAt_entireL_eq_zero_iff _ s).2 (entireL_ne_zero _ hs)
   obtain rfl | hρ₁ := eq_or_ne ρ 1
   · exact (vanish 1 le_rfl).1.trans (vanish 1 le_rfl).2.symm
-  -- The residues of the transform record the difference between the two orders.
+  -- The difference of orders gives a nonnegative residue for real x > β. Landau's lemma
+  -- then makes the residue at ρ vanish, so the two orders agree there.
   let r (s : ℂ) : ℂ := ((untwisted s : ℂ) - twisted s) / φ q / (s * (1 - s))
   have polar : IsPolar (fun v : ℝ ↦ primeRemainder d q v.exp) r := by
     simpa [r, untwisted, twisted, Finset.sum_sub_distrib] using isPolar_primeRemainder hd hcop
