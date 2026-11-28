@@ -327,20 +327,14 @@ lemma IsPosition.exists_mul_eq_frameCols_and_besselLength_le (hP : IsPosition ε
       (x.val * p.matrix).val * v = 𝔰.frameCols ∧
       besselLength x ≤ 8 * 𝔰.n * (√𝔰.r * M) := by
   -- The columns of `i₀` and `v₁, …, v_n` have the Gram matrix of the basis of `X₀` and the frame.
-  have h_entry (a b : Fin (𝔰.ϱ + 1)) :
-      (vᴴ * signMatrix ε * v) a b = if a = last 𝔰.ϱ ∧ b = last 𝔰.ϱ then -1 else 0 := by
-    split_ifs with hab
-    · rw [hab.1, hab.2, h_norm]
-    · exact hP.gram_eq_zero a b (not_and_or.1 hab)
   have h_frame : vᴴ * signMatrix ε * v = 𝔰.frameColsᴴ * 𝔰.J₁ * 𝔰.frameCols := by
-    rw [Matrix.mul_assoc 𝔰.frameColsᴴ, mul_inclMatrix, conjTranspose_inclMatrix_mul]
+    rw [conjTranspose_inclMatrix_mul_mul_inclMatrix, middleGram_submatrix_besselFrame]
     ext a b
-    rw [h_entry, submatrix_apply, submatrix_apply, id_eq]
-    refine Fin.lastCases ?_ (fun a ↦ ?_) a <;> refine Fin.lastCases ?_ (fun b ↦ ?_) b
-    · simp [Shape.besselFrame, Shape.J₁, splitGram, middleGram]
-    · simp [Shape.besselFrame, Shape.J₁, splitGram, middleGram]
-    · simp [Shape.besselFrame, Shape.J₁, splitGram, middleGram, (castSucc_lt_last a).ne]
-    · simp [Shape.besselFrame, Shape.J₁, splitGram, middleGram, (castSucc_lt_last a).ne]
+    by_cases h : a = 𝔰.top ∧ b = 𝔰.top
+    · obtain ⟨rfl, rfl⟩ := h
+      simpa using h_norm
+    · simpa [Matrix.single_apply, eq_comm (a := 𝔰.top), h]
+        using hP.gram_eq_zero a b (not_and_or.1 h)
   have h_gram : (p.matrix.val * fromCols i₀ v)ᴴ * 𝔰.J₁ * (p.matrix.val * fromCols i₀ v) =
       (fromCols 𝔰.definiteCols 𝔰.frameCols)ᴴ * 𝔰.J₁ * fromCols 𝔰.definiteCols 𝔰.frameCols := by
     rw [gram_mul, p.gram_eq]
@@ -364,21 +358,14 @@ lemma IsPosition.exists_mul_eq_frameCols_and_besselLength_le (hP : IsPosition ε
     exact ⟨Z * p.matrix⁻¹.val, by
       rw [Matrix.mul_assoc, ← Matrix.mul_assoc _ p.matrix.val, Units.inv_mul, Matrix.one_mul, hZ]⟩
   have h_indep' : HasLeftInv (fromCols 𝔰.definiteCols 𝔰.frameCols) := by
-    refine ⟨(fromCols 𝔰.definiteCols 𝔰.frameCols)ᴴ, ?_⟩
-    rw [conjTranspose_fromCols_eq_fromRows_conjTranspose, fromRows_mul_fromCols,
-      conjTranspose_inclMatrix_mul, conjTranspose_inclMatrix_mul,
-      conjTranspose_inclMatrix_mul, conjTranspose_inclMatrix_mul, ← fromBlocks_one]
-    refine fromBlocks_inj.2 ⟨?_, ?_, ?_, ?_⟩
-    · ext i j
-      simp only [submatrix_apply, id_eq, inclMatrix, Matrix.one_apply, Sum.inr.injEq, Sum.inl.injEq]
-    · ext i b
-      refine Fin.lastCases ?_ (fun c ↦ ?_) b <;>
-        simp [Shape.besselFrame, inclMatrix]
-    · ext a j
-      refine Fin.lastCases ?_ (fun c ↦ ?_) a <;>
-        simp [Shape.besselFrame, inclMatrix]
-    · ext a b
-      simp only [submatrix_apply, id_eq, inclMatrix, Matrix.one_apply, besselFrame_injective.eq_iff]
+    let e := Sum.elim 𝔰.indexX₀ 𝔰.besselFrame
+    have he : Function.Injective e := Sum.elim_injective.2
+      ⟨by simp [Function.Injective], besselFrame_injective,
+        by simp [forall_fin_succ', Shape.besselFrame]⟩
+    have h_cols : fromCols 𝔰.definiteCols 𝔰.frameCols = inclMatrix ℂ e := by
+      ext i (a | b) <;> rfl
+    rw [h_cols]
+    exact ⟨_, inclMatrix_gram_eq_one (fun _ _ h ↦ he h)⟩
   obtain ⟨x, hx⟩ : ∃ x : 𝔰.G₁,
       x.val.val * (p.matrix.val * fromCols i₀ v) = fromCols 𝔰.definiteCols 𝔰.frameCols :=
     witt ⟨Complex.I, by simp⟩ isHermitian.eq IsHermitianInvolution.isUnit h_indep h_indep' h_gram
