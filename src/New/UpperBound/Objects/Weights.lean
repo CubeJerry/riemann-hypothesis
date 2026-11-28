@@ -118,13 +118,14 @@ namespace Data
 
 variable {P : Parameters} (D : Data P)
 
-/-- The initial weight index `D.n 0` equals the base level parameter `D.k`. -/
+/-- The rank `D.n 0` is `D.k`. -/
 lemma n_zero : D.n 0 = D.k := by simp [n]
 
-/-- Inductive step for the weight index sequence `D.n (j + 1) = D.n j + (D.t + 1)`. -/
+/-- Consecutive ranks differ by `t + 1`:
+`D.n (j + 1) = D.n j + (D.t + 1)`. -/
 lemma n_succ (j : ℕ) : D.n (j + 1) = D.n j + (D.t + 1) := by grind [n]
 
-/-- The base parameter `D.k` is bounded above by `D.n j` for all sequence indices `j`. -/
+/-- Every rank `D.n j` is at least `D.k`. -/
 lemma k_le_n (j : ℕ) : D.k ≤ D.n j := by simp [n]
 
 lemma n_pos (j : ℕ) : 0 < D.n j := D.k_pos.trans_le (D.k_le_n j)
