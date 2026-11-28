@@ -447,8 +447,6 @@ lemma Gauge.exists_centre_of_isNear (Γ : Gauge F) (a : Fin 𝔰.ϱ) {g y n₀ �
     simpa [mul_assoc] using hy₀
   simpa [mul_assoc] using Γ.exists_lift_of_mem_closeBelow a h_box h_start h_move h_close
 
--- Keeps definitional checks from unfolding the finite sums.
-seal Finset.sum in
 /-- One floor up. Let `Γ` be a gauge (size bounds for the place data `F`), `k` a pairing kernel for
 `F` whose twist `d` commutes with G^(j) = `floorGroup j`, and `j ≤ l ≤ ϱ`. The cut square
 `Γ.cutSquare k l g y` is the squared modulus of the correlation `k` above floor `l`. It is set to
@@ -505,10 +503,7 @@ lemma Gauge.lintegral_cutSquare_le (Γ : Gauge F) {k : T.G → T.G → ℂ} {d :
       obtain ⟨h_mass, h_up⟩ : Γ.closeMass l g (n * y) ≠ 0 ∧
           F.partialCorrelation (l + 1) k g (n * y) ≠ 0 := by
         simpa [cutSquare] using h_ne
-      obtain ⟨ν, hν, h_pos⟩ : ∃ ν ∈ unipotentBelow l,
-          Γ.positionsOfSize.indicator (1 : T.G → ℝ≥0∞) (g⁻¹ * (ν * (n * y))) ≠ 0 :=
-        exists_ne_zero_of_ae ae_ascConv_mem_unipotentBelow h_mass
-      exact ⟨hn, ⟨ν, hν, Set.mem_of_indicator_ne_zero h_pos⟩,
+      exact ⟨hn, (Γ.lintegral_eq_zero_or_mem_closeBelow 1 l g (n * y)).resolve_left h_mass,
         hK.isNear_of_partialCorrelation_ne_zero h_up⟩
     have h_centre : ∀ n₀ ∈ S, ∃ t ∈ partialUnitriangularGroup (a + 1) ⊓ floorGroup a,
         ∃ ν ∈ unipotentBelow (a + 1), Γ.HasMatrixSize 1 (t * ν * g).val.val ∧

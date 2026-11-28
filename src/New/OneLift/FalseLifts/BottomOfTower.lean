@@ -174,7 +174,8 @@ omit [Fintype n] in
 lemma map_rowShear (f : R →+* R') (v : r → R) (l : n → R) :
     (rowShear ι v l).map f = rowShear ι (f ∘ v) (f ∘ l) := by
   ext a b
-  simp [rowShear, inclMatrix, mulVec, dotProduct, vecMulVec_apply, Matrix.one_apply, apply_ite f]
+  simp [rowShear, RingHom.map_mulVec, map_inclMatrix,
+      vecMulVec_apply, Matrix.one_apply, apply_ite f]
 
 /-- If `tᵀ e = e sᵀ` for `e = inclMatrix R ι = (1, 0)ᵀ`, the first block of `t` is `s`. -/
 lemma submatrix_eq_of_transpose_mul_inclMatrix [DecidableEq r]
@@ -210,6 +211,9 @@ def hyperplaneGroup (l : r → k) : Subgroup (GL r k) where
     refine ⟨-(s⁻¹.val *ᵥ v), ?_⟩
     rw [neg_vecMulVec, ← mul_vecMulVec, eq_add_neg_iff_add_eq, ← s.inv_mul, hv, mul_add, mul_one]
 
+lemma mem_hyperplaneGroup {l : r → k} {s : GL r k} :
+    s ∈ hyperplaneGroup l ↔ ∃ v : r → k, (s : Matrix r r k) = 1 + vecMulVec v l := .rfl
+
 /-- Over a finite field the group of the invertible `1 + v λ` is finite. -/
 instance [Finite k] (l : r → k) : Fintype (hyperplaneGroup l) := .ofFinite _
 
@@ -237,7 +241,7 @@ matrices `s = 1 + v λ` for the row `λ = l`, and `0` elsewhere. -/
 lemma coeff_hyperplaneSum_eq_ite [Finite k] (χ : MulChar k ℂ) (l : r → k) (s : GL r k) :
     (hyperplaneSum χ l).coeff s =
       if s ∈ hyperplaneGroup l then χ⁻¹ (s : Matrix r r k).det else 0 := by
-  simp [hyperplaneSum, hyperplaneGroup]
+  simp [hyperplaneSum, mem_hyperplaneGroup]
 
 /-- The hyperplane sum `∑ χ(det s)⁻¹ s` over the invertible `s = 1 + v λ` is `1` for the zero row
 `λ = 0`. -/
@@ -254,7 +258,7 @@ lemma asAlgebraHom_hyperplaneSum [Finite k] {V : Type*} [AddCommGroup V] [Module
     σ.asAlgebraHom (hyperplaneSum χ l) y =
       ∑ s : hyperplaneGroup l, χ⁻¹ ((s : GL r k) : Matrix r r k).det • σ (s : GL r k) y := by
   classical
-  have : Fintype (GL r k) := .ofFinite _
+  let : Fintype (GL r k) := .ofFinite _
   calc _ = ∑ s : GL r k, (hyperplaneSum χ l).coeff s • σ s y := by
         simp [Representation.asAlgebraHom_eq_sum]
     _ = ∑ s : GL r k with s ∈ hyperplaneGroup l, χ⁻¹ (s : Matrix r r k).det • σ s y := by

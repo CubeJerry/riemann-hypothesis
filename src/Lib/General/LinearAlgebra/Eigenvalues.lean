@@ -1,8 +1,10 @@
 module
 
 import TauCeti.LinearAlgebra.Matrix.Charpoly.Roots
+import TauCeti.LinearAlgebra.Matrix.Charpoly.Newton
 public import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.Algebra.Lie.Weights.Linear
+import Mathlib.LinearAlgebra.Matrix.Charpoly.Univ
 import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
 import Mathlib.LinearAlgebra.PID
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
@@ -73,7 +75,8 @@ lemma trace_pow_eq_sum_roots (m : ℕ) :
     (A ^ m).trace = (A.charpoly.roots.map fun a : k ↦ a ^ m).sum := by
   simpa using trace_aeval_eq_sum_roots_charpoly_of_splits (splits A.charpoly) (X ^ m)
 
-/-- Over an algebraically closed field of characteristic 0, if tr A^m = tr B^m + ∑_{e∈S} α_e^m
+omit [IsAlgClosed k] in
+/-- Over a field of characteristic 0, if tr A^m = tr B^m + ∑_{e∈S} α_e^m
 for all m ≥ 0, with S finite, then the characteristic polynomial of A is that of B times
 ∏_{e∈S} (X − α_e). -/
 lemma charpoly_eq_mul_of_trace_pow_add [CharZero k] {r ι : Type*} [Fintype r] [DecidableEq r]
@@ -81,21 +84,23 @@ lemma charpoly_eq_mul_of_trace_pow_add [CharZero k] {r ι : Type*} [Fintype r] [
     (h_trace : ∀ m : ℕ, (A ^ m).trace = (B ^ m).trace + ∑ e ∈ S, α e ^ m) :
     A.charpoly = B.charpoly * ∏ e ∈ S, (X - C (α e)) := by
   classical
-  -- The characters `m ↦ a ^ m` of `ℕ` are linearly independent (Dedekind), also over `ℕ`.
-  have h_indep : LinearIndependent ℕ fun a : k ↦ ⇑(powersHom k a) :=
-    ((linearIndependent_monoidHom _ k).comp _ (powersHom k).injective).restrict_scalars' ℕ
-  -- Hence a multiset is determined by its power sums: read the multiplicities as coefficients.
-  have eq_of_sum_pow (s t : Multiset k)
-      (hst : ∀ m : ℕ, (s.map fun a ↦ a ^ m).sum = (t.map fun a ↦ a ^ m).sum) : s = t :=
-    Multiset.toFinsupp.injective (h_indep (funext fun m ↦ by
-      simpa [Finsupp.linearCombination, Finsupp.sum, Finset.sum_multiset_map_count] using
-        hst m.toAdd))
-  have h_roots : A.charpoly.roots = B.charpoly.roots + S.val.map α := by
-    refine eq_of_sum_pow _ _ fun m ↦ ?_
-    simpa [← trace_pow_eq_sum_roots, Multiset.map_map] using h_trace m
-  -- A characteristic polynomial is monic and splits, so its roots determine its values.
-  refine Polynomial.funext fun x ↦ ?_
-  simp [eval_prod, (splits _).eval_eq_prod_roots_of_monic, charpoly_monic, h_roots]
+  -- Compare with the direct sum of B and the one-dimensional auxiliary factors.
+  let D : Matrix (r ⊕ ↥S) (r ⊕ ↥S) k := fromBlocks B 0 0 (diagonal fun e : S ↦ α e)
+  have hcard : Fintype.card n = Fintype.card (r ⊕ ↥S) := by
+    apply Nat.cast_injective (R := k)
+    simpa [Fintype.card_sum, Nat.cast_add] using h_trace 0
+  have hD : A.charpoly = D.charpoly :=
+    Matrix.charpoly_eq_of_trace_pow_eq hcard fun m _ _ ↦ by
+      change (A ^ m).trace = (fromBlocks B 0 0 (diagonal fun e : S ↦ α e) ^ m).trace
+      rw [fromBlocks_diagonal_pow, trace_fromBlocks, diagonal_pow, trace_diagonal]
+      change (A ^ m).trace = (B ^ m).trace + ∑ e : S, α e ^ m
+      rw [Finset.sum_coe_sort S (fun e ↦ α e ^ m)]
+      exact h_trace m
+  rw [hD]
+  change (fromBlocks B 0 0 (diagonal fun e : S ↦ α e)).charpoly =
+    B.charpoly * ∏ e ∈ S, (X - C (α e))
+  rw [charpoly_fromBlocks_zero₂₁, charpoly_diagonal,
+    Finset.prod_coe_sort S (fun e ↦ X - C (α e))]
 
 end New
 
@@ -289,6 +294,13 @@ lemma trace_restrict_ne_zero {p : Submodule ℂ V} [FiniteDimensional ℂ p] {b 
   have h_trace : trace ℂ p (restrict b h_stable) = c * finrank ℂ p := by
     simpa [sub_eq_zero] using isNilpotent_trace_of_isNilpotent h_nil
   simp [h_trace, hc, hp_ne]
+
+/-- Generalised eigenspaces for different eigenvalues meet trivially: in a complex vector space
+`V`, a vector killed by a power of `f - μ` that lies in the generalised eigenspace of `f` for
+`ν ≠ μ` is zero. -/
+lemma eq_zero_of_pow_apply_eq_zero_of_mem_maxGenEigenspace {f : End ℂ V} {μ ν : ℂ} (hne : μ ≠ ν)
+    {N : ℕ} {v : V} (hμ : ((f - μ • 1) ^ N) v = 0) (hν : v ∈ maxGenEigenspace f ν) : v = 0 :=
+  disjoint_def.1 (disjoint_genEigenspace f hne ⊤ ⊤) v ((mem_maxGenEigenspace f μ v).2 ⟨N, hμ⟩) hν
 
 /-- If `s` intertwines `f` and `g`, that is `s * f = g * s`, and `u` commutes with `g`, then
 `f * (u * s)` and `g * (u * s)` have the same trace. -/
@@ -522,7 +534,7 @@ lemma exists_eigenvector_of_trace_mul_eq [FiniteDimensional ℂ V] [FiniteDimens
   have hχ (a : κ) : χ a = Sum.elim θ 0 a := by
     by_contra h_ne
     have hzero (v : U) : (x * A b) v = 0 :=
-      disjoint_def.1 (disjoint_genEigenspace _ h_ne ⊤ ⊤) _ ((mem_maxGenEigenspace _ _ _).2 ⟨_, hN_fst a (A b v)⟩) (h_eig v a)
+      eq_zero_of_pow_apply_eq_zero_of_mem_maxGenEigenspace h_ne (hN_fst a (A b v)) (h_eig v a)
     have hρ : ρ ⟨(x, y), hx, hy, htr⟩ = 0 := ext fun v ↦ Subtype.ext (hzero v)
     exact hτ_ne (by simp [τ, hρ])
   obtain rfl : χ = Sum.elim θ 0 := funext hχ
@@ -701,14 +713,12 @@ lemma charpoly_smul_coeff (a : A) (M : Matrix n n A) (k : ℕ) :
   nontriviality A
   by_cases! h : card n < k
   · simp [coeff_eq_zero_of_natDegree_lt, h]
-  -- The coefficient is a signed sum of principal minors of size `card n - k`.
-  obtain ⟨m, hm, rfl⟩ : ∃ m ≤ card n, k = card n - m := ⟨card n - k, by omega, by omega⟩
-  have h_minor (s : Finset n) (hs : s ∈ univ.powersetCard m) :
-      ((a • M).submatrix (Subtype.val : s → n) Subtype.val).det =
-        a ^ m * (M.submatrix (Subtype.val : s → n) Subtype.val).det := by
-    simp [submatrix_smul, (mem_powersetCard.1 hs).2]
-  rw [charpoly_coeff_eq_sum_minors _ _ hm, charpoly_coeff_eq_sum_minors _ _ hm,
-    sum_congr rfl h_minor, ← mul_sum, Nat.sub_sub_self hm, mul_left_comm]
+  -- The universal coefficient of degree `k` is homogeneous of degree `card n - k` in the entries.
+  have eval (B : Matrix n n A) : _ = B.charpoly.coeff k :=
+    Matrix.charpoly.univ_coeff_eval₂Hom n (RingHom.id A) (Function.uncurry B) k
+  rw [← eval (a • M), ← eval M]
+  exact (Matrix.charpoly.univ_coeff_isHomogeneous A n k _ (Nat.add_sub_cancel' h)).eval_smul
+    a (Function.uncurry M)
 
 end New
 

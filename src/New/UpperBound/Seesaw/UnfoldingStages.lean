@@ -86,49 +86,19 @@ variable {E ι ι' ι'' X X' X'' X₀ q : Type} [Field E] [CMType E] [WeilData E
   {Y : Grading V N X s} {Y' : Grading V' N X' s'} {Y'' : Grading V'' N X₀ s''}
 
 omit [WeilData E] in
+@[fun_prop]
 private lemma continuous_pairChar (a b : AutChar E) :
     Continuous (pairChar (E := E) (s := ε) (s' := ε') a b) :=
   continuous_subtypeVal.comp
-    (((b⁻¹.1.continuous.comp G.continuous_det).comp continuous_fst).mul
-      ((a.1.continuous.comp G.continuous_det).comp continuous_snd))
+    (((b⁻¹.val.continuous.comp G.continuous_det).comp continuous_fst).mul
+      ((a.val.continuous.comp G.continuous_det).comp continuous_snd))
 
 private lemma continuous_theta_tripleWeil (a b : AutChar E)
     (f : 𝒮 (V'.hom (flipSum V V''))) :
     Continuous fun p : G E ε × G E ε' × G E ε'' ↦
       θ (V'.hom (flipSum V V'')) (tripleWeil (V := V) (V' := V') (V'' := V'') a b p f) := by
-  have h_sum : Continuous (G.sum : G E (-ε) × G E ε'' → G E (-ε ⊕ᵥ ε'')) := by
-    rw [G.continuous_iff]
-    simp only [G.adeleMatrix_sum]
-    refine continuous_pi fun i ↦ continuous_pi fun j ↦ ?_
-    rcases i with i | i <;> rcases j with j | j
-    · exact ((continuous_apply j).comp ((continuous_apply i).comp
-        G.continuous_adeleMatrix)).comp continuous_fst
-    · exact continuous_const
-    · exact continuous_const
-    · exact ((continuous_apply j).comp ((continuous_apply i).comp
-        G.continuous_adeleMatrix)).comp continuous_snd
-  have h_c1 : Continuous fun p : G E ε × G E ε' × G E ε'' ↦
-      pairChar (rankTwist a ι) (rankTwist a ι') (p.1, p.2.1) :=
-    (continuous_pairChar _ _).comp (continuous_fst.prodMk (continuous_fst.comp continuous_snd))
-  have h_c2 : Continuous fun p : G E ε × G E ε' × G E ε'' ↦
-      pairChar (rankTwist b ι') (rankTwist b ι'') p.2 :=
-    (continuous_pairChar _ _).comp continuous_snd
-  have h_c3 : Continuous fun p : G E ε × G E ε' × G E ε'' ↦
-      pairChar (WeilData.upsilonU1 ^ card ι') (WeilData.upsilonU1 ^ card ι) (p.2.1, p.1) :=
-    (continuous_pairChar _ _).comp ((continuous_fst.comp continuous_snd).prodMk continuous_fst)
-  have h_onHom : Continuous fun p : G E ε × G E ε' × G E ε'' ↦
-      G.onHom (p.2.1, G.sum (p.1.neg, p.2.2)) :=
-    G.continuous_onHom.comp ((continuous_fst.comp continuous_snd).prodMk
-      (h_sum.comp ((G.continuous_neg.comp continuous_fst).prodMk
-        (continuous_snd.comp continuous_snd))))
-  have h_ω : Continuous fun p : G E ε × G E ε' × G E ε'' ↦
-      θ (V'.hom (flipSum V V''))
-        ((V'.hom (flipSum V V'')).ω (G.onHom (p.2.1, G.sum (p.1.neg, p.2.2))) f) :=
-    (θ _).continuous.comp
-      ((Space.continuous_omega (V := V'.hom (flipSum V V''))).comp
-        (h_onHom.prodMk continuous_const))
-  simpa only [tripleWeil, _root_.smul_apply, map_smul, smul_eq_mul, Pi.mul_def, Pi.mul_apply] using
-    ((h_c1.mul h_c2).mul h_c3).mul h_ω
+  simp only [tripleWeil, _root_.smul_apply, map_smul]
+  fun_prop
 
 /-- A coefficient of an algebraic form times the theta function of a triple Weil translate is
 integrable over the compact quotients of the two definite unitary groups. -/
@@ -838,8 +808,6 @@ lemma exists_zeroTerm_eq_integrated (ξ : ∀ k : ℕ, GInf D.E (D.signsY k))
   -- Both sides are now pure tensors with one finite factor; `v` is the real factor on the left.
   exact ⟨_, fun _ _ ↦ rfl⟩
 
--- Without this, comparing the index types of neighbouring stages unfolds `Finset.univ`.
-seal Finset.univ in
 /-- A double unfolding step. Let `R` be data for the two lifts `Y_{2i} → Y_{2i+1} → Y_{2i+2}`, the
 last space with a grading `Y` of definite part `X`. Suppose that `D.doubleLiftEvalY i`, the linear
 map that turns finite data for the spaces `Y_k` into finite data for their definite parts `X_k`, is
@@ -1050,7 +1018,7 @@ lemma valued_twistIdele (w : FinPlace D.E) :
       simp [count_map_eq_count', asIdeal_injective, count_eq_of_nodup ϑ.Q.nodup]
     have h_ideal : 𝔪.ideal = Ideal.span {D.piM} * ∏ v ∈ ϑ.Q, v.asIdeal := by
       change ((∏ i : (k : Fin 2) × D.ChosenPlace k, (D.chosenPlace i).asIdeal) ^ 1) *
-        ∏ v : ϑ.Q, v.1.asIdeal = _
+        ∏ v : ϑ.Q, v.val.asIdeal = _
       rw [pow_one, ← span_piM, ϑ.Q.prod_coe_sort]
     rw [h_ideal, multiplicity_mul w.prime (.of_prime_left w.prime (h_ideal ▸ 𝔪.ne_bot)), h_Q]
   have h_mul : (twistIdele ϑ).val * D.chosenIdele.val = 𝔪.generator.val := by

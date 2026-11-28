@@ -60,6 +60,7 @@ is a unit of the ring of integral series in the `y(μ_j z)`.
 
 section LeastValuation
 
+open MvPolynomial (jetPairing jetPairing_monomial)
 open MvPowerSeries Finset Nat
 
 namespace New
@@ -186,6 +187,14 @@ lemma mapDomain_fst_apply (γ : X × K →₀ ℕ) (x : X) :
   classical simp [Finsupp.mapDomain, Finsupp.sum_fintype, Finsupp.single_apply,
     Fintype.sum_prod_type]
 
+/-- For `γ : X × K →₀ ℕ`, let `γ.mapDomain Prod.fst` be the exponent on `X` that adds up `γ (x, k)`
+over `k`. Then `∏ x, (γ.mapDomain Prod.fst x)!` is `∏ y, (γ y)!` times the product over `x` of the
+multinomial coefficients of the exponents `γ (x, k)`, `k : K`. -/
+lemma prod_factorial_mapDomain_fst (γ : X × K →₀ ℕ) :
+    ∏ x : X, (γ.mapDomain Prod.fst x)! =
+      (∏ y : X × K, (γ y)!) * ∏ x : X, multinomial univ fun k : K ↦ γ (x, k) := by
+  simp only [mapDomain_fst_apply, ← multinomial_spec, Fintype.prod_prod_type, prod_mul_distrib]
+
 /-- Let `δ` be the exponent that adds up the copies of each variable in `γ`. Then `γ!` times the
 coefficient of `z ^ γ` in `F (∑ a_k z_k)` is `a ^ γ` times `δ!` times the coefficient of `z ^ δ`
 in `F`. -/
@@ -195,7 +204,7 @@ lemma prod_factorial_mul_coeff_copySubst (a : K → R) (F : MvPowerSeries X R) (
         coeff (γ.mapDomain Prod.fst) F := by
   classical
   -- Apply the chain rule along `z ^ γ`.
-  -- `jet R P F` is `P(∂)F(0)`, and `linSubst M` substitutes `∑ M x y • z_x` for the variable `y`.
+  -- `jetPairing P F` is `P(∂)F(0)`. The map `linSubst M` substitutes `∑ M x y • z_x` for `y`.
   set δ : X →₀ ℕ := γ.mapDomain Prod.fst with hδ
   let M : Matrix X (X × K) R := fun x y ↦ if y.1 = x then a y.2 else 0
   have h_subst : copySubst a F = F.subst fun x : X ↦ linearSeries (M x) := by
@@ -212,13 +221,13 @@ lemma prod_factorial_mul_coeff_copySubst (a : K → R) (F : MvPowerSeries X R) (
       mem_univ, ↓reduceIte, MvPolynomial.smul_eq_C_mul, mul_pow, prod_mul_distrib, map_prod]
     rw [Fintype.prod_prod_type (f := fun y : X × K ↦ MvPolynomial.X y.1 ^ γ y)]
     simp only [hδ, mapDomain_fst_apply, prod_pow_eq_pow_sum]
-  calc _ = jet R (.monomial γ 1) (copySubst a F) := by
-        rw [jet_monomial, one_mul,
+  calc _ = jetPairing (.monomial γ 1) (copySubst a F) := by
+        rw [jetPairing_monomial, one_mul,
           Finsupp.prod_fintype _ _ (fun _ ↦ by rw [factorial_zero, cast_one])]
-    _ = jet R (.monomial δ (∏ y : X × K, a y.2 ^ γ y)) F := by
+    _ = jetPairing (.monomial δ (∏ y : X × K, a y.2 ^ γ y)) F := by
       rw [h_subst, jet_subst_linearSeries, h_monomial]
     _ = (∏ y : X × K, a y.2 ^ γ y) * (∏ x : X, ((δ x)! : R)) * coeff δ F := by
-      rw [jet_monomial, Finsupp.prod_fintype _ _ (fun _ ↦ by rw [factorial_zero, cast_one]),
+      rw [jetPairing_monomial, Finsupp.prod_fintype _ _ (fun _ ↦ by rw [factorial_zero, cast_one]),
         mul_assoc]
 
 /-- Over a domain of characteristic zero, the coefficient of `z ^ γ` in `F (∑ a_k z_k)` is `a ^ γ`
@@ -230,9 +239,7 @@ lemma coeff_copySubst [IsDomain R] [CharZero R] (a : K → R) (F : MvPowerSeries
       (∏ x : X, multinomial univ fun k : K ↦ γ (x, k) : ℕ) * coeff (γ.mapDomain Prod.fst) F := by
   have h_factorial : (∏ x : X, ((γ.mapDomain Prod.fst x)! : R)) = (∏ y : X × K, ((γ y)! : R)) *
       (∏ x : X, multinomial univ fun k : K ↦ γ (x, k) : ℕ) :=
-    mod_cast congrArg (Nat.cast (R := R)) (show ∏ x : X, (γ.mapDomain Prod.fst x)! =
-      (∏ y : X × K, (γ y)!) * ∏ x : X, multinomial univ fun k : K ↦ γ (x, k) by
-        simp only [mapDomain_fst_apply, ← multinomial_spec, Fintype.prod_prod_type, prod_mul_distrib])
+    mod_cast congrArg (Nat.cast (R := R)) (prod_factorial_mapDomain_fst γ)
   refine mul_left_cancel₀ (a := ∏ y : X × K, ((γ y)! : R))
     (by simp [prod_ne_zero_iff, factorial_ne_zero]) ?_
   rw [prod_factorial_mul_coeff_copySubst, h_factorial]

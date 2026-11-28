@@ -113,7 +113,7 @@ does not change under composition with the projection `Y.stringProj` to the span
 of `V`. -/
 lemma stringMapFin_stringProj [Finite X] (y : ι → 𝔸f E) :
     Y.stringMapFin Y' (Y.stringProj y) = Y.stringMapFin Y' y := by
-  have := Fintype.ofFinite X
+  let := Fintype.ofFinite X
   funext p
   have h_inl (a : X) : Y.stringMap Y' p (Y.indexEquiv (.inl a)) = 0 := by
     obtain ⟨b | b, rfl⟩ := Y'.indexEquiv.surjective p <;> simp [stringMap]
@@ -124,7 +124,7 @@ omit [Fintype X] in
 span `X'^⊥` of the string of `V'`, so they are fixed by the projection `Y'.stringProj` to it. -/
 lemma stringProj_stringMapFin [Finite X] (y : ι → 𝔸f E) :
     Y'.stringProj (Y.stringMapFin Y' y) = Y.stringMapFin Y' y := by
-  have := Fintype.ofFinite X
+  let := Fintype.ofFinite X
   simp [stringProj_eq_self_iff, stringMapFin, stringMap, mulVec, dotProduct,
     reindex_equiv Y.indexEquiv]
 
@@ -133,12 +133,12 @@ omit [Fintype X] in
 string vector of grade `≥ 0` up to vectors of higher grade. Then the matrix of `r` in rational
 coordinates does not lower grades. -/
 lemma hasDegreeGe_zero_ratCoordMatrixFin [Finite X] {r : Gf E ι} (hr : r ∈ Y.besselFin) :
-    HasDegreeGe Y.gradeOf Y.gradeOf 0 (V.ratCoordMatrixFin r) := fun p q h ↦ by
-  have := Fintype.ofFinite X
+    HasDegreeGe Y.gradeOf Y.gradeOf 0 (V.ratCoordMatrixFin r) := by
+  let := Fintype.ofFinite X
   -- This is the finite component of the same fact for the adelic point `(1, r)`.
   have h_mem : ((1, r) : G E ε) ∈ Y.besselGroup := hr
-  simpa [ratCoordMatrix_inr] using
-    congrArg Prod.snd (Y.hasDegreeGe_zero_of_mem_besselGroup h_mem p q h)
+  rw [V.ratCoordMatrixFin_snd (1, r)]
+  exact (Y.hasDegreeGe_zero_of_mem_besselGroup h_mem).map _
 
 omit [Fintype X] in
 /-- The Bessel group of a grading fixes each string vector of grade `≥ 0` up to vectors of higher
@@ -152,14 +152,17 @@ lemma hasDegreeGe_zero_mul_mul_sub [Finite X] [Finite X'] {W : Matrix ι' ι (�
     HasDegreeGe Y'.gradeOf Y.gradeOf 0
       (V'.ratCoordMatrixFin r' * (W * V.ratCoordMatrixFin r) -
         c • (Y.stringMap Y').map Prod.snd) := by
-  have := Fintype.ofFinite X
-  have := Fintype.ofFinite X'
+  let := Fintype.ofFinite X
+  let := Fintype.ofFinite X'
   set sh : Matrix ι' ι (𝔸f E) := (Y.stringMap Y').map Prod.snd
   set A : Matrix ι ι (𝔸f E) := V.ratCoordMatrixFin r
   set A' : Matrix ι' ι' (𝔸f E) := V'.ratCoordMatrixFin r'
-  have h_fixed : HasDegreeGe Y'.gradeOf Y.gradeOf 0 (A' * (sh * A) - sh) := fun p q h ↦ by
-    simpa [ratCoordMatrix_inr, Matrix.mul_apply, Prod.snd_sum, sh, A, A'] using
-      congrArg Prod.snd (Y.hasDegreeGe_zero_mul_stringMap_mul_sub hr hr' p q h)
+  have h_fixed : HasDegreeGe Y'.gradeOf Y.gradeOf 0 (A' * (sh * A) - sh) := by
+    let fin := RingHom.snd (NumberField.InfinitePlace E → ℂ) (𝔸f E)
+    have h_finite := (Y.hasDegreeGe_zero_mul_stringMap_mul_sub hr hr').map fin
+    simp only [Matrix.map_sub fin (map_sub fin), Matrix.map_mul (f := fin),
+      MonoidHom.inr_apply, fin, ← ratCoordMatrixFin_snd] at h_finite
+    exact h_finite
   have h_split : A' * (W * A) - c • sh = A' * ((W - c • sh) * A) + c • (A' * (sh * A) - sh) := by
     simp [Matrix.sub_mul, Matrix.mul_sub, smul_sub]
   -- Degrees add under multiplication, so all three factors together have degree at least `0`.
@@ -251,8 +254,8 @@ lemma exists_mapsTo_lattice_hasDegreeGe_sub_smul_stringMap [Finite X] [Finite X'
     ∃ W : Matrix ι' ι (𝔸f E), (∀ y ∈ V.lattice x.2, W *ᵥ y ∈ V'.lattice x'.2) ∧
       HasDegreeGe Y'.gradeOf Y.gradeOf 0
         (W - (star b / α).val • (Y.stringMap Y').map Prod.snd) := by
-  have := Fintype.ofFinite X
-  have := Fintype.ofFinite X'
+  let := Fintype.ofFinite X
+  let := Fintype.ofFinite X'
   -- Take a splitting `D` along the maps of positive degree. The constant term is a theta value of
   -- the zero term, so the finite zero term does not vanish at `sh`, and `sh` lies in its support.
   obtain ⟨m, s₀, V₀, D, -, h_proj, h_theta⟩ :

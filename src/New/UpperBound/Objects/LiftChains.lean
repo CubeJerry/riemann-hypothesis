@@ -437,10 +437,10 @@ lemma card_GL_resField_eq_card_GL_zmod (w : D.ChosenPlace i) (l : ℕ) :
     Nat.card (GL (Fin l) (ResField w.val)) = Nat.card (GL (Fin l) (ZMod (D.levelPrime i))) := by
   -- The residue field has p_i elements, and p_i is prime, so it is isomorphic to
   -- `ZMod (D.levelPrime i)`.
-  have : Fintype (ResField w.val) := Fintype.ofFinite _
+  let : Fintype (ResField w.val) := Fintype.ofFinite _
   have h_card : Fintype.card (ResField w.val) = D.levelPrime i := by
     rw [Fintype.card_eq_nat_card, card_ResField, D.q_eq_levelPrime w.property.right]
-  have e : ZMod (D.levelPrime i) ≃+* ResField w.val :=
+  let e : ZMod (D.levelPrime i) ≃+* ResField w.val :=
     ZMod.ringEquivOfPrime _ (D.levelPrime_prime i) h_card
   exact Nat.card_congr (Units.mapEquiv e.symm.mapMatrix.toMulEquiv).toEquiv
 
@@ -592,7 +592,7 @@ characters `D.chiMLocal w` at the chosen places, is at most `exp (log b / 9)`, w
 `log b = D.logB`. -/
 instance : D.HasLogUpper (P.q₂ D.towerExp) (D.logB / 9) := by
   -- `q₂` is at most a fixed power of `x`, and `log x ≤ log x₁` is negligible against `log b`.
-  have h_scale : D.logX ≤ D.logX₁ := by grind [D.scale_inequalities]
+  have h_scale : D.logX ≤ D.logX₁ := by scale_arith D
   have h_pow : D.x ^ (33 * (P.q₀ * P.d)) ≤ exp (D.logB / 9) := by
     rw [← exp_natCast_mul, exp_le_exp]
     calc _ ≤ (33 * (P.q₀ * P.d) : ℕ) * D.logX₁ := by gcongr

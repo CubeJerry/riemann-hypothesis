@@ -151,6 +151,12 @@ lemma mem_ofSize_gauge (hF : IsCutBessel F rep ρ s b F₀ f) (hL : ρ ≤ L) {i
     z ∈ (hF.gauge hL).ofSize i ↔ ‖z‖ ≤ L ^ i :=
   Iff.rfl
 
+/-- For the gauge of size `L`, the list `p` is a head of length `j` if the products of its first
+`l ≤ j` entries have inverse modulus at most `L`. -/
+lemma isHead_gauge_iff (hF : IsCutBessel F rep ρ s b F₀ f) (hL : ρ ≤ L) :
+    (hF.gauge hL).IsHead j p ↔ ∀ l ≤ j, ‖(∏ a ∈ range l, p a).val‖⁻¹ ≤ L := by
+  simp only [IsHead, hF.mem_ofSize_gauge, Units.val_inv_eq_inv_val, norm_inv, pow_one]
+
 /-- The exponent `s` is at least `10 ^ 10 * 𝔰.n ^ 4`, since the hypotheses carried by `hF` give
 `s + 3 𝔰.n + 6 ≥ 𝔰.n ^ 7` and `𝔰.n > 10 ^ 8`. -/
 lemma mul_pow_four_le_s (hF : IsCutBessel F rep ρ s b F₀ f) : 10 ^ 10 * 𝔰.n ^ 4 ≤ s := by
@@ -196,7 +202,7 @@ lemma exists_gauge_isHead (hF : IsCutBessel F rep ρ s b F₀ f) (j : ℕ) (p q 
   -- Induction on `j`: `L` is the largest of `ρ` and the inverse norms of the partial products.
   -- Each step enlarges `L` once for `p` and once for `q` (`max_pow_le_mul_max_one_pow`).
   have one_le_ρ : 1 ≤ ρ := by linarith [hF.four_le]
-  simp only [IsHead, hF.mem_ofSize_gauge, Units.val_inv_eq_inv_val, norm_inv, pow_one, exists_prop]
+  simp only [hF.isHead_gauge_iff, exists_prop]
   induction j with
   | zero => exact ⟨ρ, le_rfl, by simpa, by simpa, fun R _ ↦ by simp [headWeight]⟩
   | succ j ih =>
@@ -326,13 +332,12 @@ lemma exists_sq_le_realDepth (hF : IsCutBessel F rep ρ s b F₀ f) (hj : j ≤ 
       (hF.complexData.levelUnit⁻¹.val • ((v * (y * x)).val.val - (u * y).val.val)) := by
     simpa using (Γ.hasMatrixSize_boxSet v_box).sub (Γ.hasMatrixSize_boxSet u_box)
   have h_disc (a : Fin 𝔰.ϱ) (ha : j ≤ a) :
-      ∃ c : ℂˣ, ↑c ∈ hF.complexData.stableProducts a y x ∧ ↑c⁻¹ ∈ Γ.ofSize 1 := by
-    refine ⟨(Units.mk0 (T : ℂ) (by simpa using T_pos.ne'))⁻¹, ?_,
+      ∃ c : ℂˣ, ↑c ∈ hF.complexData.stableProducts a y x ∧ ↑c⁻¹ ∈ Γ.ofSize 1 :=
+    ⟨(Units.mk0 (T : ℂ) (by simpa using T_pos.ne'))⁻¹,
+      by simpa [hF.stableProducts_eq, inv_mul_lt_one₀ (pow_pos T_pos 2)] using h_shallow a ha,
       by simp [Γ, hF.mem_ofSize_gauge, abs_of_pos T_pos]⟩
-    simpa [hF.stableProducts_eq, inv_mul_lt_one₀ (pow_pos T_pos 2)] using h_shallow a ha
-  have h_size : Γ.HasMatrixSize (99 * 𝔰.n) (hF.complexData.levelUnit⁻¹.val • (x.val.val - 1)) :=
-    Γ.hasMatrixSize_sub_one_of_stableProducts (hF.gauge hL) hj hp hq (fun _ ↦ h_level)
-      (fun _ ↦ h_subset) ⟨u, hu, v, hv, u_box, v_box, h_diff⟩ near_p near_q h_disc
+  have h_size := Γ.hasMatrixSize_sub_one_of_stableProducts (hF.gauge hL) hj hp hq (fun _ ↦ h_level)
+    (fun _ ↦ h_subset) ⟨u, hu, v, hv, u_box, v_box, h_diff⟩ near_p near_q h_disc
   exact hx fun a c ↦ by simpa [Γ, hF.mem_ofSize_gauge] using h_size a c
 
 /-- Far means deep at a real place. Let `F` be a cut Bessel function and `p`, `q` heads of length
@@ -345,8 +350,7 @@ lemma hasDeepVector_of_notMem (hF : IsCutBessel F rep ρ s b F₀ f) (hj : j ≤
     (hT : L ^ (11 * 𝔰.n) ≤ T) (hτ : T⁻¹ ≤ τ / 2) {x : 𝔰.G₁} (hx : x ∉ positionBall 𝔰 T) :
     hF.complexData.HasDeepVector j p q F x (.ofReal τ ^ 2)⁻¹ := by
   rintro y ⟨hy, near_p, near_q⟩
-  obtain ⟨a, ha, h_depth⟩ : ∃ a : Fin 𝔰.ϱ, j ≤ a ∧ T ^ 2 ≤ realDepth a y (y * x) :=
-    hF.exists_sq_le_realDepth hj hp hq hT hx hy near_p near_q
+  obtain ⟨a, ha, h_depth⟩ := hF.exists_sq_le_realDepth hj hp hq hT hx hy near_p near_q
   have T_pos : 0 < T := (pow_pos (by linarith [hF.four_le]) _).trans_le hT
   have τ_pos : 0 < τ := by linarith [inv_pos.2 T_pos]
   have h_le : (τ ^ 2)⁻¹ ≤ realDepth a y (y * x) / π :=
@@ -477,7 +481,8 @@ lemma formConst_mul_lintegral_le [Nonempty I]
   have h_gain (h_lt : ENNReal.ofReal t⁻¹ < 1) (x : 𝔰.G₁) (_ : x ∈ hF.complexData.positions) :
       φ x ^ 2 ≤ (.ofReal V * .ofReal t⁻¹ ^ hF.complexData.volumeExponent) ^ 2 *
         (hF.gauge hL).weightedSquareProduct j p q F x := by
-    rw [hF.volumeExponent_eq, ← ofReal_pow (by positivity), ← ofReal_mul (by positivity), inv_pow]
+    rw [hF.volumeExponent_eq, ← ofReal_pow (by positivity), ← ofReal_mul (by positivity), inv_pow,
+      ← div_eq_mul_inv]
     exact hφ_gain ((inv_lt_one₀ (by positivity)).1 (ofReal_lt_one.1 h_lt)) x
   have r_le : 9 * 10 ^ 7 * 𝔰.n ^ 4 + r ≤ hF.complexData.volumeExponent := by
     rw [hF.volumeExponent_eq]

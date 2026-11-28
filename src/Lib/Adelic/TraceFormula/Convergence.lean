@@ -289,6 +289,20 @@ theorem summable_kernelTerm {B : ℕ} {k : GInf E s → ℂ} (hB : 13 * card n ^
     (eight_mul_sq_lt_of_thirteen_mul_cube_le card_pos hB) φ hk
   exact Summable.of_eNorm ((h_bound Z g x).trans_lt ENNReal.ofReal_lt_top).ne
 
+/-- For a fixed real kernel of sufficient decay, the partial kernel at `g, x` is linear in the
+finite test function. -/
+def partialKernelLinear {B : ℕ} {k : GInf E s → ℂ} (hB : 13 * card n ^ 3 ≤ B)
+    (hk : ∃ C : ℝ, ∀ g : GInf E s,
+      ‖k g‖ * (∏ w : InfinitePlace E, ‖((g w : GL n ℂ) : Matrix n n ℂ)‖) ^ B ≤ C)
+    (Z : Set (U V.J)) (g x : G E s) : TestFunction (Gf E n) →ₗ[ℂ] ℂ where
+  toFun φ := V.partialKernel k φ Z g x
+  map_add' φ ψ := by
+    simp only [partialKernel]
+    rw [← (V.summable_kernelTerm hB φ hk Z g x).tsum_add (V.summable_kernelTerm hB ψ hk Z g x)]
+    exact tsum_congr fun γ ↦ by simp [kernelTerm, mul_add]
+  map_smul' c φ := by
+    simp [partialKernel, kernelTerm, ← tsum_mul_left, mul_left_comm _ c]
+
 /-- If `k` has decay of order at least `13 (card n)³`, then the values of `k ⊗ φ` at `x⁻¹ γ x`,
 for the rational points `γ` with characteristic polynomial in `S`, are summable. -/
 theorem summable_polyTerm {B : ℕ} {k : GInf E s → ℂ} (hB : 13 * card n ^ 3 ≤ B)
@@ -419,7 +433,8 @@ theorem exists_norm_partialKernel_spanStabilizer_le {B : ℕ} {k : GInf E s → 
     ν * γ ∈ Z ↔ γ ∈ Z := by
     rw [Set.mem_ofPred_eq, Set.mem_ofPred_eq,
       mul_mem_cancel_left (mem_spanStabilizer_of_mem_dilationGroup hν)]
-    exact and_congr_right fun hγ ↦ by rw [A.isIsotropicFrame.charpoly_radical_mul hν hγ]; exact Iff.rfl
+    exact and_congr_right fun hγ ↦ by
+        rw [A.isIsotropicFrame.charpoly_radical_mul hν hγ]; exact Iff.rfl
   -- As a function of `g`, the partial kernel is bounded, of level `J` and fixed by `k`, hence
   -- continuous.
   let F (g : G E s) : ℂ := V.partialKernel k φ Z g x

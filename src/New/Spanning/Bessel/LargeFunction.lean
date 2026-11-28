@@ -68,6 +68,16 @@ class New.DiscreteSeries.UnitarySignFrame (𝔰 : Shape)
   /-- The matrix `p` is unitary. -/
   mem_unitary : matrix.val ∈ unitary (Matrix 𝔰.BesselIndex 𝔰.BesselIndex ℂ)
 
+open scoped Matrix.Norms.L2Operator in
+/-- Conjugating a matrix by the unitary sign frame preserves its operator norm. -/
+lemma New.DiscreteSeries.UnitarySignFrame.norm_conj {𝔰 : Shape} {ε : 𝔰.BesselIndex → ℤˣ}
+    (p : New.DiscreteSeries.UnitarySignFrame 𝔰 ε)
+    (A : Matrix 𝔰.BesselIndex 𝔰.BesselIndex ℂ) :
+    ‖p.matrix⁻¹.val * A * p.matrix.val‖ = ‖A‖ := by
+  rw [Units.inv_eq_of_mul_eq_one_left (Unitary.star_mul_self_of_mem p.mem_unitary),
+    CStarRing.norm_mul_mem_unitary _ p.mem_unitary,
+    CStarRing.norm_mem_unitary_mul _ (Unitary.star_mem p.mem_unitary)]
+
 /-- The Bessel system `B` has type `(l, kw)`: its full function is the Bessel function of the
 discrete series of parameter `l`, with values in the representation of `H` of weight `kw`. -/
 structure New.Filling.IsDiscreteSeriesBessel {𝔰 : Shape} {ε : 𝔰.BesselIndex → ℤˣ} {b : ℝ} {f : ℕ}
@@ -327,20 +337,14 @@ lemma IsPosition.exists_mul_eq_frameCols_and_besselLength_le (hP : IsPosition ε
       (x.val * p.matrix).val * v = 𝔰.frameCols ∧
       besselLength x ≤ 8 * 𝔰.n * (√𝔰.r * M) := by
   -- The columns of `i₀` and `v₁, …, v_n` have the Gram matrix of the basis of `X₀` and the frame.
-  have h_entry (a b : Fin (𝔰.ϱ + 1)) :
-      (vᴴ * signMatrix ε * v) a b = if a = last 𝔰.ϱ ∧ b = last 𝔰.ϱ then -1 else 0 := by
-    split_ifs with hab
-    · rw [hab.1, hab.2, h_norm]
-    · exact hP.gram_eq_zero a b (not_and_or.1 hab)
   have h_frame : vᴴ * signMatrix ε * v = 𝔰.frameColsᴴ * 𝔰.J₁ * 𝔰.frameCols := by
-    rw [Matrix.mul_assoc 𝔰.frameColsᴴ, mul_inclMatrix, conjTranspose_inclMatrix_mul]
+    rw [conjTranspose_inclMatrix_mul_mul_inclMatrix, middleGram_submatrix_besselFrame]
     ext a b
-    rw [h_entry, submatrix_apply, submatrix_apply, id_eq]
-    refine Fin.lastCases ?_ (fun a ↦ ?_) a <;> refine Fin.lastCases ?_ (fun b ↦ ?_) b
-    · simp [Shape.besselFrame, Shape.J₁, splitGram, middleGram]
-    · simp [Shape.besselFrame, Shape.J₁, splitGram, middleGram]
-    · simp [Shape.besselFrame, Shape.J₁, splitGram, middleGram, (castSucc_lt_last a).ne]
-    · simp [Shape.besselFrame, Shape.J₁, splitGram, middleGram, (castSucc_lt_last a).ne]
+    by_cases h : a = 𝔰.top ∧ b = 𝔰.top
+    · obtain ⟨rfl, rfl⟩ := h
+      simpa using h_norm
+    · simpa [Matrix.single_apply, eq_comm (a := 𝔰.top), h]
+        using hP.gram_eq_zero a b (not_and_or.1 h)
   have h_gram : (p.matrix.val * fromCols i₀ v)ᴴ * 𝔰.J₁ * (p.matrix.val * fromCols i₀ v) =
       (fromCols 𝔰.definiteCols 𝔰.frameCols)ᴴ * 𝔰.J₁ * fromCols 𝔰.definiteCols 𝔰.frameCols := by
     rw [gram_mul, p.gram_eq]
@@ -364,21 +368,14 @@ lemma IsPosition.exists_mul_eq_frameCols_and_besselLength_le (hP : IsPosition ε
     exact ⟨Z * p.matrix⁻¹.val, by
       rw [Matrix.mul_assoc, ← Matrix.mul_assoc _ p.matrix.val, Units.inv_mul, Matrix.one_mul, hZ]⟩
   have h_indep' : HasLeftInv (fromCols 𝔰.definiteCols 𝔰.frameCols) := by
-    refine ⟨(fromCols 𝔰.definiteCols 𝔰.frameCols)ᴴ, ?_⟩
-    rw [conjTranspose_fromCols_eq_fromRows_conjTranspose, fromRows_mul_fromCols,
-      conjTranspose_inclMatrix_mul, conjTranspose_inclMatrix_mul,
-      conjTranspose_inclMatrix_mul, conjTranspose_inclMatrix_mul, ← fromBlocks_one]
-    refine fromBlocks_inj.2 ⟨?_, ?_, ?_, ?_⟩
-    · ext i j
-      simp only [submatrix_apply, id_eq, inclMatrix, Matrix.one_apply, Sum.inr.injEq, Sum.inl.injEq]
-    · ext i b
-      refine Fin.lastCases ?_ (fun c ↦ ?_) b <;>
-        simp [Shape.besselFrame, inclMatrix]
-    · ext a j
-      refine Fin.lastCases ?_ (fun c ↦ ?_) a <;>
-        simp [Shape.besselFrame, inclMatrix]
-    · ext a b
-      simp only [submatrix_apply, id_eq, inclMatrix, Matrix.one_apply, besselFrame_injective.eq_iff]
+    let e := Sum.elim 𝔰.indexX₀ 𝔰.besselFrame
+    have he : Function.Injective e := Sum.elim_injective.2
+      ⟨by simp [Function.Injective], besselFrame_injective,
+        by simp [forall_fin_succ', Shape.besselFrame]⟩
+    have h_cols : fromCols 𝔰.definiteCols 𝔰.frameCols = inclMatrix ℂ e := by
+      ext i (a | b) <;> rfl
+    rw [h_cols]
+    exact ⟨_, inclMatrix_gram_eq_one (fun _ _ h ↦ he h)⟩
   obtain ⟨x, hx⟩ : ∃ x : 𝔰.G₁,
       x.val.val * (p.matrix.val * fromCols i₀ v) = fromCols 𝔰.definiteCols 𝔰.frameCols :=
     witt ⟨Complex.I, by simp⟩ isHermitian.eq IsHermitianInvolution.isUnit h_indep h_indep' h_gram
@@ -622,17 +619,6 @@ variable {𝔰 : Shape} {I : Type*} {ε : 𝔰.BesselIndex → ℤˣ} [Fintype I
 private lemma sFinite_besselGraphMeasure : SFinite 𝔰.besselGraphMeasure :=
   @Measure.instSFiniteMap _ _ _ _ (𝔰.besselHaar.prod volume) 𝔰.besselGraphChart inferInstance
 
-private lemma continuous_sum_finset {α β ι : Type*} [TopologicalSpace α] [AddCommMonoid β]
-    [TopologicalSpace β] [ContinuousAdd β] (s : Finset ι) {f : ι → α → β}
-    (hf : ∀ i ∈ s, Continuous (f i)) : Continuous fun a ↦ ∑ i ∈ s, f i a := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => exact continuous_const
-  | @insert i s hi ih =>
-    simp only [Finset.sum_insert hi]
-    exact (hf i (Finset.mem_insert_self i s)).fun_add
-      (ih fun j hj ↦ hf j (Finset.mem_insert_of_mem hj))
-
 private lemma continuous_uncurry_smul_mul_left {G S E : Type*} [TopologicalSpace G] [Mul G]
     [ContinuousMul G] [TopologicalSpace S] [TopologicalSpace E] [SMul ℂ E] [ContinuousSMul ℂ E]
     {k : G → ℂ} {F : G → S → E} (hk : Continuous k) (hF : Continuous F.uncurry) (y : G) :
@@ -743,17 +729,14 @@ lemma continuous_besselIntegrand (h_cont : Continuous rep) :
       (q.snd.val.fst : Matrix 𝔰.BesselIndex 𝔰.BesselIndex ℂ) :=
     Units.continuous_val.comp (continuous_subtypeVal.comp h_fst)
   have h_srs : Continuous fun q : 𝔰.G₁ × 𝔰.besselGraph ↦ simpleRootSum q.snd.val.fst :=
-    continuous_sum_finset _ fun a _ ↦
-      (continuous_apply _).comp ((continuous_apply _).comp h_mat)
+    continuous_finsetSum _ fun _ _ ↦ h_mat.matrix_elem _ _
   have h2 : Continuous fun q : 𝔰.G₁ × 𝔰.besselGraph ↦ wave (-simpleRootSum q.snd.val.fst) :=
     Complex.continuous_exp.comp (h_srs.neg.fun_sub (Complex.continuous_conj.comp h_srs.neg))
   have h_rep : Continuous fun q : 𝔰.G₁ × 𝔰.besselGraph ↦ (rep q.snd.val.snd⁻¹).val :=
     continuous_subtypeVal.comp (h_cont.comp h_snd.inv)
   have h3 : Continuous fun q : 𝔰.G₁ × 𝔰.besselGraph ↦
       WithLp.toLp 2 ((rep q.snd.val.snd⁻¹).val *ᵥ v.ofLp) :=
-    (PiLp.continuous_toLp 2 _).comp (continuous_pi fun i ↦
-      continuous_sum_finset _ fun j _ ↦
-        ((continuous_apply j).comp ((continuous_apply i).comp h_rep)).fun_mul continuous_const)
+    (PiLp.continuous_toLp 2 _).comp (h_rep.matrix_mulVec continuous_const)
   exact h1.fun_smul (h2.fun_smul h3)
 
 /-- For a unit vector `v`, the norm of the integrand `c_λ(x⁻¹ s y) π(s)⁻¹ v` is `|c_λ(x⁻¹ s y)|`,
@@ -796,7 +779,7 @@ private lemma besselValueRep_inv_val (k : U (1 : Matrix 𝔰.κ 𝔰.κ ℂ)) :
     have h : besselValueRep rep k⁻¹ * besselValueRep rep k = 1 := by
       rw [← (besselValueRep rep).map_mul, inv_mul_cancel, (besselValueRep rep).map_one]
     exact congrArg Subtype.val h
-  exact left_inv_eq_right_inv hBA (besselValueRep rep k).2.2
+  exact left_inv_eq_right_inv hBA (besselValueRep rep k).property.2
 
 /-- Let `rep` be a continuous unitary representation of `H` on `ℂ^I`, `v` a unit vector of `ℂ^I`,
 `x` a point of `G₁`, and `l = 2λ` a parameter with coefficient `c_λ = l.dsCoeffInFrame` and large
@@ -1011,11 +994,8 @@ lemma formalDegree_mul_integral_norm_sq_besselAverage (h_cont : Continuous rep) 
           ∂𝔰.besselGraphMeasure ∂besselQuotMeasure := by
         simp_rw [h_insert, integral_const_mul, ← Complex.ofReal_pow, integral_complex_ofReal,
           Complex.ofReal_mul]
-    _ = ∫ g : 𝔰.G₁, Φ g := by
-      have h_unfold := measurePreserving_unfold_besselGraphMeasure (𝔰 := 𝔰)
-      rw [← h_unfold.map_eq] at hΦ_int ⊢
-      rw [integral_map h_unfold.aemeasurable hΦ_int.aestronglyMeasurable]
-      exact (integral_prod _ (hΦ_int.comp_measurable h_unfold.measurable)).symm
+    _ = ∫ g : 𝔰.G₁, Φ g :=
+      (measurePreserving_unfold_besselGraphMeasure (𝔰 := 𝔰)).integral_integral_comp hΦ_int
     _ = ∫ a : 𝔰.G₁, ⟪v, (l.formalDegree * l.dsCoeffInFrame a⁻¹) • W (x * a)⟫_ℂ := by
       rw [← integral_mul_left_eq_self _ x]
       simp only [Φ, inv_mul_cancel_left, inner_smul_right, ← h_kernel.apply_inv]

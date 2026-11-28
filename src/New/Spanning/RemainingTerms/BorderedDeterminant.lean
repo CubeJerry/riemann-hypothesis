@@ -28,8 +28,7 @@ says that `γ` has cell rank `j`. `New.Filling.minorNorm j γ` is the absolute n
 * `New.Filling.latticeDisc`, `New.Filling.isotropicRowsIndex`, `New.Filling.torsionIndex`: a
   discriminant and two lattice indices. `New.submoduleIndex M M'` is the index of `M ⊓ M'` in `M'`,
   `New.colLattice` a column span.
-* `New.Filling.subframeMinor`: the minor `δ_*(γ)`, nonzero for a term with a cell rank
-  (`New.Filling.HasCellRank.subframeMinor_ne_zero`).
+* `New.Filling.subframeMinor`: the minor `δ_*(γ)`.
 * `New.Filling.minorGauge`, `New.Filling.maxGauge`: the gauges of a term.
   `New.Filling.IsNearRepresentative` marks the kept terms, and `New.Filling.IsNearTermAt` selects
   the terms that are counted.
@@ -221,6 +220,24 @@ lemma gram_classCoordX₀ : (S.classCoordX₀ c)ᴴ * S.latticeMiddle (𝔸f E) 
   simpa [classCoord_eq_fromBlocks, splitGram, fromBlocks_conjTranspose, fromBlocks_multiply] using!
     congrArg (submatrix · 𝔰.indexX₀ 𝔰.indexX₀) (classCoord_conj_splitGram c)
 
+variable {c} in
+/-- Vectors of `Λ ∩ X₀`, for the lattice `Λ` of the class `c` in the definite space `X₀`, have
+integral products. Here `S.classCoordX₀ c` changes from an orthonormal basis of `X₀` to the
+coordinates of `Λ`, and integral means with entries in the ring `Ô E` of integral elements of the
+finite adeles `𝔸f E`. -/
+lemma isIntMatrix_conjTranspose_mul_of_classCoordX₀ {σ τ : Type} {m : Matrix 𝔰.κ σ (𝔸f E)}
+    {m' : Matrix 𝔰.κ τ (𝔸f E)} (hm : IsIntMatrix (Ô E) (S.classCoordX₀ c * m))
+    (hm' : IsIntMatrix (Ô E) (S.classCoordX₀ c * m')) : IsIntMatrix (Ô E) (mᴴ * m') := by
+  -- The basis is orthonormal for the integral Gram matrix of the lattice.
+  have h_gram : mᴴ * m' =
+      (S.classCoordX₀ c * m)ᴴ * S.latticeMiddle (𝔸f E) * (S.classCoordX₀ c * m') :=
+    calc mᴴ * m'
+      _ = mᴴ * ((S.classCoordX₀ c)ᴴ * S.latticeMiddle (𝔸f E) * S.classCoordX₀ c) * m' := by
+        rw [gram_classCoordX₀, Matrix.mul_one]
+      _ = _ := by simp only [conjTranspose_mul, Matrix.mul_assoc]
+  rw [h_gram]
+  exact (hm.conjTranspose.mul S.isUnimodular_latticeMiddle.isIntMatrix).mul hm'
+
 omit [Fintype τ] [DecidableEq τ] in
 /-- The products of rational vectors `t`, `t'` for the form `S.ratGram` can be computed in the
 lattice coordinates `S.classCoord c` of a class `c`, with the Gram matrix of `S.latticeMiddle`. -/
@@ -285,13 +302,10 @@ theorem linkMetric_form_of_mem_link {p q : 𝔰.MiddleIndex ⊕ 𝔰.MiddleIndex
 lemma det_gram_linkMetric_ne_zero (h : HasLeftInv v) : (vᴴ * S.linkMetric * v).det ≠ 0 := by
   -- At a complex embedding `Φ w` the form `S.linkMetric` is positive definite and `v` stays
   -- injective.
-  obtain ⟨l, hl⟩ := h
   let w : NumberField.InfinitePlace E := Classical.ofNonempty
-  have h_inj : (v.map (Φ w)).mulVec.Injective :=
-    HasLeftInv.injective_mulVec ⟨l.map (Φ w), by simp [← Matrix.map_mul, hl]⟩
   apply_fun Φ w
   simpa [map_det, map_conjTranspose] using
-    ((linkMetric_posDef w).conjTranspose_mul_mul_same h_inj).det_pos.ne'
+    ((linkMetric_posDef w).conjTranspose_mul_mul_same (h.map (Φ w)).injective_mulVec).det_pos.ne'
 
 omit [CMType E] in
 /-- If `v` has a left inverse, the number of its columns is the dimension of their span. -/

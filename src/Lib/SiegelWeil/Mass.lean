@@ -2,6 +2,7 @@ module
 
 import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
 public import Lib.Weil.Construction.FiniteMultiplier
+public import Lib.Adelic.Adeles.LocalFactors
 public import Lib.Adelic.Adeles.StrongApproximation
 import Lib.Adelic.Reduction.DefiniteClassSums
 import Lib.Adelic.Unitary.CongruenceLevels
@@ -26,7 +27,6 @@ of a ring.
   `E` contains a primitive root of unity of order `5040`, so it is unramified over its maximal real
   subfield at all finite places). Then the class sum in rank `j + 1` of the number of lattice
   vectors of norm `1` is the mass in rank `j`.
-* `New.idealZeta`: the sum ζ_R(s) of [R : I]^(−s) over the ideals I of finite index of a ring R.
 * `New.lintegral_le_idealZeta_mul`: let ζ_R(μ) ≤ 2. An integral is at most ζ_R(μ)·V if almost every
   point x of the domain lies in some set S(I), for an ideal I of finite index, with
   [R : I]^μ · f(x) · (measure of S(I)) ≤ V, for the integrand f.
@@ -35,6 +35,7 @@ of a ring.
 
 Notions from other files:
 * `New.stdSpace`: the definite space `I_n`, the sum of `n` norms with its standard lattice.
+* `New.idealZeta`: the sum ζ_R(s) of [R : I]^(−s) over the ideals I of finite index of a ring R.
 
 ## Relation to the literature
 
@@ -235,11 +236,6 @@ open MeasureTheory Measure ENNReal Fintype AddSubgroup Set NumberField AddChar C
 
 variable {A n : Type} [CommRing A] {R : Subring A} {μ e : ℕ} {E : Type _} [Field E] [NumberField E]
 
-/-- The ideal zeta sum ∑ [R : I]^(−s) over the ideals I of finite index in R, for a natural
-number s, with values in [0, ∞]. -/
-noncomputable def idealZeta (R : Subring A) (s : ℕ) : ℝ≥0∞ :=
-  ∑' I : {I : Ideal R // I.cardQuot ≠ 0}, (I.val.cardQuot : ℝ≥0∞)⁻¹ ^ s
-
 /-- A number whose positive power is at most `1 + 2⁻¹ ^ e` is at most `2`. -/
 lemma le_two_of_pow_le_ofReal {x : ℝ≥0∞}
     (h_pow : x ^ (μ + 1) ≤ ENNReal.ofReal (1 + 2⁻¹ ^ e)) : x ≤ 2 := by
@@ -301,6 +297,11 @@ noncomputable def conductorIdeal {E : Type*} [Field E] [NumberField E] (b : 𝔸
     Ideal (Ô E) where
   toAddSubmonoid := ((characterKernel b).addSubgroupOf (Ô E).toAddSubgroup).toAddSubmonoid
   smul_mem' c r hr v := by simpa [mul_assoc, mul_left_comm] using hr (c * v)
+
+/-- The conductor ideal of a finite adele `b`, the largest ideal of `Ô` on which `v ↦ ψ_f(b v)` is
+trivial, has finite index. -/
+lemma cardQuot_conductorIdeal_ne_zero (b : 𝔸f E) : (conductorIdeal b).cardQuot ≠ 0 :=
+  isCompact_Ô.relIndex_ne_zero_add (isOpen_characterKernel b)
 
 /-- Let `E` be a CM field. Take a self-adjoint finite adele `b`, a finite adele `Γ`, and
 `I = conductorIdeal b`, the largest ideal of `Ô` on which `v ↦ ψ_f(b v)` is trivial. Then the Gauss
@@ -381,8 +382,8 @@ lemma lintegral_gauss_sum_le_idealZeta (hμ : idealZeta (Ô E) μ ≤ 2) [Fintyp
     (fun b ↦ -Function.invFun ξ (fun v ↦ χ v) + b) ⁻¹' selfAdjointCodifferent E 1
   refine (setLIntegral_univ _).ge.trans (lintegral_le_idealZeta_mul hμ S (.of_forall fun b _ ↦ ?_))
   let I : Ideal (Ô E) := conductorIdeal b.val
-  have index_ne : I.cardQuot ≠ 0 := isCompact_Ô.relIndex_ne_zero_add (isOpen_characterKernel b.val)
-  have : Fintype (Ô E ⧸ I.toAddSubgroup) := fintypeOfIndexNeZero index_ne
+  have index_ne : I.cardQuot ≠ 0 := cardQuot_conductorIdeal_ne_zero b.val
+  let : Fintype (Ô E ⧸ I.toAddSubgroup) := fintypeOfIndexNeZero index_ne
   have mem_S : b ∈ S I := by
     -- `ξ b` is trivial on `I`, so it descends to a character of `Ô ⧸ I`
     let ξb : Ô E →+ Additive ℂ := (coeHom.compAddChar (ψf E)).toAddMonoidHom.comp

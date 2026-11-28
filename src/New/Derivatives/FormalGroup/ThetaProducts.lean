@@ -66,11 +66,11 @@ open MvPolynomial
       (∏ x : X, c x ^ D x) • MvPolynomial.X () ^ D.degree := by
     simp only [linSubst, aeval_monomial]
     simp [prod_fintype, smul_pow, prod_smul, prod_pow_eq_pow_sum, degree_eq_sum]
-  have h_chain : jet ℂ_[p] (monomial D 1) (g.subst (linearSeries c)) =
-      jet ℂ_[p] (linSubst (fun _ : Unit ↦ c) (monomial D 1)) g :=
+  have h_chain : jetPairing (monomial D 1) (g.subst (linearSeries c)) =
+      jetPairing (linSubst (fun _ : Unit ↦ c) (monomial D 1)) g :=
     jet_subst_linearSeries (fun _ : Unit ↦ c) (monomial D 1) g
-  rw [h_monomial, X_pow_eq_monomial, map_smul, LinearMap.smul_apply, jet_monomial,
-    jet_monomial] at h_chain
+  rw [h_monomial, X_pow_eq_monomial, map_smul, LinearMap.smul_apply, jetPairing_monomial,
+    jetPairing_monomial] at h_chain
   rw [eq_div_iff (Finset.prod_ne_zero_iff.2 fun x _ ↦ mod_cast factorial_ne_zero (D x)), mul_comm]
   simpa [prod_fintype, PowerSeries.coeff] using h_chain
 
@@ -231,6 +231,15 @@ lemma dvd_pow_sub_sum_partner {P : Parameters} {s p : ℕ} [Fact p.Prime] [Padic
   refine h_add.add (dvd_sum fun x _ ↦ ?_)
   rw [smul_pow, ← sub_smul, smul_eq_C_mul]
   exact (map_dvd C (h_coeff x)).mul_right _
+
+/-- For vectors `u_j` over `E = P.E s` integral above `p`, the linear forms `u_j† z`, whose
+coefficient at `z_(τ,c)` is `conj (τ(u_{j,c}))` read in `ℂ_p` through the embedding `ιₚ` of `ℂ`,
+have integral coefficients. -/
+lemma norm_daggerForms_le_one (P : Parameters) (s : ℕ) {p : ℕ} [Fact p.Prime] [PadicPlace p]
+    {n J : Type} {u : J → n → P.E s}
+    (hu : ∀ (j : J) (i : n), IsIntegralAbove p (u j i)) (j : J) (x : P.Φ s × n) :
+    ‖(daggerForms u j x : ℂ_[p])‖ ≤ 1 :=
+  (hu j x.2).norm_conj_le_one _
 
 /-- Let `E = P.E s` be `K = ℚ(√-d)` (`d = P.d`) with a root of unity of order `q₁ = P.q₁ s`
 adjoined, `s` being the tower level, and let `e` be in `I_p° = partnerExponents P.d p`. Let the
@@ -451,7 +460,7 @@ lemma exists_hasNormalForm (P : Parameters) (s : ℕ) [PadicPlace p] (hp : chiK 
   -- The linear forms `u† z` are integral, so at `ϖ z` the series is an integral series times
   -- the exponential of `c_ϖ ∑ m_j Ξ(u_j† z)`.
   let μ (j : J) (x : P.Φ s × n) : valRingCp p :=
-    ⟨daggerForms u j x, (hu j x.2).norm_conj_le_one _⟩
+    ⟨daggerForms u j x, P.norm_daggerForms_le_one s hu j x⟩
   have hL (j : J) : constantCoeff (linearSeries (μ j)) = 0 := constantCoeff_linearSeries _
   obtain ⟨V, hV⟩ : H.rescale (fun _ : P.Φ s × n ↦ ϖ) ∈ seriesToCp.range :=
     P.cmCurve.rescale_mem_range_of_mem_multiSeriesRing (μ := μ) hϖ.le hH

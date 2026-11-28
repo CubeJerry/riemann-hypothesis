@@ -262,10 +262,9 @@ lemma New.Selmer.eventually_exists_lettersReadThick {P : Parameters} {D : Data P
     fun z ↦ cmSign (complexEmbeddingOf e (Classical.epsilon (reads z))),
     ⟨h_index, ?_, fun g hg ↦ ?_, fun g hg ↦ ?_, ?_, ?_⟩⟩
   · -- The index `e f` counts the embeddings in an orbit, so it is at most the degree of `E`.
-    have h_card : Nat.card (D.E →+* ℂ) ≤ D.halfGap := by
-      simpa [Embeddings.card, finrank_eq_two_mul_card_infinitePlace] using D.nat_le_of_hasLogBound
-    grw [Nat.le_mul_of_pos_right k.e k.f.pos, h_index, h_group.index_eq_card_range,
-      Finite.card_subtype_le, h_card]
+    have h_degree : finrank ℚ D.E ≤ D.halfGap := by
+      simpa [finrank_eq_two_mul_card_infinitePlace] using D.nat_le_of_hasLogBound
+    grw [Nat.le_mul_of_pos_right k.e k.f.pos, h_index, h_group.index_le_finrank, h_degree]
   · -- The letters read whether `g` is a b-place: a `g` that is not a b-place has `Q < ℓ`, so its
     -- letter determines its embedding.
     refine ⟨fun h_thick ↦ ⟨g, h_thick, rfl⟩, fun ⟨g', h_thick, h_letter⟩ ↦ ?_⟩
@@ -356,7 +355,7 @@ lemma New.Selmer.two_mul_tame_exponent_le_defectBound {P : Parameters} (D : Data
 `k = D.k = D.r + 1 - m`, `b = D.natB` is the weight at the b-places, `M = D.M` is the product of the
 two level primes, and `λ = crystallineLoss h₂ b ℓ` is the `ℓ`-adic valuation of
 `(2 b)! (∏ a) ^ h₂³`, with `a` over the positive integers in `(b - 30 h₂³, b + 30 h₂³]` and
-`h₂ = D.halfGap = D.r ^ 8`. The left side is the bound of
+`h₂ = D.halfGap = D.r ^ 8`. The left side bounds the threshold in
 `New.Selmer.normLength_dualDefect_le_of_crystallineSizes` for a lattice of rank `ρ`, with `Q = k t`
 and `μ = ⌊ρ m / (k x)⌋`. -/
 lemma New.Selmer.crystalline_bound_le_defectBound {P : Parameters} (D : Data P) (ℓ ρ : ℕ) {x : ℕ}
@@ -515,7 +514,7 @@ lemma New.Selmer.normLength_dualDefect_le_defectBound_of_isTameType {P : Paramet
   have h_large : farWindowStart D i σ + 6 * (4 * D.t + (D.halfGap ^ 2 + 1)) +
       D.r ^ 2 * ((D.r + D.t) * D.r + 1) ^ 2 + 2 < D.levelPrime n := by
     grw [farWindowStart, sub_le, hi]
-    split_ifs <;> exact D.nat_lt_of_hasLogBound
+    split_ifs <;> exact D.nat_lt_of_hasLogBound (by scale_grind D)
   exact normLength_dualDefect_le_of_hasCupExponent hL.isPotentiallyCrystalline
     (by grw [show 8 * (D.halfGap ^ 2 + 1) + 2 * (4 * D.t) ≤
         150 * (D.halfGap ^ 2 + 1 + 4 * D.t + 1) by omega,
@@ -616,7 +615,11 @@ lemma New.Selmer.normLength_dualDefect_le_of_isSummandClass {P : Parameters} {�
       sign_eq := fun γ hγ ↦ by simpa only [h_lift] using h_reads.sign_eq (lift γ) hγ }
   refine normLength_dualDefect_le_of_crystallineSizes (Γ := ⟨Γ⟩) (D.k * D.t) D.m D.halfGap
     (finrank O (L c) * D.m / (D.k * x)) (crystallineSizes_data D hi) (fun γ ↦ (h_win γ).1)
-    (fun γ u hu ↦ (h_win γ).2 u (filter_subset _ _ hu)) h_dual' ?_ ?_ h_group.1 k ζ h_reads'
+    (fun γ u hu ↦ (h_win γ).2 u (filter_subset _ _ hu)) h_dual' ?_
+    (two_mul_lt_mul_crystallineLoss_succ D.halfGap D.natB)
+    (lt_div_mul_add (crystallineSizes_data D hi).bound_pos)
+    (fun ⦃n⦄ hn hd ↦ cube_le_crystallineLoss_of_dvd hn hd)
+    ?_ h_group.1 k ζ h_reads'
   · cases c with
     | none =>
       -- The main summand: the negative jumps are at most `-h₂ / 2`, and few jumps are low.
@@ -627,7 +630,9 @@ lemma New.Selmer.normLength_dualDefect_le_of_isSummandClass {P : Parameters} {�
       -- A character: the only jump is `-c - 1`, which is low and negative.
       exact .inr fun γ ↦ subset_Icc_of_jump_eq_single h_in.isPotentiallyCrystalline
         (c.isLt.trans_le hJ.t_le) (h_count (some c)) (hU' γ)
-  · simpa only [finrank_linearMap_self] using
-      crystalline_bound_le_defectBound D ℓ (finrank O (L c)) hx_pos hx_le
+  · rw [finrank_linearMap_self]
+    refine le_trans ?_ (crystalline_bound_le_defectBound D ℓ (finrank O (L c)) hx_pos hx_le)
+    norm_cast
+    omega
 
 end OnePlaceDefect

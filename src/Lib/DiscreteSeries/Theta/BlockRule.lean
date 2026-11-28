@@ -94,6 +94,18 @@ lemma mem_centeredBlock {e y : ℤ} {d : ℕ} :
     Function.comp_apply]
   exact exists_congr fun b ↦ and_congr_right fun _ ↦ by omega
 
+/-- A doubled entry of the block has distance less than its length from the doubled centre,
+and parity opposite to its length. -/
+lemma mem_centeredBlock_iff_abs_lt_and_odd {e y : ℤ} {d : ℕ} :
+    y ∈ centeredBlock e d ↔ |y - 2 * e| < d ∧ Odd (y + d) := by
+  simp only [centeredBlock, mem_image, mem_doubledBlock, Int.even_iff, Int.odd_iff]
+  constructor
+  · rintro ⟨x, ⟨hx, hx_even⟩, rfl⟩
+    rw [add_sub_cancel_left]
+    exact ⟨hx, by omega⟩
+  · rintro ⟨hy, hy_odd⟩
+    exact ⟨y - 2 * e, ⟨hy, by omega⟩, by omega⟩
+
 lemma card_doubledBlock (d : ℕ) : (doubledBlock d).card = d := by
   rw [doubledBlock, card_image_of_injective _ fun a b hab ↦ by simpa using hab, card_range]
 
@@ -104,12 +116,9 @@ lemma card_centeredBlock (e : ℤ) (d : ℕ) : (centeredBlock e d).card = d := b
 lemma image_neg_centeredBlock (e : ℤ) (d : ℕ) :
     (centeredBlock e d).image Neg.neg = centeredBlock (-e) d := by
   ext y
-  simp only [Finset.mem_image, mem_centeredBlock]
-  constructor
-  · rintro ⟨x, ⟨b, hb, rfl⟩, rfl⟩
-    exact ⟨d - 1 - b, by omega, by omega⟩
-  · rintro ⟨b, hb, rfl⟩
-    exact ⟨2 * e + d - 1 - 2 * (d - 1 - b : ℕ), ⟨d - 1 - b, by omega, rfl⟩, by omega⟩
+  simp only [Finset.mem_image, neg_eq_iff_eq_neg, exists_eq_right,
+    mem_centeredBlock_iff_abs_lt_and_odd, abs_lt, Int.odd_iff]
+  omega
 
 /-- For a natural number d, signs u, v and an integer y: u v y > d says that |y| > d and that
 u v is the sign of y. -/
@@ -237,7 +246,8 @@ lemma isMatch_std_iff :
     exact ⟨by simpa [neg_neg, add_comm] using h.hasGap_column.neg,
       by simpa [add_comm] using h.hasGap_row,
       fun r ↦ by simpa only [isMatchedPair_std_iff, hrow] using h.left r,
-      fun c ↦ by simpa only [isMatchedPair_std_iff, centeredParam_swap_std, abs_neg] using h.right c⟩
+      fun c ↦ by simpa only [isMatchedPair_std_iff, centeredParam_swap_std, abs_neg]
+          using h.right c⟩
   · intro ⟨hgap, hgap', hrows, hcols⟩
     exact ⟨by simpa [add_comm] using hgap', by simpa [add_comm] using hgap.neg,
       fun r ↦ by simpa only [isMatchedPair_std_iff, hrow] using hrows r,
@@ -417,8 +427,8 @@ theorem isBlockRule_iff_of_character {e : ℤ} (hle : card n ≤ card n')
 /-- The block rule for n ≤ n' when γ = e + ⌈n/2⌉ and γ' = e + ⌈n'/2⌉, as for characters whose
 weights for spaces of ranks n, n' are e plus the fractional parts of n/2, n'/2. It holds iff three
 conditions hold. First, both parameters have gap 500(n+n')³. Second, the entries of l' − (n mod 2)
-are those of l − (n' mod 2) together with those of `centeredBlock e (n'−n)` = {2e + d−1, 2e + d−3, …,
-2e + 1−d} for d = n'−n (the block e + [d], doubled). Third, whenever l_c − (n' mod 2) = l'_r − (n
+are those of l − (n' mod 2) together with those of `centeredBlock e (n'−n)` = {2e + d−1, 2e + d−3,
+…, 2e + 1−d} for d = n'−n (the block e + [d], doubled). Third, whenever l_c − (n' mod 2) = l'_r − (n
 mod 2), s_c ≠ t_r exactly if this common entry is below 2e. -/
 theorem isBlockRule_iff_of_character_conj {e : ℤ} (hle : card n ≤ card n')
     (hγ : γ = e + ((card n : ℤ) + 1) / 2) (hγ' : γ' = e + ((card n' : ℤ) + 1) / 2) :

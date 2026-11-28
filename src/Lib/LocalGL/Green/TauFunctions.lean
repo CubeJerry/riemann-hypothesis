@@ -388,7 +388,7 @@ lemma aroots_map_frobenius_pow [IsAlgClosed K] {L : Type*} [Field L] [Algebra L 
     (σ : L →+* L) (hσ : ∀ y : L, σ y = y ^ Nat.card k ^ i) (P : L[X]) :
     (P.map σ).aroots K = (P.aroots K).map fun z : K ↦ z ^ Nat.card k ^ i := by
   -- Apply `Splits.roots_map` to the `i`-th power of the Frobenius map of `K`, which extends `σ`.
-  have h_fintype : Fintype k := Fintype.ofFinite k
+  let h_fintype : Fintype k := Fintype.ofFinite k
   have h_map : (P.map σ).map (algebraMap L K) =
       (P.map (algebraMap L K)).map (frobeniusAlgHom k K ^ i).toRingHom := by
     aesop (add simp coe_frobeniusAlgHom)
@@ -449,7 +449,7 @@ lemma greenTau_eq (hP : Irreducible P) (h0 : P.coeff 0 ≠ 0) {x : K} (hx : P.ae
     exists_pow_card_pow_eq_of_root hP hx (aeval_chosenRoot hx)
   have h_roots (c : SimClass k) :
       (c.charpoly.aroots K).map (fun z : K ↦ z ^ Nat.card k ^ i) = c.charpoly.aroots K := by
-    have h_fintype : Fintype k := Fintype.ofFinite k
+    let h_fintype : Fintype k := Fintype.ofFinite k
     rw [← aroots_map_frobenius_pow (.id k) (by simp [pow_card_pow]), c.charpoly.map_id]
   have h_brauer (η : K → ℂ) :
       brauerLift k (fun z : K ↦ η (z ^ Nat.card k ^ i)) = brauerLift k η := by
@@ -463,7 +463,7 @@ open scoped Classical in
 private lemma finMean_conj_mul_eq_ite {L : Type*} [Field L] [Finite L] (χ ξ : MulChar L ℂ) :
     finMean (fun z : Lˣ ↦ conj (χ z) * ξ z) = if χ = ξ then 1 else 0 := by
   -- the sum over `Lˣ` of the character `χ⁻¹ ξ` is `|Lˣ|` if it is trivial and `0` otherwise
-  have h_fintype : Fintype Lˣ := Fintype.ofFinite Lˣ
+  let h_fintype : Fintype Lˣ := Fintype.ofFinite Lˣ
   have h_sum : ∑ z : Lˣ, ((χ⁻¹ * ξ).comp (Units.coeHom L)) z =
       ((if (χ⁻¹ * ξ).comp (Units.coeHom L) = 1 then Fintype.card Lˣ else 0 : ℕ) : ℂ) :=
     sum_hom_units ((χ⁻¹ * ξ).comp (Units.coeHom L))
@@ -498,6 +498,18 @@ private lemma count_aroots_eq_ite {S : k[X]} (hP : Irreducible P) (hm : P.Monic)
     simp [hS.ne_zero, eq_comm, eq_iff_aeval_eq_zero, hS, hSm]
   rw [count_eq_of_nodup h_nodup]
   simp [h_mem_iff]
+
+/-- Pairing the cuspidal function `greenCuspidal k η` with the product `B.mulMoebius * constOne`
+obeys the Leibniz rule: it is the mean of `B` over the units of `L` times the rank `0` pairing of
+`constOne` with itself, plus the rank `0` pairing of `B.mulMoebius` with `constOne`. -/
+private lemma rankInner_greenCuspidal_mulMoebius_one {L : Type*} [Field L] [Algebra k L]
+    [Finite L] [Algebra L K] [IsScalarTower k L K] (η : MulChar K ℂ) (B : Hall k) :
+    rankInner (finrank k L) (greenCuspidal k η) (B.mulMoebius * constOne) =
+      finMean (fun z : Lˣ ↦ conj (η (algebraMap L K z)) * B (simClassOf (mulLeft k z.val))) *
+        rankInner 0 (constOne : Hall k) constOne +
+      rankInner 0 constOne B.mulMoebius * rankInner (finrank k L) (greenCuspidal k η) constOne := by
+  simp [rankInner_mul_of_isCuspidal (isCuspidal_greenCuspidal η) finrank_pos.ne',
+    rankInner_greenCuspidal_mulMoebius η (IsScalarTower.toAlgHom k L K)]
 
 open scoped Classical in
 /-- Let `T` be a faithful multiplicative character of the algebraically closed field `K ⊇ k`
@@ -541,14 +553,7 @@ lemma rankInner_greenTau (hP : Irreducible P) (h0 : P.coeff 0 ≠ 0) (hm : P.Mon
     simp only [finMean_conj_mul_eq_ite, h_j_iff]
   -- `greenCuspidal k (θ χ)` is cuspidal, so pairing with it obeys the Leibniz rule on the product
   -- `B.mulMoebius * constOne` (`rankInner_mul_of_isCuspidal`).
-  have h_pair (B : Hall k) :
-      rankInner (finrank k L) (greenCuspidal k (θ χ)) (B.mulMoebius * constOne) =
-        finMean (fun z : Lˣ ↦ conj (θ χ (algebraMap L K z)) * B (simClassOf (mulLeft k z.val))) *
-            rankInner 0 (constOne : Hall k) constOne +
-          rankInner 0 constOne B.mulMoebius *
-            rankInner (finrank k L) (greenCuspidal k (θ χ)) constOne := by
-    simp [rankInner_mul_of_isCuspidal (isCuspidal_greenCuspidal _) finrank_pos.ne',
-      rankInner_greenCuspidal_mulMoebius _ (IsScalarTower.toAlgHom k L K)]
+  have h_pair (B : Hall k) := rankInner_greenCuspidal_mulMoebius_one (L := L) (θ χ) B
   rw [greenTau_eq hP h0 hχ, h_deg, ← natCard_eq_pow_finrank]
   refine ⟨fun S hS hSm hS0 ↦ ?_, fun h1 ↦ ?_⟩
   · obtain hS_deg | hS_deg := ne_or_eq S.natDegree (finrank k L)

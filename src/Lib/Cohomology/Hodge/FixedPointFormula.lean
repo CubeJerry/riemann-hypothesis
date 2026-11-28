@@ -112,6 +112,17 @@ def IsCoincidenceSet (u c : W ⟶ X) (s : Finset (W.obj (CommAlgCat.of k k))) : 
   ∀ K : CommAlg k, IsField K → ∀ x : W.obj K, c.app K x = u.app K x →
     ∃ w ∈ s, x = W.map structureMap w
 
+/-- If all dual-number points cut out by `I` are constant, Nakayama gives a `b` nonzero at `ζ`
+that multiplies its kernel into `I`. Thus the two ideals agree locally at `ζ`. -/
+private lemma exists_mem_colon_of_const_tangents (a : EtaleChart d W) {I : Ideal a.coordRing}
+    (ζ : a.coordRing →ₐ[k] k) (hζ : I ≤ RingHom.ker ζ)
+    (h_const : ∀ p : a.coordRing →ₐ[k] k[ε], I ≤ RingHom.ker p →
+      W.map (ofHom p) a.point = W.map (SqZeroExt.fst ≫ structureMap) (W.map (ofHom p) a.point)) :
+    ∃ b ∈ I.colon (RingHom.ker ζ), ζ b ≠ 0 := by
+  refine exists_mem_colon_of_tangent (k := k) rfl hζ fun p _ hp r ↦ ?_
+  exact congrArg TrivSqZeroExt.snd
+    (ConcreteCategory.congr_hom (a.eq_comp_of_map_point_eq _ (h_const p hp)) r)
+
 /-- Let `k` be algebraically closed, `X` separated (`IsSeparatedFunctor X`) and `u c : W ⟶ X` two
 maps. Suppose that every `k[ε]`-valued coincidence of `u` and `c` is constant (`h_red`) and that
 finitely many charts `a i` of `W`, affine opens with `d` étale coordinates, contain all
@@ -157,18 +168,9 @@ lemma exists_isCoincidenceSet (u c : W ⟶ X) [IsAlgClosed k] [hX : IsSeparatedF
     have : IsDomain K := hK.isDomain
     have : (RingHom.ker φ.hom).IsPrime := RingHom.ker_isPrime φ.hom
     obtain ⟨p, hp, hp_ker⟩ := exists_minimalPrimes_le ((hJ i K φ).mp hx)
-    -- A tangent vector at the point `o hp` that kills `J i` is a coincidence, hence constant: its
-    -- `ε`-coordinates vanish.
-    have h_tangent : ∀ v : (a i).coordRing →ₐ[k] k[ε], (∀ r : (a i).coordRing, (v r).fst = o hp r) →
-        J i ≤ RingHom.ker v → ∀ r : (a i).coordRing, (v r).snd = 0 := by
-      rintro v - hv_ker r
-      have h_const : ofHom v = ofHom v ≫ SqZeroExt.fst ≫ structureMap :=
-        (a i).eq_comp_of_map_point_eq _ (h_red _ ((hJ i _ (ofHom v)).mpr hv_ker))
-      have h_const_r : v r = algebraMap k k[ε] (v r).fst := ConcreteCategory.congr_hom h_const r
-      rw [h_const_r, algebraMap_eq_inl', snd_inl]
-    -- So by Nakayama some `b` with `o hp b ≠ 0` multiplies the ideal of that point into `J i`.
-    obtain ⟨b, hb, hb_ne⟩ : ∃ b ∈ (J i).colon (RingHom.ker (o hp)), o hp b ≠ 0 :=
-      exists_mem_colon_of_tangent (k := k) rfl (hp.le.trans (ho hp)) h_tangent
+    -- Constant tangents make the chart ideal agree locally with the ideal of the point.
+    obtain ⟨b, hb, hb_ne⟩ := exists_mem_colon_of_const_tangents (a i) (o hp)
+      (hp.le.trans (ho hp)) fun v hv ↦ h_red _ ((hJ i _ (ofHom v)).mpr hv)
     -- Since `b ∉ p`, that ideal lies in `p`, so `φ` factors through the point.
     have h_ker : RingHom.ker (o hp) ≤ p := fun r hr ↦
       (hp.isPrime.mem_or_mem (hp.le (Submodule.mem_colon.mp hb r hr))).resolve_left
@@ -296,6 +298,21 @@ lemma EtaleChart.mem_range_jetTangent_of_injective {X : CommAlg E ⥤ Type 1} (A
     w ∈ range (jetTangent v) := by
   exact (A.tangent_mem_range_of_jet hT v hv h_inj).left w hw
 
+/-- Let `v` be a jet of `X` with values in `k ⊕ T*`, where `T` has dimension `d`, whose base point
+lies in a chart `A` and whose tangent vectors in distinct directions are distinct. Then there is a
+linear isomorphism `D : T ≃ kᵈ` such that every `α` representing `jetTangent v φ` in the chart has
+`ε`-parts of its coordinates equal to `D φ`. -/
+lemma EtaleChart.exists_linearEquiv_coordinate_jetTangent {X : CommAlg E ⥤ Type 1}
+    (A : EtaleChart d X) {T : FGModuleCat k} (hT : finrank k T = d)
+    (v : (restrictAlg E k ⋙ X).obj (CommAlgCat.of k (TrivSqZeroExt k (Dual k T))))
+    (hv : (restrictAlg E k ⋙ X).map SqZeroExt.fst v ∈
+      A.locus.obj ((restrictAlg E k).obj (CommAlgCat.of k k)))
+    (h_inj : Function.Injective (jetTangent v)) :
+    ∃ D : T ≃ₗ[k] (Fin d → k), ∀ (φ : T) (α :
+      A.coordRing ⟶ (restrictAlg E k).obj (CommAlgCat.of k k[ε])),
+      X.map α A.point = jetTangent v φ → (fun i : Fin d ↦ (α (A.coordinate i)).snd) = D φ := by
+  exact (A.tangent_mem_range_of_jet hT v hv h_inj).right
+
 /-- Let every field-valued point of `W` lie in a chart with `d` coordinates. Let `P` be a tangent
 polynomial of `c`, `u` at `w`, that is `P t = P 0 * det (1 - t (dc)⁻¹ du)`, with `P 1 ≠ 0`. Then for
 every `t : k`, `HasJacobianRatio u c d t (P t / P 1) w` holds: in every chart of `X` containing
@@ -329,7 +346,7 @@ lemma IsTangentPoly.hasJacobianRatio_eval_div {X : CommAlg E ⥤ Type 1}
   obtain ⟨D, hD⟩ : ∃ D : T ≃ₗ[k] (Fin d → k), ∀ (φ : T)
       (α : A.coordRing ⟶ (restrictAlg E k).obj (CommAlgCat.of k k[ε])),
       X.map α A.point = jetTangent (c.app _ v) φ → ξ α = D φ :=
-    (A.tangent_mem_range_of_jet hT (c.app _ v) hv_chart hcv_inj).right
+    A.exists_linearEquiv_coordinate_jetTangent hT (c.app _ v) hv_chart hcv_inj
   let N : Module.End k T := (1 - t • (1 - S.toLinearMap)) ∘ₗ S.symm.toLinearMap
   refine ⟨(D.toLinearMap ∘ₗ N ∘ₗ D.symm.toLinearMap).toMatrix', ?_, fun x α γ hx hα hγ ↦ ?_⟩
   · -- The determinant is `det (1 - t B) / det S = P t / P 1`.
@@ -473,18 +490,8 @@ lemma ker_le_of_cuts_out_coincidences {u c : W ⟶ X} {s : Finset (W.obj (of k k
       I ≤ ker α.hom ↔ c.app C (W.map α a.point) = u.app C (W.map α a.point)) :
     ker ζ.hom ≤ I := by
   obtain ⟨h_red, h_coin, h_field⟩ := hs
-  -- Nakayama: a tangent vector that kills `I` is a coincidence, hence constant, so `I` generates
-  -- `ker ζ` near `ζ`.
-  have h_tangent : ∀ p : a.coordRing →ₐ[k] DualNumber k, (∀ r : a.coordRing, (p r).fst = ζ r) →
-      I ≤ ker p → ∀ r : a.coordRing, (p r).snd = 0 := by
-    rintro p - hp r
-    have h_const : ofHom p = ofHom p ≫ SqZeroExt.fst ≫ structureMap :=
-      a.eq_comp_of_map_point_eq _ (h_red _ ((h_cut (ofHom p)).mp hp))
-    have h_const_r : p r = algebraMap k (DualNumber k) (p r).fst :=
-      ConcreteCategory.congr_hom h_const r
-    rw [h_const_r, algebraMap_eq_inl', snd_inl]
-  obtain ⟨b, hb_colon, hb_ne⟩ : ∃ b ∈ I.colon (ker ζ.hom), ζ b ≠ 0 :=
-    exists_mem_colon_of_tangent (k := k) rfl ((h_cut ζ).mpr (h_coin _ hw)) h_tangent
+  obtain ⟨b, hb_colon, hb_ne⟩ := exists_mem_colon_of_const_tangents a ζ.hom
+    ((h_cut ζ).mpr (h_coin _ hw)) fun p hp ↦ h_red _ ((h_cut (ofHom p)).mp hp)
   -- A field point `κ` that kills the colon ideal is a coincidence in the chart `a`, so it comes
   -- from `ζ`, against `ζ b ≠ 0`. Hence the colon ideal is `⊤`.
   have colon_top : (I.colon (ker ζ.hom)).map (𝟙 a.coordRing :).hom = ⊤ := by

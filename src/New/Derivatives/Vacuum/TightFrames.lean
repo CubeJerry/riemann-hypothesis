@@ -198,6 +198,17 @@ lemma exists_coe_eq_trace_of_isIntegral {z : P.E s}
   exact Submodule.mem_one.1
     ((differentialIdeal_le_iff (K := P.K) (L := P.E s) h_bot).1 h_le ⟨z, h_mem, rfl⟩)
 
+/-- For finite adeles `x, y ∈ α Ô`, their hermitian product times the generator of the different
+lies in `Ô`. Indeed, writing `x = α u` and `y = α v` leaves the integral factor `u * star v`. -/
+lemma mul_star_mul_relDifferentGen_mem {x y : 𝔸f (P.E s)}
+    (hx : (P.α s)⁻¹.val * x ∈ Ô (P.E s)) (hy : (P.α s)⁻¹.val * y ∈ Ô (P.E s)) :
+    x * star y * (P.relDifferentGen s).val ∈ Ô (P.E s) := by
+  have h_gen : (P.α s).val * star (P.α s).val * (P.relDifferentGen s).val ∈ Ô (P.E s) :=
+    mem_Ô.2 fun w ↦ (v_alpha_mul_star_mul_relDifferentGen w).le
+  have h_star : star (P.α s).val * star (P.α s)⁻¹.val = 1 := by simp [← star_mul']
+  convert mul_mem h_gen (mul_mem hx (star_mem_Ô hy)) using 1
+  grind [star_mul', Units.mul_inv]
+
 /-- Let `x`, `y` in the CM field `E = P.E s` lie in `𝔞₀ = E ∩ α Ô`: the finite adeles
 `finiteImage id x = α⁻¹ x` and `finiteImage id y = α⁻¹ y`, with `α = P.α s`, lie in the ring `Ô E`
 of integral adeles. Then the hermitian product `∑ τ, Φ τ x * conj (Φ τ y)` lies in `quadInt d`, the
@@ -205,23 +216,10 @@ ring of integers of `K` inside `ℂ`. -/
 lemma sum_mul_conj_mem_quadInt {x y : P.E s} (hx : finiteImage id x ∈ Ô (P.E s))
     (hy : finiteImage id y ∈ Ô (P.E s)) :
     ∑ τ : InfinitePlace (P.E s), Φ τ x * conj (Φ τ y) ∈ quadInt P.d := by
-  -- The number `x ȳ P'(ζ)` is integral: it is `α ᾱ P'(ζ)`, a unit at every finite place, times
-  -- `α⁻¹ x` and the conjugate of `α⁻¹ y`.
-  have h_gen : (P.α s).val * star (P.α s).val * (P.relDifferentGen s).val ∈ Ô (P.E s) :=
-    mem_Ô.2 fun w ↦ (v_alpha_mul_star_mul_relDifferentGen w).le
-  have h_factor : algebraMap (P.E s) (𝔸f (P.E s)) (x * star y * (P.relDifferentGen s).val) =
-      (P.α s).val * star (P.α s).val * (P.relDifferentGen s).val *
-        (finiteImage id x * star (finiteImage id y)) := by
-    have h_one : (P.α s).val * (P.α s)⁻¹.val * (star (P.α s).val * star (P.α s)⁻¹.val) = 1 := by
-      simp [← star_mul']
-    have h_conj : star (algebraMap (P.E s) (𝔸f (P.E s)) y) =
-        algebraMap (P.E s) (𝔸f (P.E s)) (star y) := by simp
-    simp only [finiteImage_id_eq_inv_alpha_mul, map_mul, star_mul', h_conj]
-    linear_combination -(algebraMap (P.E s) (𝔸f (P.E s)) x *
-      algebraMap (P.E s) (𝔸f (P.E s)) (star y) * (P.relDifferentGen s).val) * h_one
   have h_int : IsIntegral ℤ (x * star y * (P.relDifferentGen s).val) := by
-    rw [← algebraMap_mem_Ô, h_factor]
-    exact mul_mem h_gen (mul_mem hx (star_mem_Ô hy))
+    rw [← algebraMap_mem_Ô]
+    simpa using mul_star_mul_relDifferentGen_mem (P := P) (s := s) (x := algebraMap _ _ x)
+      (y := algebraMap _ _ y) hx hy
   obtain ⟨c, hc⟩ := exists_coe_eq_trace_of_isIntegral h_int
   exact ⟨c, show ((c : P.K) : ℂ) = _ by simp [hc, coe_trace_eq_sum]⟩
 
@@ -362,6 +360,7 @@ under the finite Heisenberg operators.
 
 namespace New.Space
 
+open MvPolynomial (jetPairing jetPairing_monomial)
 open MvPowerSeries MeasureTheory Fock NormedSpace Finset
 
 variable {E n : Type} [Field E] [CMType E] [WeilData E] [Fintype n] [DecidableEq n]
@@ -419,7 +418,7 @@ variable {f : 𝒮 V}
 
 /-- On a space with positive signs the polynomial jet is a Gaussian integral. -/
 lemma jet_jetSeries_eq_integral (f : 𝒮 V) (a : ℂ) (Q : MvPolynomial (InfinitePlace E × n) ℂ) :
-    jet ℂ Q (V.jetSeries a f) = ∫ y : InfinitePlace E × n → ℂ,
+    jetPairing Q (V.jetSeries a f) = ∫ y : InfinitePlace E × n → ℂ,
       MvPolynomial.eval (a • star y) Q * realVac y * f (realVec y)
         ∂normalizedVolume (InfinitePlace E × n) := by
   rw [jet_jetSeries_eq_theta, theta_integrated]
@@ -460,11 +459,11 @@ lemma taylor_line_eq_subst_jetSeries (hf : f ∈ V.finitePart) (a : ℂ)
   let T : PowerSeries ℂ := (V.jetSeries a f).subst fun p ↦ linearSeries fun _ ↦ v p
   have h_jet : k.factorial * PowerSeries.coeff k T =
       ∫ w, L w ^ k * g w ∂normalizedVolume (InfinitePlace E × n) := calc
-    _ = jet ℂ (.X () ^ k) T := by
-      simp [MvPolynomial.X_pow_eq_monomial, jet_monomial, PowerSeries.coeff]
-    _ = jet ℂ ((∑ p, v p • .X p) ^ k) (V.jetSeries a f) :=
+    _ = jetPairing (.X () ^ k) T := by
+      simp [MvPolynomial.X_pow_eq_monomial, jetPairing_monomial, PowerSeries.coeff]
+    _ = jetPairing ((∑ p, v p • .X p) ^ k) (V.jetSeries a f) :=
       (jet_subst_linearSeries (.replicateCol Unit v) _ _).trans <|
-        congrArg (fun Q ↦ jet ℂ Q (V.jetSeries a f)) (by
+        congrArg (fun Q ↦ jetPairing Q (V.jetSeries a f)) (by
           simp only [linSubst, map_pow, MvPolynomial.aeval_X, Matrix.replicateCol_apply])
     _ = ∫ w, L w ^ k * g w ∂normalizedVolume (InfinitePlace E × n) := by
       rw [jet_jetSeries_eq_integral]
@@ -512,7 +511,6 @@ lemma _root_.New.mvPowerSeries_eq_of_forall_line {σ : Type*} [Fintype σ] {S T 
       rename (fun _ : σ ↦ ()) (rescale v T)) : S = T := by
   -- The homogeneous component of degree `|α|`, evaluated at `v`, is a coefficient of the
   -- restriction to the line; a polynomial over `ℂ` is determined by its values.
-  classical
   ext α
   let deg : (σ →₀ ℕ) → Unit →₀ ℕ := Finsupp.mapDomain fun _ ↦ ()
   -- The exponents of the same total degree as `α`.

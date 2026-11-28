@@ -534,7 +534,7 @@ The heads of these files give an overview of a theory: `Lib/ClassField/Global/Ar
 
 ### Analytic: Analytic number theory
 
-- `Lib/Analytic/ZeroSymmetry` (47): Zeros of L(s, χ) and of L(1 − s, χ⁻¹)
+- `Lib/Analytic/ZeroSymmetry` (16): Dirichlet characters and the primitive characters that induce them
 - `Lib/Analytic/PolyaVinogradov` (146): Gauss sums of primitive characters and the Pólya–Vinogradov bound
 - `Lib/Analytic/DirichletTheta` (373): Theta series of Dirichlet characters, Poisson summation, and `L(s, χ)` as a Mellin transform
 - `Lib/Analytic/EntireLFunction` (123): Quadratic twists, polar functions and logarithmic derivatives of Dirichlet L-functions
@@ -855,6 +855,7 @@ The heads of these files give an overview of a theory: `Lib/ClassField/Global/Ar
 - `Lib/General/Algebra/LongExactSequences` (328): Long exact sequences, four and five lemmas, and Ext with disjoint unions and products
 - `Lib/General/Algebra/MultivariatePolynomials` (286): Multivariate polynomials: cost of vanishing, homogenization, Nullstellensatz, Hensel
 - `Lib/General/Algebra/ResidueSums` (58): Sums of residues at simple real poles
+- `Lib/General/Algebra/ComplexEmbeddings` (64): Extending embeddings of countable rings into ℂ
 - `Lib/General/Algebra/CohomologyBaseChange` (158): Flat base change in functor cohomology, and the base change adjunction for algebras
 - `Lib/General/Algebra/IntegralPowerSeries` (169): Integral power series over ℂ_p: jets, the chain rule and the exponential
 - `Lib/General/Algebra/PerfectAlgebras` (350): Perfect algebras, étale algebras over perfect rings, and constant Laurent polynomials
@@ -867,7 +868,7 @@ The heads of these files give an overview of a theory: `Lib/ClassField/Global/Ar
 **Analysis**: Real and complex analysis
 
 - `Lib/General/Analysis/FiniteFourier` (148): Orthogonality, Fourier inversion and matrix Gauss sums over a finite ring
-- `Lib/General/Analysis/GaussianIntegral` (146): Matrix norm estimates, the Ostrowski–Taussky inequality, and the complex Gaussian integral
+- `Lib/General/Analysis/GaussianIntegral` (146): Matrix norm estimates and the complex Gaussian integral
 - `Lib/General/Analysis/FourierTransforms` (207): Fourier inversion for periodic functions and decay of Fourier transforms
 - `Lib/General/Analysis/HolomorphicIntegrals` (456): Strong operator integrals, analyticity of parameter integrals, and Hua's integral bound
 - `Lib/General/Analysis/PackingAndSobolev` (173): Packing bounds for separated points and Sobolev trace inequalities
@@ -882,7 +883,7 @@ The heads of these files give an overview of a theory: `Lib/ClassField/Global/Ar
 - `Lib/General/Geometry/EtaleCharts` (632): Functors of points on algebras: open subfunctors, étale charts, atlases, charted schemes
 - `Lib/General/Geometry/PointsOfProperSchemes` (342): Functors of points of proper schemes: closed loci, atlases and descent of relations
 - `Lib/General/Geometry/SerreTheorem` (248): Absolute Frobenius, Serre's theorem on sections of powers, and projective embeddings
-- `Lib/General/Geometry/GaloisCovers` (530): Complex points over countable rings, Zariski generic members and Galois coverings
+- `Lib/General/Geometry/GaloisCovers` (494): Complex points over countable rings, Zariski generic members and Galois coverings
 - `Lib/General/Geometry/SmoothnessCriterion` (337): Smoothness near an arc from an immersive generic family and a bound on the tangent space
 
 **Groups**: Matrix groups, characters and group algebras
@@ -1074,7 +1075,7 @@ The heads of these files give an overview of a theory: `Lib/ClassField/Global/Ar
 
 - `Lib/Shimura/IntegralModel/PELDataExistence` (334): Existence of PEL data at levels good at all safe places, with the form ξ and a Lagrangian
 - `Lib/Shimura/IntegralModel/UniversalFamily` (680): The universal family: models along arcs, rigid fibres and points of linear data
-- `Lib/Shimura/IntegralModel/BallImmersion` (319): Balls immerse; holomorphy, arcs and complex points of the covers
+- `Lib/Shimura/IntegralModel/BallImmersion` (324): Balls immerse; holomorphy, arcs and complex points of the covers
 - `Lib/Shimura/IntegralModel/TowerExistence` (321): Existence of the model: the tower of Kuga–Sato covers with its congruence relation
 
 **ThetaModuli**: Moduli of abelian schemes embedded by theta coordinates

@@ -178,10 +178,8 @@ lemma RealPlace.volumeRatio_eq_norm_det (y : 𝔰.G₁) :
 /-- The form on the span of the frame is minus the squared modulus of the coefficient of `z`. -/
 lemma RealPlace.frameCols_J₁_gram :
     𝔰.frameColsᴴ * 𝔰.J₁ * 𝔰.frameCols = diagonal (Pi.single 𝔰.top (-1)) := by
-  ext a b
-  cases a using lastCases <;> cases b using lastCases <;>
-    simp [inclMatrix, splitGram, middleGram, Matrix.mul_apply, Matrix.one_apply, diagonal_apply,
-      (castSucc_lt_last _).ne']
+  rw [conjTranspose_inclMatrix_mul_mul_inclMatrix,
+    middleGram_submatrix_besselFrame, diagonal_single]
 
 /-- If the vector `frameCols x = γ frameCols x'` lies in the span of the frame `f` and in the span
 of `γ f`, then its products with the frame `γ f` are `(0, …, 0, -x' top)`. That is,
@@ -737,11 +735,11 @@ lemma RealPlace.exists_common_vector_of_normOnePairOccursFrom (hi_le : i ≤ �
       simp_all [inclMatrix, mulVec, dotProduct, eq_comm]
   have h_block_mulVec : subframeBlock hi_le Z *ᵥ c = Pi.single (last i) (-x 𝔰.top) := by
     have hZx' : Z *ᵥ x' = Pi.single 𝔰.top (-x 𝔰.top) := by
-      rw [← hZ, realFrameGram_eq_conjTranspose_mul, ← mulVec_mulVec, ← mulVec_mulVec x', h_frames,
-        mulVec_mulVec, frameCols_J₁_gram]
-      ext a
-      rw [mulVec_diagonal]
-      cases a using lastCases <;> simp
+      have h_inverse : γ⁻¹.val.val *ᵥ 𝔰.frameCols *ᵥ x = 𝔰.frameCols *ᵥ x' := by
+        simpa [mulVec_mulVec, ← Units.val_mul, ← Subgroup.coe_mul] using
+          congrArg (γ⁻¹.val.val *ᵥ ·) h_frames.symm
+      simpa only [← hZ, realFrameGram, Filling.frameGram_inv, conjTranspose_conjTranspose] using
+        (conjTranspose_realFrameGram_mulVec h_inverse).1
     rw [← hc, mulVec_mulVec, mul_inclMatrix] at hZx'
     ext l
     -- The block is made of the rows of the subframe in `Z.submatrix id (subframeIndex hi_le)`.

@@ -36,6 +36,8 @@ See `New.UpperBound.Seesaw.SeesawIdentity` for related work.
 
 @[expose] public section
 
+open IsDedekindDomain (FiniteAdeleRing)
+
 /-! ## Scaling factors and the evaluation of a pair of edges -/
 
 namespace New.Data
@@ -83,7 +85,7 @@ lemma v_star_piM_mul_chosenRatio (w : FinPlace D.E) :
   calc Valued.v ((star β * D.chosenRatio) w)
     _ = Valued.v ((star β * star (↑D.chosenIdele⁻¹ : 𝔸f D.E)) w) *
           Valued.v ((D.chosenIdele : 𝔸f D.E) w) := by
-      rw [chosenRatio, ← mul_assoc, finAdele_mul_apply, map_mul]
+      rw [chosenRatio, ← mul_assoc, FiniteAdeleRing.mul_apply, map_mul]
     _ = Valued.v (β w) := by rw [h_conj, one_mul, hβ]
 
 /-- Let `η = normNegOne` be the chosen unit of norm `-1`, `α` the idele of the Weil data and
@@ -131,6 +133,14 @@ lemma isScalingAtM_of_eq_one_or_eq {κ : PairIndex X X'' → 𝔸f D.E}
       star_mul_mem := h_star
       selfOrConj_mul_mem := h_selfOrConj }
 
+/-- The scaling of a pair of edges other than the last: the factors `1` on all rows
+`PairIndex X X''` form a scaling for `β = D.piM` and `δ = D.chosenRatio`
+(see `isScalingAtM_of_eq_one_or_eq`). -/
+lemma isScalingAtM_one :
+    IsScalingAtM D.N (algebraMap (𝓞 D.E) (Ô D.E) D.piM) D.chosenRatio
+      (1 : PairIndex X X'' → 𝔸f D.E) :=
+  D.isScalingAtM_of_eq_one_or_eq (fun _ ↦ Or.inl rfl) fun _ ↦ rfl
+
 /-- The scaling of the last pair of edges: the factors `lastScaling`, equal to `δ` at the last row
 and to `1` elsewhere, form a scaling for `β = D.piM` and `δ = D.chosenRatio`. -/
 lemma isScalingAtM_lastScaling :
@@ -171,8 +181,7 @@ lemma isAdmissibleEval_doubleLiftEvalY (i : ℕ) (hi : i ≤ D.ϱ) :
     rw [D.latticeScale_two_mul hi, Submonoid.coe_mul, ← mul_assoc, D.flipScale_mul_divStar_ideleA]
   unfold doubleLiftEvalY
   split_ifs with h_middle h_last
-  · apply isAdmissibleEval_finEval (hP := D.isSplitLevel_piNPlaces)
-      (hκ := D.isScalingAtM_of_eq_one_or_eq (fun _ ↦ Or.inl rfl) fun _ ↦ rfl)
+  · apply isAdmissibleEval_finEval (hP := D.isSplitLevel_piNPlaces) (hκ := D.isScalingAtM_one)
       (hπ := D.isSplitSquarefree_piNIdele) (hL := D.spansLattice_gradingY (2 * i + 1) _)
     · apply liftsNeighbours_middleDoubleLift (h_scale := h_scale) <;> apply D.spansLattice_gradingY
     · apply matchesDenominators_middleDoubleLift
@@ -215,7 +224,7 @@ lemma mulVec_mem_translations (hg : g ∈ localLevel n {w : FinPlace E | ↑q �
   rw [h_cols]
   refine sum_mem fun j _ i w hw ↦ ?_
   calc v ((d * (M i j * x j)) w)
-    _ = v (M i j w) * v ((d * x j) w) := by rw [mul_left_comm, finAdele_mul_apply, map_mul]
+    _ = v (M i j w) * v ((d * x j) w) := by rw [mul_left_comm, FiniteAdeleRing.mul_apply, map_mul]
     _ ≤ 1 := mul_le_one' ((hg w hw).isIntMatrix i j) (hx j w hw)
 
 omit [Fintype n] [DecidableEq n] in

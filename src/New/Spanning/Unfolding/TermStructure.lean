@@ -57,13 +57,17 @@ lemma mem_colSpan_submatrix {F m n n' : Type} [Field F] [Fintype n] [Fintype n']
     {P : Matrix m n F} {e : n' → n} (he : Injective e) {v : m → F} :
     v ∈ colSpan (P.submatrix id e) ↔
       ∃ x : n → F, (∀ a : n, a ∉ Set.range e → x a = 0) ∧ P *ᵥ x = v := by
-  have h_sum (x : n → F) (hx : ∀ a ∉ Set.range e, x a = 0) :
-      P.submatrix id e *ᵥ (x ∘ e) = P *ᵥ x :=
-    funext fun i ↦ Fintype.sum_of_injective e he _ _ (fun a ha ↦ by simp [hx a ha]) fun _ ↦ rfl
-  refine ⟨?_, fun ⟨x, hx, hv⟩ ↦ ⟨x ∘ e, (h_sum x hx).trans hv⟩⟩
-  rintro ⟨c, rfl⟩
-  have h_zero (a : n) (ha : a ∉ Set.range e) : extend e c 0 a = 0 := extend_apply' c _ a ha
-  exact ⟨extend e c 0, h_zero, by rw [← h_sum _ h_zero, extend_comp he, mulVecLin_apply]⟩
+  constructor
+  · rintro ⟨c, rfl⟩
+    exact ⟨extend e c 0, fun a ha ↦ extend_apply' c _ a ha, mulVec_extend_zero he P c⟩
+  · rintro ⟨x, hx, rfl⟩
+    have h_ext : extend e (x ∘ e) 0 = x := by
+      funext a
+      by_cases ha : a ∈ Set.range e
+      · obtain ⟨i, rfl⟩ := ha
+        simp [he]
+      · simp only [extend_apply' _ _ _ ha, hx a ha, Pi.zero_apply]
+    exact ⟨x ∘ e, (mulVec_extend_zero he P (x ∘ e)).symm.trans (congrArg (P *ᵥ ·) h_ext)⟩
 
 namespace Filling
 
@@ -143,15 +147,6 @@ lemma mem_framePerp_iff_orthogonal :
     rw [mulVecLin_apply, h_form, hy, dotProduct_zero]
   · rw [dotProduct_comm, ← star_star c, ← h_form]
     exact hy _ ⟨star c, rfl⟩
-
-/-- For the coefficients `x` of a combination of the frame `e_1, …, e_ϱ, z_N`, the product, for the
-form `S.ratGram`, of this combination with `y` is the sum of `x̄_a y(e*_a)` over `a ≤ ϱ` minus
-`N x̄_z y(z)`, where `x_z` is the last coefficient and `y(·)` are coordinates of `y`. -/
-lemma form_frameImage_one (x : Fin (𝔰.ϱ + 1) → E) (y : 𝔰.BesselIndex → E) :
-    star (frameImage 1 *ᵥ x) ⬝ᵥ S.ratGram *ᵥ y =
-      ∑ a : Fin 𝔰.ϱ, star (x a.castSucc) * y (eStar a) - S.N * (star (x 𝔰.top) * y 𝔰.z) := by
-  rw [frameImage_one_mulVec, splitGram_mulVec]
-  simp [dotProduct, mulVec, Shape.middleGram, init, sub_eq_add_neg, mul_left_comm]
 
 /-- For the form `S.ratGram`, the product of a combination with coefficients `x` of the frame
 `frameImage γ` with `y` equals the product of the same combination of the frame `frameImage 1` with
@@ -265,6 +260,10 @@ lemma isotropicSpan_le_colSpan_frameImage (M : Matrix 𝔰.BesselIndex 𝔰.Bess
 lemma commonIsotropic_le_colSpan_frameImage_one (γ : S.G E) :
     commonIsotropic γ ≤ colSpan (frameImage 1) :=
   (commonIsotropic_le_isotropicSpan_one γ).trans (isotropicSpan_le_colSpan_frameImage 1)
+
+lemma commonIsotropic_le_colSpan_frameImage_coe (γ : S.G E) :
+    commonIsotropic γ ≤ colSpan (frameImage γ.val.val) :=
+  (commonIsotropic_le_isotropicSpan_coe γ).trans (isotropicSpan_le_colSpan_frameImage γ.val.val)
 
 /-- A vector `p` on two copies of the middle coordinates lies in the kernel of
 `zRowBlockDiagonal (S.ratMiddle E)` (two copies of the `z`-row of the Gram matrix) if and only if
@@ -381,15 +380,14 @@ theorem disjoint_colSpan_frameImage (h_disc : S.termDisc γ ≠ 0) :
 `A = ⟨e_1, …, e_ϱ⟩`. -/
 lemma commonIsotropic_eq_bot (h_disc : S.termDisc γ ≠ 0) : commonIsotropic γ = ⊥ :=
   disjoint_self.1 ((disjoint_colSpan_frameImage h_disc).mono
-    (commonIsotropic_le_colSpan_frameImage_one γ)
-    ((commonIsotropic_le_isotropicSpan_coe γ).trans (isotropicSpan_le_colSpan_frameImage γ.val.val)))
+    (commonIsotropic_le_colSpan_frameImage_one γ) (commonIsotropic_le_colSpan_frameImage_coe γ))
 
 /-- The span `γ A⁺` of the image under `γ` of the frame `e_1, …, e_ϱ, z_N` has the rank
 `n = ϱ + 1`. -/
 lemma finrank_colSpan_frameImage (γ : S.G E) :
     finrank E (colSpan (frameImage (γ : Matrix 𝔰.BesselIndex 𝔰.BesselIndex E))) = 𝔰.n := by
-  rw [LinearMap.finrank_range_of_inj ((injective_iff_map_eq_zero _).2 fun _ ↦
-    frameImage_mulVec_eq_zero_iff.1), finrank_fin_fun]
+  rw [colSpan, range_mulVecLin, finrank_span_eq_card (linearIndependent_col_frameImage γ),
+    Fintype.card_fin]
 
 /-- The ranks of `frameSum γ` = `A⁺_γ = A⁺ + γ A⁺` (the span of the frame and of its image under
 `γ`) and of its orthogonal complement `framePerp γ` add up to `𝔰.r`, the rank of the whole space. -/
@@ -473,15 +471,8 @@ lemma mem_isotropicSpan {M : Matrix 𝔰.BesselIndex 𝔰.BesselIndex E} :
 `e_1, …, e_ϱ, z_N` has rank `j`. -/
 lemma finrank_flagSpan_coe (γ : S.G E) (j : Fin (𝔰.ϱ + 2)) :
     finrank E (flagSpan (γ : Matrix 𝔰.BesselIndex 𝔰.BesselIndex E) j) = j := by
-  let g : GL 𝔰.BesselIndex E := γ
-  let e : Fin j → 𝔰.BesselIndex := 𝔰.besselFrame ∘ castLE j.is_le
-  have he : Injective e := besselFrame_injective.comp (castLE_injective j.is_le)
-  -- The rows of `γ⁻¹` at the indices `e` form a left inverse of the columns of `γ` at `e`.
-  have h_left : g⁻¹.val.submatrix e id * g.val.submatrix id e = 1 := by
-    rw [← submatrix_mul _ _ e id e bijective_id, g.inv_mul, submatrix_one e he]
-  rw [flagSpan, submatrix_submatrix, id_comp,
-    LinearMap.finrank_range_of_inj (HasLeftInv.injective_mulVec ⟨g⁻¹.val.submatrix e id, h_left⟩),
-    finrank_fin_fun]
+  rw [flagSpan, colSpan, range_mulVecLin, finrank_span_eq_card, Fintype.card_fin]
+  exact (linearIndependent_col_frameImage γ).comp _ (castLE_injective j.is_le)
 
 /-- A vector with the coefficients `x` in the frame `e_1, …, e_ϱ, z_N` and `x'` in its image under
 `γ` lies in `I_γ = A ∩ γ A` if one of its coefficients at `z_N` and `γ z_N` vanishes, because the

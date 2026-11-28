@@ -240,6 +240,12 @@ lemma commonCosetSum_eq_sum (f : GL b F → ℂ) (t : Finset (GL b F ⧸ intGL b
 lemma isCommonCosetRep_commonCosetRep : IsCommonCosetRep n (commonCosetRep F b n) :=
   exists_linearMap_eq_sum_and_isCommonCosetRep.choose_spec.choose_spec.right
 
+/-- For `y` with a left inverse, exactly one of the chosen coset representatives `r` makes `y * r`
+primitive (integral with an integral left inverse). -/
+lemma existsUnique_isPrimitiveMatrix_mul_commonCosetRep {y : Matrix n b F} (hy : HasLeftInv y) :
+    ∃! q : GL b F ⧸ intGL b O, IsPrimitiveMatrix O (y * (commonCosetRep F b n q).val) :=
+  isCommonCosetRep_commonCosetRep.existsUnique_mul y hy
+
 /-- For `y` with a left inverse (`HasLeftInv y`), exactly one coset `q` of `GL b O` in `GL b F`
 makes `y * (commonCosetRep F b n q)⁻¹` primitive (entries in `O`, with a left inverse that has
 entries in `O`). -/
@@ -292,11 +298,6 @@ lemma mem_sameSectionPairs_iff {χ : MulChar F ℂ} {e : b ⊕ a ≃ n} {Φ : Ma
   simp [sameSectionPairs, LinearMap.ker_pi, add_neg_eq_zero, LinearMap.funLeft, Function.comp_def,
     and_assoc]
 
-omit [Fintype a] [DecidableEq a] [Fintype b] [DecidableEq b] in
-/-- Multiplying the columns `b` of `k` on the left by `g` gives the columns `b` of `g * k`. -/
-lemma mul_firstCols (e : b ⊕ a ≃ n) (g k : GL n F) :
-    g.val * firstCols e k = firstCols e (g * k) := rfl
-
 /-- Translation by `g` in `GL n F` preserves the same-section pairs of a character `χ` of `F` and a
 splitting `e` of the indices: if `(Φ, Ψ)` is one, then so is
 `(x ↦ χ (det g) * Φ (x * g), y ↦ Ψ (g⁻¹ * y))`. -/
@@ -318,7 +319,7 @@ lemma sameSectionPairs.translate_mem (χ : MulChar F ℂ) (e : b ⊕ a ≃ n)
       simp [← map_mul, ← det_mul]
     calc localSection χ (invLastRows e k)ᵀ (χ g.val.det • fun y ↦ Φ (yᵀ * g.val))
       _ = χ g.val.det * localSection χ (invLastRows e (g⁻¹ * k))ᵀ (fun y ↦ Φ yᵀ) := by
-        simp [invLastRows, localSection, Pi.mul_def, Matrix.mul_assoc]
+        simp [← invLastRows_mul, localSection, Pi.mul_def, Matrix.mul_assoc]
       _ = χ k.val.det * localSection χ (firstCols e (g⁻¹ * k)) Ψ := by
         rw [h_match, ← mul_assoc, h_det]
       _ = χ k.val.det * localSection χ (firstCols e k) fun y ↦ Ψ (g⁻¹.val * y) := by
@@ -333,7 +334,7 @@ lemma exists_isPrimitiveMatrix_localSection_eq (χ : MulChar F ℂ) (y : Matrix 
       ∀ Ψ : Matrix n b F → ℂ, (∀ x : Matrix n b F, Ψ x ≠ 0 → IsPrimitiveMatrix O x) →
         localSection χ y Ψ = χ g.val.det * Ψ (y * g.val) := by
   -- Exactly one representative `r` makes `y * r` primitive, and only it counts in the sum.
-  obtain ⟨q, hq, hq_unique⟩ := isCommonCosetRep_commonCosetRep.existsUnique_mul _ hy
+  obtain ⟨q, hq, hq_unique⟩ := existsUnique_isPrimitiveMatrix_mul_commonCosetRep (n := n) hy
   refine ⟨commonCosetRep F b n q, hq, fun Ψ hΨ ↦ ?_⟩
   simpa using localSection_eq_sum χ y Ψ {q} fun p hp ↦ by simp [hq_unique p (hΨ _ hp)]
 
@@ -511,7 +512,6 @@ lemma apply_invLastRows_eq_of_isPrimitiveMatrix {R a b n : Type} [CommRing R] [F
     {i j : GL n R} (hi : i ∈ intGL n O) (h_rows : invLastRows e j = invLastRows e i)
     (hj_prim : IsPrimitiveMatrix O (firstCols e j)) :
     Φ (invLastRows e j) = χ j.val.det * Ψ (firstCols e j) := by
-  classical
   -- Both blocks of columns span the kernel of the common rows, so they differ by some `g`.
   have h_span {k l : GL n R} (hkl : invLastRows e l = invLastRows e k) :
       firstCols e l * (invFirstRows e l * firstCols e k) = firstCols e k :=

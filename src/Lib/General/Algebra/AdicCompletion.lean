@@ -2,6 +2,7 @@ module
 
 import TauCeti.RingTheory.AdicCompletion.Pi
 public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
 public import Mathlib.NumberTheory.Padics.Complex
 public import Mathlib.RingTheory.AdicCompletion.Algebra
 import Mathlib.RingTheory.AdicCompletion.LocalRing
@@ -226,6 +227,10 @@ lemma isPrecomplete_of_shiftDiff_surjective (hx : (shiftDiff R x).Surjective)
   have h_mem {a b : R} (ha : a ∈ ({x, y} : Set R)) : b * a ^ n ∈ span {x, y} ^ n :=
     mul_mem_left _ _ (pow_mem_pow (subset_span ha) n)
   exact add_mem (add_mem (hf (by simp)) (h_mem (by simp))) (h_mem (by simp))
+
+/-- The valuation −log_ℓ|x| in [0, ∞], normalised by v(ℓ) = 1; it is ∞ at 0, and 0 for |x| ≥ 1. -/
+def ellVal {ℓ : ℕ} [Fact ℓ.Prime] (x : PadicAlgCl ℓ) : ENNReal :=
+  if ‖x‖ = 0 then ⊤ else ENNReal.ofReal (-Real.logb ℓ ‖x‖)
 
 end New
 
@@ -607,7 +612,7 @@ lemma New.free_finite_of_rank_le {S M : Type} [CommRing S] [Nontrivial S] [AddCo
     linearIndependent_iff.2 fun f hf ↦ f.ext fun i ↦ by simp [← c.dual i f, hf]
   have : Finite c.Index :=
     Cardinal.mk_lt_aleph0_iff.1 ((h_indep.cardinal_le_rank.trans h_rank).trans_lt (by simp))
-  have e : (c.Index →₀ S) ≃ₗ[S] M :=
+  let e : (c.Index →₀ S) ≃ₗ[S] M :=
     .ofBijective _ ⟨h_indep, surjective_of_mkQ_comp_surjective c.dense⟩
   exact ⟨.of_equiv e, .equiv e⟩
 

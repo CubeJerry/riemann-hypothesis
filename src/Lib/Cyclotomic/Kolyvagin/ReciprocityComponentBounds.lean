@@ -263,6 +263,20 @@ private lemma mem_range_of_valuation_lt_one {v : FinPlace ℚ}
   have h_over : IsPlaceOver ((s u)⁻¹ • B) t := by simpa [← hσ, smul_smul] using h_over_g
   exact ⟨u, (hw u).unique h_over⟩
 
+/-- A cocycle `x ∈ component l e ψ ν` killed by `m` satisfies `2 • x σ = 0` at every complex
+conjugation `σ` that fixes the `N m`-th roots of unity. -/
+private lemma two_smul_apply_eq_zero_of_isComplexConj
+    {x : Gal(Ω/ℚ) → QuotSpan ((l : O) ^ ν)}
+    (hx : x ∈ component l e ψ ν) (hx_tors : ∀ g : Gal(Ω/ℚ), m • x g = 0)
+    {σ : cycloGalGroup (N * m)} (hσ : IsComplexConj σ) :
+    (2 : O) • x σ = 0 := by
+  -- The cocycle rule evaluates `x (σ * (σ * σ)) = x σ` as `3 • x σ = x σ`, and the cocycle
+  -- character acts trivially since `σ` fixes the roots of unity and `m` kills `x`.
+  have hσ_sq : (σ : Gal(Ω/ℚ)) * σ = 1 := by simp [← Subgroup.coe_mul, hσ.mul_self]
+  have h_val : x (σ * (σ * σ) : Gal(Ω/ℚ)) = x σ := by rw [hσ_sq, mul_one]
+  simpa [apply_mul_of_mem_vanishingCocycles hx, hx_tors, two_smul,
+    cyclotomicPowDirichlet_smul_eq_self σ.prop] using h_val
+
 /-- Artin reciprocity over `K = ℚ(μ_{N m})` at a prime `q ≡ 1 mod N m`, with `φ` a Frobenius at `B`
 above `q`. The space `component l e ψ ν` consists of cocycles `Gal(Ω/ℚ) → O/l^ν` for `(cyc^e ψ)⁻¹`
 under local conditions, including vanishing at `cmConj` and on inertia over `ℚ(μ_N)` away from `l`.
@@ -322,13 +336,8 @@ lemma artin_reciprocity_of_mem_component {a : ℕ} (ha : l.Coprime a) (ha_one : 
     simp [χ, ← map_nsmul, smul_comm, hx_tors]
   -- `χ` kills complex conjugations `σ`, since `2 • x σ = 0` and `2 ∣ d`.
   have conj_zero (σ : G) (hσ : IsComplexConj σ) : χ.val σ = 0 := by
-    have hσ_sq : (σ : Gal(Ω/ℚ)) * σ = 1 := by simp [← Subgroup.coe_mul, hσ.mul_self]
-    -- The cocycle rule evaluates `x (σ * (σ * σ)) = x σ` as `3 • x σ = x σ`.
-    have h_val : x (σ * (σ * σ) : Gal(Ω/ℚ)) = x σ := by rw [hσ_sq, mul_one]
-    have h_two : (2 : O) • x σ = 0 := by
-      simpa [apply_mul_of_mem_vanishingCocycles hx, hx_tors, two_smul,
-        cyclotomicPowDirichlet_smul_eq_self σ.prop] using h_val
-    simp [χ, d, mul_comm (2 : O), mul_smul, h_two]
+    simp [χ, d, mul_comm (2 : O), mul_smul,
+      two_smul_apply_eq_zero_of_isComplexConj hx hx_tors hσ]
   -- Above `l`, `χ` kills the decomposition group, since `(a ^ e - 1) • x g = 0` there.
   have dec_zero (A : ClosurePlace) (hA : A.valuation l < 1) (g : G)
       (hg : (g : Gal(Ω/ℚ)) ∈ decompGroup Gal(Ω/ℚ) A) : χ.val g = 0 := by
@@ -440,7 +449,7 @@ lemma reciprocity_mod_ell {a : ℕ} (ha : l.Coprime a) (ha_one : a ≡ 1 [MOD N]
   -- `κ τ` is killed by a unit.
   have h_zmodModule : Module (ZMod l) (O ∙ κ τ) :=
     AddCommGroup.zmodModule (by simp [mem_span_singleton, smul_comm, hκ_tors])
-  have b := Module.finBasis (ZMod l) (O ∙ κ τ)
+  let b := Module.finBasis (ZMod l) (O ∙ κ τ)
   have τ_fix : cyclotomicCharMod Ω (N * l) τ = 1 :=
     mem_ker.1 (decompGroup_le_cycloGalGroup hB hq_one (IsFrob.mem_decompGroup hτ))
   obtain ⟨v, hv, -, ord_q⟩ := exists_isPlaceOver_prime hB
@@ -738,6 +747,7 @@ lemma nsmul_component_eq_zero (h_bound : IsStickelbergerBound N e X)
   exact hzσ (by simpa [nsmul_eq_mul] using h_zero)
 
 omit [NeZero N] in
+/-- A positive integer coprime to `l` is a unit in `O`. -/
 lemma isUnit_natCast_of_not_dvd {k : ℕ} (hk : ¬l ∣ k) : IsUnit (k : O) := by
   have h_unit : IsUnit (k : ℤ_[l]) :=
     .of_map PadicInt.toZMod _ (by simpa [natCast_eq_zero_iff] using hk)
@@ -905,6 +915,12 @@ lemma isUnit_natCast_of_pow_factorization_succ_dvd (hX : X ≠ 0)
     simpa [pow_succ, NeZero.ne, mul_dvd_mul_iff_left] using h_dvd
   exact (X.coprime_ordCompl L.out hX).cast.isUnit_of_dvd h_dvd_compl
 
+/-- Finiteness of the Kolyvagin reciprocity component. -/
+lemma finite_component : Finite (component l e ψ ν) :=
+  finite_vanishingCocycles (n := ν)
+    (fun g y ↦ (cyclotomicPowDirichlet_smul_eq_self g.prop (nsmul_quot_eq_zero dvd_rfl y)).right)
+    fun _ ⟨h_fix, h_inertia⟩ ↦ .inr ⟨h_fix, .inl h_inertia⟩
+
 /-- There are finitely many cocycles for `cyc ^ e ψ` modulo `l ^ m` that are unramified off `l`
 over `ℚ(ζ_N)`. -/
 lemma finite_vanishingCocycles_inertiaOff_empty (m : ℕ) :
@@ -944,9 +960,7 @@ lemma exists_finset_forall_exists_isFrob (hc : cyclotomicPowDirichlet l e ψ cmC
   -- Choose a prime for each pair; there are finitely many pairs.
   have h_finite_y : Finite (vanishingCocycles (cyclotomicPowDirichlet l (e + 1) ψ)
       (QuotSpan (l ^ m : O)) (inertiaOff N l ∅)) := finite_vanishingCocycles_inertiaOff_empty m
-  have h_finite_z : Finite (component l e ψ ν) := finite_vanishingCocycles (n := ν)
-    (fun g y ↦ (cyclotomicPowDirichlet_smul_eq_self g.prop (nsmul_quot_eq_zero dvd_rfl y)).right)
-    fun _ ⟨h_fix, h_inertia⟩ ↦ .inr ⟨h_fix, .inl h_inertia⟩
+  have h_finite_z : Finite (component l e ψ ν) := finite_component
   have h_pair (y : {y : vanishingCocycles (cyclotomicPowDirichlet l (e + 1) ψ)
       (QuotSpan (l ^ m : O)) (inertiaOff N l ∅) // ¬cycloGalGroup f ≤ openCocycleKer y.prop})
       (z : {z : component l e ψ ν // z ≠ 0}) :

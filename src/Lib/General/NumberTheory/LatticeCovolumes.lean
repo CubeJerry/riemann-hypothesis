@@ -1,6 +1,7 @@
 module
 
 public import TauCeti.RingTheory.DedekindDomain.AdicValuation.ResidueField
+import TauCeti.Algebra.Module.ZLattice.Basic
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Algebra.Ring.IsFormallyReal
 import Mathlib.RingTheory.PiTensorProduct
@@ -162,7 +163,8 @@ lemma exists_isPrimitiveMatrix_mul_fromBlocks (m : Matrix π (σ ⊕ τ) A) (hm 
     ∃ a : GL σ A, ∃ e : GL τ A, ∃ z : Matrix σ τ A,
       IsPrimitiveMatrix R (m * fromBlocks a.val z 0 e.val) := by
   -- Some `b`, block triangular for the weight 0 on `σ` and 1 on `τ`, makes `m * b` primitive.
-  obtain ⟨b, hb_tri, hb_prim⟩ := ad.isValuationPair.exists_isPrimitiveMatrix_mul hm (0 ⊕ᵥ 1)
+  obtain ⟨b, hb_tri, hb_prim⟩ :=
+    ad.isValuationPair.exists_isPrimitiveMatrix_mul (α := ℕ) hm (0 ⊕ᵥ 1)
   have h_lower : b.val.toBlocks₂₁ = 0 := Matrix.ext fun i j ↦ hb_tri zero_lt_one
   have h_blocks : fromBlocks b.val.toBlocks₁₁ b.val.toBlocks₁₂ 0 b.val.toBlocks₂₂ = b.val := by
     rw [← h_lower, fromBlocks_toBlocks]
@@ -744,9 +746,7 @@ lemma volume_fundamentalDomain_pi_basis {ι : Type*} [Fintype ι] {σ V : ι →
     [∀ i : ι, MeasureSpace (V i)] [∀ i : ι, SigmaFinite (volume : Measure (V i))]
     (b : ∀ i : ι, Basis (σ i) ℝ (V i)) (hb : ∀ i : ι, volume (fundamentalDomain (b i)) = 1) :
     volume (fundamentalDomain (Pi.basis b)) = 1 := by
-  have h_pi : fundamentalDomain (Pi.basis b) = Set.univ.pi fun i ↦ fundamentalDomain (b i) :=
-    Set.ext fun x ↦ by simp [mem_fundamentalDomain, Sigma.forall]
-  simp [h_pi, volume_pi_pi, hb]
+  simp [ZSpan.fundamentalDomain_pi_basis, volume_pi_pi, hb]
 
 /-- The unit square in `ℂ` has area `1`. -/
 lemma volume_fundamentalDomain_basisOneI : volume (fundamentalDomain Complex.basisOneI) = 1 := by

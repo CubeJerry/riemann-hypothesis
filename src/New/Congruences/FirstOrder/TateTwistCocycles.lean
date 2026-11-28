@@ -81,7 +81,7 @@ lemma add_conjGal_mem_evenClasses {e ν : ℕ} {S : Set (FinPlace E)}
   · -- the cocycle identity: `g` and `conjGal g` act alike on the twist
     simpa [h_cocycle, tateTwist, cyclotomicInv] using add_add_add_comm ..
   · -- `conjGal g` lies in the inertia group of the conjugate place, which is again outside
-    have ⟨v, hv, A, hA, hgA⟩ := hg
+    let ⟨v, hv, A, hA, hgA⟩ := hg
     have hv_star : star v ∉ placesDividing E ℓ ∪ S.conjClosure := by
       simpa [star_mem_placesDividing, and_comm] using hv
     have h_conj : c (conjGal g) = 0 :=
@@ -89,7 +89,7 @@ lemma add_conjGal_mem_evenClasses {e ν : ℕ} {S : Set (FinPlace E)}
     simp [h_unram g hg, h_conj]
   · -- `conjGal g` lies in the kernel of `cyclotomicChar` and in the decomposition group of the
     -- conjugate place
-    have ⟨A, hA, hgA, h_cyc⟩ := hg
+    let ⟨A, hA, hgA, h_cyc⟩ := hg
     have h_conj_mem : conjGal g ∈ shaLocalSet ℓ E 1 := ⟨conjPlace A, comap_apply_lt_one_iff.2
       (by simpa using hA), decompGroup.map cmConj_conjGal_smul hgA, by simpa using h_cyc⟩
     simp [h_loc g hg, h_loc _ h_conj_mem]
@@ -273,8 +273,8 @@ lemma hasTriangleCost_tateTwist [Fintype J] [LinearOrder J] {ν : ℕ} {w : J �
     have h_step : ℓ ^ h • (z + z ∘ conjGal) (τ j) = 0 := h_tri.pow_smul_eq_zero O j _ h_even h_prev'
     simpa [← Nat.cast_smul_eq_nsmul O, eq_neg_iff_add_eq_zero] using h_step
   · -- The loss: a cocycle that obeys the local crystalline relations vanishes on `L`.
-    exact relLength_le_of_mapsTo 1 (by simp) fun z hz h_loc g hg ↦
-      apply_eq_zero_of_mem_obeying_crysRelations (h_coc hz) h_loc hg
+    exact relLength_anti_right_of_inf_le fun z hz g hg ↦
+      apply_eq_zero_of_mem_obeying_crysRelations (h_coc hz.1) hz.2 hg
   · -- The cocycles in `S` kill the tame generators, so they are unramified off `ℓ`.
     have hS_tame z (hz : z ∈ S) : ∀ k : J × Bool, z (withConjInv τ k) = 0 := by
       rintro ⟨j, copy⟩

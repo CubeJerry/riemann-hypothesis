@@ -47,6 +47,8 @@ Known; see `Lib.GaloisRep.BaseChange.PrimeDegreeTransfer` for sources.
 
 @[expose] public section
 
+open IsDedekindDomain (FiniteAdeleRing)
+
 /-!
 ## Matching pairs at a congruence level over a profinite ring
 
@@ -598,6 +600,13 @@ lemma eventually_mem_kerCompNorm_of_apply_localNorm_eq_one {A : Set (FinPlace E'
       simpa [adeleOneOn, hu, ideleAt] using congrArg (fun z : 𝔸f E' ↦ z u) h_eq
     simp [hd_one]
 
+/-- Let `A` be a set of unramified places. For `x` near `0`, the norm of a unit idele congruent to
+`1` modulo `adeleOneOn A x` is killed by `μ`. -/
+lemma eventually_mem_kerCompNorm {A : Set (FinPlace E')} (hA : ∀ u ∈ A, IsStepUnramifiedPlace μ u) :
+    ∀ᶠ x : 𝔸f E' in nhds (0 : 𝔸f E'), ∀ y ∈ Ô E', ∀ d ∈ idelesUnitOff ∅,
+      d.val - adeleOneOn A x * y = 1 → d ∈ kerCompNorm E' μ :=
+  eventually_mem_kerCompNorm_of_apply_localNorm_eq_one fun u hu ↦ (hA u hu).apply_localNorm_eq_one
+
 /-- Let the open subgroup `H` contain the integral points that are trivial on `S`, and let no place
 of `A` lie above `S`. For `x` near `0`, an integral point `g` over `E` whose matrix over `E'` is
 congruent to `1` modulo `adeleOneOn A x` lies in `H`. -/
@@ -647,8 +656,8 @@ lemma mem_localLevel_congruenceLevel {m : Ô E'} {k : 𝔸f E'} (hmk : m * k = 1
       ∀ i j : n, idem (placesAbove E' S) * k * (g.val.val - 1) i j ∈ Ô E' := by
   -- The congruence makes `g` integral (multiply by `m`), and the entries of `g⁻¹` at `u` are
   -- conjugate to those of `g` at `star u`.
-  simp only [mem_congruenceLevel, mem_localLevel, mul_assoc, idem_mul_mem_Ô, finAdele_mul_apply,
-    ← atPlace_sub_one_apply, forall_and, mem_intGL]
+  simp only [mem_congruenceLevel, mem_localLevel, mul_assoc, idem_mul_mem_Ô,
+    FiniteAdeleRing.mul_apply, ← atPlace_sub_one_apply, forall_and, mem_intGL]
   -- What is left is integrality of `g` and `g⁻¹` and the congruence, at each place above `S`. The
   -- congruence implies the rest; it matches the right side up to the order of the quantifiers.
   have h_swap : (∀ u ∈ placesAbove E' S, ∀ i j : n, k u * ((g.atPlace u).val - 1) i j ∈ LocInt u) ↔
@@ -658,7 +667,7 @@ lemma mem_localLevel_congruenceLevel {m : Ô E'} {k : 𝔸f E'} (hmk : m * k = 1
   have h_int (u : FinPlace E') (hu : u ∈ placesAbove E' S) (i j : n) :
       (g.atPlace u).val i j ∈ LocInt u := by
     have hm_int : (m : 𝔸f E') u ∈ LocInt u := mem_Ô.1 m.prop u
-    simpa [← mul_assoc, ← finAdele_mul_apply, hmk, sub_eq_add_neg, add_mem_cancel_right,
+    simpa [← mul_assoc, ← FiniteAdeleRing.mul_apply, hmk, sub_eq_add_neg, add_mem_cancel_right,
       Matrix.one_apply, ite_mem] using mul_mem hm_int (h_cong u hu i j)
   refine ⟨h_int, fun u hu i j ↦ ?_⟩
   have h_int_star : (g.atPlace (star u)).val j i ∈ LocInt (star u) :=
@@ -928,8 +937,7 @@ lemma exists_isBaseChangeLevel {H : Subgroup (Gf E n)} (hH : H.IsOpen) :
     · exact fun hS₀ ↦ h_notMem (.inr (by simpa using hS₀))
   -- Both congruence conditions hold at `x = N * C` for a suitable `N ≠ 0`.
   obtain ⟨N, hN, h_small⟩ := mem_nhds_zero_finAdele_iff.1
-    ((eventually_mem_kerCompNorm_of_apply_localNorm_eq_one
-        fun u hu ↦ (hA_unram u hu).apply_localNorm_eq_one).and
+    ((eventually_mem_kerCompNorm hA_unram).and
       (eventually_mem_of_baseChangeGf_congr hH hS₀_le hA_off))
   obtain ⟨h_idele, h_group⟩ := h_small C (by simp)
   let m : Ô E' := N * C + ⟨idem A, idem_mem_Ô A⟩ * (1 - N * C)
@@ -969,7 +977,7 @@ lemma exists_isBaseChangeLevel {H : Subgroup (Gf E n)} (hH : H.IsOpen) :
     refine h_tame (e * m) hem_fixed fun u hCu h_inertia ↦ ?_
     have huA : u ∉ A := fun hu ↦
       (hA_unram u hu).exists_notMem_inertia.elim fun τ hτ ↦ hτ (h_inertia τ)
-    rw [reduceAt_eq_zero, MulMemClass.coe_mul, finAdele_mul_apply, map_mul]
+    rw [reduceAt_eq_zero, MulMemClass.coe_mul, FiniteAdeleRing.mul_apply, map_mul]
     have hm_u : m.val u = (N : LocField u) * (C : LocField u) := by
       rw [← hm, adeleOneOn]
       change evalAt u ((N : 𝔸f E') * C) + idem A u * evalAt u (1 - (N : 𝔸f E') * C) = _

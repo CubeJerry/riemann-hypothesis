@@ -30,11 +30,8 @@ contribute. Common vectors of two flags are moved up the flags by elementary lin
   `New.Filling.InScalarCoset`: the meeting places, and the subsets of the finite group.
 * `New.Filling.amplitudeSum_eq_zero_of_not_charsAgree`: a stable set of terms none of which agrees
   contributes `0`.
-* `New.Filling.mul_star_eq_and_pairOccursAt_of_le`,
-  `New.Filling.exists_pairOccursInColumnsAt_top_of_meetsAt`: when the characters agree, the leading
-  coefficients of a common vector of two flags have equal norms and recur at all higher indices over
-  `E`; modulo a place above `M` where the flags meet, some pair not both zero occurs at the top
-  index.
+* `New.Filling.exists_pairOccursInColumnsAt_top_of_meetsAt`: when the characters agree, modulo a
+  place above `M` where the flags meet, some pair not both zero occurs at the top index.
 * `New.Filling.CharsAgree.exists_hasCellRank`: a term with agreeing characters and discriminant `0`
   has a cell rank.
 
@@ -655,6 +652,19 @@ lemma dotProduct_cons_zero_init {R : Type*} [CommRing R] {w x : Fin (n + 1) → 
   · simp [hw b.succ (succ_lt_succ_iff.2 h_lt)]
   · simp [init, hx b.castSucc (castSucc_lt_castSucc_iff.2 h_gt)]
 
+/-- Let `x` and `y` vanish above `i`, and shift both up one place. If every linear form killing
+columns `0, …, i` of both matrices takes equal values on the images of the shifts under `P` and
+`P'`, then `x i` and `y i` occur as the two coefficients at the next column. -/
+lemma pairOccursInColumnsAt_succ_of_shifted_pairings_eq [Fintype ι] {i : Fin n}
+    (hx : ∀ b ≥ i.succ, x b = 0) (hy : ∀ b ≥ i.succ, y b = 0)
+    (h_shift : ∀ {m : ι → F}, (∀ b < i.succ, (m ᵥ* P) b = 0) →
+      (∀ b < i.succ, (m ᵥ* P') b = 0) →
+      m ᵥ* P ⬝ᵥ cons 0 (init x) = m ᵥ* P' ⬝ᵥ cons 0 (init y)) :
+    PairOccursInColumnsAt P P' (x i.castSucc) (y i.castSucc) i.succ := by
+  refine pairOccursInColumnsAt_of_forall_mul_vecMul_eq fun m hm hm' ↦ ?_
+  simpa only [dotProduct_cons_zero_init hm hx, dotProduct_cons_zero_init hm' hy] using
+    h_shift hm hm'
+
 end New
 
 /-!
@@ -679,13 +689,9 @@ variable {E : Type} [Field E] [CMType E] {𝔰 : Shape} {S : Filling E 𝔰} {γ
 `μ'` at `j + 1`. -/
 lemma pairOccursAt_succ (h_agree : S.CharsAgree γ) {μ μ' : E} (j : Fin 𝔰.ϱ)
     (h_occurs : PairOccursAt γ μ μ' j.castSucc) : PairOccursAt γ μ μ' j.succ := by
-  obtain ⟨x, y, hxy, rfl, rfl, h_above⟩ := h_occurs
-  have hx : ∀ b ≥ j.succ, x b = 0 := fun b hb ↦ (h_above b (castSucc_lt_iff_succ_le.2 hb)).1
-  have hy : ∀ b ≥ j.succ, y b = 0 := fun b hb ↦ (h_above b (castSucc_lt_iff_succ_le.2 hb)).2
-  -- It suffices that every form `m` that kills `f b` and `γ f b` for `b ≤ j` takes the same value
-  -- on `μ f (j + 1)` and `μ' γ f (j + 1)`. These values are sums over the shifted coordinates.
-  refine pairOccursInColumnsAt_of_forall_mul_vecMul_eq fun m hm hm' ↦ ?_
-  rw [← dotProduct_cons_zero_init hm hx, ← dotProduct_cons_zero_init hm' hy]
+  simp only [PairOccursAt, forall_and] at h_occurs
+  obtain ⟨x, y, hxy, rfl, rfl, hx, hy⟩ := h_occurs
+  refine pairOccursInColumnsAt_succ_of_shifted_pairings_eq hx hy fun {m} hm hm' ↦ ?_
   -- Two elements of `E` are equal once `ψf` agrees on all their multiples by `t : E`.
   refine (algebraMap E (𝔸f E)).injective (eq_of_forall_ψf_mul_eq
     (denseRange_algebraMap_finAdele.eq fun t ↦ ?_))
@@ -827,7 +833,7 @@ lemma exists_eichler_mem_latticeStabilizer (a : Fin (𝔰.ϱ + 1)) (r : Ô E) (x
   -- trace `1`, and push it into the finite adeles.
   obtain ⟨v, hv⟩ := exists_star_vecMul_eq (S.latticeMiddle (Ô E)).splitGram m
   obtain ⟨-, -, τ, hτ_mem, -, -, hτ⟩ := exists_skew_unit (A := 𝔸f E)
-  have : Floors.TraceOne (Ô E) := ⟨⟨τ, hτ_mem⟩, Subtype.ext hτ⟩
+  let : Floors.TraceOne (Ô E) := ⟨⟨τ, hτ_mem⟩, Subtype.ext hτ⟩
   obtain ⟨u, hu, hu_sum, hu_eq⟩ := exists_mem_besselU_eq_eichlerMap a x r hv hx hm
   let u' : S.GFin := U.map (Ô E).subtype (by simp) (map_splitGram_latticeMiddle _) u
   have hu'_sum : simpleRootSum u' = (simpleRootSum u : Ô E) := (map_sum (Ô E).subtype _ _).symm
@@ -924,12 +930,10 @@ lemma pairOccursInColumnsAt_succ_of_agree {k : S.latticeStabilizer} (hk : S.Agre
       μ μ' j.castSucc) :
     PairOccursInColumnsAt (frameImage 1) (frameImage (S.actionAt (S.reduction k) w)) μ μ'
       j.succ := by
-  obtain ⟨x, y, hxy, rfl, rfl, h_above⟩ := h_occurs
-  have hx : ∀ b ≥ j.succ, x b = 0 := fun b hb ↦ (h_above b (castSucc_lt_iff_succ_le.2 hb)).1
-  have hy : ∀ b ≥ j.succ, y b = 0 := fun b hb ↦ (h_above b (castSucc_lt_iff_succ_le.2 hb)).2
-  refine pairOccursInColumnsAt_of_forall_mul_vecMul_eq fun m hm hm' ↦ ?_
-  rw [← dotProduct_cons_zero_init hm hx, ← dotProduct_cons_zero_init hm' hy]
-  exact vecMul_frameImage_dotProduct_cons_init_eq_of_agrees hk w hxy hx hy hm hm'
+  simp only [PairOccursInColumnsAt, forall_and] at h_occurs
+  obtain ⟨x, y, hxy, rfl, rfl, hx, hy⟩ := h_occurs
+  exact pairOccursInColumnsAt_succ_of_shifted_pairings_eq hx hy
+    (vecMul_frameImage_dotProduct_cons_init_eq_of_agrees hk w hxy hx hy)
 
 /-- Let `s` be the reduction `S.reduction k` of an element `k` of the lattice stabilizer, and let
 `s` agree: the unipotent character takes equal values on integral unipotent `u`, `u'` with

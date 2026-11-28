@@ -169,29 +169,19 @@ lemma exists_add_two_primes [NeZero ℓ] [NeZero N]
       (∀ i : ι, s'.v (.inl i) = s.v i) ∧
       (∀ i : ι, s'.φ (.inl i) = s.φ i) ∧
       ∀ j : Bool, (x j).val * s'.φ (.inr j) ∈ U := by
-  -- Chebotarev: for `g` in `O`, a new prime other than `w` with a Frobenius in `g⁻¹ U`.
-  have cheb (g : O) (w : FinPlace K) : ∃ v : FinPlace K, (v ≠ w ∧ ↑N ∉ v.asIdeal ∧ ∀ i, s.v i ≠ v) ∧
-      ∃ B : ClosurePlace, IsPlaceOver B v ∧ ∃ φ : Gal(Ω/K), g.val * φ ∈ U ∧ IsFrob B v.q φ := by
-    obtain ⟨v, hv, -, B, hB, φ, hφU, hφ, -⟩ :=
-      chebotarev (U.isOpen.preimage (continuous_const_mul g.val)) ⟨g⁻¹, by simp⟩
-        (((finite_natCast_mem N).union (Set.finite_range s.v)).insert w)
-    exact ⟨v, by simpa using hv, B, hB, φ, hφU, hφ⟩
-  -- The first new prime avoids an arbitrary prime, the second avoids the first.
-  obtain ⟨v, B, φ, v_inj, hv⟩ :
-      ∃ (v : Bool → FinPlace K) (B : Bool → ClosurePlace) (φ : Bool → Gal(Ω/K)),
-        Injective v ∧ ∀ j, (↑N ∉ (v j).asIdeal ∧ ∀ i, s.v i ≠ v j) ∧ IsPlaceOver (B j) (v j) ∧
-          (x j).val * φ j ∈ U ∧ IsFrob (B j) (v j).q (φ j) := by
-    obtain ⟨v₁, ⟨-, hv₁⟩, B₁, hB₁, φ₁, hφ₁⟩ := cheb (x true) Classical.ofNonempty
-    obtain ⟨v₀, ⟨h_ne, hv₀⟩, B₀, hB₀, φ₀, hφ₀⟩ := cheb (x false) v₁
-    exact ⟨fun j ↦ cond j v₁ v₀, fun j ↦ cond j B₁ B₀, fun j ↦ cond j φ₁ φ₀,
-      Bool.injective_iff.2 h_ne, Bool.forall_bool.2 ⟨⟨hv₀, hB₀, hφ₀⟩, hv₁, hB₁, hφ₁⟩⟩
+  -- Prescribe the Frobenius cosets `(x j)⁻¹ U` and exclude the original primes.
+  obtain ⟨v, B, φ, v_inj, hv⟩ := chebotarev_family
+    (fun j ↦ U.isOpen.preimage (continuous_const_mul (x j).val))
+    (fun j ↦ ⟨(x j).val⁻¹, by simp⟩) ((finite_natCast_mem N).union (Set.finite_range s.v))
   choose hv hB hφU hφ using hv
+  have h_new (j : Bool) : ↑N ∉ (v j).asIdeal ∧ ∀ i, s.v i ≠ v j := by
+    simpa using hv j
   let s' : SplitPlaces (K := K) ℓ N _ O (ι ⊕ Bool) :=
     { cyclotomicCharMod_eq_one := hO
       dvd_level := hm.trans s.dvd_level
       v := Sum.elim s.v v
-      v_injective := s.v_injective.sumElim v_inj fun i j ↦ (hv j).2 i
-      level_notMem := Sum.forall.2 ⟨s.level_notMem, fun j ↦ (hv j).1⟩
+      v_injective := s.v_injective.sumElim v_inj fun i j ↦ (h_new j).2 i
+      level_notMem := Sum.forall.2 ⟨s.level_notMem, fun j ↦ (h_new j).1⟩
       valuationSubring := Sum.elim s.valuationSubring B
       isPlaceOver := Sum.forall.2 ⟨s.isPlaceOver, hB⟩
       φ := Sum.elim s.φ φ
@@ -234,6 +224,11 @@ variable (M ℓ) in
 def torsionAction : Gal(Ω/K) →* Multiplicative (AddAut (M.torsion ℓ)) × (ZMod ℓ)ˣ :=
   ((DistribMulAction.toAddAut _ (M.torsion ℓ)).comp (M.torsion ℓ).ρ.asGroupHom).prod
     (cyclotomicCharMod Ω ℓ)
+
+/-- An element of the kernel of the action on `M[ℓ]` and `μ_ℓ` fixes the `ℓ`-th roots of unity. -/
+lemma cyclotomicCharMod_eq_one_of_mem_ker_torsionAction {g : Gal(Ω/K)}
+    (hg : g ∈ (torsionAction M ℓ).ker) : cyclotomicCharMod Ω ℓ g = 1 :=
+  congrArg Prod.snd (MonoidHom.mem_ker.1 hg)
 
 /-- The kernel of the action on `M[ℓ]` and `μ_ℓ` acts trivially on `M[ℓ]`. -/
 lemma trivialOn_ker_torsionAction : (M.torsion ℓ).TrivialOn (torsionAction M ℓ).ker := fun _ hg a ↦
@@ -355,7 +350,7 @@ lemma exists_hasFewCocycles_torsion (hκ : Continuous κ)
   obtain ⟨γ, hγ⟩ := exists_generator_mod_ker hκ hκ_four _ O.isClosed
   let x (j : Bool) : O := cond j γ (if h : c ∈ O then ⟨c, h⟩ else 1)
   obtain ⟨I', s', v_eq, φ_eq, φ_mem⟩ := s.exists_add_two_primes (O := O) hm hUO
-    (fun _ hg ↦ congrArg Prod.snd (MonoidHom.mem_ker.1 hg)) x
+    (fun _ ↦ cyclotomicCharMod_eq_one_of_mem_ker_torsionAction) x
   refine ⟨O, I', s', Set.range_subset_iff.2 fun i ↦ ⟨.inl i, v_eq i⟩, ?_⟩
   -- An `ℓ`-th root `y` of a `q`-unit that the Frobenius elements of `s'` fix is fixed by `O`: its
   -- stabiliser `F` is open and contains `U`, `γ` and `O ⊓ ker κ`.

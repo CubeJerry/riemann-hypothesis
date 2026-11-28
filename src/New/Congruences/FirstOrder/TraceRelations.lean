@@ -133,6 +133,9 @@ lemma denominatorError_eq_natCast :
           ℝ≥0∞) := by
   simp [denominatorError]
 
+lemma denominatorError_ne_top : denominatorError D ℓ ≠ ⊤ :=
+  (denominatorError_eq_natCast D ℓ).trans_ne (ENNReal.natCast_ne_top _)
+
 /-- The clearing bound `β_ℓ = loc_ℓ + (1 + 2 t) e'_ℓ + e_ℓ + v_ℓ(N)` per unit of rank of a main
 summand at `ℓ`, where `N = D.chosenGroupOrder`. Here `loc_ℓ = localDefectBound D ℓ` bounds the local
 defect, `e'_ℓ = twistError ℓ D` is the number `(4 f + 3) r v_ℓ(N) + 2 ^ (-ℓ)` allowed for the Selmer
@@ -163,8 +166,7 @@ lemma add_denominatorError_le_mul_clearingBound {r' t' : ℕ} (hr' : r' ∈ Set.
     _ = r' * loc + 1 * ((1 + 2 * D.t) * err + denominatorError D ℓ + v) := by ring
     _ ≤ r' * loc + r' * ((1 + 2 * D.t) * err + denominatorError D ℓ + v) := by gcongr
     _ = r' * clearingBound D ℓ := by
-      simp [clearingBound, err, loc, v,
-        coe_toNNReal ((denominatorError_eq_natCast D ℓ).trans_ne (ENNReal.natCast_ne_top _)), mul_add,
+      simp [clearingBound, err, loc, v, coe_toNNReal (denominatorError_ne_top D ℓ), mul_add,
         add_assoc]
 
 /-- The cost of `t' ≤ D.t` characters, an inequality between numbers. Let `v` be the `ℓ`-adic
@@ -213,6 +215,13 @@ variable {ℓ : ℕ} [ThePrime ℓ] {P : Parameters} {D : Data P}
   {K Y n r : Type} [Fintype n] [DecidableEq n] [Fintype r] [DecidableEq r]
   {t ν : ℕ} {w : K → FinPlace D.E} {τ φ : K → AbsGal D} {O : CoeffRing ℓ}
 
+/-- Ribet's cocycles vanish on the kernel of `u`: a cocycle `z` that obeys the linear relations
+among the `u x g - 1` vanishes at every `g` with `u x g = 1` for all `x`. -/
+lemma ribetCocycles.apply_eq_zero {u : Y → AbsGal D →* Matrix n n O}
+    {ρ : AbsGal D →* Matrix r r O} {b : ↑O} {z : AbsGal D → r → QuotSpan b}
+    (hz : z ∈ ribetCocycles u ρ b) {g : AbsGal D} (hg : ∀ x : Y, u x g = 1) : z g = 0 := by
+  simpa using (mem_ribetCocycles.1 hz).2 (.single g 1) (by simp [funext_iff, hg])
+
 open Ideal IsLocallyConstant in
 /-- Let `z` be a cocycle for `ρ` modulo `b` that obeys the linear relations among the `u x g - 1`
 (`ribetCocycles`), where the `u x` are continuous and trivial on the inertia groups outside
@@ -235,9 +244,7 @@ lemma ribetCocycles.mem_selmerModule [Fintype Y] {u : Y → AbsGal D →* Matrix
     exact congrArg Prod.snd h_pair
   have h_coc : ∀ g g' : AbsGal D, z (g * g') = z g + ρ g • z g' :=
     mem_obeying_cocycleRelations.1 hz.1
-  refine mem_selmerModule_iff.2 ⟨h_coc,
-    fun g hg ↦ by simpa using (mem_ribetCocycles.1 hz).2 (.single g 1) (by simp [funext_iff, h_unr g hg]),
-    hzL, ?_⟩
+  refine mem_selmerModule_iff.2 ⟨h_coc, fun g hg ↦ apply_eq_zero hz (h_unr g hg), hzL, ?_⟩
   -- So `z g` depends only on `u g` modulo `b ^ k`, which is locally constant in `g`.
   have h_red : IsLocallyConstant fun g x ↦ (u x g).map (span {b ^ k}).mkQ := (iff_continuous _).2
     (continuous_pi fun x ↦ (hu_cont x).matrix_map (span {b ^ k}).continuous_mkQ)
@@ -249,8 +256,6 @@ lemma ribetCocycles.mem_selmerModule [Fintype Y] {u : Y → AbsGal D →* Matrix
   ext
   simp [← hv]
 
--- Keeps definitional checks from unfolding the finite sums.
-seal Finset.sum in
 /-- Let every `u x` be conjugate self-dual with twist `t`. Let `w j` be new places with tame
 generators `τ j` and elements `φ j` that fix the `ℓ ^ ν`-th roots of unity. Let `𝒥` be a trace
 ideal. Then `𝒥` is also a trace ideal for the doubled families `withConjInv τ`, `withConjInv φ`,
@@ -628,12 +633,12 @@ lemma hasTriangleCost_of_isCharacterCocycle [Fintype Y] [Fintype K] [LinearOrder
       (placesDividing D.E ℓ ∪ (Set.range w).conjClosure) ∅ (QuotSpan (ℓ ^ ν : ↑O)) :=
     fun z hz ↦ hq.mem_selmerModule_of_tame_eq_zero
       (ribetCocycles.mem_selmerModule hu_cont hu_unr (h_obey hz) (by simp [obeying]))
-      (h_tame z hz) h_cover (by simp +contextual [tateTwist, cyclotomicInv])
+      (h_tame z hz) h_cover (fun _ _ ↦ tateTwist_eq_one_of_cyclotomicChar_eq_one)
   refine ⟨hasTriangleCost_tateTwist h_tri h_unr h_g₀ ?_, fun z hz hzs ↦ hs z ?_ ?_⟩
   · exact add_le_add (relLength_mono h_obey le_rfl) le_rfl
   · -- `z` kills the tame generators at the new places, so it is unramified off `ℓ`
     exact h_tri.isTameGeneratorFamily.mem_selmerModule_of_tame_eq_zero (h_unr hz)
-      (fun k ↦ hzs _ (by simp)) .rfl (by simp +contextual [tateTwist, cyclotomicInv])
+      (fun k ↦ hzs _ (by simp)) .rfl (fun _ _ ↦ tateTwist_eq_one_of_cyclotomicChar_eq_one)
   · exact fun g hg ↦ hzs g (mem_union_left _ hg)
 
 variable [PadicIso ℓ]
@@ -661,7 +666,7 @@ lemma isTameType_of_mem_placesAboveM {V : DescentPair D.E r n}
         ∀ R : GalRep ℓ D.E n,
           IsRepOfType V t J (fun i : V.ChosenIndex ↦ scaledTypePoly V c i * (X - 1) ^ t) S R →
           IsKilledBy (decompRep R (placeOver v.val)) s 0 (Q.map O.val.val) := by
-  have ⟨k, hk⟩ :
+  let ⟨k, hk⟩ :
       ∃ k : Fin 2, (D.levelPrime k : NumberField.RingOfIntegers D.E) ∈ v.val.asIdeal := hv
   have hℓ : D.levelPrime k = ℓ := (v.val.charP_quotient hk).eq _ (v.val.charP_quotient v.property)
   refine ⟨k, hℓ.symm, fun s hs ↦ ?_⟩
@@ -735,15 +740,9 @@ lemma sum_index_mul_defectBound_le (hr : 1 ≤ card r) (ht : t ≤ D.t) :
       card r * localDefectBound D ℓ := by
   classical
   -- The local degree at `v` counts the embeddings of `E` that belong to `v`, out of `2 f`.
-  have h_degrees : ∑ v : placesDividing D.E ℓ, (localChart ℓ D.E v).toGp.range.index ≤ 2 * D.f :=
-    calc
-      _ = ∑ v : placesDividing D.E ℓ, ∑ σ : D.E →+* ℂ with
-            ∃ g : Gp ℓ, complexEmbeddingOf ((localChart ℓ D.E v).e.comp (algebraMap D.E Ω)) g = σ,
-              1 := by
-        simp [(localChart ℓ D.E _).inducesPlace.2.index_eq_card_range, Fintype.card_subtype]
-      _ ≤ 2 * D.f := by
-        simpa [Embeddings.card, finrank_eq_two_mul_card_infinitePlace] using
-          sum_complexEmbeddingOf_le fun _ : D.E →+* ℂ ↦ 1
+  have h_degrees : ∑ v : placesDividing D.E ℓ, (localChart ℓ D.E v).toGp.range.index ≤ 2 * D.f := by
+    simpa [finrank_eq_two_mul_card_infinitePlace] using
+      sum_localChart_index_le_finrank (ℓ := ℓ) (E := D.E)
   -- The main summand costs `r' defectBound`, and the characters together cost at most as much.
   have h_blocks : ∑ i : Option (Fin t),
       (card (SummandCoordIndex r i) * (defectBound D ℓ / (if i = none then 1 else D.t : ℕ)) :

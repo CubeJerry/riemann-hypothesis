@@ -147,6 +147,11 @@ the principal level and `ν` the covolume of its unipotent points. -/
 noncomputable def poincareScale : ℝ :=
   √(MeasureTheory.volume.real D.filling.stdPrincipalLevel.carrier * D.filling.unipotentCovolume)⁻¹
 
+/-- The scale of the Poincaré map is positive, as the principal level has positive volume. -/
+lemma poincareScale_pos : 0 < D.poincareScale :=
+  Real.sqrt_pos.2 (inv_pos.2
+    (mul_pos (measureReal_pos_of_isLevel (K := D.chosenLevel)) D.filling.unipotentCovolume_pos))
+
 /-- The Poincaré map times `D.poincareScale`, in the coordinates `D.sourceFormCoords` of the source
 forms, whose standard inner product serves as the inner product of the source. -/
 noncomputable def scaledPoincare :
@@ -197,7 +202,7 @@ lemma levelRepresentation_goodIdempotentAbove_eq :
     D.levelRepresentation.asAlgebraHom (piTensorElem D.goodIdempotentAbove) =
       (D.principalRep (D.spaceY 0)).asAlgebraHom D.e₀ := by
   classical
-  have : Fintype D.chosenGL := .ofFinite D.chosenGL
+  let : Fintype D.chosenGL := .ofFinite D.chosenGL
   -- Both coefficients are the sum over the families of the products over all chosen places.
   have h_tensor (s : D.filling.ResidueGL) : (piTensorElem D.goodIdempotentAbove).coeff s =
       ∑ c ∈ piFinset fun _ : Fin 2 ↦ goodTuples (P.q₂ D.towerExp) (card D.RowIndex),
@@ -314,20 +319,15 @@ lemma comap_scaledPoincare_eq_comap_goodPoincare (s : D.chosenGL) (F : Submodule
     F.comap (((D.principalRep (D.spaceY 0)).asAlgebraHom D.e₀).rangeRestrict ∘ₗ
         D.principalRep (D.spaceY 0) s ∘ₗ D.scaledPoincare) =
       (F.comap (D.goodPoincare s)).comap D.sourceFormCoords.symm.toLinearMap := by
-  have h_scale : (D.poincareScale : ℂ) ≠ 0 := mod_cast (Real.sqrt_pos.2 (inv_pos.2
-    (mul_pos (measureReal_pos_of_isLevel (K := D.chosenLevel)) D.filling.unipotentCovolume_pos))).ne'
+  have h_scale : (D.poincareScale : ℂ) ≠ 0 := mod_cast D.poincareScale_pos.ne'
   have h_card : (Nat.card D.chosenGL : ℂ) ≠ 0 := mod_cast Nat.card_pos.ne'
-  ext φ
-  set e := ((D.principalRep (D.spaceY 0)).asAlgebraHom D.e₀).rangeRestrict
-  let y : D.targetForms := e (D.principalRep (D.spaceY 0) s
-    (D.poincare (D.sourceFormCoords.symm φ)))
-  have h_scaled : (e ∘ₗ D.principalRep (D.spaceY 0) s ∘ₗ D.scaledPoincare) φ =
-      (D.poincareScale : ℂ) • y := by
-    rw [scaledPoincare, LinearMap.comp_smul, LinearMap.comp_smul]
-    rfl
-  -- by definition `D.goodPoincare s` takes the value `#Ḡ • y` here
-  change _ ∈ F ↔ (Nat.card D.chosenGL : ℂ) • y ∈ F
-  rw [h_scaled, F.smul_mem_iff h_scale, F.smul_mem_iff h_card]
+  let T : D.SourceForm →ₗ[ℂ] D.targetForms :=
+    ((D.principalRep (D.spaceY 0)).asAlgebraHom D.e₀).rangeRestrict ∘ₗ
+      D.principalRep (D.spaceY 0) s ∘ₗ D.poincare
+  rw [scaledPoincare, LinearMap.comp_smul, LinearMap.comp_smul]
+  exact (Submodule.comap_smul (T ∘ₗ D.sourceFormCoords.symm.toLinearMap) F _ h_scale).trans
+    (congrArg (Submodule.comap D.sourceFormCoords.symm.toLinearMap)
+      (Submodule.comap_smul T F _ h_card).symm)
 
 /-- **One translate.** For `s` in the finite group `Ḡ = D.chosenGL`, the map `D.goodPoincare s` is
 `#Ḡ · e₀ s Π`: the unscaled Poincaré map `Π = D.poincare` from the source forms `D.SourceForm` to
@@ -337,7 +337,7 @@ dimension of the target, the preimage of `F` under one of them has dimension at 
 `(1 + α + 3 ε₀) / 2 · D_X`, where `ε₀ = b⁻² / 8`. Here `b = D.b` is the weight at the places
 `D.bPlaces`, and `D_X` is the dimension of `D.SourceForm`. -/
 theorem isSpread_goodPoincare : IsSpread D.goodPoincare (3 / 2 * (8 * D.b ^ 2)⁻¹) := by
-  have : Fintype D.chosenGL := .ofFinite D.chosenGL
+  let : Fintype D.chosenGL := .ofFinite D.chosenGL
   let ρ : Representation ℂ D.chosenGL (D.principalForms (D.spaceY 0)) := D.principalRep (D.spaceY 0)
   have h_unitary (s : D.chosenGL) (x y : D.principalForms (D.spaceY 0)) :
       inner ℂ (ρ s x) (ρ s y) = inner ℂ x y := Space.inner_formRep ..

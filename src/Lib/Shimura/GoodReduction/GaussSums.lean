@@ -134,7 +134,8 @@ def divLattice (a : R) : AddSubgroup V :=
 
 /-- The kernel a⁻¹L / L of multiplication by a on the torus V/L. The hermitian action
 provides the finite quotient instance. -/
-abbrev MulKernel (_ : IsHermitianAction L B F β) : Type := divLattice L F a ⧸ L.toAddSubgroup.addSubgroupOf (divLattice L F a)
+abbrev MulKernel (_ : IsHermitianAction L B F β) : Type :=
+    divLattice L F a ⧸ L.toAddSubgroup.addSubgroupOf (divLattice L F a)
 
 omit [StarRing R] [IsDomain R] [Module.Finite ℤ R] [NeZero a] in
 @[simp]
@@ -247,7 +248,8 @@ lemma normShift_sum_eq_char_smul (hf : ∀ l ∈ L, h.normShift (F a l) f = f)
   have h_term : h.normShift (F a ((y : h.MulKernel a) + k).out) f =
       h.normShift (F a y) (h.normShift (F a k.out) f) := by
     rw [← h_class, normShift_map_out h hf, AddSubgroup.coe_add, map_add,
-      normShift_normShift_of_mem h (map_divLattice_mem (L := L) (F := F) a y) (map_divLattice_mem (L := L) (F := F) a k.out)]
+      normShift_normShift_of_mem h (map_divLattice_mem (L := L) (F := F) a y)
+          (map_divLattice_mem (L := L) (F := F) a k.out)]
   change h.normShift (F a y) (ξ (-k) • h.normShift (F a k.out) f) =
     ξ y • ξ (-(y + k)) • h.normShift (F a ((y : h.MulKernel a) + k).out) f
   rw [h_term, _root_.map_smul, smul_smul, ← ξ.map_add_eq_mul, neg_add, add_neg_cancel_left]
@@ -336,7 +338,8 @@ lemma poincareSeries_add (l : V) (hl : l ∈ L) :
     _ = ∑' m : L,
         (h.multiplier l)⁻¹ * exp (-(B l x + B l l / 2)) * B.poincareTerm h.multiplier x y m := by
       refine tsum_congr fun m ↦ ?_
-      simp [ThetaTori.LatticeForm.poincareTerm, h.isAppellHumbert.semicharacter, hl, ← exp_add, field]
+      simp [ThetaTori.LatticeForm.poincareTerm, h.isAppellHumbert.semicharacter, hl, ← exp_add,
+        field]
       -- what remains is an identity of exponents, with `B u v - B v u` written by the Riemann form
       grind [h.isAppellHumbert.sub_eq_riemannForm]
     _ = _ := tsum_mul_left
@@ -368,8 +371,6 @@ private lemma exp_mul_sub_eq_of_sub_mem {c κ : R} (hκ : κ = c - star c) (x : 
 
 variable [IsFullRankLattice L] [IsDomain R] [Module.Finite ℤ R]
 
--- `seal Finset.sum` keeps definitional checks from unfolding the finite sums.
-seal Finset.sum in
 /-- For hermitian data `h` and `κ = c - star c ≠ 0`, with `α = star β * κ - c`: the Poincaré
 kernel `K(c̄ x, c x)` is the sum over `l ∈ L` of the Gauss sums
 `∑ z, exp (B z (F (κ α) z)) * exp (B w (F (κ c) w))`, `w = l + x + z`, over representatives `z` of
@@ -394,7 +395,8 @@ private lemma hasSum_poincareSeries_mulKernel {c κ : R} [NeZero κ] (hκ : κ =
   have h_reindexed : HasSum (fun p : L × h.MulKernel κ ↦
       B.poincareTerm h.multiplier (F (star c) x) (F c x) (e_mul (e_rep p)))
       (B.poincareSeries h.multiplier (F (star c) x) (F c x)) :=
-    (e_rep.trans e_mul).hasSum_iff.mpr (h_summable _ _).hasSum
+    -- elaborated without the expected type, which `?f ∘ e` would only match by unfolding `HasSum`
+    ((e_rep.trans e_mul).hasSum_iff.mpr (h_summable _ _).hasSum :)
   refine h_reindexed.prod_fiberwise fun l ↦ (hasSum_fintype _).congr_fun fun z ↦ ?_
   -- The term of index `κ w`, `w = z.out + l`, is `exp (B w (F (κ α) w)) * exp (B v (F (κ c) v))`,
   -- `v = w + x`: compare the exponents.

@@ -84,15 +84,19 @@ def conjPlus : Gal(Ω/maximalRealSubfield E) :=
       change cmConj (algebraMap E Ω x) = algebraMap E Ω x
       rw [cmConj_algebraMap, mem_maximalRealSubfield_iff_star_eq.1 x.property] }
 
+/-- The restriction map `toGalPlus` is an open embedding of topological groups. -/
 lemma isOpenEmbedding_toGalPlus : Topology.IsOpenEmbedding (toGalPlus E) :=
   isOpenEmbedding_galois_restrict (toGalPlus E) fun _ _ ↦ rfl
 
+/-- The index of the image of `Gal(Ω/E)` in `Gal(Ω/F)` is 2. -/
 lemma index_range_toGalPlus : (toGalPlus E).range.index = 2 := by
   rw [index_range_eq_finrank_of_smul_eq_smul (K := maximalRealSubfield E) (L := E)
     (toGalPlus E) (fun _ _ ↦ rfl), Algebra.IsQuadraticExtension.finrank_eq_two]
 
+/-- The element `conjPlus` is a complex conjugation in `Gal(Ω/F)`. -/
 lemma isComplexConj_conjPlus : IsComplexConj (conjPlus E) := isComplexConj_cmConj
 
+/-- The square of `conjPlus` is the identity. -/
 lemma conjPlus_mul_self : conjPlus E * conjPlus E = 1 := isComplexConj_conjPlus.mul_self
 
 lemma isFrob_toGalPlus_iff {A : ClosurePlace} {q : ℕ} {g : Gal(Ω/E)} :
@@ -103,9 +107,11 @@ lemma toGalPlus_mem_inertiaGroup_iff {A : ClosurePlace} {g : Gal(Ω/E)} :
     toGalPlus E g ∈ inertiaGroup Gal(Ω/maximalRealSubfield E) A ↔ g ∈ inertiaGroup Gal(Ω/E) A :=
   Iff.rfl
 
+/-- The cyclotomic character commutes with the restriction map `toGalPlus`. -/
 lemma cyclotomicChar_toGalPlus (g : Gal(Ω/E)) :
     cyclotomicChar Ω ℓ (toGalPlus E g) = cyclotomicChar Ω ℓ g := rfl
 
+/-- Conjugation in `Gal(Ω/E)` maps under `toGalPlus` to conjugation by `conjPlus`. -/
 lemma toGalPlus_conjGal (g : Gal(Ω/E)) :
     toGalPlus E (conjGal g) = conjPlus E * toGalPlus E g * conjPlus E := rfl
 
@@ -136,12 +142,16 @@ lemma toGalPlus_ofGalPlus (σ : Gal(Ω/maximalRealSubfield E)) :
     toGalPlus E (ofGalPlus σ) = if σ ∈ (toGalPlus E).range then σ else σ * conjPlus E :=
   (exists_toGalPlus_eq_ite σ).choose_spec
 
+lemma toGalPlus_ofGalPlus_of_mem {σ : Gal(Ω/maximalRealSubfield E)}
+    (hσ : σ ∈ (toGalPlus E).range) : toGalPlus E (ofGalPlus σ) = σ :=
+  (toGalPlus_ofGalPlus σ).trans (ite_eq_left hσ)
+
 lemma toGalPlus_ofGalPlus_of_notMem {σ : Gal(Ω/maximalRealSubfield E)}
     (hσ : σ ∉ (toGalPlus E).range) : toGalPlus E (ofGalPlus σ) = σ * conjPlus E :=
   (toGalPlus_ofGalPlus σ).trans (ite_eq_right hσ)
 
 @[simp] lemma ofGalPlus_toGalPlus (g : Gal(Ω/E)) : ofGalPlus (toGalPlus E g) = g :=
-  isOpenEmbedding_toGalPlus.injective ((toGalPlus_ofGalPlus _).trans (ite_eq_left ⟨g, rfl⟩))
+  isOpenEmbedding_toGalPlus.injective (toGalPlus_ofGalPlus_of_mem ⟨g, rfl⟩)
 
 /-- Let `F` be the maximal real subfield of the CM field `E`, let `Ω` be the algebraic closure of
 `ℚ` and `c` the chosen complex conjugation. The map `ofGalPlus : Gal(Ω/F) → Gal(Ω/E)`, which sends
@@ -668,7 +678,7 @@ lemma exists_apply_eq_nsmul_of_mem_evenClasses {ν e : ℕ} {w : FrobeniusDatum 
   have h_notMem : ↑(ℓ ^ ν) ∉ (primeBelowPlus w.place).asIdeal :=
     fun h ↦ hℓ (w.place.isPrime.mem_of_pow_mem ν (by simpa using h))
   let : Module (ZMod (ℓ ^ ν)) (Unit → QuotSpan (ℓ ^ ν : ↑O)) :=
-    AddCommGroup.zmodModule fun _ ↦ funext fun _ ↦ nsmul_quot_eq_zero rfl.dvd _
+    AddCommGroup.zmodModule (nsmul_pi_quot_eq_zero dvd_rfl)
   obtain ⟨h_coc, -, -, h_locallyConstant⟩ := mem_selmerModule_iff.1 hz.1
   have h_add : ∀ g ∈ inertiaGroup Gal(Ω/maximalRealSubfield E) w.valuationSubring,
       ∀ k ∈ inertiaGroup Gal(Ω/maximalRealSubfield E) w.valuationSubring,
@@ -711,7 +721,7 @@ theorem IsKummerMap.nsmul_apply_tameGenerator_eq_zero {ν e : ℕ} {I : Type} [F
     exists_apply_eq_nsmul_of_mem_evenClasses (hw j).1 (hγ j) (w j).isPlaceOver.tameGenerator.2 hz
   -- The values of `z` form a module over `ℤ/ℓ^ν`, in which `n = 2 ψ(φ_j) a`.
   let : Module (ZMod (ℓ ^ ν)) (Unit → QuotSpan (ℓ ^ ν : ↑O)) :=
-    AddCommGroup.zmodModule fun _ ↦ funext fun _ ↦ nsmul_quot_eq_zero rfl.dvd _
+    AddCommGroup.zmodModule (nsmul_pi_quot_eq_zero dvd_rfl)
   obtain ⟨a, ha⟩ : ∃ a : ZMod (ℓ ^ ν), (n : ZMod (ℓ ^ ν)) = 2 * ψ (w j).frob * a := hn
   have h_kill : (2 * ψ (w j).frob) • z (γ j) = 0 := by
     rwa [← Nat.cast_smul_eq_nsmul (ZMod (ℓ ^ ν)), ZMod.natCast_zmod_val,

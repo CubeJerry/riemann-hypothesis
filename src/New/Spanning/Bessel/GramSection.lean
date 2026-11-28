@@ -179,6 +179,11 @@ lemma one_sub_invCorner_mul_mem_slitPlane {Z W : 𝔰.FrameMatrix} (hZ : Z ∈ �
   refine mem_slitPlane_of_norm_lt_one ?_
   grw [norm_neg, norm_mul, (mem_openCell.1 hW).2.le, mul_one, (mem_openCell.1 hZ).2]
 
+lemma differentiable_diagLast_apply (i j : Fin (𝔰.ϱ + 1)) :
+    Differentiable ℂ fun x : ℂ ↦ diagLast (𝔰 := 𝔰) x i j := by
+  revert i j
+  simp [diagonal, eq_comm, diagLast, forall_fin_succ']
+
 /-- The matrix `sectionMatrix Z W` is holomorphic in `(Z, W)` on `Ω × Ω`, where `Ω` is
 `𝔰.openCell`. -/
 lemma differentiableAt_sectionMatrix_uncurry {Z W : 𝔰.FrameMatrix} (hZ : Z ∈ 𝔰.openCell)
@@ -190,8 +195,7 @@ lemma differentiableAt_sectionMatrix_uncurry {Z W : 𝔰.FrameMatrix} (hZ : Z �
   have h_slit := one_sub_invCorner_mul_mem_slitPlane hZ hW
   have hs_ne : (1 - invCorner Z * invCorner W).sqrt ≠ 0 := by
     simp [Complex.sqrt, slitPlane_ne_zero h_slit]
-  have h_diag (i j : Fin (𝔰.ϱ + 1)) : Differentiable ℂ fun x : ℂ ↦ diagLast (𝔰 := 𝔰) x i j := by
-    revert i j; simp [diagonal, eq_comm, diagLast, forall_fin_succ']
+  have h_diag := differentiable_diagLast_apply (𝔰 := 𝔰)
   refine differentiableAt_pi.2 fun i ↦ differentiableAt_pi.2 fun j ↦ ?_
   simp only [uncurry_def, sectionMatrix, sectionFrame, sectionCoeff, invCorner,
     nonsing_inv_eq_ringInverse] at h_slit hs_ne ⊢
@@ -489,9 +493,8 @@ theorem sectionMatrix_mul_frameCols {Z : 𝔰.FrameMatrix} :
 /-- The Gram matrix of the frame `F = (e₁, …, e_ϱ, z)` for the form `𝔰.J₁` is
 `diagLast 0 - 1 = diag(0, …, 0, -1)`. -/
 lemma frameCols_gram_frameCols : 𝔰.frameColsᴴ * 𝔰.J₁ * 𝔰.frameCols = diagLast 0 - 1 := by
-  rw [conjTranspose_inclMatrix_mul_mul_inclMatrix]
-  simp [splitGram, middleGram, diagLast, ← ext_iff, Matrix.one_apply, diagonal_apply,
-    forall_fin_succ', Fin.ne_of_gt]
+  rw [conjTranspose_inclMatrix_mul_mul_inclMatrix, middleGram_submatrix_besselFrame]
+  simp [diagLast, ← ext_iff, Matrix.one_apply, diagonal_apply, forall_fin_succ', Fin.ne_of_gt]
 
 /-- The products for the form `𝔰.J₁` of the columns of `𝔰.frameCols` = (e₁, …, e_ϱ, z) with those of
 `𝔰.dualFrameCols` = (e*₁, …, e*_ϱ, x_{k₀}) form the matrix `diagLast 0 = diag(1, …, 1, 0)`, that is,
