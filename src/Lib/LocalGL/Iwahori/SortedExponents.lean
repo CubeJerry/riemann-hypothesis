@@ -331,7 +331,8 @@ private lemma transvectionGL_apply_permGL_swap_inv_eq {a b : Fin N} (h : a ≠ b
   -- `swap (σ i) (σ j) = σ * swap i j * σ⁻¹`, so `ρ (permGL (σ * swap i j)⁻¹) x` is a scalar
   -- multiple of `ρ (permGL σ⁻¹) x`, which is fixed by `hx`
   obtain h₁ | h₂ := hσ
-  · simp [mul_swap_eq_swap_mul σ, -map_inv, transvectionGL_apply_permGL_inv hx h₁, hc, hd]
+  · -- (`map_inv` is kept out so that `ρ (permGL σ⁻¹)` stays in the form of the lemma)
+    simp [mul_swap_eq_swap_mul σ, -map_inv, transvectionGL_apply_permGL_inv hx h₁, hc, hd]
   · exact transvectionGL_apply_permGL_inv hx h₂ d hd
 
 /-- Sorting an exponent. Let `ϖ` be a uniformiser, let `x` be fixed by `New.proIwahori` (`hx`), let
@@ -414,6 +415,7 @@ lemma IsExponent.exists_sorted (hϖ : v ϖ.val = exp (-1)) (hx : x ∈ levelSpac
       simpa [χ_eq, ξ, w, w_swap, stepTorus, hϖ, hij, hrev, hSy, field, pow_succ, mul_assoc,
         NeZero.ne, -Fin.val_rev] using (S_U w hw y hly).symm.trans h_zero
     simp [h_eq] at hf
+  -- Hence `y` is also a multiple of `ρ (permGL σ⁻¹) x`, so both transvections at `i`, `j` fix it.
   have tv_y {a b : Fin N} (hab : σ a < σ b ∨ π a < π b) (h : a ≠ b) (d : F) (hd : v d ≤ 1) :
       ρ (transvectionGL h d) y = y :=
     transvectionGL_apply_permGL_swap_inv_eq (h := h) hx hc hab d hd
