@@ -864,6 +864,7 @@ The heads of these files give an overview of a theory: `Lib/ClassField/Global/Ar
 - `Lib/General/Algebra/SeriesBounds` (271): Integrality of exponentials, logarithms and roots of power series
 - `Lib/General/Algebra/SharpMinors` (181): Maximal minors and lengths
 - `Lib/General/Algebra/LevelModulus` (229): Level moduli, residue data as Schwartz–Bruhat functions, and descent in positive degree
+- `Lib/General/Algebra/ValuativeIntegrality` (18): The valuative criterion for integrality
 
 **Analysis**: Real and complex analysis
 
