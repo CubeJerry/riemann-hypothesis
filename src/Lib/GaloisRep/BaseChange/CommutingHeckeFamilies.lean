@@ -152,6 +152,7 @@ abbrev IsMatchingPairAbove :
   IsMatchingPair (adeleMap_star σ) (finrank E E') (idem (placesAbove E' S)) (kerCompNorm E' μ)
     (baseChangeGf : Gf E n → Gf E' n)
 
+/-- The base-change homomorphism `baseChangeGf` is continuous on finite adele groups. -/
 lemma continuous_baseChangeGf : Continuous (baseChangeGf : Gf E n → Gf E' n) := U.continuous_map
 
 /-- The component of the base change of `g` at `u` is the image of the component of `g` at the
@@ -160,6 +161,7 @@ lemma atPlace_baseChangeGf :
     (baseChangeGf g).atPlace u =
       GeneralLinearGroup.map (locMap (algebraMap E E') rfl) (g.atPlace (u.below E)) := rfl
 
+/-- Evaluation of `atPlace (w - 1)` at a local place `w` under base change vanishes. -/
 lemma atPlace_sub_one_apply (i j : n) : ((g.atPlace w).val - 1) i j = (g.val.val - 1) i j w := by
   aesop (add simp Matrix.one_apply)
 
@@ -167,6 +169,7 @@ variable {σ μ S g}
 
 /-! ### Integrality and supports -/
 
+/-- Invariant places under complex conjugation remain in `placesAbove`. -/
 @[simp]
 lemma star_mem_placesAbove : star u ∈ placesAbove E' S ↔ u ∈ placesAbove E' S := by
   -- `star` exchanges the two parts of `S.conjClosure`.
