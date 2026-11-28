@@ -146,7 +146,8 @@ lemma sum_card_boxes_le {j r : ℕ} (T : WeylIndex (D.X (j + 1)) D.columnCount) 
   simp only [h_top, lowColumns, mul_sum, ← card_X, sum_range, sum_add_distrib, le_refl]
 
 /-- At a place inducing a marked prime and a place inducing its conjugate, a box index
-is charged exactly once when the marked side has height one. -/
+is charged exactly once when the marked side has height one. An unmarked index is charged at
+`σ` and a marked index at `τ`. -/
 lemma IsMarked.neighborCharge_add_of_conjugate (hΛ : D.IsMarked Λ) {ι : Type}
     (J : FinPlace D.E → Finset ι) {σ τ : D.Φ} (hσ : inducedPlace σ ∈ Λ)
     (hτ : inducedPlace τ = star (inducedPlace σ)) (h : ℕ) (b : ι) :
@@ -169,7 +170,8 @@ lemma IsMarked.neighborCharge_ne_zero_or_partner (hΛ : D.IsMarked Λ) {ι : Typ
   have h_odd : Odd e := by rwa [partnerExponents_of_inert h_inert] at he
   have h_conj : inducedPlace (P.partner D.towerExp p e τ) = star (inducedPlace τ) :=
     D.inducedPlace_neg_pow_mul_of_odd h_inert h_odd τ
-  have total : neighborCharge Λ J τ 1 b + neighborCharge Λ J (P.partner D.towerExp p e τ) h b = 1 := by
+  have total : neighborCharge Λ J τ 1 b +
+      neighborCharge Λ J (P.partner D.towerExp p e τ) h b = 1 := by
     obtain hτ | ⟨rfl, h_partner⟩ := h_inducing
     · exact hΛ.neighborCharge_add_of_conjugate J (by simpa using hτ) h_conj h b
     · rw [add_comm]
