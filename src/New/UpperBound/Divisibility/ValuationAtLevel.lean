@@ -604,8 +604,9 @@ lemma gaugeLe_compositeLift_at_N {ϑ : D.Twist} {Ψ : D.Translations →₀ ℂ}
       (fun j ↦ D.schrodingerOpAtN ϑ j directDatum)
       (fun j _ _ a b hb ↦ D.omega_schrodingerOpAtN_directDatum ϑ j _ a ⟨b, hb⟩) D.diagPointN
       (fun x _ _ hj ↦ D.schrodingerOpAtN_directDatum_mem_raises ϑ x hj) h_integral
-  -- A bound at `D.diagPointN D.m` gives the same bound for the restriction at `1`: the change of
-  -- lattice cancels the normalising division in the restriction map.
+  -- A bound at `D.diagPointN D.m`, which is `D.diagPoint D.m D.piNPlaces` as the `calc` writes it,
+  -- gives the same bound for the restriction at `1`: the change of lattice cancels the normalising
+  -- division in the restriction map.
   rw [h_compositeLift_eq]
   refine GaugeLe.restrictToY_of_diag D (D.map_adeleExtension_diagPoint _ _) fun g ↦ ?_
   calc _ = ‖ιₚ c‖ * weylGauge _ (D.lastEntry D.m) (g * D.diagPoint D.m D.piNPlaces)
