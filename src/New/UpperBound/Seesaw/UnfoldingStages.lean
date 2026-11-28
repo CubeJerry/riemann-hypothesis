@@ -13,6 +13,7 @@ import Lib.General.Algebra.MultivariatePolynomials
 import Lib.General.Measure.IntegralOperators
 import Lib.Weil.CompactLift.DefiniteThetaLift
 import Lib.Weil.Periods.Unfolding
+import Mathlib.Data.Matrix.ColumnRowPartitioned
 import New.OneLift.ComparisonOperator.ExchangeData
 import New.UpperBound.Objects.CharactersAtLevel
 import New.UpperBound.Seesaw.Frequency
@@ -363,21 +364,10 @@ lemma formAdjoint_fromRows (A : Matrix ι ι' (𝔸 E)) (B : Matrix ι'' ι' (�
     refine Matrix.ext fun a b ↦ ?_
     rcases a with a | a <;> rcases b with b | b <;>
       simp [flipSum, flipSpace, Space.sum]
-  have hM : V'.J⁻¹.map toAdele * (A.fromRows B)ᴴ =
-      (V'.J⁻¹.map toAdele * Aᴴ).fromCols (V'.J⁻¹.map toAdele * Bᴴ) := by
-    refine Matrix.ext fun i j ↦ ?_
-    rcases j with j | j <;> simp [Matrix.mul_apply]
-  rw [formAdjoint, formAdjoint, formAdjoint, hJ, hM]
-  refine Matrix.ext fun i j ↦ ?_
-  rcases j with j | j
-  · rw [fromCols_apply_inl, Matrix.neg_apply, Matrix.mul_apply, Matrix.mul_apply,
-      Fintype.sum_sum_type]
-    simp only [fromCols_apply_inl, fromBlocks_apply₁₁, fromBlocks_apply₂₁, Matrix.zero_apply,
-      mul_zero, Finset.sum_const_zero, add_zero, Matrix.neg_apply, mul_neg,
-      Finset.sum_neg_distrib]
-  · rw [fromCols_apply_inr, Matrix.mul_apply, Matrix.mul_apply, Fintype.sum_sum_type]
-    simp only [fromCols_apply_inr, fromBlocks_apply₁₂, fromBlocks_apply₂₂, Matrix.zero_apply,
-      mul_zero, Finset.sum_const_zero, zero_add]
+  rw [formAdjoint, formAdjoint, formAdjoint, hJ,
+    Matrix.conjTranspose_fromRows_eq_fromCols_conjTranspose, Matrix.mul_fromCols,
+    Matrix.fromCols_mul_fromBlocks]
+  simp
 
 /-- Let `D` be data for the two consecutive lifts `Y → Y' → Y''`, and let `n` be a unipotent element
 of U(V'), with matrix `V'.ratCoordMatrix n` in rational coordinates. Let
