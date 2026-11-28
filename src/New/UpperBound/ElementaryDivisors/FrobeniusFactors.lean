@@ -140,8 +140,9 @@ def entryWeight (ℓ : ℕ) (a a' : Fin k) (i : ZMod N) (v : ZMod N × Fin k × 
     v.2.2
 
 /-- The adjugate commutes with conjugation: if `A B = 1`, then `B adj(A M B) A = adj(M)`. -/
-lemma _root_.New.mul_adjugate_conj_mul {A B : Matrix (Fin k) (Fin k) R} (hAB : A * B = 1)
-    (M : Matrix (Fin k) (Fin k) R) : B * (A * M * B).adjugate * A = M.adjugate :=
+lemma _root_.New.mul_adjugate_conj_mul {ι R : Type*} [Fintype ι] [DecidableEq ι] [CommRing R]
+    {A B : Matrix ι ι R} (hAB : A * B = 1) (M : Matrix ι ι R) :
+    B * (A * M * B).adjugate * A = M.adjugate :=
   calc B * (A * M * B).adjugate * A
       = B * B.adjugate * M.adjugate * (A.adjugate * A) := by
         simp only [adjugate_mul_distrib, mul_assoc]
@@ -272,17 +273,17 @@ variable {h : GL (Fin k) W} {s : ZMod N} {r ℓ n d : ℕ} {a a' : Fin k}
 
 /-- Let each entry of row `b` of `M` lie in `G (x b - v)` for the filtration `G`, where `v ≥ 0` and
 the `x b` add up to `0`. Then each entry of row `b` of the transposed adjugate `M.adjugateᵀ` (the
-cofactor matrix) lies in `G (-x b - k * v)`. -/
-lemma _root_.New.adjugate_transpose_mem (G : ℝ → AddSubgroup R) [IsRealFiltration G]
-    {M : Matrix (Fin k) (Fin k) R} {x : Fin k → ℝ} {v : ℝ} (hv : 0 ≤ v)
-    (hx_sum : ∑ b : Fin k, x b = 0) (hM : ∀ b c : Fin k, M b c ∈ G (x b - v)) (b c : Fin k) :
-    M.adjugateᵀ b c ∈ G (-x b - k * v) := by
+cofactor matrix) lies in `G (-x b - Fintype.card ι * v)`. -/
+lemma _root_.New.adjugate_transpose_mem {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (G : ℝ → AddSubgroup R) [IsRealFiltration G] {M : Matrix ι ι R} {x : ι → ℝ} {v : ℝ}
+    (hv : 0 ≤ v) (hx_sum : ∑ b : ι, x b = 0) (hM : ∀ b c : ι, M b c ∈ G (x b - v)) (b c : ι) :
+    M.adjugateᵀ b c ∈ G (-x b - Fintype.card ι * v) := by
   -- A cofactor in row `b` is a sum of products of entries of the other rows.
   rw [transpose_apply, adjugate_apply, ← det_transpose, det_apply]
   refine sum_mem fun π _ ↦ zsmul_mem (antitone ?_ <|
     prod_mem_graded G (update (fun i ↦ x i - v) b 0) _ fun i _ ↦ ?_) _
   · simp [Finset.sum_update_of_mem, Finset.sum_sub_distrib, hx_sum, Finset.card_sdiff,
-      Finset.inter_univ, cast_pred b.pos]
+      Finset.inter_univ, cast_pred (Fintype.card_pos_iff.2 ⟨b⟩)]
     linarith
   · obtain rfl | hi := eq_or_ne i b
     · by_cases hc : π i = c <;> simp [hc, one_mem_graded G]
@@ -291,12 +292,13 @@ lemma _root_.New.adjugate_transpose_mem (G : ℝ → AddSubgroup R) [IsRealFiltr
 /-- Let the entries of row `b` of `M` have level `y b` in the filtration `G`. Rows and columns of
 the `n`-th symmetric power of `M` are indexed by exponent vectors of degree `n`, and row `β` has
 level `∑ b, β b * y b`. -/
-lemma _root_.New.symPowMatrix_mem (G : ℝ → AddSubgroup R) [IsRealFiltration G]
-    {M : Matrix (Fin k) (Fin k) R} {y : Fin k → ℝ} (hM : ∀ b c : Fin k, M b c ∈ G (y b))
-    (β γ : Monomials (Fin k) n) : symPowMatrix n M β γ ∈ G (weight y β.val) := by
+lemma _root_.New.symPowMatrix_mem {ι : Type} [Fintype ι] [DecidableEq ι]
+    (G : ℝ → AddSubgroup R) [IsRealFiltration G] {M : Matrix ι ι R} {y : ι → ℝ}
+    (hM : ∀ b c : ι, M b c ∈ G (y b)) (β γ : Monomials ι n) :
+    symPowMatrix n M β γ ∈ G (weight y β.val) := by
   -- Give the variable `b` the weight `-y b`. The image of each variable has Gauss level `0`, hence
   -- so has the image of each monomial.
-  have h_var (c : Fin k) : ∑ b : Fin k, M b c • X b ∈ gaussFiltration G (-y) 0 := by
+  have h_var (c : ι) : ∑ b : ι, M b c • X b ∈ gaussFiltration G (-y) 0 := by
     refine sum_mem fun b _ ↦ ?_
     rw [X, smul_monomial, smul_eq_mul, mul_one]
     exact monomial_mem_gaussFiltration (by simpa [weight_single] using hM b c)
@@ -309,10 +311,10 @@ lemma _root_.New.symPowMatrix_mem (G : ℝ → AddSubgroup R) [IsRealFiltration 
 /-- Filtration levels add up along a product. Suppose that for `d < m` each entry `(b, c)` of `A d`
 lies in `G (α (d + 1) b - α d c - u)` for the filtration `G`, and that `α 0 b ≤ u` for all `b`. Then
 each entry of row `b` of `A (m - 1) * ⋯ * A 0` lies in `G (α m b - (m + 1) * u)`. -/
-lemma _root_.New.reverse_prod_map_range_mem (G : ℝ → AddSubgroup R) [IsRealFiltration G]
-    {A : ℕ → Matrix (Fin k) (Fin k) R} {α : ℕ → Fin k → ℝ} {u : ℝ} {m : ℕ}
-    (hα_zero : ∀ b : Fin k, α 0 b ≤ u)
-    (hA : ∀ d < m, ∀ b c : Fin k, A d b c ∈ G (α (d + 1) b - α d c - u)) (b c : Fin k) :
+lemma _root_.New.reverse_prod_map_range_mem {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (G : ℝ → AddSubgroup R) [IsRealFiltration G] {A : ℕ → Matrix ι ι R} {α : ℕ → ι → ℝ} {u : ℝ}
+    {m : ℕ} (hα_zero : ∀ b : ι, α 0 b ≤ u)
+    (hA : ∀ d < m, ∀ b c : ι, A d b c ∈ G (α (d + 1) b - α d c - u)) (b c : ι) :
     ((range m).map A).reverse.prod b c ∈ G (α m b - (m + 1) * u) := by
   induction m generalizing b with
   | zero =>
@@ -340,7 +342,7 @@ lemma parityCofactor_mem (G : ℝ → AddSubgroup R) [IsRealFiltration G]
   split_ifs
   · have hk : (1 : ℝ) ≤ k := by exact_mod_cast b.pos
     exact antitone (by nlinarith) (hM b c)
-  · simpa only [neg_one_mul] using adjugate_transpose_mem G hv hx_sum hM b c
+  · simpa only [neg_one_mul, Fintype.card_fin] using adjugate_transpose_mem G hv hx_sum hM b c
 
 /-- Let `T` be a Frobenius cycle, whose letters `s : ZMod N` are even or odd (`T.isEven`). The
 variable `(b, s)` is deep (`T.deepIndicator r (b, s) = 1`, else `0`) if `r ≤ b` for even and `b < r`
