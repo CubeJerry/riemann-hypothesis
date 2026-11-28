@@ -363,10 +363,8 @@ lemma IsPosition.exists_mul_eq_frameCols_and_besselLength_le (hP : IsPosition ε
       refine Fin.lastCases ?_ (fun c ↦ ?_) b <;>
         simp [Shape.besselFrame, Shape.J₁, splitGram, middleGram]
   -- Both families are independent, so Witt's theorem gives `x`.
-  have h_indep : HasLeftInv (p.matrix.val * fromCols i₀ v) := by
-    obtain ⟨Z, hZ⟩ := hP.hasLeftInv
-    exact ⟨Z * p.matrix⁻¹.val, by
-      rw [Matrix.mul_assoc, ← Matrix.mul_assoc _ p.matrix.val, Units.inv_mul, Matrix.one_mul, hZ]⟩
+  have h_indep : HasLeftInv (p.matrix.val * fromCols i₀ v) :=
+    HasLeftInv.mul ⟨_, p.matrix.inv_mul⟩ hP.hasLeftInv
   have h_indep' : HasLeftInv (fromCols 𝔰.definiteCols 𝔰.frameCols) := by
     let e := Sum.elim 𝔰.indexX₀ 𝔰.besselFrame
     have he : Function.Injective e := Sum.elim_injective.2
