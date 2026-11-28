@@ -161,7 +161,7 @@ lemma atPlace_baseChangeGf :
     (baseChangeGf g).atPlace u =
       GeneralLinearGroup.map (locMap (algebraMap E E') rfl) (g.atPlace (u.below E)) := rfl
 
-/-- Evaluation of `atPlace (w - 1)` at a local place `w` under base change vanishes. -/
+/-- Entry `(i, j)` of `g.atPlace w - 1` is entry `(i, j)` of `g - 1` evaluated at `w`. -/
 lemma atPlace_sub_one_apply (i j : n) : ((g.atPlace w).val - 1) i j = (g.val.val - 1) i j w := by
   aesop (add simp Matrix.one_apply)
 
@@ -169,7 +169,7 @@ variable {σ μ S g}
 
 /-! ### Integrality and supports -/
 
-/-- Invariant places under complex conjugation remain in `placesAbove`. -/
+/-- `placesAbove E' S` is stable under complex conjugation: `star u` lies in it iff `u` does. -/
 @[simp]
 lemma star_mem_placesAbove : star u ∈ placesAbove E' S ↔ u ∈ placesAbove E' S := by
   -- `star` exchanges the two parts of `S.conjClosure`.
