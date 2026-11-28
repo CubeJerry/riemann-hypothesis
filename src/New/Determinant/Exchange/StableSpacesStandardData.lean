@@ -307,10 +307,12 @@ lemma IntegralFrame.stdColDatum_mul_sub_smul (A : IntegralFrame F n m b) (r : Ma
     _ = hχ.resChar (r.map hχ.reduction).det * stdColDatum χ A.dualK x := by
         simp [hx, ← hk, invOnUnits_det_eq_resChar_det, hN_red, stdColDatum]
 
-/-- Averaging the shears `S (ϖ⁻¹ • l r)` against `η (det r)` over the residue ring produces a
-function in `P`. Every functional `Λ` that transforms under shears by `ψ (tr (T z))` and kills
-`stdColDatum χ A.dualK` when `T` is primitive must kill this sum, because `T` is forced to be
-integral and non-unimodular so the matrix Gauss sum vanishes. -/
+/-- For each matrix `z`, let `S z` be the sheared datum
+`y ↦ stdColDatum χ A.dualK (y + A.L * z * (A.dualK * y))`. Averaging the shears `S (ϖ⁻¹ • l r)`
+against `hχ.resChar r.det` over the residue ring produces a function in `P`. Every functional `Λ`
+that transforms under shears by `ψ (tr (T z))` and kills `stdColDatum χ A.dualK` when `T` is
+primitive must kill this sum, because `T` is forced to be integral and non-unimodular so the matrix
+Gauss sum vanishes. -/
 private lemma IntegralFrame.sum_resChar_smul_shear_mem (A : IntegralFrame F n m b)
     [Fintype hχ.ResidueRing] {l : Matrix b b hχ.ResidueRing → Matrix b b V.O}
     (hl : ∀ r : Matrix b b hχ.ResidueRing, (l r).map hχ.reduction = r)
@@ -357,9 +359,10 @@ private lemma IntegralFrame.sum_resChar_smul_shear_mem (A : IntegralFrame F n m 
   exact h_sum (sum_mul_addChar_lift_eq_zero hχ.isPrimitive_resChar_and_invOnUnits_eq.left hφ hφπ
     hl h_det)
 
-/-- At `-ϖ⁻¹ • y`, every nonzero term `η (det r) * S (ϖ⁻¹ • l r) (-ϖ⁻¹ • y)` of the Gauss-sum
-average equals `stdColDatum χ A.dualL y`: solving the sheared argument for `y` reduces the
-identity to `IntegralFrame.stdColDatum_mul_sub_smul`. -/
+/-- Let `S z` be the sheared datum `y ↦ stdColDatum χ A.dualK (y + A.L * z * (A.dualK * y))`. At
+`-ϖ⁻¹ • y`, every nonzero term `hχ.resChar r.det * S (ϖ⁻¹ • l_r) (-ϖ⁻¹ • y)` of the Gauss-sum
+average equals `stdColDatum χ A.dualL y`: solving the sheared argument for `y` reduces the identity
+to `IntegralFrame.stdColDatum_mul_sub_smul`. -/
 private lemma IntegralFrame.resChar_smul_shear_eq_stdColDatum (A : IntegralFrame F n m b)
     {r : Matrix b b hχ.ResidueRing} {l_r : Matrix b b V.O} (hl : l_r.map hχ.reduction = r)
     (y : Matrix n b F)
@@ -407,12 +410,14 @@ lemma IntegralFrame.match_mem_of_isPrimitiveMatrix_vanishing
     Ψ ∈ P := by
   classical
   -- Sum the `S z` over `z = ϖ⁻¹ r`, `r` a matrix over the residue ring (lifted to `O`), against
-  -- `η (det r)`. The functionals `Λ` kill this sum (a Gauss sum that vanishes off the units), so
-  -- it lies in `P`. Its value at `-ϖ⁻¹ • y` is `stdColDatum χ A.dualL y` times the number of terms
-  -- that do not vanish there; that number is not zero for `y = A.L - ϖ • A.K`, so
+  -- `hχ.resChar r.det`. The functionals `Λ` kill this sum (a Gauss sum that vanishes off the
+  -- units), so it lies in `P`. Its value at `-ϖ⁻¹ • y` is `stdColDatum χ A.dualL y` times the
+  -- number of terms that do not vanish there; that number is not zero for `y = A.L - ϖ • A.K`, so
   -- `match_mem_of_stdColDatum` applies.
   let S (z : Matrix b b F) (y : Matrix n b F) : ℂ :=
     stdColDatum χ A.dualK (y + A.L * z * (A.dualK * y))
+  -- `hχ.reduction : O → R` is the residue map, and `hχ.resChar ∘ hχ.reduction` is `χ⁻¹` on units
+  -- and zero elsewhere.
   let R : Type := hχ.ResidueRing
   let π : V.O →+* R := hχ.reduction
   have h_surj : Surjective π := hχ.reduction_surjective_and_eq_zero_iff.left
