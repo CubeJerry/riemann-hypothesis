@@ -738,6 +738,7 @@ lemma nsmul_component_eq_zero (h_bound : IsStickelbergerBound N e X)
   exact hzσ (by simpa [nsmul_eq_mul] using h_zero)
 
 omit [NeZero N] in
+/-- A positive integer coprime to `l` is a unit in `O`. -/
 lemma isUnit_natCast_of_not_dvd {k : ℕ} (hk : ¬l ∣ k) : IsUnit (k : O) := by
   have h_unit : IsUnit (k : ℤ_[l]) :=
     .of_map PadicInt.toZMod _ (by simpa [natCast_eq_zero_iff] using hk)
@@ -905,6 +906,7 @@ lemma isUnit_natCast_of_pow_factorization_succ_dvd (hX : X ≠ 0)
     simpa [pow_succ, NeZero.ne, mul_dvd_mul_iff_left] using h_dvd
   exact (X.coprime_ordCompl L.out hX).cast.isUnit_of_dvd h_dvd_compl
 
+/-- Finiteness of the Kolyvagin reciprocity component. -/
 lemma finite_component : Finite (component l e ψ ν) :=
   finite_vanishingCocycles (n := ν)
     (fun g y ↦ (cyclotomicPowDirichlet_smul_eq_self g.prop (nsmul_quot_eq_zero dvd_rfl y)).right)

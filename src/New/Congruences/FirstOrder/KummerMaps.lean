@@ -84,15 +84,19 @@ def conjPlus : Gal(Ω/maximalRealSubfield E) :=
       change cmConj (algebraMap E Ω x) = algebraMap E Ω x
       rw [cmConj_algebraMap, mem_maximalRealSubfield_iff_star_eq.1 x.property] }
 
+/-- The restriction map `toGalPlus` is an open embedding of topological groups. -/
 lemma isOpenEmbedding_toGalPlus : Topology.IsOpenEmbedding (toGalPlus E) :=
   isOpenEmbedding_galois_restrict (toGalPlus E) fun _ _ ↦ rfl
 
+/-- The index of the image of `Gal(Ω/E)` in `Gal(Ω/F)` is 2. -/
 lemma index_range_toGalPlus : (toGalPlus E).range.index = 2 := by
   rw [index_range_eq_finrank_of_smul_eq_smul (K := maximalRealSubfield E) (L := E)
     (toGalPlus E) (fun _ _ ↦ rfl), Algebra.IsQuadraticExtension.finrank_eq_two]
 
+/-- The element `conjPlus` is a complex conjugation in `Gal(Ω/F)`. -/
 lemma isComplexConj_conjPlus : IsComplexConj (conjPlus E) := isComplexConj_cmConj
 
+/-- The square of `conjPlus` is the identity. -/
 lemma conjPlus_mul_self : conjPlus E * conjPlus E = 1 := isComplexConj_conjPlus.mul_self
 
 lemma isFrob_toGalPlus_iff {A : ClosurePlace} {q : ℕ} {g : Gal(Ω/E)} :
@@ -103,9 +107,11 @@ lemma toGalPlus_mem_inertiaGroup_iff {A : ClosurePlace} {g : Gal(Ω/E)} :
     toGalPlus E g ∈ inertiaGroup Gal(Ω/maximalRealSubfield E) A ↔ g ∈ inertiaGroup Gal(Ω/E) A :=
   Iff.rfl
 
+/-- The cyclotomic character commutes with the restriction map `toGalPlus`. -/
 lemma cyclotomicChar_toGalPlus (g : Gal(Ω/E)) :
     cyclotomicChar Ω ℓ (toGalPlus E g) = cyclotomicChar Ω ℓ g := rfl
 
+/-- Conjugation in `Gal(Ω/E)` maps under `toGalPlus` to conjugation by `conjPlus`. -/
 lemma toGalPlus_conjGal (g : Gal(Ω/E)) :
     toGalPlus E (conjGal g) = conjPlus E * toGalPlus E g * conjPlus E := rfl
 

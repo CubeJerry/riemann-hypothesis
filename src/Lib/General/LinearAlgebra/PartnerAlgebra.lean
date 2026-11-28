@@ -75,6 +75,19 @@ abbrev invLastRows : Matrix a n R := k⁻¹.val.submatrix (e ∘ Sum.inr) id
 block `b`. -/
 abbrev firstCols : Matrix n b R := k.val.submatrix id (e ∘ Sum.inl)
 
+/-- Right multiplication of the last rows of the inverse corresponds to left translation
+of the original matrix by the inverse of the multiplier. -/
+lemma invLastRows_mul (g k : GL n R) :
+    invLastRows e k * g.val = invLastRows e (g⁻¹ * k) := by
+  change k⁻¹.val.submatrix (e ∘ Sum.inr) id * g.val =
+    (g⁻¹ * k)⁻¹.val.submatrix (e ∘ Sum.inr) id
+  rw [_root_.mul_inv_rev, inv_inv, Units.val_mul,
+    submatrix_mul _ _ _ id _ bijective_id, submatrix_id_id]
+
+/-- Left multiplication of the selected columns agrees with selection after multiplication. -/
+lemma mul_firstCols (g k : GL n R) :
+    g.val * firstCols e k = firstCols e (g * k) := rfl
+
 /-- The functions `Φ` on `a × n` matrices and `Ψ` on `n × b` matrices are partners for the
 multiplicative character `χ` over `O` if `Φ` vanishes off the matrices `invLastRows e k` and `Ψ` off
 the matrices `firstCols e k`, for `k` in `GL_n(O)`, and
@@ -111,6 +124,7 @@ lemma transpose_invLastRows :
     (invLastRows e k)ᵀ = firstCols ((Equiv.sumComm a b).trans e) (invTransposeGL k) :=
   rfl
 
+/-- The transpose of `invLastRows e k` has a left inverse. -/
 lemma hasLeftInv_invLastRows_transpose [DecidableEq a] : HasLeftInv (invLastRows e k)ᵀ := by
   rw [transpose_invLastRows]
   exact ⟨_, invFirstRows_mul_firstCols _ _⟩
@@ -136,9 +150,7 @@ lemma isPrimitiveMatrix_iff_mem_intGL : IsPrimitiveMatrix O k.val ↔ k ∈ intG
 /-- A block of columns of a matrix in `GL n O` is primitive over `O`. -/
 lemma isPrimitiveMatrix_firstCols [DecidableEq b] {k : GL n R} (hk : k ∈ intGL n O) :
     IsPrimitiveMatrix O (firstCols e k) :=
-  -- `invFirstRows e k` is an integral left inverse.
-  ⟨fun i j ↦ (mem_intGL.1 hk).1 i (e (Sum.inl j)), invFirstRows e k,
-    fun i j ↦ (mem_intGL.1 hk).2 (e (Sum.inl i)) j, invFirstRows_mul_firstCols e k⟩
+  ((isPrimitiveMatrix_iff_mem_intGL k).2 hk).submatrix_cols (e.injective.comp Sum.inl_injective)
 
 /-! ### Columns of a matrix and rows of its inverse -/
 
