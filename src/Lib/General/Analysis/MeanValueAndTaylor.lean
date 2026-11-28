@@ -263,10 +263,8 @@ lemma contDiff_matrix_mul [Fintype o] :
 
 /-- The conjugate transpose of complex matrices is smooth over `ℝ` for the elementwise norm. -/
 @[fun_prop]
-lemma contDiff_conjTranspose : ContDiff ℝ N (conjTranspose : Matrix l m ℂ → Matrix m l ℂ) := by
-  refine contDiff_pi' fun i ↦ contDiff_pi' fun j ↦ ?_
-  simp only [conjTranspose_apply, ← starRingEnd_apply]
-  fun_prop
+lemma contDiff_conjTranspose : ContDiff ℝ N (conjTranspose : Matrix l m ℂ → Matrix m l ℂ) :=
+  (conjTransposeLinearEquiv l m ℝ ℂ).toContinuousLinearEquiv.contDiff
 
 /-- The exponential of complex square matrices is smooth over `ℝ` for the elementwise norm. -/
 @[fun_prop]
