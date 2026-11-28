@@ -43,16 +43,6 @@ section NullFrames
 
 open Finset Matrix
 
-/-- One step of elimination over the integers `valRingCp p` of `ℂ_p`. Given the values `a k` of a
-linear form on the rows of a matrix and a modulus `α`, there are row operations `u`, with
-determinant dividing `α`, after which `α` divides all values. -/
-lemma New.exists_det_dvd_and_dvd_mulVec {p : ℕ} [Fact p.Prime] {m : ℕ} (a : Fin m → valRingCp p)
-    (α : valRingCp p) :
-    ∃ u : Matrix (Fin m) (Fin m) (valRingCp p), u.det ∣ α ∧ ∀ k : Fin m, α ∣ (u *ᵥ a) k := by
-  simpa [mulVec, dotProduct, Ideal.mem_span_singleton] using
-    colengthDvd_inf_comap_span (⊤ : Submodule (valRingCp p) (valRingCp p)) LinearMap.id α m a
-      (fun _ ↦ Submodule.mem_top)
-
 /-- For finitely many linear forms with coefficient vectors `A i` and moduli `α i` over the integers
 `valRingCp p` of `ℂ_p`, there is a square matrix `g`, with determinant dividing the product of the
 moduli, such that `α i` divides the value of the `i`-th form on every row of `g`. -/
