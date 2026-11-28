@@ -110,9 +110,13 @@ lemma LevelPlaces.LevelForm.inner_eq_petersson {s : n → ℤˣ} (V : Space E n 
 
 variable [WeilData E]
 
+/-- The one-point type `Unit` embeds in every non-empty type. -/
+lemma nonempty_unit_embedding {α : Type} [h : Nonempty α] : Nonempty (Unit ↪ α) :=
+  h.map Function.Embedding.punit
+
 /-- For non-empty `n`, an arbitrary embedding of the one-point type `Unit` into `n`, that is, an
 arbitrary index. -/
-def arbitraryIndexEmbedding [h : Nonempty n] : Unit ↪ n := (h.map Function.Embedding.punit).some
+def arbitraryIndexEmbedding [h : Nonempty n] : Unit ↪ n := (nonempty_unit_embedding (h := h)).some
 
 /-! ### The data and the theta kernel -/
 
@@ -531,7 +535,6 @@ under the block rule to `paramV`, twice the Harish-Chandra parameter of the weig
 parameter. The partitions `colsPlus` and `colsMinus` have no column higher than the number of basis
 vectors of `W` with sign `1` and `-1`. -/
 lemma LValueData.fitsParams_descentPair (X : LValueData E n) : X.descentPair.FitsParams 0 := by
-  classical
   -- Both spaces are definite, and the weight `0` on the line goes up to the weight on `V`.
   have h_correspond :
       ParamsCorrespond X.descentPair.detExp (-X.rowLength ·) 0 X.descentPair.paramV 1 1 :=

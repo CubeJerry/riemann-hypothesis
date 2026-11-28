@@ -738,6 +738,7 @@ lemma nsmul_component_eq_zero (h_bound : IsStickelbergerBound N e X)
   exact hzσ (by simpa [nsmul_eq_mul] using h_zero)
 
 omit [NeZero N] in
+/-- A positive integer coprime to `l` is a unit in `O`. -/
 lemma isUnit_natCast_of_not_dvd {k : ℕ} (hk : ¬l ∣ k) : IsUnit (k : O) := by
   have h_unit : IsUnit (k : ℤ_[l]) :=
     .of_map PadicInt.toZMod _ (by simpa [natCast_eq_zero_iff] using hk)
@@ -905,6 +906,12 @@ lemma isUnit_natCast_of_pow_factorization_succ_dvd (hX : X ≠ 0)
     simpa [pow_succ, NeZero.ne, mul_dvd_mul_iff_left] using h_dvd
   exact (X.coprime_ordCompl L.out hX).cast.isUnit_of_dvd h_dvd_compl
 
+/-- Finiteness of the Kolyvagin reciprocity component. -/
+lemma finite_component : Finite (component l e ψ ν) :=
+  finite_vanishingCocycles (n := ν)
+    (fun g y ↦ (cyclotomicPowDirichlet_smul_eq_self g.prop (nsmul_quot_eq_zero dvd_rfl y)).right)
+    fun _ ⟨h_fix, h_inertia⟩ ↦ .inr ⟨h_fix, .inl h_inertia⟩
+
 /-- There are finitely many cocycles for `cyc ^ e ψ` modulo `l ^ m` that are unramified off `l`
 over `ℚ(ζ_N)`. -/
 lemma finite_vanishingCocycles_inertiaOff_empty (m : ℕ) :
@@ -944,9 +951,7 @@ lemma exists_finset_forall_exists_isFrob (hc : cyclotomicPowDirichlet l e ψ cmC
   -- Choose a prime for each pair; there are finitely many pairs.
   have h_finite_y : Finite (vanishingCocycles (cyclotomicPowDirichlet l (e + 1) ψ)
       (QuotSpan (l ^ m : O)) (inertiaOff N l ∅)) := finite_vanishingCocycles_inertiaOff_empty m
-  have h_finite_z : Finite (component l e ψ ν) := finite_vanishingCocycles (n := ν)
-    (fun g y ↦ (cyclotomicPowDirichlet_smul_eq_self g.prop (nsmul_quot_eq_zero dvd_rfl y)).right)
-    fun _ ⟨h_fix, h_inertia⟩ ↦ .inr ⟨h_fix, .inl h_inertia⟩
+  have h_finite_z : Finite (component l e ψ ν) := finite_component
   have h_pair (y : {y : vanishingCocycles (cyclotomicPowDirichlet l (e + 1) ψ)
       (QuotSpan (l ^ m : O)) (inertiaOff N l ∅) // ¬cycloGalGroup f ≤ openCocycleKer y.prop})
       (z : {z : component l e ψ ν // z ≠ 0}) :

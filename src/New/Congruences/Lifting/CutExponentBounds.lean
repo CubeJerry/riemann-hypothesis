@@ -20,9 +20,8 @@ with the larger size, are sparse, and one where they form any pattern.
 
 * `New.Lift.KummerChart.PairingSide.killsCokernel_of_isKillingCut`: at a cut `i`, `p ^ κ * E ^ s i`
   kills the cokernel.
-* `New.Lift.KummerChart.PairingSide.SidePairing.exists_stop_of_hasSignBefore`,
-  `New.Lift.KummerChart.PairingSide.SidePairing.exists_stop_of_isLongGap`: the stop of the walk at a
-  plain cut and at a cut with a long gap.
+* `New.Lift.KummerChart.PairingSide.SidePairing.exists_stop_of_isLongGap`: the stop of the walk
+  at a cut with a long gap.
 * `New.Lift.KummerChart.PairingSide.SidePairing.isScaledCupCoboundary_of_cut_windows`: the scheme.
   It derives the bound from a cut 1 to `2J + 1` letters back from each letter.
 * `New.Lift.KummerChart.PairingSide.SidePairing.isScaledCupCoboundary_sparse_thick`,
@@ -540,41 +539,6 @@ lemma SidePairing.exists_stop_of_isLongGap {ε : k.Letter → ℤˣ} {s β : k.L
       (sub_mem_kerWithOrders_of_pointsOver hx (phi_pow_smul_mem_pointsOver hx₀)) hq'
       fun a u hu v _ ↦ h_rule a u hu v⟩
 
-/-- Let the paired sides have their jumps at each letter `j` in `[-η, η]` and in opposite far
-windows `∓ε j • [β j, β j + V]`. Let `i` be a plain cut: `0 < l`, and the `l` letters after
-`i.stepBack l` share the sign `ρ`, up to far windows that end at or below `η`. Let `x`, `x'` at `i`
-and `x₀`, `x₀'` at `i.stepBack l` be points of the two sides over `p ^ e c`, `p ^ e c'` with orders
-`-u` on each jump `u`, lowered by `η` at the distinguished element `E` (level `0`). Let `x`, `x'`
-have the depth `plainDepth s η l η`: `-u`, raised by `s` at the level `0` and by `η` at the levels
-up to `l`. Let `p ^ κ * E ^ s` kill the cokernel at `i` of the Tate dual side, with lattice
-`Hom(Y ⊗ Y', O(1))`. Then one side has a stop, at which it rests while the other side moves from
-`φ ^ l` of its point at `i.stepBack l` to its point at `i`, safely: `p ^ κ` times the pairing of
-this move with all `g • q - q` (`q` the stop) lies in the image of `W(𝔪^♭)`. -/
-lemma SidePairing.exists_stop_of_hasSignBefore {ε : k.Letter → ℤˣ} {β : k.Letter → ℕ}
-    {η V κ e : ℕ} (h : S.SidePairing S')
-    (hU : ∀ i : k.Letter, FitsWindows η (-ε i) (β i) V (S.jumpSet i))
-    (hU' : ∀ i : k.Letter, FitsWindows η (ε i) (β i) V (S'.jumpSet i)) {i : k.Letter} {l s : ℕ}
-    {ρ : ℤˣ} (hl : 0 < l) (h_kill : h.tateDualSide.KillsCokernel i κ s)
-    (h_plain : i.HasSignBefore ε β η V l ρ) {c : S.paramLattice} {c' : S'.paramLattice}
-    {d₀ : ℕ → ℤ → ℤ} {x₀ x : S.extensionLattice.Ambient} {x₀' x' : S'.extensionLattice.Ambient}
-    (hx : x ∈ S.pointsOver c i e (raisedOrdersAtZero (-η)) (plainDepth s η l η))
-    (hx' : x' ∈ S'.pointsOver c' i e (raisedOrdersAtZero (-η)) (plainDepth s η l η))
-    (hx₀ : x₀ ∈ S.pointsOver c (i.stepBack l) e (raisedOrdersAtZero (-η)) d₀)
-    (hx₀' : x₀' ∈ S'.pointsOver c' (i.stepBack l) e (raisedOrdersAtZero (-η)) d₀) :
-    (∃ q ∈ S.stopPoints c i e η l, h.IsSafeMoveSnd κ q (FrobGroup.φ ^ l • x₀' - x')) ∨
-      ∃ q' ∈ S'.stopPoints c' i e η l, h.IsSafeMoveFst κ (FrobGroup.φ ^ l • x₀ - x) q' := by
-  obtain rfl | rfl := Int.units_eq_one_or ρ
-  · have h_down (a : ℕ) (ha : a < l) : ∀ u ∈ S.jumpSet (i.stepBack a), u ≤ η :=
-      jump_le_of_fitsWindows (hU _) ((h_plain a ha).imp_left neg_inj.2)
-    have h_up (a : ℕ) (ha : a < l) : ∀ u ∈ S'.jumpSet (i.stepBack a), -η ≤ u :=
-      neg_le_jump_of_fitsWindows (hU' _) (h_plain a ha)
-    exact .inl (h.exists_mem_stopPoints_isSafeMoveSnd hl h_kill h_down h_up hx hx' hx₀')
-  · have h_down (a : ℕ) (ha : a < l) : ∀ u ∈ S'.jumpSet (i.stepBack a), u ≤ η :=
-      jump_le_of_fitsWindows (hU' _) (h_plain a ha)
-    have h_up (a : ℕ) (ha : a < l) : ∀ u ∈ S.jumpSet (i.stepBack a), -η ≤ u :=
-      neg_le_jump_of_fitsWindows (hU _) ((h_plain a ha).imp_left neg_eq_iff_eq_neg.2)
-    exact .inr (h.exists_mem_stopPoints_isSafeMoveFst hl h_kill h_down h_up hx' hx hx₀)
-
 /-- The scheme of cuts, a chosen set of letters. Let paired sides have their jumps in the low window
 `[-η, η]` and in opposite far windows `∓ε i • [β i, β i + V]`. Suppose that `η ≥ 1`, `V + 4 η ≤ W`,
 that the shifts have `s i + W ≤ p n`, and that the size conditions `CutSizes` hold: `2 b` bounds all
@@ -635,7 +599,7 @@ lemma SidePairing.isScaledCupCoboundary_of_cut_windows {cut : k.Letter → Prop}
     (fun i hi ↦ mem_standardPoints_of_plainDepth (hx'_plain i hi)) (fun i hi ↦ ?_) (by omega)
   have h_before : cut (i.stepBack (l i)) := (hl_nearest i).cut_stepBack
   obtain ⟨t, h_plain | h_long⟩ := h_gap i (l i) (hl_nearest i)
-  · exact h.exists_stop_of_hasSignBefore hU hU' (hl_nearest i).pos (h_kill i hi) h_plain
+  · exact h.exists_stop_of_aligned_windows hU hU' (hl_nearest i).pos (h_kill i hi) h_plain
       (hx_plain i hi) (hx'_plain i hi) (hx_plain _ h_before) (hx'_plain _ h_before)
   · -- The cut before a long gap has shift `0`.
     have h_kill_before := h_kill _ h_before
@@ -788,8 +752,8 @@ both gaps between `1` and `J ≥ 1`. Suppose also that the chart is unramified w
 `2 e (b + 5 η) ≤ p ^ (J + 1) δ` and `20 (J + 1 + d) η + ⌊log_p (2 (b + 5 η))⌋ ≤ X`. Here `e = k.e`
 is the ramification index, and `d = k.differentBound` is `0` if `e = 1` and `v_p(e) + 1` otherwise.
 Then for `c` in `S.paramLattice` and `c'` in `S'.paramLattice`, the cup product of the cocycles
-`S.cocycleMap c` and `p ^ (10³ (δ + (J + 1) X)) • S'.cocycleMap c'` is a coboundary
-(`IsScaledCupCoboundary`). -/
+`S.cocycleMap c` and `p ^ H • S'.cocycleMap c'` is a coboundary for
+`H ≥ 156 (δ + (J + 1) X) + 13` (`IsScaledCupCoboundary`). -/
 lemma SidePairing.isScaledCupCoboundary_sparse_thick {T : k.Letter → Prop} [DecidablePred T]
     {ε : k.Letter → ℤˣ} {η V X δ b J G : ℕ} (h : S.SidePairing S') (hη : 1 ≤ η)
     (hU : ∀ i : k.Letter, FitsWindows η (-ε i) (if T i then b else G) V (S.jumpSet i))
@@ -800,8 +764,9 @@ lemma SidePairing.isScaledCupCoboundary_sparse_thick {T : k.Letter → Prop} [De
       (∀ i i' : k.Letter, ε i = ε i') ∧ 8 * k.e ≤ p ^ (J + 1))
     (h_depth : k.e * (2 * (b + 5 * η)) ≤ p ^ (J + 1) * δ)
     (hX : 20 * (J + 1 + k.differentBound) * η + p.log (2 * (b + 5 * η)) ≤ X)
+    {H : ℕ} (hH : 156 * (δ + (J + 1) * X) + 13 ≤ H)
     (c : S.paramLattice) (c' : S'.paramLattice) :
-    h.IsScaledCupCoboundary (10 ^ 3 * (δ + (J + 1) * X)) c c' := by
+    h.IsScaledCupCoboundary H c c' := by
   -- Apply `isScaledCupCoboundary_of_cut_windows` without shifts, cutting at the letters that are
   -- followed by `J` thin letters, with the width `W = 5 η` and the least `κ` it allows.
   let β (i : k.Letter) : ℕ := if T i then b else G
@@ -831,7 +796,8 @@ lemma SidePairing.isScaledCupCoboundary_sparse_thick {T : k.Letter → Prop} [De
     Letter.hasSignBefore_or_isLongGap hη hβ_thick hβ_thin hG
       (h_unramified_or_constSign.imp_right And.left)
       fun _ ↦ h_nearest.eq_zero_or_add_eq_of_hasThinSuccessors h_sparse
-  have h_exponent : 13 * κ ≤ 10 ^ 3 * (δ + (J + 1) * X) := by lia
+  -- The sparse cut requires the exponent 13κ.
+  have h_exponent : 13 * κ ≤ H := by dsimp only [κ]; omega
   exact h.isScaledCupCoboundary_of_cut_windows hη hW hU hU' h_sizes (fun _ ↦ h_width) h_killing
     (Letter.exists_hasThinSuccessors_stepBack h_sparse) h_gap h_exponent c c'
 
@@ -972,15 +938,16 @@ lemma _root_.New.Lift.KummerChart.Letter.IsNearestCut.hasSignBefore_or_isLongGap
 Let the sides `S`, `S'`, paired by `h`, have their jumps at each letter `i` in `[-η, η]` and in
 opposite far windows of signs `∓ε i` and width `V`, which start at `b` at the b-letters (those with
 `T i`) and at `G` at the others, where `0 < G ≤ b`, `η ≥ 1` and `V + 4 η ≤ W`. If `b < K p ^ 2`,
-`2 G < K p` and `W ≤ K`, then the cup product of the cocycles `S.cocycleMap c` and `p ^ (10⁴
-(K + ⌊log_p (2 (b + W))⌋)) • S'.cocycleMap c'` is a coboundary. -/
+`2 G < K p` and `W ≤ K`, then the cup product of `S.cocycleMap c` and `p ^ H • S'.cocycleMap c'`
+is a coboundary for any `H ≥ 312 (5 K + ⌊log_p (2 (b + W))⌋) + 13`. -/
 lemma SidePairing.isScaledCupCoboundary_any_pattern {T : k.Letter → Prop} [DecidablePred T]
     {ε : k.Letter → ℤˣ} {η V W b G K : ℕ} (h : S.SidePairing S') (hη : 1 ≤ η) (hW : V + 4 * η ≤ W)
     (hU : ∀ i : k.Letter, FitsWindows η (-ε i) (if T i then b else G) V (S.jumpSet i))
     (hU' : ∀ i : k.Letter, FitsWindows η (ε i) (if T i then b else G) V (S'.jumpSet i))
     (hk : k.IsUnramified) (hp : 7 ≤ p) (hG_pos : 0 < G) (hGb : G ≤ b) (hbK : b < K * p ^ 2)
-    (hGK : 2 * G < K * p) (hWK : W ≤ K) (c : S.paramLattice) (c' : S'.paramLattice) :
-    h.IsScaledCupCoboundary (10 ^ 4 * (K + p.log (2 * (b + W)))) c c' := by
+    (hGK : 2 * G < K * p) (hWK : W ≤ K) {H : ℕ} (hH : 312 * (5 * K + p.log (2 * (b + W))) + 13 ≤ H)
+    (c : S.paramLattice) (c' : S'.paramLattice) :
+    h.IsScaledCupCoboundary H c c' := by
   -- Apply `isScaledCupCoboundary_of_cut_windows` with `J = 1`. A letter whose successor is a
   -- b-letter has shift `b / p - 7 K`, the others have shift `0`; the cuts are the letters with
   -- `s i < β i`.
@@ -1027,7 +994,8 @@ lemma SidePairing.isScaledCupCoboundary_any_pattern {T : k.Letter → Prop} [Dec
         i.IsLongGap ε s β η V 1 s₀ (G + W) l t :=
     ⟨0, h_nearest.hasSignBefore_or_isLongGap_of_two_sizes hk hp hβ_thick hβ_thin hs_le hs_thin_succ
       h_cut_thick h_cut_thin_succ hG_pos hbK hW hWK⟩
-  have h_exponent : 13 * κ ≤ 10 ^ 4 * (K + p.log (2 * (b + W))) := by lia
+  -- Substituting X into 13κ gives the stated bound on H.
+  have h_exponent : 13 * κ ≤ H := by dsimp only [κ, X]; omega
   exact h.isScaledCupCoboundary_of_cut_windows hη hW hU hU' h_sizes h_shift h_killing h_cut_before
     h_gap h_exponent c c'
 

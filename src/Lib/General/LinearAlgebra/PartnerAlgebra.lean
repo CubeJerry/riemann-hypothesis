@@ -75,6 +75,19 @@ abbrev invLastRows : Matrix a n R := k⁻¹.val.submatrix (e ∘ Sum.inr) id
 block `b`. -/
 abbrev firstCols : Matrix n b R := k.val.submatrix id (e ∘ Sum.inl)
 
+/-- Right multiplication of the last rows of the inverse corresponds to left translation
+of the original matrix by the inverse of the multiplier. -/
+lemma invLastRows_mul (g k : GL n R) :
+    invLastRows e k * g.val = invLastRows e (g⁻¹ * k) := by
+  change k⁻¹.val.submatrix (e ∘ Sum.inr) id * g.val =
+    (g⁻¹ * k)⁻¹.val.submatrix (e ∘ Sum.inr) id
+  rw [_root_.mul_inv_rev, inv_inv, Units.val_mul,
+    submatrix_mul _ _ _ id _ bijective_id, submatrix_id_id]
+
+/-- Left multiplication of the selected columns agrees with selection after multiplication. -/
+lemma mul_firstCols (g k : GL n R) :
+    g.val * firstCols e k = firstCols e (g * k) := rfl
+
 /-- The functions `Φ` on `a × n` matrices and `Ψ` on `n × b` matrices are partners for the
 multiplicative character `χ` over `O` if `Φ` vanishes off the matrices `invLastRows e k` and `Ψ` off
 the matrices `firstCols e k`, for `k` in `GL_n(O)`, and
@@ -106,8 +119,15 @@ lemma invLastRows_invTransposeGL :
     invLastRows e (invTransposeGL k) = (firstCols ((Equiv.sumComm a b).trans e) k)ᵀ :=
   rfl
 
+/-- The transposed rows `a` of `k⁻¹` are the columns `a` of `invTransposeGL k = (kᵀ)⁻¹`. -/
+lemma transpose_invLastRows :
+    (invLastRows e k)ᵀ = firstCols ((Equiv.sumComm a b).trans e) (invTransposeGL k) :=
+  rfl
+
+/-- The transpose of `invLastRows e k` has a left inverse. -/
 lemma hasLeftInv_invLastRows_transpose [DecidableEq a] : HasLeftInv (invLastRows e k)ᵀ := by
-  exact ⟨_, invFirstRows_mul_firstCols ((Equiv.sumComm a b).trans e) (invTransposeGL k)⟩
+  rw [transpose_invLastRows]
+  exact ⟨_, invFirstRows_mul_firstCols _ _⟩
 
 omit [DecidableEq n] in
 /-- Let `y` be primitive over `O`, that is, integral with an integral left inverse. Then `y * x` is
@@ -130,9 +150,7 @@ lemma isPrimitiveMatrix_iff_mem_intGL : IsPrimitiveMatrix O k.val ↔ k ∈ intG
 /-- A block of columns of a matrix in `GL n O` is primitive over `O`. -/
 lemma isPrimitiveMatrix_firstCols [DecidableEq b] {k : GL n R} (hk : k ∈ intGL n O) :
     IsPrimitiveMatrix O (firstCols e k) :=
-  -- `invFirstRows e k` is an integral left inverse.
-  ⟨fun i j ↦ (mem_intGL.1 hk).1 i (e (Sum.inl j)), invFirstRows e k,
-    fun i j ↦ (mem_intGL.1 hk).2 (e (Sum.inl i)) j, invFirstRows_mul_firstCols e k⟩
+  ((isPrimitiveMatrix_iff_mem_intGL k).2 hk).submatrix_cols (e.injective.comp Sum.inl_injective)
 
 /-! ### Columns of a matrix and rows of its inverse -/
 
@@ -159,7 +177,7 @@ lemma det_fromRows_invLastRows [Finite a] [DecidableEq b] (s : Matrix b n R) :
     ((fromRows s (invLastRows e k)).submatrix e.symm id).det * k.val.det =
       (s * firstCols e k).det := by
   classical
-  have := Fintype.ofFinite a
+  let := Fintype.ofFinite a
   -- In the blocks given by `e`, the product with `k` is upper triangular with diagonal blocks
   -- `s * firstCols e k` and `1`, since the rows `invLastRows e k` are rows of `k⁻¹`.
   let lastCols : Matrix n a R := k.val.submatrix id (e ∘ Sum.inr)
@@ -178,7 +196,7 @@ omit [Fintype a] in
 `firstCols e k`, with coefficients `invFirstRows e k * y`. -/
 lemma firstCols_mul_invFirstRows_mul [Finite a] (h_kill : invLastRows e k * y = 0) :
     firstCols e k * (invFirstRows e k * y) = y := by
-  have := Fintype.ofFinite a
+  let := Fintype.ofFinite a
   let lastCols : Matrix n a R := k.val.submatrix id (e ∘ Sum.inr)
   -- Cut the product `k * k⁻¹ = 1` along `e`.
   have h_sum : firstCols e k * invFirstRows e k + lastCols * invLastRows e k = 1 := by
@@ -210,7 +228,7 @@ lemma exists_eq_invLastRows_of_mul_eq [Finite b] {f : GL a R} (hf : f ∈ intGL 
     {x : Matrix a n R} (h : ∃ k ∈ intGL n O, f.val * x = invLastRows e k) :
     ∃ k ∈ intGL n O, x = invLastRows e k := by
   classical
-  have := Fintype.ofFinite b
+  let := Fintype.ofFinite b
   obtain ⟨k, hk, hx⟩ := h
   obtain ⟨j, hj, -, hj_rows, -⟩ := exists_firstCols_eq_mul e k O 1 (one_mem _) _ (inv_mem hf) hk
   exact ⟨j, hj, by simp [hj_rows, ← hx]⟩
@@ -221,7 +239,7 @@ right multiplication by `GL b O`. -/
 lemma exists_mul_eq_firstCols_iff [Finite a] {g : GL b R} (hg : g ∈ intGL b O) :
     (∃ k ∈ intGL n O, y * g.val = firstCols e k) ↔ ∃ k ∈ intGL n O, y = firstCols e k := by
   classical
-  have := Fintype.ofFinite a
+  let := Fintype.ofFinite a
   refine ⟨fun ⟨k, hk, hy⟩ ↦ ?_, ?_⟩
   · obtain ⟨j, hj, hj_cols, -⟩ := exists_firstCols_eq_mul e k O g⁻¹ (inv_mem hg) 1 (one_mem _) hk
     exact ⟨j, hj, by simp [hj_cols, ← hy]⟩
@@ -238,7 +256,7 @@ lemma _root_.New.IsValuationPair.exists_firstCols_iff [Finite a] [Finite b]
     (hO : IsValuationPair O) :
     (∃ k ∈ intGL n O, y = firstCols e k) ↔ IsPrimitiveMatrix O y := by
   classical
-  have := Fintype.ofFinite b
+  let := Fintype.ofFinite b
   refine ⟨?_, fun hy ↦ ?_⟩
   · rintro ⟨k, hk, rfl⟩
     exact isPrimitiveMatrix_firstCols e hk
@@ -345,7 +363,7 @@ lemma left_mul [Finite b] (h : AreMatched O e χ Φ Ψ) {g : GL a R} {x : Matrix
     (hg : g ∈ intGL a O) :
     χ g.val.det * Φ (g.val * x) = Φ x := by
   classical
-  have := Fintype.ofFinite b
+  let := Fintype.ofFinite b
   by_cases hx : ∃ k ∈ intGL n O, x = invLastRows e k
   · -- `g * invLastRows e k = invLastRows e j`, where `j` has the same columns `firstCols` as `k`
     -- and `det j * det g = det k`
@@ -369,7 +387,7 @@ lemma right_mul [Finite a] (h : AreMatched O e χ Φ Ψ) (g : GL b R) (hg : g �
     (y : Matrix n b R) :
     Ψ (y * g.val) * χ g.val.det = Ψ y := by
   classical
-  have := Fintype.ofFinite a
+  let := Fintype.ofFinite a
   by_cases hy : ∃ k ∈ intGL n O, y = firstCols e k
   · -- `y * g = firstCols e j` for some `j` with the rows `invLastRows e k` and determinant
     -- `det k * det g`; compare `h.apply_eq` at `j` and at `k`, and cancel `χ (det k) ≠ 0`

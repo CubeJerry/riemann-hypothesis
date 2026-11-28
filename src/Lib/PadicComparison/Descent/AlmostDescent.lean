@@ -249,7 +249,7 @@ lemma exists_faithfullyFlat_padicTest (V : CommAlg OFlat) [IsDomain V] [Valuatio
   -- The ring `c.fst.ProdRing ≃ W` of the test is a valuation ring, hence so is its tilt
   -- `c.fst.TiltRing`. The image of `V` in the tilt is a valuation ring too, so the inclusion is
   -- flat.
-  have e_prod : c.fst.ProdRing ≃+* W := .piUnique fun () ↦ W
+  let e_prod : c.fst.ProdRing ≃+* W := .piUnique fun () ↦ W
   have h_prod_domain : IsDomain c.fst.ProdRing := e_prod.injective.isDomain
   have h_prod_valuationRing : ValuationRing c.fst.ProdRing :=
     e_prod.symm.surjective.valuationRing e_prod.symm.toRingHom
@@ -710,7 +710,7 @@ lemma exists_tensorPush_ne_zero_and_dvd_total [PerfectRing S p]
       (hi : tensorPush (i.comp ψ).toLinearMap z ≠ 0) : i (ψ f) ∣ i (ψ g) → ψ f ∣ ψ g :=
     h_maximal ⟨E, i.comp ψ, hi, rfl⟩ (fun _ _ ↦ map_dvd i) f g
   refine ⟨B, ψ, hψ, fun f g ↦ ?_⟩
-  -- The perfected charts `i₁ : B → B₁`, `i₂ : B → B₂` of the blow-up of `(ψ f, ψ g)`: the sequence
+  -- On the two perfected charts, `ψ f` divides `ψ g` or `ψ g` divides `ψ f`. The sequence
   -- `B → B₁ × B₂ → B₀ → 0` is exact, and injective on the left after tensoring with any `D`.
   obtain ⟨B₁, B₂, B₀, i₁, i₂, j, h₁ : i₁ (ψ g) ∣ i₁ (ψ f), h₂ : i₂ (ψ f) ∣ i₂ (ψ g), h_surj,
     h_exact, h_inj⟩ := exists_perfect_blowup_charts natCast_eq_zero_of_algebra_oFlat B (ψ f) (ψ g)

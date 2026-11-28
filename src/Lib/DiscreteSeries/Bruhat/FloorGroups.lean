@@ -800,12 +800,20 @@ lemma weylElem_star : (weylElem l (star p) : T.G) = (weylElem l p)⁻¹ := by
   ext
   rfl
 
+lemma weylElem_left_comm (hs : s ∈ floorGroup l) :
+    weylElem l p * (s * g) = s * (weylElem l p * g) :=
+  (commute_weylElem hs).left_comm g
+
+lemma weylElem_inv_left_comm (hs : s ∈ floorGroup l) :
+    (weylElem l p)⁻¹ * (s * g) = s * ((weylElem l p)⁻¹ * g) :=
+  (commute_weylElem hs).inv_left.left_comm g
+
 /-- For `s` in the fixer `H_l` of the floors below `l`, the Weyl element `w_p` of length `l` and its
 inverse can be moved past `s` on the left. -/
 lemma weylElem_mul_left_comm (hs : s ∈ floorGroup l) :
     weylElem l p * (s * g) = s * (weylElem l p * g) ∧
     (weylElem l p)⁻¹ * (s * g) = s * ((weylElem l p)⁻¹ * g) :=
-  ⟨(commute_weylElem hs).left_comm _, (commute_weylElem hs).inv_left.left_comm _⟩
+  ⟨weylElem_left_comm hs, weylElem_inv_left_comm hs⟩
 
 /-- The diagonal entry `b` of the frame Gram matrix of `σ τ⁻¹`, that is the hermitian product of
 `f_b` and `σ τ⁻¹ f_b`, is the hermitian product of `σ⁻¹ f_b = orbitPoint b σ` and
@@ -856,9 +864,7 @@ lemma leadingMinor_submatrix_mul_of_mem_partialUnitriangularGroup {l : ℕ} {s :
       have := floorOf_level_cases i; have := b.is_lt; lia
     exact hi ⟨⟨level i, h_lt.trans b.is_lt⟩, (eq_besselFrame_of_floorOf_eq h_floor le_rfl).symm⟩
   have h_block : (M * s.val.val).submatrix f f = M.submatrix f f * s.val.val.submatrix f f := by
-    ext a b
-    rw [submatrix_apply, Matrix.mul_apply, Matrix.mul_apply]
-    refine (sum_of_injective f f_injective _ _ (fun i hi ↦ ?_) fun _ ↦ rfl).symm
+    refine submatrix_mul_of_eq_zero_outside _ _ f f f f_injective fun _ b i hi ↦ ?_
     rw [h_column i b (h_level i hi b), one_apply_ne fun h_eq ↦ hi ⟨b, h_eq.symm⟩, mul_zero]
   have h_det : (s.val.val.submatrix f f).det = 1 := by
     refine det_eq_one_of_unitriangular (lev := Fin.val) fun a b hba ↦ ?_

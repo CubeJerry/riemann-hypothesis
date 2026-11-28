@@ -114,6 +114,11 @@ lemma exists_smul_vac_eq_sum {E n : Type} [Field E] [CMType E] [WeilData E] [Fin
 noncomputable def zetaCoord (P : Parameters) (s : ℕ) (k : Fin (P.q₁ s)) (y : P.E s) : K P :=
   -Algebra.trace P.K (P.E s) (y * star (P.ζ s ^ k.val)) / P.q₁ s
 
+/-- The coordinate along a vector of the frame commutes with multiplication by elements of `K`. -/
+lemma zetaCoord_smul {P : Parameters} {s : ℕ} (k : Fin (P.q₁ s)) (a : K P) (y : P.E s) :
+    P.zetaCoord s k (a • y) = a * P.zetaCoord s k y := by
+  simp [zetaCoord, mul_div_assoc']
+
 section ThetaProduct
 
 variable {P : Parameters} {s : ℕ} {n : Type} [Fintype n] {ε : n → ℤˣ}
@@ -630,18 +635,11 @@ lemma map_zetaLinearSeries (σ : Gal(ℂ/K P)) (Ω : ℂˣ) (k : Fin (P.q₁ s))
         (Prod.map (placePerm s σ).symm id) := by
   -- The constant factors are `periodFactor / q₁` and its image under `σ`, and `σ` permutes the
   -- embeddings `Φ`.
-  have h_left :
-      P.cmPeriod.val / P.q₁ s / P.areaScale * P.jetScale s = P.periodFactor s / P.q₁ s := by
-    rw [jetScale]
-    have h1 : (P.cmPeriod : ℂ) ≠ 0 := P.cmPeriod.ne_zero
-    have h2 : (P.areaScale : ℂ) ≠ 0 := P.areaScale.ne_zero
-    field_simp
-  have h_right : Ω.val / P.q₁ s / P.areaScale * (σ (P.periodFactor s) / Ω * P.areaScale) =
-      σ (P.periodFactor s) / P.q₁ s := by
-    have h1 : (Ω : ℂ) ≠ 0 := Ω.ne_zero
-    have h2 : (P.areaScale : ℂ) ≠ 0 := P.areaScale.ne_zero
-    field_simp
-  simp only [zetaLinearSeries, h_left, h_right, linearSeries, map_sum, smul_eq_C_mul, map_mul,
+  have h_scale (ω : ℂˣ) (c : ℂ) :
+      ω.val / P.q₁ s / P.areaScale * (c * P.areaScale / ω) = c / P.q₁ s := by
+    field_simp [ω.ne_zero, P.areaScale.ne_zero]
+  rw [div_mul_eq_mul_div (σ (P.periodFactor s))]
+  simp only [zetaLinearSeries, jetScale, h_scale, linearSeries, map_sum, smul_eq_C_mul, map_mul,
     map_C, map_X, rename_C, rename_X]
   exact Fintype.sum_equiv ((placePerm s σ).prodCongr 1) _ _ fun ⟨w, i⟩ ↦ by
     rw [Equiv.prodCongr_apply, Prod.map_apply, Prod.map_apply, Equiv.Perm.one_apply, id_eq,
@@ -773,9 +771,7 @@ lemma exists_isJetConjugate_translates (P : Parameters) (s : ℕ) :
   suffices IsJetConjugate σ (placePerm s σ) (P.jetScale s) t (V.ϱ (finVec (finiteImage γ)) F)
     (V.ϱ (finVec (finiteImage (x₀ • γ))) F') by rwa [h_rational]
   refine hF.isJetConjugate_of_map_taylorAtZero_eq hF' fun k j ↦ ?_
-  rw [zetaCoordThetaTranslate, zetaCoordThetaTranslate, Pi.smul_apply,
-    show ∀ (a : K P) (y : P.E s), P.zetaCoord s k (a • y) = a * P.zetaCoord s k y from
-      fun _ _ ↦ by simp [zetaCoord, mul_div_assoc']]
+  rw [zetaCoordThetaTranslate, zetaCoordThetaTranslate, Pi.smul_apply, zetaCoord_smul]
   exact h_translate σ _ _ (h_coord k j)
 
 end ConjugateTranslates

@@ -56,17 +56,13 @@ lemma comp_mem_selmerModule_iff {f : B →ₗ[O] B'} (hf : Function.Injective f)
     {z : Gal(Ω/E) → n → B} :
     (fun (g : Gal(Ω/E)) (i : n) ↦ f (z g i)) ∈ selmerModule ρ S L B' ↔
       z ∈ selmerModule ρ S L B := by
-  have h_obeying (R : Set (Gal(Ω/E) →₀ Matrix n n O)) :
-      (fun (g : Gal(Ω/E)) (i : n) ↦ f (z g i)) ∈ obeying R B' ↔ z ∈ obeying R B := by
-    simp only [comp_mem_obeying_iff, mem_obeying (c := z), map_eq_zero_iff f hf, funext_iff,
-      Pi.zero_apply]
   have h_locallyConstant :
       IsLocallyConstant (fun (g : Gal(Ω/E)) (i : n) ↦ f (z g i)) ↔ IsLocallyConstant z :=
     ⟨fun h ↦ IsLocallyConstant.desc z (fun v : n → B ↦ f ∘ v) h hf.comp_left,
       fun h ↦ h.comp fun v : n → B ↦ f ∘ v⟩
   -- The Selmer module is cut out by a set of relations and by local constancy.
   simp only [selmerModule, Submodule.mem_inf]
-  exact and_congr (h_obeying _) h_locallyConstant
+  exact and_congr (comp_mem_obeying_iff_of_injective f hf) h_locallyConstant
 
 /-- The map of Selmer modules `z ↦ f ∘ z` induced by an injective map `f` of coefficient
 modules. -/
@@ -74,6 +70,14 @@ def selmerModuleMapOfInjective {f : B →ₗ[O] B'} (hf : Function.Injective f) 
     selmerModule ρ S L B →ₗ[O] selmerModule ρ S L B' :=
   ((f.compLeft n).compLeft Gal(Ω/E)).restrict fun (_ : Gal(Ω/E) → n → B) hz ↦
     (comp_mem_selmerModule_iff ρ S L hf).2 hz
+
+/-- The value at `g` and `i` of the image of a Selmer cocycle `z` under the map induced by `f` is
+`f (z g i)`. -/
+lemma selmerModuleMapOfInjective_apply {f : B →ₗ[O] B'} (hf : Function.Injective f)
+    (z : selmerModule ρ S L B) (g : Gal(Ω/E)) (i : n) :
+    (selmerModuleMapOfInjective ρ S L hf z : Gal(Ω/E) → n → B') g i =
+      f ((z : Gal(Ω/E) → n → B) g i) :=
+  rfl
 
 /-- An injective map of coefficient modules induces an injective map of Selmer modules. -/
 lemma selmerModuleMapOfInjective_injective {f : B →ₗ[O] B'} (hf : Function.Injective f) :
@@ -102,6 +106,7 @@ lemma range_selmerModuleMapOfInjective {a : O} {f : QuotSpan a →ₗ[O] B}
       simpa only [hz] using hy_mem
     refine ⟨⟨z, (comp_mem_selmerModule_iff ρ S L hf).1 hfz_mem⟩, ?_⟩
     ext g i
+    rw [selmerModuleMapOfInjective_apply]
     exact hz g i
 
 /-- If `f` identifies `O / a` (that is, `QuotSpan a`) with the `a`-torsion of `B`, then the Selmer

@@ -68,6 +68,10 @@ noncomputable def piKernel (X : ι → BesselSystem 𝔰 b f) (σ : FullOrCut) (
   WithLp.toLp 2 fun i ↦ ∏ v : ι, (X v).besselFn σ (γ v * z v) (i.1 v) * conj
     ((X v).besselFn σ (z v) (i.2 v))
 
+lemma continuous_piKernel (X : ι → BesselSystem 𝔰 b f) (σ : FullOrCut) (γ : ι → 𝔰.G₁) :
+    Continuous (piKernel X σ γ) := by
+  fun_prop [piKernel]
+
 /-- The parameter `b` of a Bessel system is at least `1`, being at least eight times the rank. -/
 lemma one_le_b (X : BesselSystem 𝔰 b f) : 1 ≤ b := by
   have h_rank : (𝔰.r : ℝ) = 𝔰.ϱ + (card 𝔰.κ + 1 + 𝔰.ϱ) := by simp
@@ -91,7 +95,7 @@ lemma integrableOn_smul_piKernel (X : ι → BesselSystem 𝔰 b f) (σ : FullOr
     {A : Set (ι → 𝔰.G₁)} (hA : IsCompact A) :
     IntegrableOn (fun z : ι → 𝔰.G₁ ↦ φ (t * z) • piKernel X σ γ (t * z)) A := by
   have h_cont : Continuous fun z : ι → 𝔰.G₁ ↦ piKernel X σ γ (t * z) :=
-    (by fun_prop [piKernel] : Continuous (piKernel X σ γ)).comp (continuous_const_mul t)
+    (continuous_piKernel X σ γ).comp (continuous_const_mul t)
   exact (h_cont.continuousOn.integrableOn_compact hA).bdd_smul 1
     (hφ_meas.comp (measurable_const_mul t)).aestronglyMeasurable (.of_forall fun z ↦ hφ_le (t * z))
 
@@ -219,14 +223,13 @@ lemma hasCompactSupport_and_enorm_integral_piKernel_le (X : ι → BesselSystem 
         rw [h_translate, integral_sub (h_int .full) (h_int .cut), _root_.sub_sub_cancel]
       _ ≤ _ := eNorm_sub_le.trans (add_le_add h_full h_diff)
 
-/-- The matrix of the operator `W (y) ⊗ W (γ⁻¹ y)^*`, as a vector with the Hilbert–Schmidt norm.
-Here `W` is the tensor product, over a finite family `X` of Bessel systems, of the Bessel functions
-(`σ = .full`) or of their cuts (`σ = .cut`). It is the adjoint of `piKernel X σ γ⁻¹ y`, the matrix
-of `W (γ⁻¹ y) ⊗ W (y)^*`. -/
+/-- The pairing kernel evaluates `piKernel` at `γ⁻¹ * y`, giving the matrix of
+`W (y) ⊗ W (γ⁻¹ y)^*` with its Hilbert–Schmidt norm. Here `W` is the tensor product of the Bessel
+functions of the systems `X` for `σ = .full`, or of their cuts for `σ = .cut`. Equivalently,
+this matrix is the adjoint of `piKernel X σ γ⁻¹ y`. -/
 noncomputable def pairKernel (X : ι → BesselSystem 𝔰 b f) (σ : FullOrCut) (γ y : ι → 𝔰.G₁) :
     EuclideanSpace ℂ (((v : ι) → (X v).Index) × ((v : ι) → (X v).Index)) :=
-  WithLp.toLp 2 fun i ↦ ∏ v : ι, (X v).besselFn σ (y v) (i.1 v) * conj
-    ((X v).besselFn σ ((γ v)⁻¹ * y v) (i.2 v))
+  piKernel X σ γ (γ⁻¹ * y)
 
 /-- The passage to the adjoint (conjugate transpose) of a complex matrix indexed by `I × I`, a real
 linear isometry for the Hilbert–Schmidt norm. -/

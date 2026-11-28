@@ -128,7 +128,6 @@ lemma exists_zeroTermFin_ne_zero (D : V.Splitting V₀ p) :
   have h_vac : V₀.vacElem = 0 := (smul_eq_zero.1 (h_value.symm.trans h_zero)).resolve_left hc_ne
   simpa [h_vac] using V₀.dataInner_vacElem_vacElem
 
-unseal finitePart in
 /-- Let `D` be a splitting of `V` over `V₀`, with isotropic frame `k` indexed by `p`. The finite
 part `zeroTermFin D : 𝒮 V → 𝒮 V₀` of the zero term along `k` sends `V.finitePart`, the span of the
 finite Heisenberg translates of the vacuum, into `V₀.finitePart`. -/
@@ -635,6 +634,11 @@ section
 
 omit [WeilData E]
 
+/-- The Gram matrix of `V` vanishes at two indices whose weights are not opposite. -/
+lemma GradeZeroPart.J_eq_zero_of_add_ne_zero (Z : GradeZeroPart V V'' w) {a b : ι}
+    (hab : w a + w b ≠ 0) : V.J a b = 0 :=
+  by_contra fun h_ne ↦ hab (Z.grade_add_eq_zero a b h_ne)
+
 /-- The Gram matrix pairs weight `a` only with weight `-a`, so it intertwines the projections to the
 positive and to the negative weights. -/
 lemma GradeZeroPart.proj_pos_mul_J (Z : GradeZeroPart V V'' w) :
@@ -643,7 +647,7 @@ lemma GradeZeroPart.proj_pos_mul_J (Z : GradeZeroPart V V'' w) :
   ext a b
   by_cases hab : w a + w b = 0
   · simp [show 0 < w a ↔ w b < 0 by omega]
-  · simp [by_contra fun h_ne ↦ hab (Z.grade_add_eq_zero _ _ h_ne)]
+  · simp [Z.J_eq_zero_of_add_ne_zero hab]
 
 /-- The inverse of the Gram matrix of `V` vanishes at two indices of positive weight. -/
 lemma GradeZeroPart.inv_J_apply_eq_zero_of_pos (Z : GradeZeroPart V V'' w) {a b : ι} (ha : 0 < w a)

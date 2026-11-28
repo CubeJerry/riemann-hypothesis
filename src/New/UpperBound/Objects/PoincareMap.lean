@@ -44,28 +44,17 @@ section Riesz
 variable {M F : Type*} [AddCommGroup M] [Module ℂ M] [NormedAddCommGroup F] [InnerProductSpace ℂ F]
   [FiniteDimensional ℂ F]
 
-/-- On an inner product space `F` of finite dimension, every conjugate linear form is `y ↦ ⟨y, z⟩`
-for a unique vector `z` (Riesz). -/
-lemma bijective_flip_innerₛₗ : Function.Bijective (innerₛₗ ℂ (E := F)).flip := by
-  have : CompleteSpace F := FiniteDimensional.completeSpace ℂ F
-  refine ⟨fun z z' h_eq ↦ ext_inner_left ℂ (LinearMap.congr_fun h_eq), fun l ↦ ?_⟩
-  -- Apply the Riesz theorem to the linear form `conj ∘ l`.
-  let z : F := (InnerProductSpace.toDual ℂ F).symm
-    ((starRingEnd ℂ).toSemilinearMap ∘ₛₗ l).toContinuousLinearMap
-  have hz (y : F) : inner ℂ z y = conj (l y) := InnerProductSpace.toDual_symm_apply
-  refine ⟨z, LinearMap.ext fun y ↦ ?_⟩
-  rw [LinearMap.flip_apply, innerₛₗ_apply_apply, ← inner_conj_symm, hz, Complex.conj_conj]
-
-/-- The linear map that sends `x` to the vector representing the conjugate linear form `B x`. -/
+/-- The linear map that sends `x` to the vector representing the conjugate linear form `B x`,
+given by the adjoint of the linear form `conj ∘ B x` evaluated at `1`. -/
 def rieszMap (B : M →ₗ[ℂ] F →ₗ⋆[ℂ] ℂ) : M →ₗ[ℂ] F :=
-  (LinearEquiv.ofBijective (innerₛₗ ℂ).flip bijective_flip_innerₛₗ).symm.toLinearMap ∘ₗ B
+  LinearMap.applyₗ (1 : ℂ) ∘ₗ LinearMap.adjoint.toLinearMap ∘ₛₗ
+    B.compr₂ₛₗ (starLinearEquiv ℂ).toLinearMap
 
 /-- The inner product of `y` with `rieszMap B x` is `B x y`. -/
 lemma inner_rieszMap (B : M →ₗ[ℂ] F →ₗ⋆[ℂ] ℂ) (x : M) (y : F) :
     inner ℂ y (rieszMap B x) = B x y := by
-  have h_flip : (innerₛₗ ℂ).flip (rieszMap B x) = B x :=
-    (LinearEquiv.ofBijective (innerₛₗ ℂ).flip bijective_flip_innerₛₗ).apply_symm_apply (B x)
-  rw [← h_flip, LinearMap.flip_apply, innerₛₗ_apply_apply]
+  simpa [rieszMap] using
+    LinearMap.adjoint_inner_right ((B.compr₂ₛₗ (starLinearEquiv ℂ).toLinearMap) x) y 1
 
 end Riesz
 
@@ -73,8 +62,10 @@ namespace Space
 variable {E n : Type} [Field E] [CMType E] [Fintype n] [DecidableEq n] {s : n → ℤˣ}
   {V : Space E n s} {e : GInf E s → ℂ}
 
+/-- Pointwise evaluation of the sum of two automorphic forms. -/
 lemma Form.add_apply (y z : V.Form e) (x : G E s) : (y + z) x = y x + z x := rfl
 
+/-- Pointwise evaluation of the scalar multiplication of an automorphic form by a complex scalar. -/
 lemma Form.smul_apply (c : ℂ) (y : V.Form e) (x : G E s) : (c • y) x = c * y x := rfl
 
 /-- The sum of the right translates of a form `z` under the chosen representatives of
@@ -181,6 +172,17 @@ def besselPeriod : D.SourceForm →ₗ[ℂ] D.principalForms (D.spaceY 0) →ₗ
     (fun c φ y ↦ by
       simp [Space.Form.smul_apply, mul_left_comm _ (conj c), integral_const_mul])
 
+/-- Let `g` be an archimedean point of the unitary group `G₀` of `Y₀`, let `φ` be a source form and
+`t` a linear form on the Weyl module of its values. Let `y` be a form on `G₀` of discrete series
+type `D.paramW` and principal level `D.chosenLevel`. Then `D.besselPeriod g t φ y = ∫_{[R₀]} 𝒲_φ (r)
+conj (y (r g)) dr`. -/
+lemma besselPeriod_apply (φ : D.SourceForm) (y : D.principalForms (D.spaceY 0)) :
+    D.besselPeriod g t φ y =
+      ∫ r : (D.gradingY 0).besselGroup,
+        (D.gradingY 0).sourceFn t φ.val r * conj (y.val (r.val * (g, 1)))
+        ∂(D.gradingY 0).besselMeasure :=
+  rfl
+
 /-- The Poincaré map `𝒫 : 𝒜(X₀) → 𝒜(Y₀)` for an archimedean point `g` of `G₀` and a linear form
 `t`: the form `𝒫 φ` represents the Bessel period of `φ`. The measure on `[R₀]` is `besselMeasure`;
 another Haar measure on `R₀(𝔸)` would multiply `𝒫` by a positive constant, which can be absorbed
@@ -199,7 +201,7 @@ theorem inner_poincareAt (φ : D.SourceForm) (y : D.principalForms (D.spaceY 0))
       ∫ r : (D.gradingY 0).besselGroup,
         (D.gradingY 0).sourceFn t φ.val r * conj (y.val (r.val * (g, 1)))
         ∂(D.gradingY 0).besselMeasure := by
-  rw [poincareAt, inner_rieszMap]; rfl
+  rw [poincareAt, inner_rieszMap, besselPeriod_apply]
 
 /-- Let `z` be a form on `G₀`, right invariant under `J`, whose archimedean type is conjugate to
 that of the values of `𝒫 = D.poincareAt g t`. Then `[J_M : J ∩ J_M] ∫_{[G₀]} z · 𝒫 φ` is the sum

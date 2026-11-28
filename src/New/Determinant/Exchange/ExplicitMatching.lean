@@ -137,6 +137,11 @@ omit [DecidableEq p] [DecidableEq l] in
 lemma card_neg_blockSigns : card {i : b // blockSigns f i = -1} = card l := by
   simp [Fintype.card_subtype, card_filter, reindex_equiv f, -sum_boole]
 
+omit [NumberField E] in
+lemma continuous_posBlockEmb : Continuous (posBlockEmb (E := E) j) := by
+  simp only [continuous_pi_iff, continuous_U_iff_matrix, val_posBlockEmb_apply_coe]
+  fun_prop
+
 /-- The polynomial `∏_τ det (y⁻_τ) ^ (card (ι τ) + card n - 2 * card l) ∏_{τ, k} det (η_{τ k} y_τ)`,
 where `y⁻_τ` is the `l × l` block of variables with both signs negative and `y_τ` the `m × p` block
 with both signs positive. The first determinant is `variableMinor` (a minor of the matrix of
@@ -269,8 +274,6 @@ lemma stackedDet_standardFrame (τ : InfinitePlace E) :
 
 end Blocks
 
--- Keeps definitional checks from unfolding the finite sums.
-seal Finset.sum in
 /-- Let `γ τ = card l - card (ι τ)` and let `y` lie in `PairFock`, the Fock space of the pair
 U(signs on `n`) × U(`a`), on which `(x, u)` acts by the real Weil representation `realPairWeil γ 0`,
 twisted by `∏_τ (det u_τ) ^ γ τ` and not by `det x`.
@@ -314,8 +317,7 @@ lemma exists_mul_eq_circle_mean (j : m ⊕ l ≃ n) (e : p ⊕ a ≃ m)
     exact h_mem.imp fun κ hκ ℓ hℓ ↦ congrFun hκ ⟨ℓ, hℓ⟩
   -- A line of functions of `ℓ` is closed and `mean` is continuous, so it is enough to treat Fock
   -- vectors of polynomials.
-  have h_cont : Continuous (posBlockEmb (E := E) j) := by
-    simp only [continuous_pi_iff, continuous_U_iff_matrix, val_posBlockEmb_apply_coe]; fun_prop
+  have h_cont := continuous_posBlockEmb (E := E) j
   have h_cont_torus : Continuous (frameTorus E e) := by fun_prop [frameTorus]
   refine isClosed_property denseRange_polyVector
     ((isClosedMap_smul_left _).isClosed_range.preimage_of_continuous (f := mean)) (fun P ↦ ?_) y
@@ -731,7 +733,6 @@ theorem exists_stdClassSum_eq_mul_integral_modKernel (j : m ⊕ l ≃ n) (W : Sp
   -- The exchange identity for the polynomial `Q₀` of `exists_stdClassSum_eq_of_exchange` gives `C`,
   -- a real datum `v` and `c`. That lemma moves it from `v`, `Q₀` to the products of determinants,
   -- at the cost of the factor `c'`.
-  classical
   have h_card : card n = card b + card a := by rw [← card_congr σ, card_sum]
   have h_neg : negCount (blockSigns j) = card l := by simp [negCount]
   have h_nonempty : Nonempty a := card_pos_iff.1 (by omega)

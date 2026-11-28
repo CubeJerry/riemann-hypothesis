@@ -54,6 +54,14 @@ variable {T T' M M' : Type} [CommRing T] [CommRing T'] [AddCommGroup M] [AddComm
 
 /-! ### Semilinear maps on exterior algebras -/
 
+/-- A ring homomorphism out of an exterior algebra is determined by its values on scalars
+and on the degree-one generators. -/
+lemma exteriorRingHom_ext {S : Type*} [Semiring S] {f g : ExteriorAlgebra T M →+* S}
+    (h_scalar : ∀ r, f (algebraMap T _ r) = g (algebraMap T _ r))
+    (h_generator : ∀ v, f (ι T v) = g (ι T v)) : f = g := by
+  refine RingHom.ext fun x ↦ ?_
+  induction x using ExteriorAlgebra.induction <;> simp_all
+
 /-- For a ring map a: T → T' and an a-semilinear map m: M → M', the ring homomorphism ⋀_T M →
 ⋀_{T'} M' extending a and m. -/
 def exteriorMap : ExteriorAlgebra T M →+* ExteriorAlgebra T' M' :=
@@ -149,12 +157,8 @@ private lemma exteriorHom_ext {X : HodgeTest k} {Y : AlgCat k}
     {f g : AlgCat.of k (ExteriorAlgebra X.baseAlg (X.Index → X.baseAlg)) ⟶ Y}
     (hT : ∀ r, f (algebraMap X.baseAlg _ r) = g (algebraMap X.baseAlg _ r))
     (hM : ∀ v, f (ExteriorAlgebra.ι X.baseAlg v) = g (ExteriorAlgebra.ι X.baseAlg v)) : f = g := by
-  ext x
-  induction x using induction with
-  | algebraMap r => exact hT r
-  | ι v => exact hM v
-  | mul a b ha hb => rw [map_mul, map_mul, ha, hb]
-  | add a b ha hb => rw [_root_.map_add, _root_.map_add, ha, hb]
+  apply AlgCat.hom_ext
+  exact AlgHom.toRingHom_injective (exteriorRingHom_ext hT hM)
 
 /-- The functor sending a pair (A, M) to the exterior algebra ⋀_A M, as a k-algebra. -/
 def exteriorAlg : HodgeTest k ⥤ AlgCat k where
@@ -377,6 +381,10 @@ private lemma EtaleChart.univPoint_coordinate (i : Fin d) :
     a.univPoint (a.coordinate i) = (a.coordinate i, single i 1) :=
   (EtaleChart.existsUnique_univPoint a).exists.choose_spec.right i
 
+lemma EtaleChart.leftInverse_fst_univPoint : LeftInverse fst a.univPoint :=
+  -- The projection `baseProj` takes the first part, and after u it is the identity.
+  fun r ↦ ConcreteCategory.congr_hom a.univPoint_comp_baseProj r
+
 /-- Through the universal point u of a chart with ring R and d coordinates, the pair (R, R^d)
 represents c = (A, M) ↦ (k-algebra maps R → A ⊕ M): at each pair c, `pointMap`, which sends a
 morphism of pairs f : (R, R^d) → c to u followed by `sqZeroExt.map f`, is a bijection. -/
@@ -419,7 +427,7 @@ lemma EtaleChart.exists_univPoint :
       LeftInverse fst u ∧
         AllBijective fun c : HodgeTest k ↦
           pointMap (Y := HodgeTest.sqZeroExt ⋙ reprBy a.coordRing) ⟨u⟩ c :=
-  ⟨a.univPoint, fun r ↦ ConcreteCategory.congr_hom a.univPoint_comp_baseProj r, a.bijective_pointMap_univPoint⟩
+  ⟨a.univPoint, a.leftInverse_fst_univPoint, a.bijective_pointMap_univPoint⟩
 
 /-- Over a field k of characteristic zero, the values of a functor F to k-vector spaces are flat
 as abelian groups: k is flat over ℤ, and every k-vector space is flat over k. -/

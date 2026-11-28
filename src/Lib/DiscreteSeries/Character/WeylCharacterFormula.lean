@@ -879,8 +879,6 @@ lemma New.HCParam.prod_prod_lowerCount_sub {n : Type} [Fintype n]
         simp [← e.prod_comp, h_map, h_count, ← Iio_eq_range, ← Fin.map_valEmbedding_Iio]
     _ = _ := by simp only [h_factorial, Fin.prod_univ_eq_prod_range (fun i : ℕ ↦ (i ! : ℂ))]
 
--- Keeps definitional checks from unfolding the finite sums.
-seal Finset.sum Finset.prod Finset.univ in
 /-- Weyl's dimension formula for `U(n)`. Let `l = 2λ` be a parameter for all signs `1` (distinct
 entries congruent to `n - 1` mod 2; the gap `h` plays no role as all signs are equal) and
 `Λ = l.lowestKType = λ - ρ`. The number `Λ.kTypeNormSq` is the integral of `|New.weightMinors Λ k|²`
@@ -966,9 +964,10 @@ variable {a : ℕ} {ι : Type} [Fintype ι]
 
 /-- If the `r i` are nonzero, a common integer shift `d` of the exponents comes out of
 `det (r i ^ (d + k j))` as the factor `(∏ r i) ^ d`. -/
-lemma det_zpow_add {r : Fin a → ℂ} (h_ne : ∀ i : Fin a, r i ≠ 0) (d : ℤ) (k : Fin a → ℤ) :
-    (of fun i j : Fin a ↦ r i ^ (d + k j)).det =
-      univ.prod r ^ d * (of fun i j : Fin a ↦ r i ^ k j).det := by
+lemma det_zpow_add {K m : Type*} [Field K] [Fintype m] [DecidableEq m]
+    {r : m → K} (h_ne : ∀ i : m, r i ≠ 0) (d : ℤ) (k : m → ℤ) :
+    (of fun i j : m ↦ r i ^ (d + k j)).det =
+      univ.prod r ^ d * (of fun i j : m ↦ r i ^ k j).det := by
   -- Row `i` has the factor `r i ^ d`.
   simp only [zpow_add₀ (h_ne _), ← prod_zpow]
   exact det_mul_column _ _

@@ -425,6 +425,13 @@ lemma norm_det_eq_of_orthonormal_inv_mul {A b : GL n ℂ}
     CStarRing.norm_of_mem_unitary (det_of_mem_unitary (mem_unitaryGroup_iff'.2 h_orth))
   rw [← A.mul_inv_cancel_left b.val, det_mul, norm_mul, h_norm, mul_one]
 
+/-- If the columns of `A⁻¹ * b` are orthonormal, then `det A` and `det b` have the same squared
+absolute value. -/
+lemma norm_det_sq_eq_of_orthonormal_inv_mul {A b : GL n ℂ}
+    (h_orth : (A⁻¹.val * b.val)ᴴ * (A⁻¹.val * b.val) = 1) :
+    ‖A.val.det‖ ^ 2 = ‖b.val.det‖ ^ 2 := by
+  rw [norm_det_eq_of_orthonormal_inv_mul h_orth]
+
 /-- Let `b w` make the columns of `g_w⁻¹ * b w` orthonormal at each infinite place `w`, with `g_w`
 the component of `g` at `w`, and let `c ^ n * ‖det D‖ ^ 2 = ∏ j, α j ^ 2`. Then
 `|det g| * ∏ j, α j ^ (2 f)` is `c ^ (f n)` times the adelic absolute value of the determinant of
@@ -443,7 +450,7 @@ lemma ideleAbs_det_mul_prod_eq (g : GL n (𝔸 E)) {b : InfinitePlace E → GL n
   have g_eq_mk : g = mkAdelicGL (g_inf, g_fin) := Units.ext (Matrix.ext fun i j ↦ rfl)
   have abs_det_g : ideleAbs g.det =
       (∏ w : InfinitePlace E, ‖(b w).val.det‖ ^ 2) * finIdeleAbs g_fin.det := by
-    rw [← prod_congr rfl fun w _ ↦ congrArg (· ^ 2) (norm_det_eq_of_orthonormal_inv_mul (h_orth w)),
+    rw [← prod_congr rfl fun w _ ↦ norm_det_sq_eq_of_orthonormal_inv_mul (h_orth w),
       ← ideleAbs_det_mkAdelicGL g_inf g_fin, ← g_eq_mk]
   have abs_det_mul_D : ideleAbs (mkAdelicGL (fun w ↦ b w * D, g_fin)).det =
       (∏ w : InfinitePlace E, ‖(b w).val.det‖ ^ 2) *
@@ -625,17 +632,6 @@ theorem _root_.New.exists_basis_frameLength_le_two_zpow (y : GL n (𝔸 E)) :
 open MeasureTheory ENNReal Set
 
 /-! ### Counting rational points -/
-
-/-- The sum over all tuples `x : n → α` of the product of the `f (x i)` is at most the product over
-`n` of the sums of `f`. -/
-lemma tsum_prod_le_prod_tsum {α : Type*} (f : α → ℝ≥0∞) :
-    ∑' x : n → α, ∏ i : n, f (x i) ≤ ∏ _ : n, tsum f := by
-  classical
-  refine tsum_le_of_sum_le' bot_le fun s ↦ ?_
-  -- a finite set of tuples lies in the product of its projections, over which the sum factors
-  have h_sub : s ⊆ piFinset (fun i ↦ s.image (eval i)) := fun x hx ↦
-    mem_piFinset.2 fun i ↦ mem_image_of_mem (eval i) hx
-  grw [h_sub, ← prod_univ_sum, sum_le_tsum]
 
 open Pointwise in
 /-- Let `box` be the set of adelic vectors with entries of size at most `1` at infinity and

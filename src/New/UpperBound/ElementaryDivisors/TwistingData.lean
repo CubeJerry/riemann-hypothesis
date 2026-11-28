@@ -243,29 +243,28 @@ lemma p_dvd_embedding_of_mem_maximalIdeal {y : W} (hy_mem : y ∈ maximalIdeal W
   rw [← (h_unit.map (T.embedding s)).dvd_mul_right, h_factor]
   simpa [ZMod.natCast_self] using T.frobenius_pow_congr N s y
 
-/-- Let `g` lie in the parahoric subgroup of `τ`. Each letter `s` in `ℤ/N` is marked even or odd by
-`T.isEven s`, neighbouring letters differently, and on an even letter the matrix
-`T.letterMatrix s g` is the entrywise image of `g` under the ring map `T.embedding s : W → R`. If
-`s` is even and `τ i < τ j`, then `p` divides the entry `(i, j)` of this matrix. -/
+/-- An entry forced into the maximal ideal by the parahoric condition has image divisible by `p`. -/
+private lemma p_dvd_embedding_of_mem_parahoric {τ : Fin k → ℕ} {g : GL (Fin k) W}
+    (hg : g ∈ parahoric W τ) {i j : Fin k} (hij : τ i < τ j) :
+    (T.p : R) ∣ T.embedding s (g i j) :=
+  T.p_dvd_embedding_of_mem_maximalIdeal s ((residue_eq_zero_iff _).1 (hg hij))
+
+/-- The predicate `T.isEven` marks neighbouring letters differently. At an even letter,
+`letterMatrix` embeds `g` entrywise. If `τ i < τ j` and `g` is parahoric, then `p` divides the
+entry `(i, j)`. -/
 lemma p_dvd_letterMatrix_of_mem_parahoric_of_isEven {τ : Fin k → ℕ} {g : GL (Fin k) W}
     (hg : g ∈ parahoric W τ) (hs : T.isEven s = true) {i j : Fin k} (hij : τ i < τ j) :
     (T.p : R) ∣ T.letterMatrix s g i j := by
-  have h_entry : T.letterMatrix s g i j = T.embedding s (g i j) := by simp [letterMatrix_apply, hs]
-  rw [h_entry]
-  exact T.p_dvd_embedding_of_mem_maximalIdeal s ((residue_eq_zero_iff _).1 (hg hij))
+  simpa [letterMatrix_apply, hs] using T.p_dvd_embedding_of_mem_parahoric s hg hij
 
-/-- Let `g` lie in the parahoric subgroup of `τ`. Each letter `s` in `ℤ/N` is marked even or odd by
-`T.isEven s`, neighbouring letters differently, and on an odd letter the matrix `T.letterMatrix s g`
-is the entrywise image of the transpose of `g⁻¹` under the ring map `T.embedding s : W → R`. If `s`
-is odd and `τ j < τ i`, then `p` divides the entry `(i, j)` of this matrix. -/
+/-- The predicate `T.isEven` marks neighbouring letters differently. At an odd letter,
+`letterMatrix` embeds the transpose of `g⁻¹`. If `τ j < τ i` and `g` is parahoric, then `p` divides
+the entry `(i, j)`. -/
 lemma p_dvd_letterMatrix_of_mem_parahoric_of_not_isEven {τ : Fin k → ℕ} {g : GL (Fin k) W}
     (hg : g ∈ parahoric W τ) (hs : T.isEven s = false) {i j : Fin k} (hji : τ j < τ i) :
     (T.p : R) ∣ T.letterMatrix s g i j := by
-  -- The entry comes from the entry `(j, i)` of `g⁻¹`, which is parahoric too.
-  have h_entry : T.letterMatrix s g i j = T.embedding s (g⁻¹ j i) := by
-    simp [letterMatrix_apply, hs]
-  rw [h_entry]
-  exact T.p_dvd_embedding_of_mem_maximalIdeal s ((residue_eq_zero_iff _).1 (inv_mem hg hji))
+  -- The entry comes from `(j, i)` of `g⁻¹`, which is parahoric too.
+  simpa [letterMatrix_apply, hs] using T.p_dvd_embedding_of_mem_parahoric s (inv_mem hg) hji
 
 /-- Let `g` lie in the parahoric subgroup of `τ`. Suppose that `τ i < τ j` if `s` is even, and
 `τ j < τ i` if it is odd. Then `p` divides the entry `(i, j)` of `T.letterMatrix s g`. -/
@@ -340,8 +339,6 @@ lemma polyAction_polyOfCoeffs (T : FrobeniusCycle N W R) {n : ℕ} {g : GL (Fin 
         simp [mono, monomial_eq, polyOfCoeffs, exponentOf, prod_prod_type_right, mulVec_eq_sum,
           smul_eq_C_mul, Finset.mul_sum]
 
--- Keeps definitional checks from unfolding the finite sums.
-seal Finset.sum in
 /-- The matrix of `g` on forms for the Frobenius cycle `T.map φ`, obtained from `T` along the ring
 map `φ : R →+* R'`, is the entrywise image under `φ` of the matrix of `g` for `T`. -/
 lemma letterRep_map : (T.map φ).letterRep n g = (T.letterRep n g).map φ := by
@@ -365,6 +362,8 @@ lemma five_mul_P_pow_le_q : 5 * T.P ^ s.val ≤ T.q :=
   calc 5 * T.P ^ s.val ≤ T.P ^ (s.val + 1) := by grw [pow_succ', T.five_le_P]
     _ ≤ T.P ^ N := Nat.pow_le_pow_right (pow_pos T.prime.pos T.frobExp) s.val_lt
 
+lemma five_le_q : (5 : ℝ) ≤ T.q := mod_cast T.five_le_P.trans (Nat.le_self_pow (NeZero.ne N) T.P)
+
 /-- Let `a ≠ a'`. In the letter `s` let `u = T.rootVar a a' s` be the variable `(a', s)` if `s` is
 even and `(a, s)` if `s` is odd, and let `ū = T.rootVar a' a s` be the other of these two variables.
 The defect of a monomial at the letter `i` along the root `(a, a')` is its weighted degree for the
@@ -386,8 +385,7 @@ lemma defectWeight_sub_mem_Icc (T : FrobeniusCycle N W R) {i : ZMod N} {a a' : F
     mod_cast Nat.pow_le_pow_right (pow_pos T.prime.pos _) (by linarith [(s - 1 - i).val_lt])
   have h_second : (5 * T.P ^ (s - i).val : ℝ) ≤ T.q := mod_cast T.five_mul_P_pow_le_q (s - i)
   rw [h_diff]
-  have hq : (5 : ℝ) ≤ T.q := mod_cast T.five_le_P.trans (Nat.le_self_pow (NeZero.ne N) T.P)
-  exact ⟨by positivity, (div_le_iff₀ q_sub_one_pos).2 (by linarith)⟩
+  exact ⟨by positivity, (div_le_iff₀ q_sub_one_pos).2 (by linarith [T.five_le_q])⟩
 
 /-- Let `P = T.P` be the prime power of the Frobenius cycle, which is at least `5`, and let
 `q = T.q = P ^ N`. As `s` runs over the letters, the exponent `1 + (s - 1 - i).val` runs over

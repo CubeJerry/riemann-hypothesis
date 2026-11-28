@@ -124,14 +124,6 @@ lemma exists_map_eq_map_pow_of_isTameGenerator {C : Type} [CommMonoid C] {ψ : G
       ⟨s * g * s⁻¹, hg.conj s⟩).left
   rwa [h_conj] at h_power
 
-/-- Evaluation at `x` of `P` with `f j` put for the variable `j` is evaluation of `P` at the values
-of the `f j` at `x`. -/
-lemma eval_aeval {σ R : Type*} [CommSemiring R] (x : σ → R) (f : σ → MvPolynomial σ R)
-    (P : MvPolynomial σ R) :
-    eval x (aeval f P) = eval (fun j : σ ↦ eval x (f j)) P := by
-  rw [map_aeval, algebraMap_eq, show (eval x).comp C = RingHom.id R from RingHom.ext eval_C]
-  rfl
-
 /-- A finite length `b` has finite normalised length `O.normLength b` (the multiple of `b` by the
 valuation of a uniformiser of `O`). -/
 lemma normLength_ne_top {b : ℕ∞} (hb : b ≠ ⊤) : O.normLength b ≠ ⊤ := by
@@ -168,6 +160,13 @@ lemma twist_apply (hζ : ∀ v : X.auxPrimes, (ζ v : PadicAlgCl ℓ) ^ ℓ ^ N 
 lemma coe_pow_apply_pow_eq_one (hζ : ∀ v : X.auxPrimes, (ζ v : PadicAlgCl ℓ) ^ ℓ ^ N = 1) (j : ℕ)
     (v : X.auxPrimes) : ((ζ ^ j) v : PadicAlgCl ℓ) ^ ℓ ^ N = 1 := by
   rw [Pi.pow_apply, SubmonoidClass.coe_pow, pow_right_comm, hζ v, one_pow]
+
+/-- The power `ψ ^ j` of the twist `ψ = ∏ ζ_𝔮 ^ λ_𝔮` by roots of unity `ζ_𝔮` of order dividing
+`ℓ ^ N` is the twist by the `ζ_𝔮 ^ j`, which again have order dividing `ℓ ^ N`. -/
+lemma twist_pow (hζ : ∀ v : X.auxPrimes, (ζ v : PadicAlgCl ℓ) ^ ℓ ^ N = 1) (j : ℕ) :
+    X.twist hζ ^ j = X.twist (ζ := ζ ^ j) (X.coe_pow_apply_pow_eq_one hζ j) := by
+  ext g
+  simp [← prod_pow, pow_right_comm]
 
 /-- The twist by roots of unity of order dividing `ℓ ^ N` has order dividing `ℓ ^ N`. -/
 lemma twist_pow_eq_one (hζ : ∀ v : X.auxPrimes, (ζ v : PadicAlgCl ℓ) ^ ℓ ^ N = 1) :
@@ -342,7 +341,10 @@ lemma exists_rootsOfUnity_ellVal_eval_le (s₀ : ℕ) {m : ℕ} (hm : 1 ≤ m) {
     aeval (fun u : σ ↦ ((1 + X u) ^ (p.2 : ℕ) - 1 : MvPolynomial σ (intQpBar ℓ))) (P p.1)
   have eval_Ppow (p : ι × Set.Icc 1 m) (y : σ → intQpBar ℓ) :
       eval y (Ppow p) = eval (fun u : σ ↦ (1 + y u) ^ (p.2 : ℕ) - 1) (P p.1) := by
-    simp only [Ppow, eval_aeval, map_sub, map_pow, map_add, map_one, eval_X]
+    change aeval y (Ppow p) = aeval _ (P p.1)
+    dsimp only [Ppow]
+    rw [MvPolynomial.comp_aeval_apply]
+    simp
   have h_point : ∀ (p : ι × Set.Icc 1 m) (u : σ), ∃ x' : intQpBar ℓ,
       (1 + x') ^ (p.2 : ℕ) - 1 = x p.1 u ∧ (↑(r / m) : ℝ≥0) ≤ ellVal x'.val :=
     fun p u ↦ exists_one_add_pow_eq p.2.property (hx p.1 u)
@@ -443,8 +445,7 @@ theorem exists_anticyclotomic_twist [Finite ι] [Finite κ] (hS₀ : placesDivid
   refine ⟨X.auxPrimes, X.twist hζ_N, X.auxiliary, fun j hj ↦ ?_⟩
   have h_far : ∀ v : X.auxPrimes, ellVal ((ζ ^ j) v - 1).val ≤ (r : ℝ≥0) :=
     fun v ↦ ellVal_pow_sub_one_le hr_lt hj (hζ v) (hζ_far v)
-  rw [show X.twist hζ_N ^ j = X.twist (ζ := ζ ^ j) (X.coe_pow_apply_pow_eq_one hζ_N j) by
-    ext g; simp [← prod_pow, pow_right_comm]]
+  rw [X.twist_pow hζ_N j]
   exact X.isSmallTwist_twist _ hS₀ hε_one (hr_ε.trans (half_le_self hε.le)) h_far
     (fun i ↦ h_value (.inl i) hj) fun k ↦ h_value (.inr k) hj
 
