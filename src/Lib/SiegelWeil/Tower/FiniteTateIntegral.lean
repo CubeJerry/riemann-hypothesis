@@ -101,7 +101,7 @@ theorem lValueProd_succ (z : ℕ) :
     h_power, h_norm, Finset.prod_Icc_succ_top (by simp), Nat.cast_succ]
   ring
 
-/-- The Euler product `lValueProd` of local L-factors is strictly positive for `e : ℕ`. -/
+/-- For the character and ramified places of `𝔠`, the product `L_*(e)` of `L`-values is positive. -/
 theorem lValueProd_pos (e : ℕ) : 0 < lValueProd 𝔠.ramifiedPlaces 𝔠.character e := by
   induction e with
   | zero => simp [lValueProd]
