@@ -372,12 +372,8 @@ lemma finHeisenbergOp_comm (x y : n → 𝔸f E) (f : 𝒮 V) :
 @[local simp] lemma finHeisenbergOp_add {x y : n → 𝔸f E} (hx : x ∈ stdLattice E n)
     (hy : y ∈ stdLattice E n) (f : 𝒮 V) :
     V.finHeisenbergOp (x + y) f = V.finHeisenbergOp x (V.finHeisenbergOp y f) := by
-  -- The scalar of `finHeisenbergOp_finHeisenbergOp` is a value of `selfDualAddChar` at an integral
-  -- adele, hence `1`.
-  have h_scalar : selfDualAddChar E (star traceOneAdele * star y ⬝ᵥ x) = 1 :=
-    selfDualAddChar_eq_one_of_mem (mul_mem (star_mem_Ô traceOneAdele_mem)
-      (star_dotProduct_mem hx hy))
-  rw [finHeisenbergOp_finHeisenbergOp, h_scalar, one_smul]
+  -- On the standard lattice the scalar in the multiplication law is trivial.
+  rw [finHeisenbergOp_finHeisenbergOp, selfDualAddChar_traceOne_dotProduct_eq_one hx hy, one_smul]
 
 /-- If `L (finHeisenbergOp (idem S.conjClosure • y) f)` is a constant `c` for `y` in the standard
 lattice, then `L (projOn S f) = c`, as the standard lattice has measure `1` for
@@ -788,14 +784,10 @@ coordinates) fixes every vector `f` of the finite part `V.finitePart`. The finit
 subspace of 𝒮(V) spanned by the translates of the vacuum under the finite Heisenberg operators. -/
 @[simp]
 lemma projReal_eq_self_of_mem_finitePart (hf : f ∈ V.finitePart) : V.projReal f = f := by
-  induction hf using span_induction with
-  | mem _ h_gen =>
-    obtain ⟨z, rfl⟩ := h_gen
-    -- `projReal` commutes with ϱ_f(z) and fixes the vacuum.
-    rw [integrated_finHeisenbergOp, projReal_vacElem]
-  | zero => simp
-  | add f₁ f₂ _ _ h₁ h₂ => rw [map_add, h₁, h₂]
-  | smul c f₁ _ h₁ => rw [map_smul, h₁]
+  refine LinearMap.eqOn_span (f := V.projReal.toLinearMap) (g := LinearMap.id) ?_ hf
+  rintro _ ⟨z, rfl⟩
+  -- `projReal` commutes with ϱ_f(z) and fixes the vacuum.
+  simp [integrated_finHeisenbergOp, projReal_vacElem]
 
 /-- For f in the finite part, the map x ↦ ϱ(x)f on finite adelic vectors x is locally constant. -/
 lemma isLocallyConstant_rho_finVec (hf_mem : f ∈ V.finitePart) :
