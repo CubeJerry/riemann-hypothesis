@@ -181,8 +181,7 @@ lemma exists_smooth_exponent_coherent {A : EuclideanSpace ℂ p → (ι → ℂ)
   · change cexp (e (A x y) w) = realHeisenbergOp (A x y) vacVector w
     simp only [e, Complex.exp_add, heisenbergOp_apply]
     rfl
-  · simp only [e, dotProduct, Pi.star_apply, RCLike.star_def, mulVec, Pi.sub_apply, star_sub,
-      ← Complex.conjCLE_apply]
+  · simp only [e, dotProduct, Pi.star_apply, RCLike.star_def, mulVec, Pi.sub_apply, star_sub]
     fun_prop
   · intro r hr t x
     have hr_ne : (r : ℂ) ≠ 0 := mod_cast hr.ne'
@@ -360,7 +359,7 @@ lemma MixedModel.exists_isSchwartzVector_slice_eq {τ : (p → ℂ) → ℂ} (h�
   have d_supp : HasCompactSupport d := (hτ_supp.comp_homeomorph (PiLp.homeomorph ..)).mul_right
   have d_smooth : ContDiff ℝ ∞ d := by
     simp only [d, principalMinor, dotProduct, det_apply, toSquareBlockProp, toBlock_apply,
-      Pi.star_apply, star_def, ← Complex.conjCLE_apply]
+      Pi.star_apply, star_def]
     fun_prop
   -- `A x y = I (S x y)`.
   let A (x : EuclideanSpace ℂ p) : (ι → ℂ) →L[ℝ] ι' → ℂ :=
