@@ -113,13 +113,16 @@ def relationsOn : Set (Γ →₀ Matrix n n O) := {f : Γ →₀ Matrix n n O | 
 /-- The length of S/(S ∩ T) as an A-module, for submodules S, T of M. -/
 def relLength : ℕ∞ := length A (S ⧸ T.submoduleOf S)
 
+/-- The relative length of the kernel submodule under a linear map. -/
 lemma relLength_ker : relLength S f.ker = length A (S.map f) := by
   rw [← f.range_domRestrict S]
   exact (f.domRestrict S).quotKerEquivRange.length_eq
 
+/-- The relative length of a submodule quotient equals the length of its quotient image. -/
 lemma relLength_eq_length_map_mkQ : relLength S T = length A (S.map T.mkQ) := by
   simp [← relLength_ker]
 
+/-- Relative length of the comap submodule under a linear projection. -/
 lemma relLength_comap : relLength S (Submodule.comap f T') = relLength (S.map f) T' := by
   rw [← T'.ker_mkQ, ← f.ker_comp, relLength_ker, map_comp, relLength_ker]
 
@@ -147,6 +150,7 @@ lemma length_map_add_length_inf_ker :
     length A (S.map f) + length A ↥(S ⊓ f.ker) = length A S := by
   rw [← relLength_ker S f, relLength_add_length_inf]
 
+/-- The relative length of the bottom submodule `⊥` equals the absolute module length. -/
 @[simp]
 lemma relLength_bot : relLength S ⊥ = length A S := by rw [← ker_id, relLength_ker, S.map_id]
 
