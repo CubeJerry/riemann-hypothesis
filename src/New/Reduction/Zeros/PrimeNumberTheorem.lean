@@ -91,7 +91,7 @@ lemma primeRemainder_eq_integral_countError_sub {y : ℝ} (hy : 1 ≤ y) :
       lambdaKResidueClass, residueClass, div_eq_inv_mul]
   apply Complex.ofReal_injective
   rw [primeRemainder_eq_normalized_rieszSum (zero_lt_one.trans_le hy),
-    TauCeti.rieszSum_div_sub_log_eq_integral _ _ hy,Complex.ofReal_sub,
+    TauCeti.rieszSum_div_sub_log_eq_integral _ _ hy, Complex.ofReal_sub,
     intervalIntegral.integral_of_le hy]
   simp_rw [← integral_complex_ofReal, Complex.ofReal_div, Complex.ofReal_pow, count]
 

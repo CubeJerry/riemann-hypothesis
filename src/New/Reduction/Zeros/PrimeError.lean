@@ -216,11 +216,13 @@ lemma primeRemainder_eq_normalized_rieszSum {y : ℝ} (hy : 0 < y) :
     (primeRemainder d q y : ℂ) =
       TauCeti.rieszSum (fun n ↦ (lambdaKResidueClass d q n : ℂ)) y / y -
         (φ q : ℂ)⁻¹ * Real.log y - (logDerivMean d q 1).re := by
-  simp [primeRemainder, lambdaKSum, TauCeti.rieszSum_def, ← div_eq_inv_mul, sum_div,
-    ← sum_sub_distrib]
-  refine sum_congr rfl fun n hn ↦ ?_
-  have hn_pos : 0 < n := (mem_Icc.1 hn).1
-  field [hn_pos.ne', hy.ne']
+  have weight (n : ℕ) (hn : n ∈ Icc 1 ⌊y⌋₊) (w : ℂ) :
+      w / n - w / n * n / y = w * ((y : ℂ) / n - 1) / y := by
+    have hn_pos : 0 < n := (mem_Icc.1 hn).1
+    field [hn_pos.ne', hy.ne']
+  simpa [primeRemainder, lambdaKSum, TauCeti.rieszSum_def, ← div_eq_inv_mul, sum_div,
+    ← sum_sub_distrib] using
+    (sum_congr (rfl : Icc 1 ⌊y⌋₊ = _) fun n hn ↦ weight n hn (lambdaKResidueClass d q n))
 
 /-- In the remainder `primeRemainder d q z = ∑_{1 ≤ n ≤ z} λ(n) (1/n - 1/z) - log z / φ(q) - re
 G_q(1)` with `z > 0`, the sum equals `∑_{1 ≤ n ≤ A} λ(n) (1/n - 1/z)⁺` for any integer `A ≥ ⌊z⌋`. -/
@@ -230,7 +232,7 @@ lemma primeRemainder_eq_sum_posPart {A : ℕ} {z : ℝ} (hz_pos : 0 < z) (hz_le 
       re (logDerivMean d q 1) := by
   apply Complex.ofReal_injective
   rw [primeRemainder_eq_normalized_rieszSum hz_pos, TauCeti.rieszSum_eq_sum_max_of_floor_le _ hz_le]
-  push_cast
+  simp only [ofReal_sub, ofReal_div, ofReal_sum, ofReal_mul, ofReal_natCast]
   rw [div_eq_inv_mul (Real.log z : ℂ), sub_left_inj, sub_left_inj, sum_div]
   apply sum_congr rfl
   intro n _
