@@ -31,7 +31,7 @@ polynomial.
 * `New.exists_eigenvector_of_trace_mul_eq`: if twisted traces of a commuting family `A'` are
   proportional to traces of a commuting family `A`, a generalised eigensystem of `A` on which one
   operator has non-zero trace extends to an eigensystem of `A'` that is invariant under the twist.
-  This holds over any algebraically closed field of characteristic zero.
+  This holds over any algebraically closed field.
 * `New.amitsur_charpoly_mem_of_span` (Amitsur): for an algebra map to matrices, it suffices to check
   on a spanning set that the coefficients of the characteristic polynomials lie in the base ring.
   The proof works with det (1 - t ρ(w)) modulo a power of t and factors 1 - t ρ(w) step by step.
@@ -310,13 +310,11 @@ lemma trace_mul_mul_eq_of_mul_eq_mul {f g s u : End K V} (hs : s * f = g * s) (h
   rw [trace_mul_comm, mul_assoc, hs, ← mul_assoc, hu.eq, mul_assoc]
 
 /-- Let `G a` be commuting elements of a `K`-algebra `R`, `K` algebraically closed, and let `S` be a
-finite-dimensional
-subspace of `R` that is stable under left multiplication by the `G a`. If `τ` is a non-zero linear
-form on `S`, then `τ z ≠ 0` for some joint generalised eigenvector `z ∈ S` of these
-multiplications. -/
+finite-dimensional subspace of `R` that is stable under left multiplication by the `G a`. If `τ` is
+a non-zero linear form on `S`, then `τ z ≠ 0` for some joint generalised eigenvector `z ∈ S` of
+these multiplications. -/
 lemma exists_pow_sub_smul_mul_eq_zero_of_commute [IsAlgClosed K] {R : Type*} {κ : Sort*} [Ring R]
-    [Algebra K R]
-    {S : Submodule K R} [FiniteDimensional K S] {G : κ → R}
+    [Algebra K R] {S : Submodule K R} [FiniteDimensional K S] {G : κ → R}
     (hG_comm : ∀ a a' : κ, Commute (G a) (G a')) (hG_maps : ∀ a : κ, ∀ z ∈ S, G a * z ∈ S)
     {τ : S →ₗ[K] K} (hτ : τ.ker ≠ ⊤) :
     ∃ (χ : κ → K) (z : S), τ z ≠ 0 ∧ ∀ a : κ, ∃ N : ℕ, (G a - χ a • 1) ^ N * (z : R) = 0 := by
@@ -339,13 +337,12 @@ lemma exists_pow_sub_smul_mul_eq_zero_of_commute [IsAlgClosed K] {R : Type*} {κ
   rwa [show L a = Algebra.lmul K R (G a) from rfl, ← map_one (Algebra.lmul K R), ← map_smul,
     ← map_sub, ← map_pow] at hN
 
-/-- A commuting family `A'`, indexed by `I'`, of operators on a finite-dimensional space over an
-algebraically closed field
-`V'` has a common eigenvector in the range of any non-zero operator `f` that commutes with it. -/
+/-- A commuting family `A'`, indexed by `I'`, of operators on a finite-dimensional space `V'` over
+an algebraically closed field has a common eigenvector in the range of any non-zero operator `f`
+that commutes with it. -/
 lemma exists_eigenvector_mem_range_of_commute [IsAlgClosed K] [FiniteDimensional K V']
-    {A' : I' → End K V'}
-    (hA' : ∀ a b : I', Commute (A' a) (A' b)) {f : End K V'} (hf : ∀ a : I', Commute f (A' a))
-    (hf_ne : f ≠ 0) :
+    {A' : I' → End K V'} (hA' : ∀ a b : I', Commute (A' a) (A' b)) {f : End K V'}
+    (hf : ∀ a : I', Commute f (A' a)) (hf_ne : f ≠ 0) :
     ∃ (Θ : I' → K) (v : V'), f v ≠ 0 ∧ ∀ a : I', A' a (f v) = Θ a • f v := by
   have : Nontrivial f.range := nontrivial_iff_ne_bot.2 (mt range_eq_bot.1 hf_ne)
   have h_stable (a : I') : ∀ u ∈ f.range, A' a u ∈ f.range :=
@@ -457,13 +454,11 @@ lemma zero_sub_mul_mem_traceIdentityMultipliers (hA' : ∀ a b : J', Commute (A'
 end Multipliers
 
 /-- Let `G a` be operators on a finite-dimensional space `V'` over an algebraically closed field.
-Suppose that the image of a
-non-zero operator `f`, commuting with a commuting family `A'` indexed by a type `I'`, lies in the
-generalised `χ a`-eigenspace of each `G a`. Then `A'` has a common eigenvector in that image, and
-the only eigenvalue that `G a` can have at it is `χ a`. -/
+Suppose that the image of a non-zero operator `f`, commuting with a commuting family `A'` indexed by
+a type `I'`, lies in the generalised `χ a`-eigenspace of each `G a`. Then `A'` has a common
+eigenvector in that image, and the only eigenvalue that `G a` can have at it is `χ a`. -/
 lemma exists_eigenvector_and_forall_eigenvalue_eq [IsAlgClosed K] [FiniteDimensional K V']
-    {κ : Sort*}
-    {A' : I' → End K V'} (hA' : ∀ a a' : I', Commute (A' a) (A' a')) {f : End K V'}
+    {κ : Sort*} {A' : I' → End K V'} (hA' : ∀ a a' : I', Commute (A' a) (A' a')) {f : End K V'}
     (hf : ∀ a : I', Commute f (A' a)) (hf_ne : f ≠ 0) {G : κ → End K V'} {χ : κ → K}
     (h_range : ∀ (a : κ) (v : V'), f v ∈ maxGenEigenspace (G a) (χ a)) :
     ∃ (Θ : I' → K) (v : V'), f v ≠ 0 ∧ (∀ a : I', A' a (f v) = Θ a • f v) ∧
@@ -482,10 +477,9 @@ the image of `A' i` whose system of eigenvalues `Θ` satisfies `Θ ∘ j = θ`, 
 `s * A' a = A' a' * s`. The hypothesis `h_stable` serves to state the trace hypothesis; it follows
 from `hA` by `New.apply_mem_iInf_maxGenEigenspace_of_commute`. -/
 lemma exists_eigenvector_of_trace_mul_eq [IsAlgClosed K] [FiniteDimensional K V]
-    [FiniteDimensional K V']
-    {J : Sort*} {A : J → End K V} {A' : I' → End K V'} (hA : ∀ a a' : J, Commute (A a) (A a'))
-    (hA' : ∀ a a' : I', Commute (A' a) (A' a')) (k : I → J) (j : I → I') (b : J) (i : I')
-    (θ : I → K)
+    [FiniteDimensional K V'] {J : Sort*} {A : J → End K V} {A' : I' → End K V'}
+    (hA : ∀ a a' : J, Commute (A a) (A a')) (hA' : ∀ a a' : I', Commute (A' a) (A' a')) (k : I → J)
+    (j : I → I') (b : J) (i : I') (θ : I → K)
     (h_stable : ∀ v ∈ ⨅ a : I, maxGenEigenspace (A (k a)) (θ a),
       A b v ∈ ⨅ a : I, maxGenEigenspace (A (k a)) (θ a))
     (h_trace_ne :
@@ -581,9 +575,8 @@ system of eigenvalues `Θ` satisfies `Θ ∘ j = θ`, and `Θ a = Θ a'` wheneve
 The hypothesis `h_stable` serves to state the trace hypothesis; it follows from `hB_comm` by
 `New.apply_mem_inf_iInf_maxGenEigenspace_of_commute_restrict`. -/
 lemma exists_eigenvector_of_trace_identity [IsAlgClosed K] {p : Submodule K V}
-    [FiniteDimensional K p]
-    [FiniteDimensional K V'] {J : Sort*} {B : J → End K V} {A' : I' → End K V'}
-    (hB_maps : ∀ a : J, ∀ v ∈ p, B a v ∈ p)
+    [FiniteDimensional K p] [FiniteDimensional K V'] {J : Sort*} {B : J → End K V}
+    {A' : I' → End K V'} (hB_maps : ∀ a : J, ∀ v ∈ p, B a v ∈ p)
     (hB_comm : ∀ a a' : J, Commute ((B a).restrict (hB_maps a)) ((B a').restrict (hB_maps a')))
     (hA' : ∀ a a' : I', Commute (A' a) (A' a')) (k : I → J) (j : I → I') (b : J) (i : I')
     (θ : I → K)
