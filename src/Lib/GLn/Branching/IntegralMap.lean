@@ -85,7 +85,7 @@ def _root_.New.SpansBranchingMaps (e₀ e : Φ → ℤ)
 /-- A polynomial `P` in the entries of the matrices `z τ` which vanishes on the image of
 `M ↦ (u + M - u * U M) * (1 + U M)` is zero everywhere: that map is a submersion at `0`, its
 derivative there being the identity. -/
-private lemma eq_zero_of_vanish_on_submersion
+private lemma eq_zero_of_forall_evalMatrix_eq_zero
     (u : ∀ τ : Φ, Matrix (N τ) (N τ) ℂ)
     (U : (∀ τ : Φ, Matrix (N τ) (N τ) ℂ) →L[ℂ] ∀ τ : Φ, Matrix (N τ) (N τ) ℂ)
     (P : MvPolynomial ((τ : Φ) × N τ × N τ) ℂ)
@@ -190,7 +190,8 @@ lemma exists_cyclic_lower_triangular (κ : Φ → ℕ → ℕ) :
     rw [hM, hP]
     simp [Pi.mul_def, hr g hg, schur_mul_left, h_eigen, ← mulVec_mulVec, mulVec_smul]
   have h_zero (z : ∀ τ : Φ, Matrix (N τ) (N τ) ℂ) : r ⬝ᵥ schur κ z *ᵥ v = 0 := by
-    rw [← hP]; exact eq_zero_of_vanish_on_submersion u U P h_vanish z
+    rw [← hP]
+    exact eq_zero_of_forall_evalMatrix_eq_zero u U P h_vanish z
   -- The vectors `schur κ g *ᵥ v` span (`ext_schur_weylEval`), and `r` is orthogonal to all of them.
   refine (dotProductEquiv ℂ (WeylIndexFamily N κ)).injective (ext_schur_weylEval E fun g ↦ ?_)
   simpa [v] using h_zero fun τ : Φ ↦ (g τ).val
