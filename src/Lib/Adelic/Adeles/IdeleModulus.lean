@@ -86,15 +86,19 @@ noncomputable def ideleAbs : (𝔸 E)ˣ →* ℝ where
       simp +contextual [norm_def, not_imp_not]
     simp [sq, field, finprod_mul_distrib (h_finite x) (h_finite y), Finset.prod_mul_distrib]
 
+/-- `ideleAbs x` is the product of the squared norms of `x` at the infinite places
+and its norms at the finite places. -/
 lemma ideleAbs_apply (x : (𝔸 E)ˣ) :
     ideleAbs x =
       (∏ w : InfinitePlace E, ‖(x : 𝔸 E).1 w‖ ^ 2) * ∏ᶠ w : FinPlace E, ‖(x : 𝔸 E).2 w‖ := rfl
 
+/-- The idele modulus is non-negative and non-zero. -/
 @[simp]
 lemma ideleAbs_nonneg_and_ne_zero : 0 ≤ ideleAbs x ∧ ideleAbs x ≠ 0 := by
   refine ⟨mul_nonneg ?_ (finprod_nonneg fun w ↦ norm_nonneg _), (toHomUnits ideleAbs x).ne_zero⟩
   positivity
 
+/-- Positivity of the idele modulus. -/
 @[simp]
 lemma ideleAbs_pos : 0 < ideleAbs x :=
   lt_of_le_of_ne' ideleAbs_nonneg_and_ne_zero.1 ideleAbs_nonneg_and_ne_zero.2
@@ -481,9 +485,8 @@ lemma adeleNorm_algebraMap (x : L) : adeleNorm K L x = Algebra.norm K x := by
 `a ^ [L : K]`. -/
 lemma adeleNorm_finAdeleIncl (a : 𝔸f K) :
     adeleNorm K L (finAdeleIncl K L a) = a ^ finrank K L := by
-  -- both sides are continuous, so it suffices to compare them on the dense subset `K`
-  revert a
-  exact denseRange_algebraMap_finAdele.eq (by simp) (by fun_prop) (by fun_prop)
+  simpa only [adeleNorm, algebraMap_eq_finAdeleIncl, Fintype.card_fin] using
+    norm_algebraMap_of_basis (adeleBasis (finBasis K L)) a
 
 /-- For Galois `L / K`, the norm of a finite adele `y` of `L`, included back in the adeles of `L`,
 is the product of the images of `y` under the Galois group. -/
