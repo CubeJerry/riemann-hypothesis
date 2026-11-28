@@ -192,6 +192,9 @@ lemma sum_sum_dotProduct_eq_one_eq_smul {W : Type} [AddCommGroup W] [Module ℂ 
     {y : W} (hf : ∀ z : n → F, z ≠ 0 → (∀ j ≠ i, z j = 0) → f z = y) :
     ∑ ξ : n → F with ξ i = 1, ∑ z : n → F with ξ ⬝ᵥ z = 1, f z =
       (Fintype.card F : ℂ) ^ (Fintype.card n - 2 : ℤ) • (y + ∑ z : n → F with z ≠ 0, f z) := by
+  -- Apply the incidence count to `f - y`, which vanishes on the nonzero multiples of `e_i`.
+  -- To add back the constant weight `y`, count the normalized forms and the vectors on each
+  -- affine hyperplane using `card_normalized_forms` and `card_affine_hyperplane`.
   have centered := sum_incidence_of_vanishing_on_line (i := i) (fun z ↦ f z - y)
     (fun z hz h ↦ sub_eq_zero.mpr (hf z hz h))
   have hcard (ξ : n → F) (hξ : ξ ∈ ({ξ : n → F | ξ i = 1} : Finset _)) :=
