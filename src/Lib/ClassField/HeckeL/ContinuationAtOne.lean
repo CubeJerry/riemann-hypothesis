@@ -174,6 +174,56 @@ private lemma mem_Ô_iff_exists_coeIdeal_eq_divisor
   · rintro ⟨I, hI⟩
     exact mem_Ô.mpr fun w ↦ (hd_count x w).mpr (by simp [← hI, count_coeIdeal_nonneg])
 
+open scoped Classical in
+open Real HeightOneSpectrum UniqueFactorizationMonoid FractionalIdeal Set in
+/-- Let `d` be the divisor map on finite ideles (with kernel `Ô^× = idelesUnitOff ∅` and sending
+the local uniformiser at each prime `w` to `w`), and let `Z` be a function on finite ideles that
+agrees with the indicator of `V` on `Ô^×` and transforms by `χ w * w.q ^ (-s)` under multiplication
+by the uniformiser at `w` on ideles of integral divisor. Then for every integral ideal `I`, the
+part of `Z` supported on ideles of divisor `I` is `χ I * I.absNorm ^ (-s)` times a left translate
+of the indicator of `Ô^× ∩ V`. -/
+private lemma exists_divisor_part_eq_mul_indicator
+    {d : (𝔸f K)ˣ →* (FractionalIdeal (nonZeroDivisors (𝓞 K)) K)ˣ}
+    (hd_ker : d.ker = idelesUnitOff ∅)
+    (hd_unif : ∀ w : FinPlace K, (d (locIdele w (uniformizer w))).val = w.asIdeal)
+    {χ : Ideal (𝓞 K) →* ℂ} (hχ_zero : χ ⊥ = 0)
+    {V : Set (𝔸f K)ˣ} {Z : (𝔸f K)ˣ → ℂ} {s : ℝ}
+    (h_units : ∀ u : (𝔸f K)ˣ, u ∈ idelesUnitOff ∅ → Z u = if u ∈ V then 1 else 0)
+    (h_unif : ∀ (w : FinPlace K) {x : (𝔸f K)ˣ} {I : Ideal (𝓞 K)}, (d x).val = I →
+      Z (locIdele w (uniformizer w) * x) = χ w.asIdeal * w.q ^ (-s : ℂ) * Z x)
+    (I : Ideal (𝓞 K)) :
+    ∃ t : (𝔸f K)ˣ, ∀ x : (𝔸f K)ˣ,
+      (if (d x).val = I then Z x else 0) =
+        χ I * I.absNorm ^ (-s : ℂ) *
+          (((idelesUnitOff ∅ : Subgroup (𝔸f K)ˣ) : Set (𝔸f K)ˣ) ∩ V).indicator 1 (t * x) := by
+  induction I using induction_on_prime with
+  | h₁ => simp [hχ_zero]
+  | h₂ u hu =>
+    -- Divisor `1` means `x` is a unit idele; there `Z` is the indicator of `V`.
+    refine ⟨1, fun x ↦ ?_⟩
+    rw [hu.eq_one]
+    have h_div_one : d x = 1 ↔ x ∈ idelesUnitOff ∅ := by rw [← MonoidHom.mem_ker, hd_ker]
+    by_cases hx : x ∈ idelesUnitOff ∅
+    · -- `↓` applies `map_one` before simp rewrites the ideal `1` as `⊤`.
+      simp [h_div_one.mpr hx, h_units x hx, hx, indicator, ↓map_one]
+    · simp [h_div_one, hx, indicator]
+  | h₃ J p hJ_ne hp ih =>
+    obtain ⟨t, ht⟩ := ih
+    obtain ⟨w, rfl⟩ : ∃ w : FinPlace K, w.asIdeal = p := ⟨ofPrime hp, rfl⟩
+    -- Write a general idele as `u * x` with `u = locIdele w (uniformizer w)`.
+    refine ⟨t / locIdele w (uniformizer w), fun y ↦ ?_⟩
+    obtain ⟨x, rfl⟩ := mul_left_surjective (locIdele w (uniformizer w)) y
+    have h_coeff : χ (w.asIdeal * J) * ((w.asIdeal * J).absNorm : ℂ) ^ (-s : ℂ) =
+        χ w.asIdeal * (w.asIdeal.absNorm : ℂ) ^ (-s : ℂ) * (χ J * J.absNorm ^ (-s : ℂ)) := by
+      rw [map_mul, map_mul, Nat.cast_mul, natCast_mul_cpow, mul_mul_mul_comm]
+    -- With `u = locIdele w (uniformizer w)`, the divisor of `u * x` is `w` times that of `x`, and
+    -- `(t / u) * (u * x) = t * x`; so `ht` gives the part of divisor `J` on the right, and
+    -- `h_unif` compares the two sides.
+    rw [map_mul, Units.val_mul, hd_unif w, ← mul_assoc, div_mul_cancel, h_coeff, mul_assoc, ← ht]
+    by_cases hx : (d x).val = J
+    · simp [hx, h_unif w hx]
+    · simp [ne_bot, hx]
+
 namespace IsHeckeOfType
 
 variable [PlaceEmbedding K] {n : InfinitePlace K → ℤ} {S : Set (FinPlace K)}
@@ -304,39 +354,14 @@ lemma integral_mul_finIdeleAbs_rpow_eq_eulerProd_mul (hψ : IsHeckeOfType ψ n)
       Z (locIdele w (uniformizer w) * x) = χ w.asIdeal * w.q ^ (-s : ℂ) * Z x :=
     mul_finIdeleAbs_rpow_locIdele_uniformizer_mul h_supp h_local hχ_prime s w (h_integral hx)
       (h_integral (I := w.asIdeal * I) (by simp [hd_unif w, hx]))
-  -- The part of `Z` of divisor `I`, by induction on the prime factorisation of `I`.
-  have h_part (I : Ideal (𝓞 K)) : ∃ t : (𝔸f K)ˣ, ∀ x : (𝔸f K)ˣ,
-      (if (d x).val = I then Z x else 0) = χ I * I.absNorm ^ (-s : ℂ) * W.indicator 1 (t * x) := by
-    induction I using induction_on_prime with
-    | h₁ => simp [hχ_zero]
-    | h₂ u hu =>
-      -- Divisor `1` means `x` is a unit idele; there `|x| = 1` and `f ψ` is the indicator of `V`.
-      refine ⟨1, fun x ↦ ?_⟩
-      rw [hu.eq_one]
-      have h_div_one : d x = 1 ↔ x ∈ idelesUnitOff ∅ := by rw [← MonoidHom.mem_ker, hd_ker]
-      have h_abs_one (hx : x ∈ idelesUnitOff ∅) : finIdeleAbs x = 1 := by
-        simp [finIdeleAbs, ideleAbs_eq_prod_of_v_eq_one, mem_idelesUnitOff.mp hx]
-      by_cases hx : x ∈ idelesUnitOff ∅
-      · -- `↓` applies `map_one` before simp rewrites the ideal `1` as `⊤`.
-        simp [Z, h_div_one.mpr hx, h_abs_one hx, h_units x hx, hW, hx, indicator, ↓map_one]
-      · simp [h_div_one, hx, hW, indicator]
-    | h₃ J p hJ_ne hp ih =>
-      obtain ⟨t, ht⟩ := ih
-      obtain ⟨w, rfl⟩ : ∃ w : FinPlace K, w.asIdeal = p := ⟨ofPrime hp, rfl⟩
-      -- Write a general idele as `u * x` with `u = locIdele w (uniformizer w)`.
-      refine ⟨t / locIdele w (uniformizer w), fun y ↦ ?_⟩
-      obtain ⟨x, rfl⟩ := mul_left_surjective (locIdele w (uniformizer w)) y
-      have h_coeff : χ (w.asIdeal * J) * ((w.asIdeal * J).absNorm : ℂ) ^ (-s : ℂ) =
-          χ w.asIdeal * (w.asIdeal.absNorm : ℂ) ^ (-s : ℂ) * (χ J * J.absNorm ^ (-s : ℂ)) := by
-        rw [map_mul, map_mul, Nat.cast_mul, natCast_mul_cpow, mul_mul_mul_comm]
-      -- With `u = locIdele w (uniformizer w)`, the divisor of `u * x` is `w` times that of `x`, and
-      -- `(t / u) * (u * x) = t * x`; so `ht` gives the part of divisor `J` on the right, and
-      -- `h_unif` compares the two sides.
-      rw [map_mul, hd_unif w, ← mul_assoc, div_mul_cancel, h_coeff, mul_assoc, ← ht]
-      by_cases hx : (d x).val = J
-      · simp [hx, h_unif w hx]
-      · simp [ne_bot, hx]
-  choose t ht using h_part
+  -- On the unit ideles `Ô^×`, `|x| = 1` and `f ψ` is the indicator of `V`.
+  have hZ_units (u : (𝔸f K)ˣ) (hu : u ∈ idelesUnitOff ∅) : Z u = if u ∈ V then 1 else 0 := by
+    have h_abs_one : finIdeleAbs u = 1 := by
+      simp [finIdeleAbs, ideleAbs_eq_prod_of_v_eq_one, mem_idelesUnitOff.mp hu]
+    simp [Z, h_abs_one, h_units u hu]
+  -- Split `Z` by divisor using prime factorisation of integral ideals.
+  choose t ht using exists_divisor_part_eq_mul_indicator hd_ker (fun w ↦ by simp [hd_unif w])
+    hχ_zero hZ_units h_unif
   -- Where `f x ≠ 0` the divisor `d x` is an integral ideal, so `Z` is the sum of its parts.
   have h_Z (x : (𝔸f K)ˣ) :
       Z x = ∑' I : Ideal (𝓞 K), χ I * I.absNorm ^ (-s : ℂ) * W.indicator 1 (t I * x) := by
