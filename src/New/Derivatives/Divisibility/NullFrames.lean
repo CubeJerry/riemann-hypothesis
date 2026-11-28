@@ -3,7 +3,7 @@ module
 import Mathlib.RingTheory.PiTensorProduct
 import Std.Tactic.BVDecide.Normalize.BitVec
 public import Lib.General.Algebra.AdicCompletion
-import Lib.Cohomology.Etale.Basic
+import Lib.General.Algebra.AbsIntegrallyClosed
 import Lib.General.Algebra.SeriesCongruences
 
 /-!

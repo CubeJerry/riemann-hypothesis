@@ -6,7 +6,6 @@ public import New.Derivatives.Vacuum.TightFrames
 import Lib.Adelic.Adeles.StrongApproximation
 import Lib.CM.ChowlaSelberg
 import Lib.CM.FiniteLattices
-import Lib.Cohomology.Etale.Basic
 import Lib.Weil.Construction.CanonicalTheta
 import Lib.Weil.Construction.FourierInversion
 
