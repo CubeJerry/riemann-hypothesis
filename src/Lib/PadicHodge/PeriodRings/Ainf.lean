@@ -640,17 +640,6 @@ lemma theta_iterate_frobEnd_mu (j : ℕ) : theta (frobEnd^[j] mu) = 0 := by
 /-- `θ μ = 0`, since `μ = [ε] - 1` and `ε^♯ = 1`. -/
 lemma theta_mu : theta mu = 0 := by simpa using theta_iterate_frobEnd_mu 0
 
-/-- `θ (φ ^ j ξ) = p` for all `j ≥ 1`. -/
-lemma theta_iterate_frobEnd_xi (j : ℕ) : theta (frobEnd^[j + 1] xi) = p := by
-  -- `φ ^ (j + 1) ξ = ∑_{i < p} [ε ^ p ^ j] ^ i`, and `θ [ε ^ p ^ j] = 1`, so the sum goes to `p`
-  have h_iter :
-      frobEnd^[j + 1] xi = ∑ i ∈ Finset.range p, teichmuller p (epsTilt ^ p ^ j) ^ i := by
-    rw [xi_eq_sum, ← RingHom.coe_pow, map_sum]
-    refine Finset.sum_congr rfl fun i _ ↦ ?_
-    -- `φ ^ (j + 1) [ε^{1/p}] = [(ε^{1/p}) ^ p ^ (j + 1)] = [ε ^ p ^ j]`
-    rw [map_pow, RingHom.coe_pow, iterate_frobEnd_teichmuller, epsTilt, ← pow_mul, ← pow_succ']
-  simp [h_iter]
-
 /-- `θ ξ = 0`, because `θ ξ * θ τ = θ μ = 0` and `θ τ ≠ 0`. -/
 @[simp]
 lemma theta_xi : theta xi = 0 := by
