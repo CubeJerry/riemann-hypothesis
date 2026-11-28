@@ -204,7 +204,8 @@ lemma simClassOf_eq_iff :
   · rintro ⟨e, he⟩
     exact ⟨b.symm ≪≫ₗ e ≪≫ₗ c, by simp [DFunLike.ext_iff, he]⟩
 
-/-- Intertwined linear endomorphisms share identical similarity classes. -/
+/-- Endomorphisms conjugate by a linear isomorphism `e` (that is, `e ∘ g = g' ∘ e`)
+have the same similarity class. -/
 lemma simClassOf_eq_of_equiv (e : V ≃ₗ[k] V') (he : ∀ x : V, e (g x) = g' (e x)) :
     simClassOf g = simClassOf g' :=
   simClassOf_eq_iff.mpr ⟨e, he⟩
