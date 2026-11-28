@@ -92,9 +92,9 @@ omit [StarRing R] [IsDomain R] [Module.Finite ℤ R] in
 lemma action_comm (r s : R) (x : V) : F r (F s x) = F s (F r x) := by
   simpa using DFunLike.congr_fun (congrArg F (mul_comm r s)) x
 
-omit [StarRing R] in
-/-- A nonzero element of the domain `R`, finite over `ℤ`, acts injectively on `V`. -/
-lemma action_injective : (⇑(F a)).Injective := by
+omit [StarRing R] [Module.Finite ℤ R] in
+/-- A nonzero element of the domain `R`, algebraic over `ℤ`, acts injectively on `V`. -/
+lemma action_injective [Algebra.IsAlgebraic ℤ R] : (⇑(F a)).Injective := by
   -- `a` divides a nonzero integer `r`, and `F r` is multiplication by `r` on a complex space.
   obtain ⟨b, r, hr, hab⟩ := exists_smul_eq_mul ℤ 1 (NeZero.ne a)
   intro x y hxy
@@ -104,10 +104,11 @@ lemma action_injective : (⇑(F a)).Injective := by
     simpa [hxy, action_comm a, ← Int.cast_smul_eq_zsmul ℂ] using h_key
   exact sub_eq_zero.mp ((smul_eq_zero.mp h_smul).resolve_left (Int.cast_ne_zero.mpr hr))
 
-omit [StarRing R] in
-/-- A nonzero element of `R` acts invertibly on the finite-dimensional space `V`. -/
+omit [StarRing R] [Module.Finite ℤ R] in
+/-- A nonzero element of the domain `R`, algebraic over `ℤ`, acts invertibly on the
+finite-dimensional complex space `V`. -/
 @[simp]
-lemma action_isInvertible : (F a).IsInvertible :=
+lemma action_isInvertible [Algebra.IsAlgebraic ℤ R] : (F a).IsInvertible :=
   ⟨(ofInjectiveEndo _ (action_injective a)).toContinuousLinearEquiv, rfl⟩
 
 namespace IsHermitianAction
