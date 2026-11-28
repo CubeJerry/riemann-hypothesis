@@ -156,8 +156,6 @@ theorem U.principalMinor_sign_ne_zero (σ : ℤˣ) (g : USign ε) : principalMin
   intro h_zero
   simpa [h_zero] using norm_det_blockDiagPart σ g
 
--- Keeps definitional checks from unfolding the finite sums.
-seal Finset.sum in
 /-- For `g` in `U(diag ε)`, the determinant of the block diagonal part of `g` has absolute value at
 least `(‖g‖ / 2)²`, where `‖g‖` is the L² operator norm. -/
 theorem sq_le_norm_det_blockDiagPart (g : USign ε) [Nonempty n] :
@@ -674,7 +672,7 @@ theorem rightRegularL2_toL2_eq_smear (hg : l.HasLargeGap A) {y : l.DsModule} {α
         ∫ u : USign ε, α.val.val u⁻¹ * l.dsCoeff (x * g * u :) =
       ∫ u : USign ε, α.val.val u⁻¹ *
         ∫ x : USign ε, conj (toSimpleFunc w x) * l.dsCoeff (x * g * u :) := by
-    simpa using (integral_conv (· * g) (hw.inner_const 1) (integrable_bump_inv_smul 1 α)
+    simpa using (integral_conv (· * g) (hw.inner_const 1) (integrable_bump_inv_smul (E := ℂ) 1 α)
       (.of_continuous ⟨1, norm_dsCoeff_le_one hg⟩)).1
   rw [hg.inner_smear_rightRegularL2_toL2_dsGenerator, ← toLp_toSimpleFunc w]
   simpa [toL2, inner_toLp_rightRegularL2_toLp, -map_mul, ← hα, mul_left_comm, mul_comm,

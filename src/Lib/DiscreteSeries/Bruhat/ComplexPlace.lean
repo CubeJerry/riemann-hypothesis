@@ -252,18 +252,16 @@ lemma measurable_cellDensity {l : ℕ} : Measurable (cellDensity 𝔰 l) := by
   delta cellDensity
   measurability
 
-/-- For `1 < ‖c‖` the boost `w = cellChart 𝔰 ϱ c` has `h(z, w z) = c`: this is the entry at
+/-- For `1 ≤ ‖c‖` the boost `w = cellChart 𝔰 ϱ c` has `h(z, w z) = c`: this is the entry at
 (`top`, `top`) of the matrix `realFrameGram` of products of the frame with its translate by `w`,
 `top` being the position of `z`. -/
-lemma realFrameGram_cellChart {c : ℂ} (hc : 1 < ‖c‖) :
+lemma realFrameGram_cellChart {c : ℂ} (hc : 1 ≤ ‖c‖) :
     realFrameGram (cellChart 𝔰 𝔰.ϱ c) 𝔰.top 𝔰.top = c := by
-  simp [cellChart_top_of_one_le hc.le, cellBoost, U.of, middleGram, splitGram, frameGram,
+  simp [cellChart_top_of_one_le hc, cellBoost, U.of, middleGram, splitGram, frameGram,
     Matrix.mul_apply]
 
 /-! ### The top floor: Cartan decomposition and the hyperboloid -/
 
--- Keeps definitional checks from unfolding the finite sums.
-seal Finset.sum in
 /-- Cartan decomposition of `U(V_ϱ)`, the isometry group of the form `middleGram 1` (diagonal: 1 on
 X₀, indexed by κ, and −1 at z). Let `σ` fix the basis vectors of the floors below the top
 (`σ ∈ floorGroup ϱ`) and let `c = h(z, σ z)`, the last diagonal entry of `realFrameGram σ`, have

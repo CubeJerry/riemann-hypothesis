@@ -106,6 +106,13 @@ lemma Exchange.modTransposedLift_eq_sum (α : ∀ (M : Type) [Fintype M], AutCha
   rw [modTransposedLift, modDatum_eq_sum]
   simp
 
+/-- When `conj (K a) = c * K' a`, conjugating the integral of `K * f` gives `c` times
+the integral of `K'` against the conjugate of `f`. -/
+lemma Exchange.conj_integral_mul {α : Type*} [MeasurableSpace α] {c : ℂ} {K K' : α → ℂ}
+    (hK : ∀ a, conj (K a) = c * K' a) (μ : Measure α) (f : α → ℂ) :
+    conj (∫ a, K a * f a ∂μ) = c * ∫ a, K' a * conj (f a) ∂μ := by
+  simp [← integral_conj, hK, mul_assoc, integral_const_mul]
+
 /-- The theta lift of a function `y`, with finite datum `Ψ` modulo `𝔪` and polynomial `Φ` at
 infinity, is the integral of `y` against the theta kernel `modKernel`. -/
 lemma Exchange.lift_modDatum_apply (α β : AutChar E) {𝔪 : Modulus E}
@@ -198,9 +205,8 @@ theorem Exchange.IsEdgeFamily.exists_inner_modLift_eq_inner_modTransposedLift
     have h_kernel : (modLift S T (a j) Φ Ψ (typeKernel l s) (k' false) y).val g =
         ∫ g' : G E s, modKernel S T (a j N) (a j N') 𝔪 Ψ Φ g' g * y.val g' ∂S.quotMeasure :=
       congrFun ((h_edge.isArrow_lift S T Ψ j).coe_formLift y) g
-    rw [h_kernel]
-    simp [L, b, Ψ₀, y', lift_modDatum_apply, integral_neg_quotMeasure, formNegEquiv_apply_neg,
-      ← integral_conj, h_neg, mul_assoc, integral_const_mul]
+    rw [h_kernel, conj_integral_mul (fun g' ↦ h_neg (a j N) (a j N') 𝔪 Ψ Φ g' g)]
+    simp [L, b, Ψ₀, y', lift_modDatum_apply, integral_neg_quotMeasure, formNegEquiv_apply_neg]
   have h_trade : T.petersson x.val (star L) =
       κ * ⟪modTransposedLift S.neg T b Φ' Ψ₀ (k' false) (typeKernel l (-s)) x, y'⟫ :=
     hκ j S.neg T 𝔪 Ψ₀ y' x
@@ -511,10 +517,6 @@ theorem exists_hasSum_inner_triangleFirstLift {P : Parameters} (D : Data P) (z :
   · -- if `v = 0` then the lift of `y` has norm zero
     apply (h_rallis ϑ y).1
     rw [← inner_self_eq_zero (𝕜 := ℂ), ← hv, hv_zero, inner_zero_left]
-
--- The index type of the node `(i, n + 1)` unfolds to a sum type, and `kernelPair l s false` to
--- `typeKernel l s`; rewriting below has to see through both.
-attribute [local implicit_reducible] Data.GridIndex BlockIndex kernelPair
 
 omit [CMType E] [WeilData E] [Fintype N] [DecidableEq N] [Fintype N'] [DecidableEq N'] in
 /-- Every polynomial `P` is the signed transpose `flipPoly s t` of the polynomial obtained from some
