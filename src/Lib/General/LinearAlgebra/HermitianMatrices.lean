@@ -73,13 +73,6 @@ lemma New.norm_det_sq_le_of_posSemidef {A B : Matrix ι ι ℂ} (h : (fromBlocks
   have h_left : ‖(A * Q⁻¹ * Aᴴ).det‖ = ‖A.det‖ ^ 2 / ‖Q.det‖ := by simp [field]
   rwa [h_left, div_le_iff₀ (norm_pos_iff.2 hQ)] at h_det
 
-/-- Gram–Schmidt for a positive definite matrix `G`: there is a lower triangular matrix `Γ` whose
-columns are orthonormal for `G`. -/
-lemma New.exists_lowerTriangular_conjTranspose_mul_mul_eq_one {m : ℕ}
-    {G : Matrix (Fin m) (Fin m) ℂ} (hG : G.PosDef) :
-    ∃ Γ : Matrix (Fin m) (Fin m) ℂ, (∀ a b : Fin m, a < b → Γ a b = 0) ∧ Γᴴ * G * Γ = 1 :=
-  PosDef.exists_isUpperTriangular_conjTranspose_mul_mul_eq_one (n := OrderDual (Fin m)) hG
-
 end PosSemidefDet
 
 /-!
@@ -176,6 +169,7 @@ theorem jacobi_complementary_minor (hx : x.det ≠ 0) :
   rw [eq_div_iff hx, mul_comm]
   simpa [principalMinor, toSquareBlockProp, toBlock, Function.comp_def] using h.symm
 
+/-- The principal minor map on complex matrices is continuous. -/
 @[fun_prop]
 theorem continuous_principalMinor : Continuous fun y : Matrix n n ℂ ↦ principalMinor y p := by
   simp only [principalMinor_eq_det]
@@ -183,9 +177,11 @@ theorem continuous_principalMinor : Continuous fun y : Matrix n n ℂ ↦ princi
 
 /-! ### Special cases, products and reindexing -/
 
+/-- When the predicate `p` holds for all indices, the principal minor equals the determinant. -/
 theorem principalMinor_of_forall (hp : ∀ i : n, p i) : principalMinor x p = x.det := by
   simp [principalMinor_eq_det, hp]
 
+/-- When the predicate `p` holds for no indices, the principal minor equals 1. -/
 theorem DiscreteSeries.principalMinor_of_forall_not (hp : ∀ i : n, ¬p i) :
     principalMinor x p = 1 := by
   simp [principalMinor_eq_det, hp]

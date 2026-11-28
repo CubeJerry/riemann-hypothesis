@@ -6,9 +6,11 @@ import Mathlib.CategoryTheory.Shift.Basic
 public import Lib.ClassField.GaloisCohomology.ShapiroCorestriction
 public import Lib.ClassField.Places.DecompositionCyclotomic
 public import Lib.General.Groups.ProfiniteCharacters
+import TauCeti.FieldTheory.Normal.Embeddings
 import Lib.Adelic.Hecke.ClassSums
 import Lib.ClassField.Places.LocalFields
 import Lib.ClassField.Places.ProfiniteGalois
+import TauCeti.FieldTheory.GaloisCohomology.Hilbert90
 
 /-!
 # Cup products, Hilbert 90, Kummer cocycles and cyclic symbols in Galois cohomology
@@ -392,33 +394,28 @@ include K
 Every continuous 1-cocycle `f` of `Γ` with values in `Ωˣ` is a coboundary: `f g = g m / m` for some
 `m`, written additively as `unitsRep g m - m`. -/
 lemma hilbert90_unitsRep : ∃ m : DiscreteUnits Ω, ∀ g : Γ, f.val g = unitsRep g m - m := by
-  obtain ⟨hf_cont, hf_cocycle⟩ : Continuous f.val ∧
-      ∀ g h : Γ, f.val (g * h) = f.val g + unitsRep g (f.val h) := f.property
-  -- The continuous map `f` to a discrete space is constant on an open normal subgroup `U`. (The
-  -- lemma is stated for maps on `Γ × Y`; here the second factor `Y = Γ` is not used.)
-  obtain ⟨U, hU_const⟩ := exists_openNormalSubgroup_apply_eq (Y := Γ) hf_cont.fst'
-  have hU (u : Γ) (hu : u ∈ U) : f.val u = 0 :=
-    (hU_const u hu 1).trans (by simpa using hf_cocycle 1 1)
-  -- The action `x ↦ f g * g • x` on `Ω` is semilinear, and `U` fixes `1`.
-  let τ : Representation ℤ Γ Ω :=
-    { toFun g := ((f.val g).toMul : Ω) • toLinearMap ℤ Ω g
-      map_one' := by aesop
-      map_mul' := by simp [ext_iff, hf_cocycle, mul_smul] }
-  have τ_smul (g : Γ) (c y : Ω) : τ g (c • y) = (g • c) • τ g y := by simp [τ, field]
-  have τ_one_of_mem (g : Γ) (hg : g ∈ (U : Subgroup Γ)) : τ g 1 = 1 := by simp [τ, hU g hg]
-  -- By Galois descent a vector fixed by `U` lies in the `Ω`-span of the `τ`-invariant vectors. So
-  -- there is an invariant `x ≠ 0`, and `f g * g • x = x` makes `f` the coboundary of `x⁻¹`.
-  have one_mem : (1 : Ω) ∈ span Ω {y : Ω | ∀ g : Γ, τ g y = y} :=
-    mem_span_fixed (MonoidHom.id Γ) τ τ_smul τ_one_of_mem
-      (fixingSubgroup_fixedFieldOf (U : Subgroup Γ)).le
-  obtain ⟨x, hx, hx0⟩ : ∃ x : Ω, (∀ g : Γ, τ g x = x) ∧ x ≠ 0 := by
-    by_contra! h
-    exact one_ne_zero ((mem_bot Ω).mp (mem_span.mp one_mem ⊥ h))
-  refine ⟨-DiscreteUnits.ofNeZero x hx0, fun g ↦ ?_⟩
-  -- In `Ω` the goal reads `f g = x / g • x`.
-  have h_val : ((f.val g).toMul : Ω) = x / g • x :=
-    (eq_div_iff ((smul_ne_zero_iff_ne g).mpr hx0)).mpr (hx g)
-  simpa [DiscreteUnits.ext_iff, field] using h_val
+  let e := proGaloisEquiv (K := K) (Ω := Ω) Γ
+  -- Transport the cocycle to the automorphism group, with coefficients written multiplicatively.
+  let u (σ : Gal(Ω/K)) : Ωˣ := (f.val (e.symm σ)).toMul
+  have h_loc : IsLocallyConstant u :=
+    ((IsLocallyConstant.iff_continuous _).2
+      (f.property.1.comp e.symm.continuous)).comp Additive.toMul
+  -- The equivalence respects the action on coefficients, so the cocycle identity transfers.
+  have h_cocycle : groupCohomology.IsMulCocycle₁ u := by
+    intro σ τ
+    apply Units.ext
+    have h_action (x : Ω) : e.symm σ • x = σ x :=
+      (proGaloisEquiv_apply (Γ := Γ) (K := K) (e.symm σ) x).symm.trans
+        (congrArg (fun g : Gal(Ω/K) ↦ g x) (e.apply_symm_apply σ))
+    simpa [u, AlgEquiv.smul_units_def, val_unitsRep, h_action, mul_comm] using
+      congrArg (fun a : DiscreteUnits Ω ↦ (a.toMul : Ω))
+        (f.property.2 (e.symm σ) (e.symm τ))
+  -- Continuous Hilbert 90 gives a coboundary on the automorphism group.
+  obtain ⟨x, hx⟩ := TauCeti.isMulCoboundary₁_of_isMulCocycle₁_of_isLocallyConstant h_cocycle h_loc
+  -- Pull the coboundary back to `Γ` and return to additive notation.
+  refine ⟨Additive.ofMul x, fun g ↦ Additive.toMul.injective (Units.ext ?_)⟩
+  simpa [u, AlgEquiv.smul_units_def, val_unitsRep, e, proGaloisEquiv_apply] using
+    (congrArg Units.val (hx (e g))).symm
 
 /-- Kummer cocycle. Let `Ω` be algebraically closed of characteristic 0, and let `Γ`, the Galois
 group of `Ω / K`, fix the `n`-th roots of unity (`h_cyc`: the cyclotomic character mod `n` is
@@ -729,26 +726,27 @@ separable and `Ω` algebraically closed. Then the norm from `U` to `Γ`
 lemma corestrictH0_ofBase_eq_norm (U : OpenSubgroup Γ) [IsProGalois U.toSubgroup L Ω] (y : Lˣ) :
     (unitsModule Γ).corestrictH0 U (DiscreteUnits.ofBase U.toSubgroup Ω (Additive.ofMul y)) =
       DiscreteUnits.ofBase Γ Ω (Additive.ofMul (y.map (Algebra.norm K))) := by
-  -- Both sides are products of conjugates of `y`: over the cosets `gU` on the left, over the
-  -- `K`-embeddings of `L` on the right. Restriction to `L` matches the two index sets.
-  obtain ⟨h_fix : U.toSubgroup = fixingSubgroup Γ (Set.range (algebraMap L Ω)),
-    h_index : U.toSubgroup.index = Module.finrank K L⟩ :=
-    eq_fixingSubgroup_of_isProGalois (L := L) (V := U.toSubgroup)
-  let res (x : Γ ⧸ U.toSubgroup) : L →ₐ[K] Ω := (toAlgHom K Ω x.out).domRestrict L
-  -- Two elements with the same restriction differ by an element fixing `L`, that is, of `U`.
-  have res_inj : Injective res := fun x x' h_res ↦ by
-    refine out_equiv_out.mp (leftRel_apply.mpr (h_fix.ge ?_))
-    -- `res x l` is `x.out • l`, with `l` viewed in `Ω`.
-    have h_smul_eq (l : L) : x'.out • algebraMap L Ω l = x.out • algebraMap L Ω l :=
-      (DFunLike.congr_fun h_res l).symm
-    simpa [mem_fixingSubgroup_iff, mul_smul, inv_smul_eq_iff] using h_smul_eq
-  -- There are at most `[L : K] = [Γ : U]` embeddings.
-  have res_bij : Bijective res :=
-    res_inj.bijective_of_nat_card_le ((card_algHom_le_finrank K L Ω).trans h_index.ge)
+  let φ : L →ₐ[K] Ω := IsScalarTower.toAlgHom K L Ω
+  let : MulAction Γ (L →ₐ[K] Ω) :=
+    MulAction.compHom _ (MulSemiringAction.toAlgAut Γ K Ω)
+  have : MulAction.IsPretransitive Γ (L →ₐ[K] Ω) :=
+    MulAction.isPretransitive_compHom (G := L →ₐ[K] Ω) (toAlgAut_surjective Γ)
+  have h_stab : U.toSubgroup = MulAction.stabilizer Γ φ := by
+    rw [(eq_fixingSubgroup_of_isProGalois (L := L) (V := U.toSubgroup)).1]
+    ext g
+    rw [mem_fixingSubgroup_iff, MulAction.mem_stabilizer_iff]
+    exact ⟨fun h ↦ AlgHom.ext fun x ↦ h _ ⟨x, rfl⟩, fun h _ ⟨x, hx⟩ ↦
+      hx ▸ DFunLike.congr_fun h x⟩
+  -- Cosets of the stabilizer of `φ` are the embeddings of `L` into `Ω`.
+  let e := (Subgroup.quotientEquivOfEq h_stab).trans (TauCeti.quotientStabilizerEquiv Γ φ)
+  have he (q : Γ ⧸ U.toSubgroup) : e q = q.out • φ := by
+    conv_lhs => rw [← QuotientGroup.out_eq' q]
+    dsimp only [e, Equiv.trans_apply]
+    rw [Subgroup.quotientEquivOfEq_mk, TauCeti.quotientStabilizerEquiv_mk]
   refine DiscreteUnits.ext ?_
   suffices h_prod : ∏ x : Γ ⧸ U.toSubgroup, x.out • algebraMap L Ω y = ∏ σ : L →ₐ[K] Ω, σ y by
     simpa [corestrictH0, norm_eq_prod_embeddings, sum] using h_prod
-  exact Finset.prod_bijective res res_bij (by simp) fun x _ ↦ rfl
+  exact Fintype.prod_equiv e _ _ fun x ↦ by rw [he]; rfl
 
 /-- If the kernel of the character `χ : Γ → ℚ/ℤ` is the Galois group of `Ω / L` (`J`), with `L / K`
 finite separable and `Ω` algebraically closed, then the symbol `(χ, x)` (`New.cyclicClass`) of `x`

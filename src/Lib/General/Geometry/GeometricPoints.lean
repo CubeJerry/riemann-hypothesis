@@ -30,8 +30,9 @@ separating over a stalk of the base and on a product of flat schemes.
 
 * `New.exists_section_mem`, `New.exists_point_mem`: a nonempty locally closed set in a scheme
   locally of finite type over `k` contains a `k`-point.
-* `New.IsDenseFamily.of_fibres`: if the complex points `η i` are dense in `S` and `A` is smooth over
-  `S`, a family containing every complex point of `A` over the `η i` is dense in `A`.
+* `New.IsDenseFamily.of_fibres`: if the complex points `η i` are dense in `S` and `A ⟶ S` is open
+  and locally of finite type, a family containing every complex point of `A` over the `η i` is
+  dense in `A`.
 * `New.AddObj.property_of_isOpenImmersion`: take a commutative group scheme (`New.AddObj`) locally
   of finite type over `k`. A property induced by a property of ring maps spreads from a nonempty
   open part to the whole scheme, by translation.
@@ -42,7 +43,7 @@ separating over a stalk of the base and on a product of flat schemes.
   `A` to that stalk.
 * `New.IsSeparatingFamily.prod`: separating points of `B`, paired with dense points of the fibres of
   `A` over their images in `S`, separate `A ×_S B`, for `A`, `B` flat and locally of finite type,
-  `A` reduced, and `S` reduced, locally noetherian, with finitely many dense complex points.
+  `A` reduced, and `S` locally noetherian with dense complex points.
 
 Notions from other files:
 * `New.IsDenseFamily`: the images of a family of complex points are dense.
@@ -90,16 +91,17 @@ lemma exists_point_mem {k : Type*} [Field k] [IsAlgClosed k] (X : Over (Spec (.o
   obtain ⟨x, hx_section, hx_mem⟩ := exists_section_mem X.hom hS hS_ne
   exact ⟨homMk x hx_section, hx_mem⟩
 
-/-- Let `f : A ⟶ S` be smooth and `η i` complex points with dense images in `S`
-(`New.IsDenseFamily`). If every complex point of `A` over some `η i` is one of the points `ξ z`,
+/-- Let `f : A ⟶ S` be open and locally of finite type, and let `η i` be a dense family of
+complex points of `S`. If every complex point of `A` over some `η i` is one of the points `ξ z`,
 then the `ξ z` have dense images in `A`. -/
 lemma IsDenseFamily.of_fibres {A S : Scheme} {κ Z : Type} {η : κ → (Spec (.of ℂ) ⟶ S)}
-    (hη : IsDenseFamily η) (f : A ⟶ S) [s : Smooth f] {ξ : Z → (Spec (.of ℂ) ⟶ A)}
+    (hη : IsDenseFamily η) (f : A ⟶ S) [LocallyOfFiniteType f] (h_open : IsOpenMap f)
+    {ξ : Z → (Spec (.of ℂ) ⟶ A)}
     (h_all : ∀ (i : κ) (y : Spec (.of ℂ) ⟶ A), y ≫ f = η i → ∃ z : Z, ξ z = y) :
     IsDenseFamily ξ := by
   -- As `f` is open, the points of `A` over the `η i` are dense; so it suffices to see that each
   -- of them lies in the closure of the `ξ z`.
-  refine (hη.preimage f.isOpenMap).induction (fun x ⟨i, hx⟩ ↦ mem_closure_iff.2 fun U hU hxU ↦ ?_)
+  refine (hη.preimage h_open).induction (fun x ⟨i, hx⟩ ↦ mem_closure_iff.2 fun U hU hxU ↦ ?_)
     isClosed_closure
   -- An open neighbourhood `U` of `x` contains a complex point over `η i`, which is some `ξ z`.
   let V : A.Opens := ⟨U, hU⟩
@@ -422,37 +424,48 @@ lemma stalk_eq_zero_of_dense {S : Scheme} [IsReduced S] {J : Type} [Finite J]
 
 open MonoidalCategory IsSchemeTheoreticallyDominant LocallyOfFiniteType CartesianMonoidalCategory
 
-/-- Let X be reduced, locally noetherian, flat and locally of finite type over a reduced locally
-noetherian scheme S with finitely many complex points whose images are dense. Then the smooth
-locus of X over S is dense in X. -/
-lemma dense_smoothLocus_of_isDenseFamily {S : Scheme} [IsReduced S] [IsLocallyNoetherian S]
-    {J : Type} [Finite J] {ξ : J → (Spec (.of ℂ) ⟶ S)} (hξ : IsDenseFamily ξ) {X : Scheme}
-    (f : X ⟶ S) [LocallyOfFiniteType f] [Flat f] [IsReduced X] :
+/-- If complex points are dense in a scheme, each stalk has characteristic zero. -/
+lemma IsDenseFamily.charZero_stalk {S : Scheme} {J : Type}
+    {ξ : J → (Spec (.of ℂ) ⟶ S)} (hξ : IsDenseFamily ξ) (s : S) :
+    CharZero (S.presheaf.stalk s) := by
+  refine ⟨fun n m h_eq ↦ ?_⟩
+  -- The two constants agree on an open neighbourhood of `s`.
+  have h_germ : S.presheaf.Γgerm s (n : Γ(S, ⊤)) = S.presheaf.Γgerm s (m : Γ(S, ⊤)) := by
+    simpa using h_eq
+  obtain ⟨U, hsU, i, j, hU⟩ := S.presheaf.germ_eq s (by simp) (by simp) _ _ h_germ
+  have h_nat : (n : Γ(S, U)) = m := by simpa using hU
+  -- Evaluate at a complex point of that neighbourhood.
+  obtain ⟨k, hk⟩ := hξ.exists_mem_open U.isOpen ⟨s, hsU⟩
+  let ev := evalSection (ξ k) (landsIn_iff_mem.mpr hk)
+  exact Nat.cast_injective (R := ℂ) (by simpa using congrArg ev.hom h_nat)
+
+/-- A flat, locally finitely presented morphism from a reduced scheme to a scheme with dense
+complex points has dense smooth locus. -/
+lemma dense_smoothLocus_of_isDenseFamily {S : Scheme} {J : Type}
+    {ξ : J → (Spec (.of ℂ) ⟶ S)} (hξ : IsDenseFamily ξ) {X : Scheme}
+    (f : X ⟶ S) [LocallyOfFinitePresentation f] [Flat f] [IsReduced X] :
     Dense (f.smoothLocus : Set X) := by
-  -- At a generic point `a` of `X` the stalks of `X` and `S` are fields. The second maps to `ℂ`,
-  -- so it has characteristic zero and is perfect, and the extension is formally smooth.
+  -- At a generic point `a` of `X` the stalks of `X` and `S` are fields. The second has
+  -- characteristic zero and is perfect, so the extension is formally smooth.
   refine (dense_iff_closure_eq.2 genericPoints.closure).mono fun a ha ↦ ?_
   have hX : IsField (X.presheaf.stalk a) :=
     isField_stalk_of_closure_mem_irreducibleComponents _ a ha
   have hS : IsField (S.presheaf.stalk (f a)) :=
     IsLocalHom.isField (stalkMap_injective_of_flat f a) hX
-  -- As `1 ≠ 0` in the stalk, some `ξ i` factors through it.
-  obtain ⟨ψ⟩ : Nonempty (S.presheaf.stalk (f a) ⟶ .of ℂ) := by_contra fun h_empty ↦
-    one_ne_zero (stalk_eq_zero_of_forall_factor hξ 1 fun _ ψ _ ↦ (h_empty ⟨ψ⟩).elim)
   let : Field (X.presheaf.stalk a) := hX.toField
   let : Field (S.presheaf.stalk (f a)) := hS.toField
-  have : CharZero (S.presheaf.stalk (f a)) := ψ.hom.charZero
+  have : CharZero (S.presheaf.stalk (f a)) := hξ.charZero_stalk (f a)
   have h_ft : (f.stalkMap a).hom.EssFiniteType := LocallyOfFiniteType.stalkMap f a
   algebraize [(f.stalkMap a).hom]
   exact Algebra.FormallySmooth.of_perfectField
 
-/-- Let S be reduced and locally noetherian, with a finite family of complex points whose images are
-dense. Let A and B be flat and locally of finite type over S, with A reduced. Let η_w be complex
+/-- Let S be locally noetherian with dense complex points. Let A and B be flat and
+locally of finite type over S, with A reduced. Let η_w be complex
 points of S, and let y_w be complex points of B over η_w that separate B, meaning B is reduced and
 the images of the y_w are dense. Suppose that for each w the complex points e_w(v) of A over η_w
 have dense image in the fibre A ×_S Spec ℂ over η_w. Then the complex points (e_w(v), y_w) separate
 A ×_S B: it is reduced and their images are dense (`New.IsSeparatingFamily`). -/
-lemma IsSeparatingFamily.prod {S : Scheme} [IsReduced S] {A B : Over S} {V W J : Type} [Finite J]
+lemma IsSeparatingFamily.prod {S : Scheme} {A B : Over S} {V W J : Type}
     {ξ : J → (Spec (.of ℂ) ⟶ S)} {η : W → (Spec (.of ℂ) ⟶ S)} [LocallyOfFiniteType A.hom]
     [LocallyOfFiniteType B.hom] [IsLocallyNoetherian S] [Flat A.hom] [Flat B.hom]
     {y : ∀ w : W, Over.mk (η w) ⟶ B} {e : ∀ w : W, V → (Over.mk (η w) ⟶ A)}

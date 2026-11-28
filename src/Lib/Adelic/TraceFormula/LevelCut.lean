@@ -62,13 +62,6 @@ lemma commute_offPlace_ofSplitPlace (hw : w.IsSplit) (g : Gf E n) (x : GL n (Loc
   refine (Gf.commute_supportedOn_trivialOn (ofSplitPlace_mem_supportedOn hw x) ?_).symm
   simp [Gf.mem_trivialOn, atPlace_offPlace]
 
-/-- If `K` contains the maximal compact subgroup at the split place `w`, it contains the image of
-`GL_n(𝒪_w)` under `ofSplitPlace`. -/
-lemma ofSplitPlace_mem_of_maxCompactAt_le (hw : w.IsSplit) {K : Subgroup (Gf E n)}
-    (hK : maxCompactAt n w ≤ K) {x : GL n (LocField w)} (hx : x ∈ localIntGL n w) :
-      ofSplitPlace hw x ∈ K :=
-  hK ⟨(ofSplitPlace_mem_stdLevel hw x).2 hx, ofSplitPlace_mem_supportedOn hw x⟩
-
 section Algebraic
 
 variable (hw : w.IsSplit) {K : Subgroup (Gf E n)} {J : Subgroup (GL n (LocField w))}
@@ -342,7 +335,7 @@ lemma lineRelation_offAction (hw : w.IsSplit) (hK : maxCompactAt n w ≤ K) (i :
         commute_offAction_localAction hw ρ hK (lineStabilizer_le_localIntGL w i) a _ }
 
 /-- Let the level `K` contain the maximal compact subgroup at the split place `w`, and let `a` be
-in `universalLevelAlgebra K` (it maps the space of `K`-fixed vectors to itself in every
+in `universalLevelAlgebra ℂ K` (it maps the space of `K`-fixed vectors to itself in every
 representation) and be a combination of elements that are integral at `w`. Consider two unitary
 representations whose spaces of vectors of level `K'`, the level cut by the stabiliser of a line at
 `w`, are finite-dimensional. Suppose that for all `l`, `m` the element
@@ -355,7 +348,7 @@ theorem trace_eq_of_trace_cutLevel_eq (hw : w.IsSplit) (hK : maxCompactAt n w �
     (hρ' : ∀ (g : Gf E n) (x y : M'), ⟪ρ' g x, ρ' g y⟫_ℂ = ⟪x, y⟫_ℂ)
     [Module.Finite ℂ (levelSpace ρ (cutLevel K w (lineStabilizer w i)))]
     [Module.Finite ℂ (levelSpace ρ' (cutLevel K w (lineStabilizer w i)))]
-    {a : ℂ[Gf E n]} (ha : a ∈ universalLevelAlgebra K)
+    {a : ℂ[Gf E n]} (ha : a ∈ universalLevelAlgebra ℂ K)
     (h_int : a ∈ spanOn ℂ {g : Gf E n | g.atPlace w ∈ localIntGL n w})
     (h_trace : ∀ (l m : ℕ) (S : End ℂ (levelSpace ρ (cutLevel K w (lineStabilizer w i))))
       (S' : End ℂ (levelSpace ρ' (cutLevel K w (lineStabilizer w i)))),

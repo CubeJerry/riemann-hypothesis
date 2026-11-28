@@ -7,11 +7,12 @@ import Mathlib.GroupTheory.CosetCover
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.Invariant.Galois
 import Mathlib.RingTheory.PicardGroup
-import Mathlib.RingTheory.Valuation.LocalSubring
 import TauCeti.RingTheory.MvPolynomial.Homogeneous
+import TauCeti.AlgebraicGeometry.Morphisms.SchemeTheoreticallyDominant
 public import Lib.General.Geometry.ProjectiveSpace
 public import Lib.General.Geometry.EtaleCharts
 import Lib.General.Algebra.MultivariatePolynomials
+import Lib.General.Algebra.ValuativeIntegrality
 import Lib.General.Geometry.PointsOfProperSchemes
 import Lib.PadicComparison.Descent.TestCategory
 
@@ -137,17 +138,6 @@ lemma IsHomogeneousSolution.aeval_eq_zero_of_transcendental [Algebra B L] [IsSca
 
 lemma IsHomogeneousSolution.refl : IsHomogeneousSolution k v v := by tauto
 
-/-- An element of a field `L` that lies in every valuation ring containing the image of `f` is
-integral over that image. -/
-@[stacks 090P "part (1), for the integral closure of the image of a ring map"]
-lemma isIntegralElem_of_valuationSubring {f : A →+* L} {x : L}
-    (h : ∀ V : ValuationSubring L, (∀ a : A, f a ∈ V) → x ∈ V) :
-    f.IsIntegralElem x := by
-  -- The integral closure of `A` in `L` is the intersection of the valuation rings that contain it.
-  let algebraL : Algebra A L := f.toAlgebra
-  refine (integralClosure A L).toSubring.eq_iInf_of_isIntegrallyClosedIn.ge ?_
-  simpa using fun V hV ↦ h V fun a ↦ hV isIntegral_algebraMap
-
 /-! ### Noether normalisation -/
 
 /-- Λ is a Noether normalisation of g: the Λ_0, …, Λ_d are linear forms, the values Λ_j(g) have no
@@ -249,7 +239,7 @@ lemma isIntegralElem_of_no_common_zero [Finite ι]
   -- Show `v i ∈ V` for each valuation ring `V` that contains the image of `φ`. Divide `v` by a
   -- coordinate `v j` of largest valuation. If `v j ∉ V`, the quotient reduces to a common zero
   -- of `Λ` over the residue field whose `j`-th coordinate is `1`, against `h_no_common_zero`.
-  refine isIntegralElem_of_valuationSubring fun V hV ↦ ?_
+  refine (RingHom.isIntegralElem_iff_forall_valuationSubring _ _).2 fun V hV ↦ ?_
   -- largest valuation says that each `v l` is a multiple of `v j` by some `x l ∈ V`
   have h_nonempty : Nonempty ι := ⟨i⟩
   obtain ⟨j, hj⟩ : ∃ j : ι, ∀ l : ι, ∃ x : V, x • v j = v l := exists_max (V.valuation ∘ v)
@@ -670,10 +660,11 @@ lemma IsCoordsWithUnit.exists_descend_of_injective (hξ : IsCoordsWithUnit L ξ 
   have hv : IsUnit (v i) := by simp [hvi]
   obtain ⟨j, _, hj, rfl⟩ := hL.out.exists_isClosedImmersion
   obtain ⟨t, ht_over, ht⟩ := exists_isHomogeneousCoords (Opposite.unop ((specAlg k R).obj A)).hom hv
+  let q := Spec.map (CommRingCat.ofHom φ.hom.toRingHom)
   -- `ξ` and the image of `t` both have coordinates `g` and lie over the same point of `Spec R`.
-  have h_image : ξ.down.left ≫ j = Spec.map (CommRingCat.ofHom φ.hom.toRingHom) ≫ t := by
+  have h_image : ξ.down.left ≫ j = q ≫ t := by
     have h_coords_image : LineBundle.IsHomogeneousCoords ((hyperplaneBundle ι).pull Limits.prod.fst)
-        (Spec.map (CommRingCat.ofHom φ.hom.toRingHom) ≫ t) g :=
+        (q ≫ t) g :=
       h_coord ▸ (ht.map (isLinearSystem_hyperplaneBundle.pull _) hv _).smul hgi_unit
     refine isProjEmbedding_projSpace.eq_of_isHomogeneousCoords ?_ hξ.left h_coords_image
       (LineBundle.exists_landsIn _ _)
@@ -685,14 +676,13 @@ lemma IsCoordsWithUnit.exists_descend_of_injective (hξ : IsCoordsWithUnit L ξ 
       _ = u.left ≫ (t ≫ Limits.prod.snd) :=
         ξ.down.w.trans (u.w.symm.trans (congrArg (u.left ≫ ·) ht_over).symm)
       _ = _ := (assoc ..).symm
-  -- The ideal `J` cutting out the locus where `t` lies in `Y` is killed by `φ`, hence is zero.
-  obtain ⟨J, -, hJ⟩ := exists_ideal_le_ker_iff_factors j t
-  have h_ker_le : RingHom.ker φ.hom.toRingHom ≤ RingHom.ker (RingHom.id A) :=
-    ((RingHom.injective_iff_ker_eq_bot _).mp φ_inj).le.trans bot_le
-  have hJ0 : J ≤ RingHom.ker (RingHom.id A) :=
-    ((hJ φ.hom.toRingHom).mpr ⟨ξ.down.left, h_image⟩).trans h_ker_le
-  obtain ⟨x, rfl⟩ : ∃ x : Spec (CommRingCat.of A) ⟶ Y.left, x ≫ j = t := by
-    simpa using (hJ (RingHom.id A)).mp hJ0
+  -- Schematic dominance of `q` implies that `t` and `q ≫ t` have the same kernel ideal sheaf.
+  have : IsSchemeTheoreticallyDominant q := (isSchemeTheoreticallyDominant_SpecMap_iff _).mpr φ_inj
+  have h_ker : j.ker ≤ t.ker := by
+    rw [← q.ker_comp_of_isSchemeTheoreticallyDominant t, ← h_image]
+    exact Scheme.Hom.le_ker_comp _ _
+  obtain ⟨x, rfl⟩ : ∃ x : Spec (CommRingCat.of A) ⟶ Y.left, x ≫ j = t :=
+    ⟨IsClosedImmersion.lift j t h_ker, IsClosedImmersion.lift_fac j t h_ker⟩
   -- `x` lies over `Spec R`, since `x ≫ j` does
   have h_x_over : x ≫ Y.hom = (Opposite.unop ((specAlg k R).obj A)).hom := by
     rw [← hj, ← Category.assoc]
@@ -775,7 +765,7 @@ lemma IsCoordsWithUnit.exists_app_eq_algebraMap_of_isHomogeneousSolution
   -- The value at `ξ` lies in every valuation ring `V` over `k`: dividing by the coordinate of
   -- largest valuation shows that `ξ` comes from a point over `V`. So it is integral over `k`.
   have h_integral : (algebraMap k F).IsIntegralElem ((f.app _ ξ).down 0) := by
-    refine isIntegralElem_of_valuationSubring fun V hV ↦ ?_
+    refine (RingHom.isIntegralElem_iff_forall_valuationSubring _ _).2 fun V hV ↦ ?_
     have h_max : ∃ i : ι, ∀ l : ι, ∃ x : V, x • g i = g l := Finite.exists_max (V.valuation ∘ g)
     choose i w hw using h_max
     -- the inclusion of `V`, as a subalgebra of `F`

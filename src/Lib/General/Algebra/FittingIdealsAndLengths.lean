@@ -78,6 +78,16 @@ variable {O O' Γ n A : Type*} [CommRing O] [CommRing O'] [Fintype n] [Decidable
 /-- O is a discrete valuation ring (in particular a domain). -/
 class DVR (O : Type*) [CommRing O] extends IsDomain O, IsDiscreteValuationRing O
 
+/-- In a discrete valuation ring, a nonzero `a` divides the `v(a)`-th power of every nonunit.
+Each factor contributes at least one to the valuation. -/
+lemma dvd_pow_addVal_of_not_isUnit [IsDomain O] [IsDiscreteValuationRing O] {a b : O}
+    (ha : a ≠ 0) (hb : ¬ IsUnit b) : a ∣ b ^ (addVal O a).toNat := by
+  have h_b : (1 : ℕ∞) ≤ addVal O b :=
+    Order.one_le_iff_ne_zero.mpr (mt addVal_eq_zero_iff.mp hb)
+  rw [← addVal_le_iff_dvd, addVal_pow]
+  simpa [nsmul_eq_mul, ENat.natCast_toNat (mt addVal_eq_top_iff.mp ha)] using
+    nsmul_le_nsmul_right h_b (addVal O a).toNat
+
 /-- The quotient ring O/aO. -/
 abbrev QuotSpan (a : O) : Type _ := O ⧸ Ideal.span {a}
 
@@ -114,13 +124,16 @@ def relationsOn : Set (Γ →₀ Matrix n n O) := {f : Γ →₀ Matrix n n O | 
 /-- The length of S/(S ∩ T) as an A-module, for submodules S, T of M. -/
 def relLength : ℕ∞ := length A (S ⧸ T.submoduleOf S)
 
+/-- The length of `S` modulo `ker f` is the length of its image `S.map f`. -/
 lemma relLength_ker : relLength S f.ker = length A (S.map f) := by
   rw [← f.range_domRestrict S]
   exact (f.domRestrict S).quotKerEquivRange.length_eq
 
+/-- The relative length of a submodule quotient equals the length of its quotient image. -/
 lemma relLength_eq_length_map_mkQ : relLength S T = length A (S.map T.mkQ) := by
   simp [← relLength_ker]
 
+/-- The length of `S` modulo `T'.comap f` equals the length of `S.map f` modulo `T'`. -/
 lemma relLength_comap : relLength S (Submodule.comap f T') = relLength (S.map f) T' := by
   rw [← T'.ker_mkQ, ← f.ker_comp, relLength_ker, map_comp, relLength_ker]
 
@@ -159,6 +172,7 @@ lemma length_map_add_length_inf_ker :
     length A (S.map f) + length A ↥(S ⊓ f.ker) = length A S := by
   rw [← relLength_ker S f, relLength_add_length_inf]
 
+/-- The relative length of the bottom submodule `⊥` equals the absolute module length. -/
 @[simp]
 lemma relLength_bot : relLength S ⊥ = length A S := by rw [← ker_id, relLength_ker, S.map_id]
 

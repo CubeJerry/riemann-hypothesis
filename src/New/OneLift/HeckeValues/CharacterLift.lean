@@ -167,6 +167,13 @@ lemma descentPair_colsPlus_apply (τ : NumberField.InfinitePlace E) (k : ℕ) :
     X.descentPair.colsPlus τ k = if k = 1 then X.rowLength τ else 0 :=
       Pi.single_apply 1 (X.rowLength τ) k
 
+omit [DecidableEq n] in
+/-- The weight of `X.descentPair` has no `colsMinus`, so the exponent `detExp` of the determinant
+vanishes at every place. -/
+@[simp]
+lemma detExp_descentPair (τ : NumberField.InfinitePlace E) : X.descentPair.detExp τ = 0 :=
+  congrFun (mixedDetExp_zero n) τ
+
 /-- The vector of derivatives, for the one-row weight of `X` and with variables scaled by `c`, of
 the theta function of the datum `ω(g, h) f`, for a finite point `(g, h)` of `U(1) × U(n)`. -/
 def kernelValue (c : ℂ) (f : 𝒮 (X.descentPair.W.hom (stdSpace E n))) (g : Gf E Unit) (h : Gf E n) :
@@ -331,8 +338,8 @@ lemma toPoly_eq_rename_fockPoly (X : LValueData E n)
   have h_intertwines := (mixedCartan n X.descentPair.colsPlus 0).intertwines g
     (weylEval (fun _ ↦ n) (mixedWeight n X.descentPair.colsPlus 0)
       (permArray fun τ i ↦ (rowEquivFin (fun _ : InfinitePlace E ↦ n) τ i : ℕ)))
-  simp only [Pi.zero_apply, Finset.sum_const_zero, Nat.cast_zero, neg_zero, weylRep,
-    MonoidHom.coe_mk, OneHom.coe_mk, zpow_zero, Finset.prod_const_one, one_smul] at h_intertwines
+  simp only [mixedDetExp_zero, Pi.zero_apply, weylRep, MonoidHom.coe_mk, OneHom.coe_mk, zpow_zero,
+    Finset.prod_const_one, one_smul] at h_intertwines
   -- `↓rowSubst_highestPoly` has to rewrite before `rowSubst` and `highestPoly` are unfolded.
   simp [DescentPair.fockPoly, -mulVec_mulVec, MixedCartanEmbedding.top, letterPoly, weylKernel,
     ↓rowSubst_highestPoly, rowSubst, fockLetters, X.one_lt_card, mixedWeight, Pi.single_apply,
@@ -371,8 +378,6 @@ lemma fockPoly_eq_schurCoeffPoly (X : LValueData E n)
   rw [h_one, dotProduct_comm, h_gram]
   simp [detPow, h_minor]
 
--- Keeps definitional checks from unfolding the finite sums.
-seal Finset.univ in
 /-- Let `X` be data for a lift from `U(1)`. The space `X.descentPair.W.hom (stdSpace E n)` is
 `Hom(W, V)`, for the standard definite spaces `W` of rank `1` and `V` of rank `card n`; `Space.θ` is
 its theta functional and `ω` the Weil action of `U(W) × U(V)` on its Schwartz space. The vector
@@ -394,19 +399,13 @@ lemma theta_pairThetaKernel_omega_fockDatum (X : LValueData E n) (x : GInf E X.d
   -- the real points act on the Fock vector alone (`pairWeil_integrated_all`); on the right the
   -- pairing is the jet along a polynomial `schurCoeffPoly` (`dotProduct_schurJet_mulVec`).
   dsimp only [DescentPair.fockDatum, kernelForm, kernelValue]
-  rw [pairWeil_integrated_all, gramForm_apply]
-  rw [show conjWeylRep (mixedWeight n X.descentPair.colsPlus X.descentPair.colsMinus)
-      X.descentPair.detExp y⁻¹ _ =
-    conjWeylMatrix (mixedWeight n X.descentPair.colsPlus X.descentPair.colsMinus)
-      X.descentPair.detExp y⁻¹ *ᵥ _ from rfl]
-  rw [mulVec_mulVec, dotProduct_mulVec, dotProduct_schurJet_mulVec, jet_jetSeries_eq_theta]
+  rw [pairWeil_integrated_all, gramForm_apply, conjWeylRep_apply, mulVec_mulVec, dotProduct_mulVec,
+    dotProduct_schurJet_mulVec, jet_jetSeries_eq_theta]
   -- Compare the Fock polynomials: `y⁻¹` moves the covector, and `x` acts trivially.
   simp only [fockPoly_eq_schurCoeffPoly, realPairWeil_schurCoeffPoly X.isLiftWeight,
     MvPolynomial.aeval_X_left_apply, star_star, one_smul, conjWeylRep_eq_one, one_apply_eq_self,
     vecMul_vecMul]
 
--- Keeps definitional checks from unfolding the finite sums.
-seal Finset.sum in
 /-- Let `X` be data for a lift from `U(1)` with all row lengths `0`, so that the weight is trivial
 and no derivative is taken. Then every coordinate of the vector valued theta kernel
 `X.kernelForm g h` is the value of the scalar theta kernel `modKernel W V a b 𝔪 Ψ P`, the function
@@ -433,7 +432,9 @@ lemma kernelForm_of_rowLength_eq_zero (X : LValueData E n) (g : Gf E Unit) (h : 
     schurJet, LinearMap.flip_apply, LinearMap.comp_apply, LinearMap.mapMatrixLinear_apply,
     LinearMap.mapMatrix_apply, Matrix.map_apply]
   rw [← LinearMap.sum_apply, ← map_sum, jet_jetSeries_eq_theta, ← pairWeil_integrated_fin, h_charW]
-  congr
+  -- This is `modKernel` at the sum of the row, so it remains to show that the sum is `1`.
+  -- Writing out `X.levelModulus 2` keeps the unifier from finding the modulus by unfolding.
+  refine congrArg (modKernel _ _ 1 _ (X.levelModulus 2) _ · (1, g) (1, h)) ?_
   -- In degree zero all basis polynomials are `1`, so `sum_schur_smul_nablaBasis` says that the
   -- row sums to `1`.
   apply C_injective ((Σ _ : InfinitePlace E, Unit) × ℕ)

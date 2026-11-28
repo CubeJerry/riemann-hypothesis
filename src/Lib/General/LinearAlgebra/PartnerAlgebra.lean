@@ -205,6 +205,25 @@ lemma firstCols_mul_invFirstRows_mul [Finite a] (h_kill : invLastRows e k * y = 
     simp [lastCols, Matrix.mul_apply, ← e.sum_comp, Fintype.sum_sum_type]
   simpa [Matrix.add_mul, Matrix.mul_assoc, h_kill] using congrArg (· * y) h_sum
 
+/-- If the rows `a` of `γ⁻¹` and `γ'⁻¹` agree, then the columns `b` of `γ'` are those of `γ`
+multiplied on the right by an invertible `h` with `det γ' = det γ * det h`. -/
+lemma Exchange.exists_firstCols_eq_mul_of_invLastRows_eq {R a b n : Type} [Fintype a] [Fintype b]
+    [DecidableEq b] [Fintype n] [DecidableEq n] [CommRing R] {e : b ⊕ a ≃ n} {γ γ' : GL n R}
+    (h_eq : invLastRows e γ = invLastRows e γ') :
+    ∃ h : GL b R, firstCols e γ' = firstCols e γ * h.val ∧ γ'.val.det = γ.val.det * h.val.det := by
+  have h_cols : firstCols e γ * (invFirstRows e γ * firstCols e γ') = firstCols e γ' :=
+    firstCols_mul_invFirstRows_mul e γ (by rw [h_eq, invLastRows_mul_firstCols])
+  let h : GL b R := .mk'' (invFirstRows e γ * firstCols e γ') <|
+    isUnit_det_of_left_inverse (B := invFirstRows e γ' * firstCols e γ) <| by
+      rw [Matrix.mul_assoc, h_cols, invFirstRows_mul_firstCols]
+  refine ⟨h, h_cols.symm, ?_⟩
+  let d : R := ((fromRows (invFirstRows e γ) (invLastRows e γ)).submatrix e.symm id).det
+  have h_one : d * γ.val.det = 1 := by
+    rw [det_fromRows_invLastRows, invFirstRows_mul_firstCols, det_one]
+  have h_mixed : d * γ'.val.det = h.val.det := by
+    simp only [d, h, h_eq, det_fromRows_invLastRows, GeneralLinearGroup.val_mk'']
+  linear_combination γ.val.det * h_mixed - γ'.val.det * h_one
+
 variable [DecidableEq a] [DecidableEq b]
 
 /-- For `g ∈ GL b O`, `f ∈ GL a O` and `k ∈ GL n O`, the matrices `firstCols e k * g` and
@@ -277,19 +296,13 @@ section Lift
 variable {R a b n : Type} [CommRing R] [Fintype n] [DecidableEq n] {F : Type} [CommRing F]
   {O : Subring F} {l m : Type} [Fintype l] [Fintype m]
 
-/-- At a matrix `M` over the subring `O`, the lift `liftIntegralFn π f` takes the value of `f` at
-the image of `M` under `π`. -/
-lemma liftIntegralFn_map_coe (π : O →+* R) (f : Matrix l m R → ℂ) (M : Matrix l m O) :
-    liftIntegralFn π f (M.map (↑)) = f (M.map π) :=
-  dite_eq_left fun i j ↦ (M i j).property
-
 /-- If the lift `liftIntegralFn π f` does not vanish at `S`, then `S` comes from a matrix `M` over
 the subring `O`, and `f` does not vanish at the image of `M` under `π`. -/
 lemma exists_map_coe_eq_of_liftIntegralFn_ne_zero {π : O →+* R} {f : Matrix l m R → ℂ}
     {S : Matrix l m F} (hS : liftIntegralFn π f S ≠ 0) :
     ∃ M : Matrix l m O, M.map (↑) = S ∧ f (M.map π) ≠ 0 := by
   have hS_int : ∀ (i : l) (j : m), S i j ∈ O := by_contra fun h_not ↦ hS (dite_eq_right h_not)
-  exact ⟨of fun i j ↦ ⟨S i j, hS_int i j⟩, rfl, by rwa [← liftIntegralFn_map_coe π f]⟩
+  exact ⟨of fun i j ↦ ⟨S i j, hS_int i j⟩, rfl, by rwa [← liftIntegralFn_map_subtype π f]⟩
 
 /-- Let `π : O → R` be a surjective local homomorphism from a subring `O` of `F`. If the image under
 `π` of a matrix `y` over `O` is the block `firstCols e k` of columns of some `k ∈ GL n R`, then `y`
@@ -340,10 +353,10 @@ lemma lift_of_reduction {e : b ⊕ a ≃ n} {χ : MulChar R ℂ} {Φ : Matrix a 
     have h_det : χ' j.val.det = χ m.val.det := by
       simpa [j, m, RingHom.map_det, ← O.subtype_apply] using hχ k.val.det (isUnits_det_units k)
     calc liftIntegralFn π Φ (invLastRows e j)
-        = Φ (invLastRows e m) := liftIntegralFn_map_coe π Φ (invLastRows e k)
+        = Φ (invLastRows e m) := liftIntegralFn_map_subtype π Φ (invLastRows e k)
       _ = χ m.val.det * Ψ (firstCols e m) := h.apply_eq m (by simp [mem_intGL])
       _ = χ' j.val.det * liftIntegralFn π Ψ (firstCols e j) :=
-        congrArg₂ (· * ·) h_det.symm (liftIntegralFn_map_coe π Ψ (firstCols e k)).symm
+        congrArg₂ (· * ·) h_det.symm (liftIntegralFn_map_subtype π Ψ (firstCols e k)).symm
 
 variable [DecidableEq a] [DecidableEq b]
 

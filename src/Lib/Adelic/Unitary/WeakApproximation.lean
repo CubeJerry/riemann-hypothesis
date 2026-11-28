@@ -1,11 +1,13 @@
 module
 
+import TauCeti.Algebra.Ring.Invertible
 import TauCeti.LinearAlgebra.Matrix.Nonsingular.Inverse
 import Mathlib.RingTheory.PiTensorProduct
 import Mathlib.Topology.Algebra.Group.Units
 import TauCeti.Analysis.Matrix.IndefiniteUnitaryGroup
 public import Lib.Adelic.Unitary.GramMatrix
 public import Lib.Adelic.Unitary.ComponentsAndBlockSums
+import Lib.General.Topology
 import Lib.Adelic.Adeles.StrongApproximation
 
 /-!
@@ -86,17 +88,13 @@ lemma G.continuous_iff {X : Type*} [TopologicalSpace X] {f : X → G E s} :
 /-- For a space `W` whose signs are all `1`, the finite parts of the rational points form a
 discrete subgroup `W.Γf` of `G_f`. -/
 instance {E : Type*} [Field E] [CMType E] (W : Space E n 1) : DiscreteTopology W.Γf := by
-  -- The rational points are discrete in `G E 1`, so a compact set holds only finitely many.
-  have h_emb : Filter.Tendsto W.ratEmbed .cofinite (.cocompact (G E 1)) :=
-    W.ratEmbed.tendsto_coe_cofinite_of_isDiscrete W.ratEmbed_injective ⟨W.discreteTopology_Gamma⟩
-  -- All signs are `1`, so the infinite part of `G E 1` is compact and can be dropped.
-  have h_fin : Filter.Tendsto (fun γ : U W.J ↦ (W.ratEmbed γ).2) .cofinite
-    (.cocompact (Gf E n)) := by
-    simpa [← Filter.coprod_cocompact, Function.comp_def] using h_emb
-  -- `W.Γf` is the range of `W.embFin γ = (W.ratEmbed γ).2`.
-  refine continuous_subtypeVal.discrete_of_tendsto_cofinite_cocompact
-    (.mono_left ?_ (Set.rangeFactorization_surjective (f := W.embFin)).le_map_cofinite)
-  exact h_fin
+  -- The infinite factor is compact, so the finite projection is a closed map.
+  change DiscreteTopology (Set.range (Prod.snd ∘ W.ratEmbed))
+  rw [Set.range_comp]
+  have hΓ : IsDiscrete (W.Γ : Set (G E (1 : n → ℤˣ))) :=
+    isDiscrete_iff_discreteTopology.2 W.discreteTopology_Gamma
+  exact (isDiscrete_image_of_isClosedMap hΓ (W.Γ.isClosed_of_isDiscrete hΓ)
+    isClosedMap_snd_of_compactSpace).to_subtype
 
 end New
 
@@ -156,11 +154,10 @@ lemma _root_.New.cayleyTransform_cayleyTransform {K : Type*} [Field K] (h_two : 
 /-- The two factors of the Cayley transform commute. -/
 lemma _root_.New.cayleyTransform_eq_inv_mul {K : Type*} [Field K] (A : Matrix n n K) :
     cayleyTransform A = (1 + A)⁻¹ * (1 - A) := by
-  have h_comm : (1 + A) * (1 - A) = (1 - A) * (1 + A) := by noncomm_ring
-  obtain hA | hA := eq_or_ne (1 + A).det 0
-  · simp [cayleyTransform, inv_def, hA]
-  · calc _ = (1 + A)⁻¹ * ((1 + A) * (1 - A)) * (1 + A)⁻¹ := by simp [cayleyTransform, hA]
-      _ = (1 + A)⁻¹ * (1 - A) := by simp [h_comm, Matrix.mul_assoc, hA]
+  have h_comm : Commute (1 - A) (1 + A) :=
+    (Commute.one_left _).sub_left ((Commute.one_right A).add_right (Commute.refl A))
+  rw [cayleyTransform, nonsing_inv_eq_ringInverse]
+  exact h_comm.ringInverse_right.eq
 
 /-- The Cayley transform of an isometry is skew. Here `B` stands for the conjugate transpose of
 `A`: if `B J A = J` with `J` and `1 + A` invertible, then `1 + B` is invertible and the
