@@ -916,14 +916,6 @@ abbrev IsMixedLaw (T : (p → 𝔸 E) → 𝒮 V →L[ℂ] 𝒮 V₀) : Prop :=
       (adelicHeisenberg E 1).β (x + (x + D.lCoord *ᵥ y)) (D.kCoord *ᵥ y) •
         V₀.ϱ (D.iCoord *ᵥ y) (T (x + D.lCoord *ᵥ y) f)
 
-variable {D} in
-/-- If the family `T` obeys the law of a mixed model, then translating by a vector `l c` along the
-isotropic frame `l` of the splitting shifts the argument of `T` by `c`. -/
-lemma IsMixedLaw.apply_rho_lAdelic_mulVec {T : (p → 𝔸 E) → 𝒮 V →L[ℂ] 𝒮 V₀} (hT : D.IsMixedLaw T)
-    (x c : p → 𝔸 E) (f : 𝒮 V) : T x (V.ϱ (D.lAdelic *ᵥ c) f) = T (x + c) f := by
-  -- The `k`- and `V₀`-coordinates of `l c` vanish and its `l`-coordinate is `c`.
-  simp [hT x, mulVec_mulVec]
-
 variable (g : G E s) (t : GL p (𝔸 E))
 
 /-- For `g` in `G` and `t` in `GL_p(𝔸)`, the adelic matrix `g⁻¹ (l (t⁻¹)ᴴ, k t, ι)`, where `l`, `k`,
