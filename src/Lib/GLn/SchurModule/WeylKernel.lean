@@ -398,6 +398,7 @@ lemma GL.weylGram_eq_submatrix {Ψ : Type} [Fintype Ψ] [DecidableEq Ψ] (κ : �
     linearCombination_apply, mulVec, dotProduct, weylEval, h_basis, h_eval] at h ⊢
   exact h
 
+omit [∀ τ : Φ, DecidableEq (n τ)] in
 @[simp]
 lemma map_toPoly : MvPolynomial.map φ (toPoly n κ ξ) = toPoly n κ (φ ∘ ξ) := by
   simp [toPoly, ← C_mul', linearCombination_apply, mulVec, dotProduct]
@@ -491,6 +492,7 @@ lemma weylGramOver_mul_schur :
 
 /-! ### Schur matrices and substitution -/
 
+omit [(τ : Φ) → DecidableEq (n' τ)] in
 /-- If the ranks fit `κ`, then `c ᵥ* S_κ(z) = x` if and only if the substitution `y ↦ z y` sends
 `Σ_i c_i b'_i` to `(Σ_j x_j b_j) · ∏_τ det(y_τ)^{d_τ}`, with `d = New.schurDetExp n n' κ`. -/
 lemma GL.vecMul_schur_eq_iff (h_fits : FitsRanks n n' κ) (z : ∀ τ : Φ, Matrix (n' τ) (n τ) R)
