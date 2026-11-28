@@ -72,6 +72,8 @@ lemma sum_floorDiff (h_cop : m.Coprime r) (x : QZ) {v : ZMod r} (hv : IsUnit v) 
       .trans ?_ (floor_add_fract _)
     have h_intCast (a : ℤ) : ofZMod r (a : ZMod r) = QZ.mk ((a : ℚ) / r) :=
       ZMod.toRatAddCircle_intCast r a
+    -- Keep the natural-cast representative for `ofZMod_apply`. The `↓` flags reduce the floor
+    -- expressions before `simp` rewrites the surrounding rational terms.
     simp [← ofZMod_apply, -natCast_val, h_intCast, add_assoc, sub_div,
       ↓floor_div_natCast, ↓floor_natCast_add, ↓floor_fract, ediv_eq_zero_of_lt, val_lt,
       ← fracRep_mk, add_div, ← self_sub_fract, NeZero.ne]
