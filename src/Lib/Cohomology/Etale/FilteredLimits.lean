@@ -887,8 +887,9 @@ lemma isCorepresentable_cech (m : ℕ) :
              $(e.prop _ 0))⟩
            left_inv g := Arrow.hom_ext _ _ rfl congr(↾fun _ ↦ $(g.w) _) } }⟩⟩
 
-/-- If every map from one of the rings `R' o` to a test ring factors through the envelope map
-`θ : A → E A`, and `R' o` represents the pull-back of `D'` along `q`, then the composite
+/-- If `q` has cohomologically dense image, every map from one of the rings `R' o` to a test ring
+factors through the envelope map `θ : A → E A`, and `R' o` represents the pull-back of `D'` along
+`q`, then the composite
 `h_{E (R' o)} → h_{R' o} ≅ h_T ×_Y D' → D'` has cohomologically dense image in `D'`. -/
 private lemma hasCohomDenseImage_envelope {J : Type} {T : CommRingCat} {q : reprBy T ⟶ Y}
     (hq : HasCohomDenseImage Λ q) (R' : Option J → CommRingCat)
