@@ -723,6 +723,81 @@ lemma natCast_notMem_of_mem_conjClosure (hQ : IsAuxiliary (badPlaces D ℓ) ϑ.Q
     fun hvQ ↦ (hQ v hvQ).1 (placesDividing_union_subset_badPlaces D ℓ (.inl hv))
   exact fun hw ↦ hwQ.elim (h_bad hw) (h_bad (star_mem_placesDividing.2 hw))
 
+/-- In a lift setting `hc` for `O` and `ϑ`, a nonzero form `f` with the parahoric type of `O` at a
+twist place `w = O.twistPlace i ∈ ϑ.Q` admits a product label with trivial block `0` and characters
+`![1, (ϑ.tamePart w)⁻¹]`. -/
+private lemma hasProductLabel_of_hasTwistParahoricType [DecidableEq n] (hc : IsLiftSetting O c ϑ)
+    {f : (stdSpace D.E n).forms (O.columnCount, O.detExp)} (hf : f.val ≠ 0) {i : O.TwistIndex}
+    (h_type : HasTwistParahoricType O f.val i) (hw : O.twistPlace i ∈ ϑ.Q) :
+    ∃ t : Fin 2 → ℕ,
+      HasProductLabel f.val (isSplit_twistPlace O i) (faithfulChar (ResField (O.twistPlace i)))
+        (card Empty) 1 ![1, (ϑ.tamePart (O.twistPlace i))⁻¹] t := by
+  -- `D.chiMLocal` is trivial at `Q`, so there `O.tamePart = D.chiMLocal ^ j * ϑ.tamePart` is
+  -- `ϑ.tamePart`
+  have h_tamePart : O.tamePart (O.twistPlace i) = ϑ.tamePart (O.twistPlace i) := by
+    obtain ⟨j, -, hj⟩ := hc.exists_tamePart_eq_chiMLocal_zpow_mul
+    obtain ⟨-, h_not_chosen, -⟩ := D.normQ_mem_and_notMem_of_mem_Q _ (.inl hw)
+    simp only [hj, zpow_natCast, Pi.mul_apply, Pi.pow_apply,
+      D.chiMLocal_eq_one_of_not_isChosen h_not_chosen, one_pow, one_mul]
+  -- block `0` is empty, so its label is `1`, whose idempotent does not kill `f`
+  have h_idem : (1 : Representation ℂ _ _).asAlgebraHom
+      (labelIdem (k := ResField (O.twistPlace i)) Empty 1) f.val ≠ 0 := by
+    simp only [labelIdem, IsLabel, monic_one, isUnit_one, IsUnit.squarefree, natDegree_one,
+      Fintype.card_eq_zero, AddMonoidAlgebra.coeff_one_zero, ne_eq, one_ne_zero,
+      not_false_eq_true, and_self, ↓reduceIte, Hall.evalGL, Units.val_one, toLin'_one, map_one,
+      Hall.one_apply, dim_simClassOf, Module.finrank_fintype_fun_eq_card,
+      Nat.card_eq_fintype_card, card_unique, Nat.cast_one, div_self, mul_one,
+      Representation.asAlgebraHom_eq_sum,
+      Finset.univ_unique, coeff_groupAlgElem, Finsupp.equivFunOnFinite_symm_apply_apply,
+      MonoidHom.one_apply, one_smul, Finset.sum_const, Finset.card_singleton, one_apply_eq_self,
+      hf]
+  have h_lab := h_type.hasProductLabel 1 Function.injective_id h_idem
+    (by
+      simp only [Nat.succ_eq_add_one, Nat.reduceAdd, h_tamePart, Matrix.injective_pair_iff_ne,
+        ne_eq, one_eq_inv, hw, ϑ.tamePart_ne_one, not_false_eq_true]) (by simp)
+  exact ⟨_, by simpa only [scaleRoots_one, map_one, Units.val_one, h_tamePart] using h_lab⟩
+
+/-- The `w ∈ ϑ.Q` case of `isFiniteTypeAt_and_polyKillsAt_of_mem_conjClosure`: at a place `A`
+above `w ∈ ϑ.Q`, `R` has finite type and `(X - ϑ.invAvatar s) * (X - 1)` kills each `s` in the
+inertia group of `A`. -/
+private lemma isFiniteTypeAt_and_polyKillsAt_of_mem_Q [DecidableEq n] [Nonempty n]
+    (hc : IsLiftSetting O c ϑ) (hQ : IsAuxiliary (badPlaces D ℓ) ϑ.Q)
+    {f : (stdSpace D.E n).forms (O.columnCount, O.detExp)} {H : FinPlace D.E → ℂ[X]}
+    {R : Gal(Ω/D.E) →* GL n (PadicAlgCl ℓ)} (he : IsEigenform f.val H) (hR : Attached H R)
+    (h_type : ∀ i : O.TwistIndex, HasTwistParahoricType O f.val i) {w : FinPlace D.E}
+    (hw : w ∈ ϑ.Q) {A : ClosurePlace} (hA : IsPlaceOver A w) :
+    IsFiniteTypeAt R A ∧
+      ∀ s ∈ inertiaGroup (AbsGal D) A, PolyKillsAt R A s ((X - C (ϑ.invAvatar s)) * (X - 1)) := by
+  obtain ⟨i, rfl⟩ : ∃ i : O.TwistIndex, O.twistPlace i = w := by
+    rw [hc.toLevelPlaces_eq]
+    exact ⟨⟨w, hw⟩, rfl⟩
+  have h_val : A.valuation ℓ = 1 :=
+    hA.valuation_natCast_eq_one_iff.2 (natCast_notMem_of_mem_conjClosure hQ (.inl hw))
+  have h_split : star (O.twistPlace i) ≠ O.twistPlace i := isSplit_twistPlace O i
+  obtain ⟨t, h_lab⟩ := hasProductLabel_of_hasTwistParahoricType hc he.1 (h_type i) hw
+  obtain ⟨h_fin, -, h_labelled⟩ := hR.isLabelledAt f.prop he h_lab hA
+  refine ⟨h_fin, fun s hs ↦ ?_⟩
+  -- with `a` the tame exponent of `s`, the roots of the label give the eigenvalues of `s`
+  obtain ⟨a, ha, -⟩ :=
+    (GaloisRep.exists_isTameExponent (faithfulChar (ResField (O.twistPlace i))) hA (card Empty)).2
+      s hs
+  refine ⟨fun _ ↦ h_fin.aeval_eq_zero_of_roots h_val hs (h_labelled ha) _ ?_, fun {L} ↦ ?_⟩
+  · -- the roots of the label are `1` and the name of `(ϑ.tamePart)⁻¹`, whose images are the roots
+    -- of the quadratic
+    rw [invAvatar_eq_of_isTameExponent hw h_split h_val ha]
+    simp +contextual only [Nat.succ_eq_add_one, Nat.reduceAdd, Fin.prod_univ_two, Fin.isValue,
+      cons_val_zero, map_one, Units.val_one, cons_val_one, cons_val_fin_one, map_inv,
+      Units.val_inv_eq_inv_val, one_mul, IsRoot.def, eval_multiset_prod, Multiset.map_map,
+      Function.comp_apply, eval_sub, eval_X, eval_C, prod_eq_zero_iff, mem_map, mem_roots',
+      Polynomial.map_mul, Polynomial.map_pow, Polynomial.map_sub, map_X, Polynomial.map_one, map_C,
+      map_inv₀, ne_eq, mul_eq_zero, pow_eq_zero_iff', sub_eq_zero, not_or, not_and,
+      Decidable.not_not, eval_mul, eval_pow, eval_one, forall_exists_index,
+      EmbeddingLike.apply_eq_iff_eq, and_imp, or_imp, or_true, implies_true, true_or, and_self]
+  · -- `A` is not above `ℓ`, so no embedding in `ℚ̄_ℓ` induces it
+    obtain ⟨⟨h_comap, -⟩, -⟩ := L.inducesPlace
+    rw [← h_comap] at h_val
+    exact absurd h_val (valuation_comap_intQpBar_lt_one L.e).ne
+
 /-- Let `c` be a lift setting (`IsLiftSetting`) for the descent pair `O` and `ϑ`: the places
 `O.twistPlace i` are those of `ϑ.Q`, and `O.tamePart` agrees with `ϑ.tamePart` there. Let `ϑ.Q` be
 auxiliary for the places dividing `ℓ * D.levelPrime 0 * D.levelPrime 1 * D.N` (`badPlaces D ℓ`): its
@@ -742,9 +817,10 @@ lemma isFiniteTypeAt_and_polyKillsAt_of_mem_conjClosure [DecidableEq n] [Nonempt
       ∀ s ∈ inertiaGroup (AbsGal D) A, PolyKillsAt R A s ((X - C (ϑ.invAvatar s)) * (X - 1)) := by
   -- At a place of `Q` inertia acts through `1` and the tame character of `ϑ.tamePart⁻¹`; duality
   -- carries both clauses to the conjugate places.
-  wlog hw : w ∈ ϑ.Q generalizing w A with at_Q
-  · have hw_star : star w ∈ ϑ.Q := hwQ.resolve_left hw
-    obtain ⟨h_fin_conj, h_poly⟩ := at_Q (.inl hw_star) hA.conjPlace_star hw_star
+  rcases hwQ with hw | hw_star
+  · exact isFiniteTypeAt_and_polyKillsAt_of_mem_Q hc hQ he hR h_type hw hA
+  · obtain ⟨h_fin_conj, h_poly⟩ :=
+      isFiniteTypeAt_and_polyKillsAt_of_mem_Q hc hQ he hR h_type hw_star hA.conjPlace_star
     obtain ⟨h_fin, -, h_dual⟩ :=
       isFiniteTypeAt_and_hasJumpsAt_of_conjPlace (isConjSelfDual_of_attached he hR) h_fin_conj
     refine ⟨h_fin, fun s hs ↦ ?_⟩
@@ -759,61 +835,6 @@ lemma isFiniteTypeAt_and_polyKillsAt_of_mem_conjClosure [DecidableEq n] [Nonempt
       rw [← h_av]
       exact h_poly _ hs_conj
     simpa only [map_inv, inv_inv, conjGal_conjGal] using h_dual _ hs_conj _ h_kill
-  obtain ⟨i, rfl⟩ : ∃ i : O.TwistIndex, O.twistPlace i = w := by
-    rw [hc.toLevelPlaces_eq]
-    exact ⟨⟨w, hw⟩, rfl⟩
-  let K : Type := AlgebraicClosure (ResField (O.twistPlace i))
-  let T : MulChar K ℂ := faithfulChar _
-  have h_val : A.valuation ℓ = 1 :=
-    hA.valuation_natCast_eq_one_iff.2 (natCast_notMem_of_mem_conjClosure hQ hwQ)
-  -- `D.chiMLocal` is trivial at `Q`, so there `O.tamePart = D.chiMLocal ^ j * ϑ.tamePart` is
-  -- `ϑ.tamePart`
-  have h_tamePart : O.tamePart (O.twistPlace i) = ϑ.tamePart (O.twistPlace i) := by
-    obtain ⟨j, -, hj⟩ := hc.exists_tamePart_eq_chiMLocal_zpow_mul
-    obtain ⟨-, h_not_chosen, -⟩ := D.normQ_mem_and_notMem_of_mem_Q _ hwQ
-    simp only [hj, zpow_natCast, Pi.mul_apply, Pi.pow_apply,
-      D.chiMLocal_eq_one_of_not_isChosen h_not_chosen, one_pow, one_mul]
-  have h_split : star (O.twistPlace i) ≠ O.twistPlace i := isSplit_twistPlace O i
-  -- block `0` is empty, so its label is `1`, whose idempotent does not kill `f`
-  obtain ⟨t, h_lab⟩ : ∃ t : Fin 2 → ℕ,
-      HasProductLabel f.val h_split T (card Empty) 1 ![1, (ϑ.tamePart (O.twistPlace i))⁻¹] t := by
-    have h_idem : (1 : Representation ℂ _ _).asAlgebraHom
-        (labelIdem (k := ResField (O.twistPlace i)) Empty 1) f.val ≠ 0 := by
-      simp only [labelIdem, IsLabel, monic_one, isUnit_one, IsUnit.squarefree, natDegree_one,
-        Fintype.card_eq_zero, AddMonoidAlgebra.coeff_one_zero, ne_eq, one_ne_zero,
-        not_false_eq_true, and_self, ↓reduceIte, Hall.evalGL, Units.val_one, toLin'_one, map_one,
-        Hall.one_apply, dim_simClassOf, Module.finrank_fintype_fun_eq_card,
-        Nat.card_eq_fintype_card, card_unique, Nat.cast_one, div_self, mul_one,
-        Representation.asAlgebraHom_eq_sum,
-        Finset.univ_unique, coeff_groupAlgElem, Finsupp.equivFunOnFinite_symm_apply_apply,
-        MonoidHom.one_apply, one_smul, Finset.sum_const, Finset.card_singleton, one_apply_eq_self,
-        he.1]
-    have h_lab := (h_type i).hasProductLabel 1 Function.injective_id h_idem
-      (by
-        simp only [Nat.succ_eq_add_one, Nat.reduceAdd, h_tamePart, Matrix.injective_pair_iff_ne,
-          ne_eq, one_eq_inv, hw, ϑ.tamePart_ne_one, not_false_eq_true]) (by simp)
-    exact ⟨_, by simpa only [scaleRoots_one, map_one, Units.val_one, h_tamePart] using h_lab⟩
-  obtain ⟨h_fin, -, h_labelled⟩ := hR.isLabelledAt f.prop he h_lab hA
-  refine ⟨h_fin, fun s hs ↦ ?_⟩
-  -- with `a` the tame exponent of `s`, the roots of the label give the eigenvalues of `s`
-  obtain ⟨a, ha, -⟩ := (GaloisRep.exists_isTameExponent T hA (card Empty)).2 s hs
-  refine ⟨fun _ ↦ h_fin.aeval_eq_zero_of_roots h_val hs (h_labelled ha) _ ?_, fun {L} ↦ ?_⟩
-  · -- the roots of the label are `1` and the name of `(ϑ.tamePart)⁻¹`, whose images are the roots
-    -- of the quadratic
-    rw [invAvatar_eq_of_isTameExponent hw h_split h_val ha]
-    simp +contextual only [Nat.succ_eq_add_one, Nat.reduceAdd, Fin.prod_univ_two, Fin.isValue,
-      cons_val_zero, map_one, Units.val_one, cons_val_one, cons_val_fin_one, map_inv,
-      Units.val_inv_eq_inv_val, one_mul, IsRoot.def, eval_multiset_prod, Multiset.map_map,
-      Function.comp_apply, eval_sub, eval_X, eval_C, prod_eq_zero_iff, mem_map, mem_roots',
-      Polynomial.map_mul, Polynomial.map_pow, Polynomial.map_sub, map_X, Polynomial.map_one, map_C,
-      map_inv₀, ne_eq, mul_eq_zero, pow_eq_zero_iff', sub_eq_zero, not_or, not_and,
-      Decidable.not_not, eval_mul, eval_pow, eval_one, forall_exists_index,
-      EmbeddingLike.apply_eq_iff_eq, and_imp, or_imp, or_true, implies_true, true_or, and_self, K,
-      T]
-  · -- `A` is not above `ℓ`, so no embedding in `ℚ̄_ℓ` induces it
-    obtain ⟨⟨h_comap, -⟩, -⟩ := L.inducesPlace
-    rw [← h_comap] at h_val
-    exact absurd h_val (valuation_comap_intQpBar_lt_one L.e).ne
 
 /-- Let `c` be a lift setting (`IsLiftSetting`) for the descent pair `O` and the twist `ϑ`: the
 places `O.twistPlace i` are those of `ϑ.Q`. Let `ϑ.Q` be auxiliary for the set `badPlaces D ℓ` of
