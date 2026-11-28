@@ -148,7 +148,8 @@ namespace New.Variety
 variable {E : Type} [Field E] [CMBase E] {n : Type} [Fintype n] [DecidableEq n]
   {β : Matrix n n E} (x : GL n (𝔸f E)) (z : GL n E) (J : Matrix n n ℂ)
 
-/-- Membership in the unitary similitude group `GUPlus` characterized by similitude factors. -/
+/-- `g` lies in `GUPlus E n` if and only if it lies in `GU E n`
+and every entry of `g⁻¹` lies in `Ô E`. -/
 lemma mem_GUPlus_iff {g : GL n (𝔸f E)} :
     g ∈ GUPlus E n ↔ g ∈ GU E n ∧ ∀ i j : n, (g⁻¹ : GL n (𝔸f E)) i j ∈ Ô E :=
   Iff.rfl
