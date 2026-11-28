@@ -288,20 +288,8 @@ instance : Category PadicTest :=
 instance : Nontrivial c.ProdRing := Pi.nontrivial_at c.nonempty.some
 
 /-- The ring S of a p-adic test is p-adically complete, since each of its factors is. -/
-instance isAdicComplete_prodRing : IsAdicComplete (span {(p : c.ProdRing)}) c.ProdRing := by
-  -- Congruence modulo `p ^ n` in the product is congruence modulo `p ^ n` in each factor.
-  have h_smodEq (x y : c.ProdRing) (n : ℕ) :
-      x ≡ y [SMOD (span {(p : c.ProdRing)} ^ n • ⊤ : Ideal c.ProdRing)] ↔
-        ∀ i : c.Index, x i ≡ y i [SMOD (span {(p : c.Cell i)} ^ n • ⊤ : Ideal (c.Cell i))] := by
-    simp only [TauCeti.sModEq_span_singleton_pow_iff, pi_dvd_iff, Pi.pow_apply, Pi.natCast_apply,
-      Pi.sub_apply]
-  refine { haus' := fun x hx ↦ funext fun i ↦ ?_, prec' := fun f hf ↦ ?_ }
-  · exact (c.isCell i).haus (x i) fun n ↦ (h_smodEq x 0 n).mp (hx n) i
-  · have h_lim (i : c.Index) : ∃ L : c.Cell i, ∀ n : ℕ,
-        f n i ≡ L [SMOD (span {(p : c.Cell i)} ^ n • ⊤ : Ideal (c.Cell i))] :=
-      (c.isCell i).prec' (fun n ↦ f n i) fun {m n} h_le ↦ (h_smodEq (f m) (f n) m).mp (hf h_le) i
-    choose L hL using h_lim
-    exact ⟨L, fun n ↦ (h_smodEq (f n) L n).mpr fun i ↦ hL i n⟩
+instance isAdicComplete_prodRing : IsAdicComplete (span {(p : c.ProdRing)}) c.ProdRing :=
+  IsAdicComplete.pi_span_natCast p
 
 /-- The tilt S^♭ of the ring S of a p-adic test, the inverse limit of S/p along Frobenius. -/
 abbrev TiltRing : Type := PreTilt c.ProdRing p

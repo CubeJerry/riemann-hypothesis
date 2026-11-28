@@ -200,11 +200,6 @@ lemma LSeriesHasSum_mul_vonMangoldt (hs : 1 < s.re) :
     field [sub_ne_zero.2 hs_ne, LFunction_ne_zero_of_one_le_re 1 (.inr hs_ne) hs.le]
   · simp [hχ]
 
-/-- A function continuous at `s` has residue zero there. -/
-lemma tendsto_sub_mul_of_continuousAt {f : ℂ → ℂ} (hf : ContinuousAt f s) :
-    Tendsto (fun z : ℂ ↦ (z - s) * f z) (𝓝[≠] s) (𝓝 0) := by
-  simpa using ((tendsto_id.sub_const s).mul hf).mono_left nhdsWithin_le_nhds
-
 lemma analyticOrderAt_entireL_ne_top (s : ℂ) : analyticOrderAt (entireL χ) s ≠ ⊤ := by
   -- An entire function of infinite order at a point is zero, but `entireL χ 1 ≠ 0`.
   exact fun h_top ↦ entireL_ne_zero χ le_rfl

@@ -3,7 +3,7 @@ module
 import Mathlib.RingTheory.PiTensorProduct
 import Std.Tactic.BVDecide.Normalize.BitVec
 public import Lib.General.Algebra.AdicCompletion
-import Lib.Cohomology.Etale.Basic
+import Lib.General.Algebra.AbsIntegrallyClosed
 import Lib.General.Algebra.SeriesCongruences
 import New.Reduction.Lattices.Colength
 
@@ -42,16 +42,6 @@ product of the moduli.
 section NullFrames
 
 open Finset Matrix
-
-/-- One step of elimination over the integers `valRingCp p` of `ℂ_p`. Given the values `a k` of a
-linear form on the rows of a matrix and a modulus `α`, there are row operations `u`, with
-determinant dividing `α`, after which `α` divides all values. -/
-lemma New.exists_det_dvd_and_dvd_mulVec {p : ℕ} [Fact p.Prime] {m : ℕ} (a : Fin m → valRingCp p)
-    (α : valRingCp p) :
-    ∃ u : Matrix (Fin m) (Fin m) (valRingCp p), u.det ∣ α ∧ ∀ k : Fin m, α ∣ (u *ᵥ a) k := by
-  simpa [mulVec, dotProduct, Ideal.mem_span_singleton] using
-    colengthDvd_inf_comap_span (⊤ : Submodule (valRingCp p) (valRingCp p)) LinearMap.id α m a
-      (fun _ ↦ Submodule.mem_top)
 
 /-- For finitely many linear forms with coefficient vectors `A i` and moduli `α i` over the integers
 `valRingCp p` of `ℂ_p`, there is a square matrix `g`, with determinant dividing the product of the
@@ -334,6 +324,80 @@ def New.newDirection {Φ n R : Type} [CommRing R] (g : Φ → ∀ h : ℕ, Matri
     (y : Φ → n → ℕ → R) (τ : Φ) (h : ℕ) (k : Fin h) (a : n) : R :=
   g τ h k ⬝ᵥ fun k' : Fin h ↦ y τ a k'
 
+/-- The linear forms on the rows of height `h` at the place `τ`, paired with `congruenceModulus`.
+They are indexed by `e ∈ S`, `σ`, the side of the pairing from `σ` to `pr e σ`, and the form
+(`none` for the pairing with direction `0` at the other place, taking `p ^ e`-th roots at the source
+and `p ^ e`-th powers at the partner; `some l` for the `l`-th entry of the row). -/
+def New.congruenceForm {O Φ n : Type*} [CommRing O] [Fintype n] (p : ℕ) (pr : ℕ → Φ → Φ)
+    (S : Finset ℕ) (root : ℕ → O → O) (y : Φ → n → ℕ → O) (τ : Φ) (h : ℕ) :
+    S × Φ × PairingSide × Option (Fin h) → Fin h → O
+  | (e, σ, .source, none) => fun k ↦ ∑ a : n, root e (y (pr e σ) a 0) * y τ a k
+  | (e, σ, .partner, none) => fun k ↦ ∑ a : n, y σ a 0 ^ p ^ (e : ℕ) * y τ a k
+  | (_, _, _, some l) => Pi.single l 1
+
+/-- If the rows of `g τ h` satisfy the congruences of `congruenceForm` modulo `congruenceModulus`
+for the choices `c`, where `π ∣ p` and `root e x` is a `p ^ e`-th root of `x`, then for `e ∈ S`
+every pair of heights `(h, h')` covered by `c e τ` gives new directions whose pairing
+`∑ a, β a ^ p ^ e * β' a` is divisible by `π`. -/
+lemma New.dvd_sum_pow_mul_newDirection_of_covers {p : ℕ} [Fact p.Prime] {O Φ n : Type} [CommRing O]
+    [DecidableEq Φ] [Fintype n] {π : O} (hπ : π ∣ (p : O)) {pr : ℕ → Φ → Φ} {S : Finset ℕ}
+    {root : ℕ → O → O} (h_root : ∀ (e : ℕ) (x : O), root e x ^ p ^ e = x)
+    {c : ℕ → Φ → CongruenceChoice} {y : Φ → n → ℕ → O}
+    {g : Φ → ∀ h : ℕ, Matrix (Fin h) (Fin h) O}
+    (h_dvd : ∀ (τ : Φ) (h : ℕ) (i : S × Φ × PairingSide × Option (Fin h)) (k : Fin h),
+      congruenceModulus pr S (fun e : ℕ ↦ root e π) c τ h i ∣
+        (g τ h *ᵥ congruenceForm p pr S root y τ h i) k)
+    {e : ℕ} (he : e ∈ S) {τ : Φ} {h : ℕ} {k : Fin h} {h' : ℕ} {k' : Fin h'}
+    (h_cov : (c e τ).Covers h h') :
+    π ∣ ∑ a : n, newDirection g y τ h k a ^ p ^ e * newDirection g y (pr e τ) h' k' a := by
+  let β : n → O := newDirection g y τ h k
+  let β' : n → O := newDirection g y (pr e τ) h' k'
+  change π ∣ ∑ a : n, β a ^ p ^ e * β' a
+  have source_dvd (form : Option (Fin h)) (h_imposed : (c e τ).imposes h .source form) :
+      root e π ∣ g τ h k ⬝ᵥ congruenceForm p pr S root y τ h (⟨e, he⟩, τ, .source, form) := by
+    simpa [congruenceModulus, PairingSide.place, PairingSide.rootExponent, h_imposed, mulVec] using
+      h_dvd τ h (⟨e, he⟩, τ, .source, form) k
+  have partner_dvd (form : Option (Fin h')) (h_imposed : (c e τ).imposes h' .partner form) :
+      π ∣ g (pr e τ) h' k' ⬝ᵥ
+        congruenceForm p pr S root y (pr e τ) h' (⟨e, he⟩, τ, .partner, form) := by
+    have h_root_zero : root 0 π = π := by simpa using h_root 0 π
+    simpa [congruenceModulus, PairingSide.place, PairingSide.rootExponent, h_imposed, h_root_zero,
+      mulVec] using h_dvd (pr e τ) h' (⟨e, he⟩, τ, .partner, form) k'
+  obtain ⟨h_imposed, rfl⟩ | h_imposed | ⟨h_imposed, rfl⟩ | h_imposed := h_cov
+  · -- `β` is a multiple of the first direction at `τ`, and `π` divides its pairing with `β'`.
+    have h_pair : π ∣ ∑ a, y τ a 0 ^ p ^ e * β' a := by
+      simpa only [congruenceForm, β', newDirection, dotProduct_sum_mul] using
+        partner_dvd none h_imposed
+    have h_factor : ∑ a, β a ^ p ^ e * β' a =
+        g τ 1 k 0 ^ p ^ e * ∑ a, y τ a 0 ^ p ^ e * β' a := by
+      simp [β, newDirection, dotProduct, mul_pow, mul_sum, mul_assoc]
+    simpa only [h_factor] using h_pair.mul_left _
+  · -- All entries of the row at the partner are divisible by `π`, hence so is `β'`.
+    have h_entry (j : Fin h') : π ∣ g (pr e τ) h' k' j := by
+      simpa [congruenceForm] using partner_dvd (some j) h_imposed
+    have h_direction (a : n) : π ∣ β' a := by
+      simpa only [β', newDirection, dotProduct] using dvd_sum fun j _ ↦ (h_entry j).mul_right _
+    exact dvd_sum fun a _ ↦ (h_direction a).mul_left _
+  · -- `β'` is a multiple of the first direction at the partner, and its pairing with `β` is
+    -- divisible by `π` through one congruence modulo the root of `π`.
+    have h_form : root e π ∣ ∑ a, root e (y (pr e τ) a 0) * β a := by
+      simpa only [congruenceForm, β, newDirection, dotProduct_sum_mul] using
+        source_dvd none h_imposed
+    have h_pair : π ∣ ∑ a, β a ^ p ^ e * y (pr e τ) a 0 :=
+      dvd_sum_pow_mul_of_root_dvd hπ (h_root e) h_form
+    have h_factor : ∑ a, β a ^ p ^ e * β' a =
+        g (pr e τ) 1 k' 0 * ∑ a, β a ^ p ^ e * y (pr e τ) a 0 := by
+      simp [β', newDirection, dotProduct, mul_sum, mul_left_comm]
+    simpa only [h_factor] using h_pair.mul_left _
+  · -- All entries of the row at `τ` are divisible by the root of `π`, hence so is `β`.
+    have h_entry (j : Fin h) : root e π ∣ g τ h k j := by
+      simpa [congruenceForm] using source_dvd (some j) h_imposed
+    have h_direction (a : n) : root e π ∣ β a := by
+      simpa only [β, newDirection, dotProduct] using dvd_sum fun j _ ↦ (h_entry j).mul_right _
+    have h_pow (a : n) : π ∣ β a ^ p ^ e := by
+      simpa only [h_root] using pow_dvd_pow_of_dvd (h_direction a) (p ^ e)
+    exact dvd_sum fun a _ ↦ (h_pow a).mul_right _
+
 /-- **Changing the directions.** Let `π` divide `p` in the integers `valRingCp p` of `ℂ_p`, and let
 `y τ a k'` be coordinate `a` of direction `k'` at the place `τ`. There are square matrices `g τ h`,
 one for each place and height, such that the new directions `newDirection g y τ h k a = ∑ k' : Fin
@@ -364,68 +428,22 @@ lemma New.exists_newDirection_dvd {p : ℕ} [Fact p.Prime] {Φ n : Type} [Fintyp
   choose c cost_eq cover using exists_choice
   let α (τ : Φ) (h : ℕ) : S × Φ × PairingSide × Option (Fin h) → valRingCp p :=
     congruenceModulus pr S (fun e : ℕ ↦ root e π) c τ h
-  -- The forms on these rows: the pairing with direction `0` at the other place, or a single entry.
-  let A (τ : Φ) (h : ℕ) : S × Φ × PairingSide × Option (Fin h) → Fin h → valRingCp p
-    | (e, σ, .source, none) => fun k ↦ ∑ a : n, root e (y (pr e σ) a 0) * y τ a k
-    | (e, σ, .partner, none) => fun k ↦ ∑ a : n, y σ a 0 ^ p ^ (e : ℕ) * y τ a k
-    | (_, _, _, some l) => Pi.single l 1
+  let A (τ : Φ) (h : ℕ) : S × Φ × PairingSide × Option (Fin h) → Fin h → valRingCp p :=
+    congruenceForm p pr S root y τ h
   have exists_matrix (τ : Φ) (h : ℕ) : ∃ g : Matrix (Fin h) (Fin h) (valRingCp p),
       g.det ∣ ∏ i, α τ h i ∧ ∀ i ∈ univ, ∀ k : Fin h, α τ h i ∣ (g *ᵥ A τ h i) k :=
     exists_det_dvd_prod_and_dvd_mulVec univ (A τ h) (α τ h)
   choose g det_dvd row_dvd using exists_matrix
-  refine ⟨g, fun e he τ h k h' k' not_exempt ↦ ?_, ?_⟩
-  · let β : n → valRingCp p := newDirection g y τ h k
-    let β' : n → valRingCp p := newDirection g y (pr e τ) h' k'
-    change π ∣ ∑ a : n, β a ^ p ^ e * β' a
-    have source_dvd (form : Option (Fin h)) (h_imposed : (c e τ).imposes h .source form) :
-        root e π ∣ g τ h k ⬝ᵥ A τ h (⟨e, he⟩, τ, .source, form) := by
-      simpa [α, congruenceModulus, PairingSide.place, PairingSide.rootExponent, h_imposed,
-        mulVec] using row_dvd τ h (⟨e, he⟩, τ, .source, form) (mem_univ _) k
-    have partner_dvd (form : Option (Fin h')) (h_imposed : (c e τ).imposes h' .partner form) :
-        π ∣ g (pr e τ) h' k' ⬝ᵥ A (pr e τ) h' (⟨e, he⟩, τ, .partner, form) := by
-      have h_root_zero : root 0 π = π := by simpa using h_root 0 π
-      simpa [α, congruenceModulus, PairingSide.place, PairingSide.rootExponent, h_imposed,
-        h_root_zero, mulVec] using row_dvd (pr e τ) h' (⟨e, he⟩, τ, .partner, form) (mem_univ _) k'
-    obtain ⟨h_imposed, rfl⟩ | h_imposed | ⟨h_imposed, rfl⟩ | h_imposed :=
-      cover e τ h h' not_exempt
-    · -- `β` is a multiple of the first direction at `τ`, and `π` divides its pairing with `β'`.
-      have h_pair : π ∣ ∑ a, y τ a 0 ^ p ^ e * β' a := by
-        simpa only [A, β', newDirection, dotProduct_sum_mul] using partner_dvd none h_imposed
-      have h_factor : ∑ a, β a ^ p ^ e * β' a =
-          g τ 1 k 0 ^ p ^ e * ∑ a, y τ a 0 ^ p ^ e * β' a := by
-        simp [β, newDirection, dotProduct, mul_pow, mul_sum, mul_assoc]
-      simpa only [h_factor] using h_pair.mul_left _
-    · -- All entries of the row at the partner are divisible by `π`, hence so is `β'`.
-      have h_entry (j : Fin h') : π ∣ g (pr e τ) h' k' j := by
-        simpa [A] using partner_dvd (some j) h_imposed
-      have h_direction (a : n) : π ∣ β' a := by
-        simpa only [β', newDirection, dotProduct] using dvd_sum fun j _ ↦ (h_entry j).mul_right _
-      exact dvd_sum fun a _ ↦ (h_direction a).mul_left _
-    · -- `β'` is a multiple of the first direction at the partner, and its pairing with `β` is
-      -- divisible by `π` through one congruence modulo the root of `π`.
-      have h_form : root e π ∣ ∑ a, root e (y (pr e τ) a 0) * β a := by
-        simpa only [A, β, newDirection, dotProduct_sum_mul] using source_dvd none h_imposed
-      have h_pair : π ∣ ∑ a, β a ^ p ^ e * y (pr e τ) a 0 :=
-        dvd_sum_pow_mul_of_root_dvd hπ (h_root e) h_form
-      have h_factor : ∑ a, β a ^ p ^ e * β' a =
-          g (pr e τ) 1 k' 0 * ∑ a, β a ^ p ^ e * y (pr e τ) a 0 := by
-        simp [β', newDirection, dotProduct, mul_sum, mul_left_comm]
-      simpa only [h_factor] using h_pair.mul_left _
-    · -- All entries of the row at `τ` are divisible by the root of `π`, hence so is `β`.
-      have h_entry (j : Fin h) : root e π ∣ g τ h k j := by
-        simpa [A] using source_dvd (some j) h_imposed
-      have h_direction (a : n) : root e π ∣ β a := by
-        simpa only [β, newDirection, dotProduct] using dvd_sum fun j _ ↦ (h_entry j).mul_right _
-      have h_pow (a : n) : π ∣ β a ^ p ^ e := by
-        simpa only [h_root] using pow_dvd_pow_of_dvd (h_direction a) (p ^ e)
-      exact dvd_sum fun a _ ↦ (h_pow a).mul_right _
-  · -- The cost: `det (g τ h)` divides the product of the moduli, whose norm is known.
-    calc ‖π‖ ^ ∑ e ∈ S, ∑ τ : Φ, deductionTerm p κ N marked τ (pr e τ) e
-        = ∏ τ : Φ, ∏ h : Fin N, ‖∏ i, α τ h i‖ ^ κ τ h := by
-          simp only [← cost_eq]
-          exact norm_rpow_sum_cost_eq_prod_congruenceModulus pr S N κ (fun e : ℕ ↦ h_root e π) c
-      _ ≤ ∏ τ : Φ, ∏ h : Fin N, ‖((g τ h).det : ℂ_[p])‖ ^ κ τ h := by
-        gcongr with τ _ h
-        exact valRingCp.dvd_iff_norm_le.1 (det_dvd τ h)
+  refine ⟨g, fun e he τ h k h' k' not_exempt ↦
+    dvd_sum_pow_mul_newDirection_of_covers hπ h_root
+      (fun τ h i k ↦ row_dvd τ h i (mem_univ _) k) he (cover e τ h h' not_exempt), ?_⟩
+  -- The cost: `det (g τ h)` divides the product of the moduli, whose norm is known.
+  calc ‖π‖ ^ ∑ e ∈ S, ∑ τ : Φ, deductionTerm p κ N marked τ (pr e τ) e
+      = ∏ τ : Φ, ∏ h : Fin N, ‖∏ i, α τ h i‖ ^ κ τ h := by
+        simp only [← cost_eq]
+        exact norm_rpow_sum_cost_eq_prod_congruenceModulus pr S N κ (fun e : ℕ ↦ h_root e π) c
+    _ ≤ ∏ τ : Φ, ∏ h : Fin N, ‖((g τ h).det : ℂ_[p])‖ ^ κ τ h := by
+      gcongr with τ _ h
+      exact valRingCp.dvd_iff_norm_le.1 (det_dvd τ h)
 
 end NullFrames

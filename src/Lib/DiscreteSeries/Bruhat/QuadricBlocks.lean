@@ -2,6 +2,7 @@ module
 
 public import Mathlib.Probability.Kernel.Composition.MeasureCompProd
 import Mathlib.Probability.Kernel.Deterministic
+import TauCeti.Probability.Kernel.Randomization
 public import Lib.General.Measure.QuadricDisintegration
 public import Lib.DiscreteSeries.Bruhat.FloorGroups -- shake: keep (`open FloorGroups`)
 import Lib.Adelic.QuotientMeasure.Basic
@@ -73,10 +74,8 @@ lemma exists_equiv_comp_inr_eq {α κ : Type} [Finite κ] {j : α → κ} (hj : 
 lemma exists_kernel_eq_map {X Y Z : Type*} [MeasurableSpace X] [MeasurableSpace Y]
     [MeasurableSpace Z] (ζ : Measure Z) [SFinite ζ] {K : X × Z → Y} (hK : Measurable K) :
     ∃ l : Kernel X Y, IsSFiniteKernel l ∧ ∀ x : X, l x = ζ.map fun z : Z ↦ K (x, z) := by
-  refine ⟨(Kernel.id ×ₖ Kernel.const X ζ).map K, inferInstance, fun x ↦ ?_⟩
-  rw [Kernel.map_apply _ hK, Kernel.prod_apply, Kernel.id_apply, Kernel.const_apply, dirac_prod,
-    Measure.map_map hK measurable_prodMk_left]
-  rfl
+  exact ⟨(Kernel.id ×ₖ Kernel.const X ζ).map K, inferInstance,
+    Kernel.map_id_prod_const_apply ζ K hK⟩
 
 /-- Joining two vectors along a bijection of indices preserves the volume. -/
 lemma measurePreserving_sumElim_comp_symm {η : Type} [Fintype η] (e : η ⊕ B ≃ κ) :
