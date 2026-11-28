@@ -1015,6 +1015,74 @@ variable (Y Y' Y'')
 
 /-! ### The two kinds of pairs -/
 
+omit [Fintype X] [Fintype X₀] in
+/-- The Gram matrix of `V⁻ ⊕ V''` pairs two basis vectors only if their grades add up to zero. -/
+lemma flipSum_grade_add_eq_zero : ∀ a b : ι ⊕ ι'', (flipSum V V'').J a b ≠ 0 →
+    (Y.gradeOf ⊕ᵥ Y''.gradeOf) a + (Y.gradeOf ⊕ᵥ Y''.gradeOf) b = 0 := by
+  simp [↓reindex_equiv Y.indexEquiv, ↓reindex_equiv Y''.indexEquiv, Y.gram_eq, Y''.gram_eq,
+    flipSpace, gradedGram]
+  grind
+
+omit [Fintype X'] in
+/-- The inclusion matrix of `middleDoubleLift` pulls back the Gram matrix of `V⁻ ⊕ V''`. -/
+lemma middleDoubleLift_gram_incl (h_string : HasConsecutiveStrings Y Y' Y'') (hs : s ≠ 1) :
+    let z (_ : Unit) : ι ⊕ ι'' :=
+      Sum.inl (Y.indexEquiv (Sum.inr ⟨s / 2, by have := h_string.odd_length; grind⟩))
+    let z' (_ : Unit) : ι ⊕ ι'' := Sum.inr (Y''.indexEquiv (Sum.inr ⟨s'' / 2, by
+      obtain ⟨h_odd, h_middle, h_last, -⟩ := h_string; grind⟩))
+    let j := Sum.map (Y.indexEquiv ∘ Sum.inl) (Y''.indexEquiv ∘ Sum.inl)
+    (fromCols (fromCols ((2 * N)⁻¹ • (inclMatrix E z - inclMatrix E z'))
+        (inclMatrix E z + inclMatrix E z')) (inclMatrix E j))ᴴ * (flipSum V V'').J *
+      fromCols (fromCols ((2 * N)⁻¹ • (inclMatrix E z - inclMatrix E z'))
+        (inclMatrix E z + inclMatrix E z')) (inclMatrix E j) =
+      (hyperbolicSum Unit (flipSum (stdSpace E X) (stdSpace E X₀))).J := by
+  obtain ⟨h_odd, h_middle, h_last, -⟩ := h_string; intro z z' j
+  simp [j, z, z', Y.gram_eq, Y''.gram_eq, inclMatrix,
+    conjTranspose_fromCols_eq_fromRows_conjTranspose, flipSpace, gradedGram, hyperbolicSum,
+    ← Matrix.ext_iff, Matrix.mul_apply, Matrix.one_apply]
+  grind [Y.N_ne_zero_and_star_eq]
+
+omit [WeilData E] [Fintype X'] in
+/-- The inclusion matrix of `middleDoubleLift` intertwines `U(X) × U(X₀)`. -/
+lemma middleDoubleLift_intertwines (h_string : HasConsecutiveStrings Y Y' Y'') (hs : s ≠ 1)
+    (g : G E (1 : X → ℤˣ)) (k : G E (1 : X₀ → ℤˣ)) :
+    let z (_ : Unit) : ι ⊕ ι'' :=
+      Sum.inl (Y.indexEquiv (Sum.inr ⟨s / 2, by have := h_string.odd_length; grind⟩))
+    let z' (_ : Unit) : ι ⊕ ι'' := Sum.inr (Y''.indexEquiv (Sum.inr ⟨s'' / 2, by
+      obtain ⟨h_odd, h_middle, h_last, -⟩ := h_string; grind⟩))
+    let j := Sum.map (Y.indexEquiv ∘ Sum.inl) (Y''.indexEquiv ∘ Sum.inl)
+    fromBlocks (V.ratCoordMatrix (Y.inclX g)) 0 0 (V''.ratCoordMatrix (Y''.inclX k)) *
+        (fromCols (fromCols ((2 * N)⁻¹ • (inclMatrix E z - inclMatrix E z'))
+          (inclMatrix E z + inclMatrix E z')) (inclMatrix E j)).map toAdele =
+      (fromCols (fromCols ((2 * N)⁻¹ • (inclMatrix E z - inclMatrix E z'))
+        (inclMatrix E z + inclMatrix E z')) (inclMatrix E j)).map toAdele *
+        (G.sum (s := hyperbolicSigns Unit) (1, G.sum (g.neg, k))).adeleMatrix := by
+  intro z z' j
+  simp [j, z, z', ↓reindex_equiv Y.indexEquiv, ↓reindex_equiv Y''.indexEquiv,
+    ratCoordMatrix_inclX, inclMatrix, fromCols_map, ← Matrix.ext_iff, Matrix.mul_apply,
+    Matrix.one_apply]
+
+omit [WeilData E] [Fintype X₀] in
+/-- Evaluation of `stackedStringMap` on the grade-zero rows of `middleDoubleLift`. -/
+lemma middleDoubleLift_stackedStringMap_apply (h_string : HasConsecutiveStrings Y Y' Y'')
+    (hs : s ≠ 1) :
+    let z (_ : Unit) : ι ⊕ ι'' :=
+      Sum.inl (Y.indexEquiv (Sum.inr ⟨s / 2, by have := h_string.odd_length; grind⟩))
+    let z' (_ : Unit) : ι ⊕ ι'' := Sum.inr (Y''.indexEquiv (Sum.inr ⟨s'' / 2, by
+      obtain ⟨h_odd, h_middle, h_last, -⟩ := h_string; grind⟩))
+    let j := Sum.map (Y.indexEquiv ∘ Sum.inl) (Y''.indexEquiv ∘ Sum.inl)
+    ∀ (a : (Unit ⊕ Unit) ⊕ X ⊕ X₀) (l : ι'),
+      stackedStringMap Y Y' Y'' ((z ⊕ᵥ z' ⊕ᵥ j) a) l = ∑ k : Unit,
+        if l = Y'.indexEquiv (Sum.inr ⟨s'' / 2, by
+          obtain ⟨h_odd, h_middle, h_last, -⟩ := h_string; grind⟩) then
+          toAdele (fromCols (fromCols ((2 * N)⁻¹ • (inclMatrix E z - inclMatrix E z'))
+            (inclMatrix E z + inclMatrix E z')) (inclMatrix E j)
+            ((z ⊕ᵥ z' ⊕ᵥ j) a) (Sum.inl (Sum.inr k)) * Y'.genericConst) else 0 := by
+  obtain ⟨h_odd, h_middle, h_last, h_const⟩ := h_string; intro z z' j
+  simp [j, z, z', ↓reindex_equiv Y'.indexEquiv, ↓Y.formAdjoint_apply Y', apply_ite star,
+    stackedStringMap, stringMap, inclMatrix, Matrix.one_apply, gradedGram, stringReversal]
+  grind [Y.N_ne_zero_and_star_eq]
+
 /-- The pair data for strings of lengths s (odd, s ≠ 1), s − 1 and s − 2, with
 `Y'.genericConst = Y.genericConst` and `card ι + card ι''` even: one hyperbolic plane, spanned by
 the middle vectors z of Y and z' of Y'', is removed. -/
@@ -1023,7 +1091,6 @@ def middleDoubleLift (h_string : HasConsecutiveStrings Y Y' Y'') (h_card : Even 
   have h_odd : Odd s := h_string.odd_length
   have h_middle : s' = s - 1 := h_string.length_middle
   have h_last : s'' = s' - 1 := h_string.length_last
-  have h_const : Y'.genericConst = Y.genericConst := h_string.c_eq
   -- `z` and `z'` are the middle string vectors of `V` and `V''`; `j` lists `X` and `X₀`.
   let z (_ : Unit) : ι ⊕ ι'' := Sum.inl (Y.indexEquiv (Sum.inr ⟨s / 2, by grind⟩))
   let z' (_ : Unit) : ι ⊕ ι'' := Sum.inr (Y''.indexEquiv (Sum.inr ⟨s'' / 2, by grind⟩))
@@ -1042,30 +1109,33 @@ def middleDoubleLift (h_string : HasConsecutiveStrings Y Y' Y'') (h_card : Even 
             Matrix.one_apply, sub_eq_zero]
           grind
         -- `z` has norm `N` in `V⁻` and `z'` has norm `-N`.
-        gram_incl := by
-          simp [j, z, z', Y.gram_eq, Y''.gram_eq, inclMatrix,
-            conjTranspose_fromCols_eq_fromRows_conjTranspose, flipSpace, gradedGram, hyperbolicSum,
-            ← Matrix.ext_iff, Matrix.mul_apply, Matrix.one_apply]
-          grind [Y.N_ne_zero_and_star_eq]
-        grade_add_eq_zero := by
-          simp [↓reindex_equiv Y.indexEquiv, ↓reindex_equiv Y''.indexEquiv, Y.gram_eq, Y''.gram_eq,
-            flipSpace, gradedGram]
-          grind }
+        gram_incl := middleDoubleLift_gram_incl Y Y' Y'' h_string hs
+        grade_add_eq_zero := flipSum_grade_add_eq_zero Y Y'' }
     toHasConsecutiveStrings := h_string
     even_card_add := h_card
     embX := MonoidHom.id (G E (1 : X₀ → ℤˣ))
     det_embX := by simp
-    intertwines := by
-      simp [j, z, z', ↓reindex_equiv Y.indexEquiv, ↓reindex_equiv Y''.indexEquiv,
-        ratCoordMatrix_inclX, inclMatrix, fromCols_map, ← Matrix.ext_iff, Matrix.mul_apply,
-        Matrix.one_apply]
+    intertwines := middleDoubleLift_intertwines Y Y' Y'' h_string hs
     gradeOne := ⟨fun _ ↦ ⟨Y'.indexEquiv (Sum.inr ⟨s'' / 2, by grind⟩), by grind [gradeOf]⟩,
       by simp [Injective]⟩
-    stackedStringMap_apply := by
-      simp [j, z, z', ↓reindex_equiv Y'.indexEquiv, ↓Y.formAdjoint_apply Y', apply_ite star,
-        stackedStringMap, stringMap, ← Embedding.toFun_eq_coe, inclMatrix, Matrix.one_apply,
-        gradedGram, stringReversal]
-      grind [Y.N_ne_zero_and_star_eq] }
+    stackedStringMap_apply := middleDoubleLift_stackedStringMap_apply Y Y' Y'' h_string hs }
+
+omit [WeilData E] in
+/-- The inclusion matrix of `lastDoubleLift` intertwines `U(X) × U(X₀)`. -/
+lemma lastDoubleLift_intertwines (p : E) (hs : s = 1) (g : G E (1 : X → ℤˣ))
+    (k : G E (1 : X₀ → ℤˣ)) :
+    let j := isEmptyElim ⊕ᵥ (Sum.inl ∘ Y.indexEquiv ∘ Sum.inl ⊕ᵥ (Sum.inr ∘
+      Y''.indexEquiv ∘ Sum.inl ⊕ᵥ fun _ : Unit ↦ Sum.inl (Y.indexEquiv (Sum.inr ⟨0, hs.ge⟩))))
+    let incl : Matrix (ι ⊕ ι'') ((Empty ⊕ Empty) ⊕ X ⊕ X₀ ⊕ Unit) E :=
+      of fun a b ↦ if a = j b then if b = Sum.inr (Sum.inr (Sum.inr ())) then p⁻¹ else 1 else 0
+    fromBlocks (V.ratCoordMatrix (Y.inclX g)) 0 0 (V''.ratCoordMatrix (Y''.inclX k)) *
+        incl.map toAdele = incl.map toAdele *
+      (G.sum (s := hyperbolicSigns Empty) (1, G.sum (g.neg,
+        G.blockEmb (e := Equiv.refl (X₀ ⊕ Unit)) Sum.elim_one_one.symm
+          (MonoidHom.inl (G E (1 : X₀ → ℤˣ)) (G E (1 : Unit → ℤˣ)) k)))).adeleMatrix := by
+  intro j incl
+  simp [incl, j, ↓reindex_equiv Y.indexEquiv, ↓reindex_equiv Y''.indexEquiv, Finset.univ_eq_empty,
+    ratCoordMatrix_inclX, G.blockEmb, ← Matrix.ext_iff, Matrix.mul_apply, Matrix.one_apply]
 
 /-- The pair data for s = 1 (so Y' and Y'' have no string), N = pp̄,
 `Y'.genericConst = Y.genericConst` and `card ι + card ι''` even: no plane is removed, and z/p, z the
@@ -1093,19 +1163,14 @@ def lastDoubleLift (h_string : HasConsecutiveStrings Y Y' Y'') (h_card : Even (c
           simp [j, Y.gram_eq, Y''.gram_eq, apply_ite star, flipSpace, gradedGram, hyperbolicSum,
             ← Matrix.ext_iff, Matrix.mul_apply, Matrix.one_apply]
           grind [Y.N_ne_zero_and_star_eq]
-        grade_add_eq_zero := by
-          simp [↓reindex_equiv Y.indexEquiv, ↓reindex_equiv Y''.indexEquiv, Y.gram_eq, Y''.gram_eq,
-            flipSpace, gradedGram]
-          grind }
+        grade_add_eq_zero := flipSum_grade_add_eq_zero Y Y'' }
     toHasConsecutiveStrings := h_string
     even_card_add := h_card
     -- `k` acts on `X₀` and fixes the last basis vector.
     embX := MonoidHom.comp (G.blockEmb (e := Equiv.refl (X₀ ⊕ Unit)) Sum.elim_one_one.symm)
       (MonoidHom.inl (G E (1 : X₀ → ℤˣ)) (G E (1 : Unit → ℤˣ)))
     det_embX := by simp [G.blockEmb, Subtype.ext_iff]
-    intertwines := by
-      simp [j, ↓reindex_equiv Y.indexEquiv, ↓reindex_equiv Y''.indexEquiv, Finset.univ_eq_empty,
-        ratCoordMatrix_inclX, G.blockEmb, ← Matrix.ext_iff, Matrix.mul_apply, Matrix.one_apply]
+    intertwines := lastDoubleLift_intertwines Y Y'' p hs
     gradeOne := .ofIsEmpty
     stackedStringMap_apply := by
       simp [j, ↓reindex_equiv Y'.indexEquiv, ↓Y.formAdjoint_apply Y', Finset.univ_eq_empty,
