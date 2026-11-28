@@ -397,7 +397,8 @@ lemma hilbert90_unitsRep : ∃ m : DiscreteUnits Ω, ∀ g : Γ, f.val g = units
   -- Transport the cocycle to the automorphism group, with coefficients written multiplicatively.
   let u (σ : Gal(Ω/K)) : Ωˣ := (f.val (e.symm σ)).toMul
   have h_loc : IsLocallyConstant u :=
-    ((IsLocallyConstant.iff_continuous _).2 (f.property.1.comp e.symm.continuous)).comp Additive.toMul
+    ((IsLocallyConstant.iff_continuous _).2
+      (f.property.1.comp e.symm.continuous)).comp Additive.toMul
   -- The equivalence respects the action on coefficients, so the cocycle identity transfers.
   have h_cocycle : groupCohomology.IsMulCocycle₁ u := by
     intro σ τ
