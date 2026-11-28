@@ -93,12 +93,17 @@ lemma norm_le_two_mul_re_add {p t : ℝ} {z : ℂ} (hp : 0 ≤ p) (hz : ‖z - p
   have h_re : -‖z - p‖ ≤ z.re - p := by simpa using neg_le_of_abs_le (abs_re_le_norm (z - p))
   linarith
 
+private lemma laplace_radius_bounds {T ρ : ℝ} (hT : 1 ≤ T) (hρ : T * ρ = 1e-13) :
+    0 < ρ ∧ ρ ≤ 1e-13 := by
+  have hpos : 0 < ρ := (mul_pos_iff_of_pos_left (zero_lt_one.trans_le hT)).1
+    (by rw [hρ]; norm_num)
+  exact ⟨hpos, (le_mul_of_one_le_left hpos.le hT).trans_eq hρ⟩
+
 /-- If `T ≥ 1`, `T ρ = 10⁻¹³` and `h ≥ 10³⁰ T³`, then `(1 + ρ²) ^ (-h) ≤ exp (-100 T) ^ 4`. -/
 lemma inv_one_add_sq_pow_le_exp_pow_four {T ρ : ℝ} {h : ℕ} (hT : 1 ≤ T) (hρ : T * ρ = 1e-13)
     (hh : 10 ^ 30 * T ^ 3 ≤ h) : (1 + ρ ^ 2)⁻¹ ^ h ≤ rexp (-100 * T) ^ 4 := by
   -- Take logarithms: `log (1 + ρ²) ≥ 2 ρ² / (ρ² + 2)`, `h ≥ 10³⁰ T³` and `ρ² T² = 10⁻²⁶`.
-  have hρ_pos : 0 < ρ := by nlinarith
-  have hρ_le : ρ ≤ 100⁻¹ := by nlinarith
+  obtain ⟨hρ_pos, hρ_le⟩ := laplace_radius_bounds hT hρ
   have h_gap : 400 * T ≤ 10 ^ 30 * T ^ 3 * (2 * ρ ^ 2 / (ρ ^ 2 + 2)) := by
     have h_sq : T ^ 2 * ρ ^ 2 = 1e-13 ^ 2 := by rw [← mul_pow, hρ]
     field_simp
@@ -218,7 +223,7 @@ end Modulus
 
 /-- Let `j s = (g, g')` in `U(ε) × U(η)`. If `s ↦ g` is proper and `s ↦ g'` is continuous, then the
 block diagonal sum `s ↦ g ⊕ g'` is a proper map to `U(ε ⊕ η)`. -/
-lemma isProperMap_sum {n m S : Type} [Fintype n] [DecidableEq n] [Fintype m] [DecidableEq m]
+lemma isProperMap_sum {n m S : Type*} [Fintype n] [DecidableEq n] [Fintype m] [DecidableEq m]
     [Group S] {ε : n → ℤˣ} {η : m → ℤˣ} {j : S →* USign ε × USign η} [TopologicalSpace S]
     (hj : IsProperMap fun s : S ↦ (j s).1) (hj' : Continuous fun s : S ↦ (j s).2) :
     IsProperMap ((U.sum (signMatrix_sum ε η)).comp j) := by
@@ -235,6 +240,12 @@ lemma isProperMap_sum {n m S : Type} [Fintype n] [DecidableEq n] [Fintype m] [De
     change IsProperMap ((fun g : USign ε ↦ (g : Matrix n n ℂ)) ∘ fun s : S ↦ (j s).1)
     exact isClosedEmbedding_U.isProperMap.comp hj
   exact isProperMap_of_comp_of_t2 h_cont (by fun_prop [toBlocks₁₁]) h_comp
+
+/-- The embedding `a ↦ diag(a, 1)` of unitary groups is proper. -/
+@[fun_prop]
+theorem isProperMap_inl {n m : Type*} [Fintype n] [DecidableEq n] [Fintype m] [DecidableEq m]
+    {ε : n → ℤˣ} {η : m → ℤˣ} : IsProperMap (U.inl ε η) :=
+  isProperMap_sum (j := MonoidHom.inl (USign ε) (USign η)) isProperMap_id continuous_const
 
 open Norms.L2Operator in
 /-- Let `j` and `φ`, defined on a group `S`, satisfy `IsLaplaceDatum` (so `φ` is imaginary). Let the
@@ -341,12 +352,12 @@ lemma IsLaplaceDatum.norm_laplaceIntegrand_le_mul_re_add (h_datum : IsLaplaceDat
   rcases le_total (‖noncompactPart ε (j s).1‖ ^ 2 + ‖noncompactPart η (j s).2‖ ^ 2) (ρ ^ 2) with
     h_near | h_far
   · -- By localization the value at `s` is also taken at a `t` with `j t` within `4 ρ` of `1`.
-    have hρ_pos : 0 < ρ := by nlinarith
-    have hρ_le : ρ ≤ 6⁻¹ := by nlinarith
+    obtain ⟨hρ_pos, hρ_le⟩ := laplace_radius_bounds hT_one hρ
     obtain ⟨t, hθ, h_fst, h_snd⟩ : ∃ t : S,
         l.laplaceIntegrand k j φ s = l.laplaceIntegrand k j φ t ∧
         ‖(subOnePair j t).1‖ ≤ 4 * ρ ∧ ‖(subOnePair j t).2‖ ≤ 4 * ρ :=
-      h_datum.exists_laplaceIntegrand_eq_and_norm_subOnePair_le ρ hB hρ_pos hρ_le s h_near
+      h_datum.exists_laplaceIntegrand_eq_and_norm_subOnePair_le ρ hB hρ_pos
+        (hρ_le.trans (by norm_num)) s h_near
     rw [hθ]
     exact h_datum.norm_laplaceIntegrand_le_mul_re_add_of_near hl hk hl_le hk_le hβ_le h_log_β hT
       (by linarith : 4 * ρ * T ≤ 1e-12) h_fst h_snd

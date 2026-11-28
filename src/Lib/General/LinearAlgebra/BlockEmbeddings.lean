@@ -2,22 +2,21 @@ module
 
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
 import Mathlib.RingTheory.PicardGroup
+public import TauCeti.LinearAlgebra.Matrix.GeneralLinearGroup.Elementary
 public import Lib.Weil.DualPair.Defs
 public import Lib.Weil.Unramified.HeckeGL
+import Lib.DiscreteSeries.Haar.CayleyChart
 
 /-!
 # Extending columns, block matrices and block embeddings
 
 For an embedding `ι : r ↪ n` of index sets, `New.inclMatrix k ι` has the standard basis vectors
 `e (ι j)` as columns. Such a map splits `n` into two blocks, and the file studies the corresponding
-block matrices. Over a field, independent columns extend to an invertible matrix. The embedding
-`a ↦ diag(a, 1)` of unitary groups of sign matrices is a proper map, and the norm of a block
-diagonal matrix is the larger of those of its blocks, for the L² operator norm.
+block matrices. Over a field, independent columns extend to an invertible matrix.
 
 ## Main definitions and results
 
-* `New.extendGL`: the embedding g ↦ diag(g, 1); `New.submatrix_extendGL` and
-  `New.extendGL_apply_of_notMem_range` give its block g and its rows outside that block.
+* `Function.Embedding.extendGL`: the embedding g ↦ diag(g, 1), supplied by Tau Ceti.
 * `New.rangeParabolic`, `New.mem_rangeParabolic_iff`: the opposite parabolic for the two blocks, and
   its description in entries.
 * `New.index_rangeParabolic_mul_card_GL`, `New.index_stabilizer_inclMatrix`: the index of the
@@ -25,13 +24,10 @@ diagonal matrix is the larger of those of its blocks, for the L² operator norm.
   the first block, and over a finite field the latter index is computed.
 * `New.residueDatum`: a function of adelic matrices given by their reductions at a family of
   places.
-* `New.DiscreteSeries.isProperMap_inl`: the embedding `a ↦ diag(a, 1)` is a proper map.
 
 Notions from other files:
 * `New.parabolic`: the subgroup of GL_n(R) of matrices that are block upper triangular for a given
   level function on the indices.
-* `New.U`, `New.U.sum`: U(J) is the group of g with gᴴJg = J; for a block diagonal sum J'' of J
-  and J', `New.U.sum` is the homomorphism U(J) × U(J') → U(J'') sending (g,h) to diag(g,h).
 -/
 
 @[expose] public section
@@ -122,44 +118,27 @@ def residueDatum (w : ι → FinPlace E) (f : ((i : ι) → Matrix n' n (ResFiel
     f fun i ↦ (vecToMatrix x : Matrix n' n (𝔸f E)).map (residueOrZero ∘ evalAt (w i))
   else 0
 
-/-- For an embedding u of index sets, the homomorphism GL_r(R) → GL_n(R), g ↦ diag(g, 1), with g
-acting on the indices in the image of u. -/
-@[local simp]
-def extendGL [DecidableEq r] (u : r ↪ n) : GL r R →* GL n R :=
-  Units.map
-    { toFun g := 1 + inclMatrix R u * (g - 1) * (inclMatrix R u)ᵀ
-      map_one' := by simp
-      map_mul' g h := by
-        -- With `P = inclMatrix R u`, the product is `1 + P * X * Pᵀ` for this `X = g * h - 1`.
-        have h_sum : g * h - 1 = (g - 1) + (h - 1) + (g - 1) * (h - 1) := by noncomm_ring
-        rw [h_sum]
-        simp [Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc, add_assoc,
-          inclMatrix_transpose_mul_cancel_left] }
-
 /-- For the embedding g ↦ diag(g, 1), the columns indexed by u of the image of g are the columns
 of g, extended by zero. -/
 @[simp]
 lemma extendGL_mul_inclMatrix [DecidableEq r] (u : r ↪ n) (g : GL r R) :
-    (extendGL u g).val * inclMatrix R u = inclMatrix R u * g.val := by
-  simp [Matrix.add_mul, Matrix.mul_assoc, Matrix.mul_sub]
+    (u.extendGL _ g).val * inclMatrix R u = inclMatrix R u * g.val := by
+  ext i j
+  rcases em (i ∈ range u) with ⟨k, rfl⟩ | hi
+  · simp [inclMatrix, Matrix.mul_apply, Matrix.one_apply]
+  · have h_ne (k : r) : i ≠ u k := fun h ↦ hi ⟨k, h.symm⟩
+    rw [Matrix.mul_apply, Finset.sum_eq_single (u j)]
+    · simp [inclMatrix, Matrix.one_apply, Matrix.mul_apply, h_ne,
+        u.coe_extendGL_apply_of_notMem_left g hi]
+    · intro k _ hk
+      simp [inclMatrix, hk]
+    · simp
 
 /-- The block of diag(g, 1) with rows and columns in the image of u is g. -/
 lemma submatrix_extendGL [DecidableEq r] (u : r ↪ n) (g : GL r R) :
-    (extendGL u g).val.submatrix u u = g.val := by
+    (u.extendGL _ g).val.submatrix u u = g.val := by
   ext i j
-  simp [extendGL, inclMatrix, Matrix.mul_apply, Matrix.one_apply]
-
-/-- Outside the image of u, the rows of diag(g, 1) are those of the identity matrix. -/
-lemma extendGL_apply_of_notMem_range [DecidableEq r]
-    (u : r ↪ n) (g : GL r R) {i : n} (hi : i ∉ range u) (j : n) :
-    extendGL u g i j = (1 : Matrix n n R) i j := by
-  have h_ne (k : r) : i ≠ u k := fun h ↦ hi ⟨k, h.symm⟩
-  simp [extendGL, inclMatrix, Matrix.mul_apply, Matrix.one_apply, h_ne]
-
-lemma extendGL_injective [DecidableEq r]
-    (u : r ↪ n) : Function.Injective (extendGL (R := R) u) := by
-  intro g h h_eq
-  rw [Units.ext_iff, ← submatrix_extendGL u g, h_eq, submatrix_extendGL]
+  exact u.coe_extendGL_apply_apply g i j
 
 /-- An invertible matrix x fixes every column of T, seen as the family `T.col`, if and only if
 xT = T. -/
@@ -262,10 +241,10 @@ lemma index_rangeParabolic_mul_card_GL [DecidableEq r] (u : r ↪ n) :
           inclMatrix_transpose_mul_cancel_left]
         simp only [Matrix.mul_assoc] }
   have h_onto : Function.Surjective block.toHomUnits := fun g ↦ by
-    have h_block : Aᵀ * ((extendGL u g).val * A) = g := by
+    have h_block : Aᵀ * ((u.extendGL _ g).val * A) = g := by
       rw [extendGL_mul_inclMatrix, inclMatrix_transpose_mul_cancel_left]
-    have hg : extendGL u g ∈ P := by rw [h_mem, h_block, extendGL_mul_inclMatrix]
-    exact ⟨⟨extendGL u g, hg⟩, Units.ext h_block⟩
+    have hg : u.extendGL _ g ∈ P := by rw [h_mem, h_block, extendGL_mul_inclMatrix]
+    exact ⟨⟨u.extendGL _ g, hg⟩, Units.ext h_block⟩
   have h_le : MulAction.stabilizer (GL n R) A.col ≤ P := fun x hx ↦ by
     rw [h_mem, mem_stabilizer_col_iff.1 hx, inclMatrix_transpose_mul_self, Matrix.mul_one]
   have h_ker : (MulAction.stabilizer (GL n R) A.col).subgroupOf P = block.toHomUnits.ker := by
@@ -339,48 +318,5 @@ lemma cast_index_stabilizer_inclMatrix (u : r ↪ n) :
     Finset.card_range, pow_mul, h_reindex]
 
 end New
-
-/-!
-## The block embedding of unitary groups
-
-`New.U.inl` embeds `New.U (New.signMatrix ε)`, the unitary group of the diagonal matrix of signs
-`ε`, into the group `New.U (New.signMatrix (Sum.elim ε η))` of the concatenated signs, by
-`a ↦ diag(a, 1)`.
--/
-
-/-- The block embedding a ↦ diag(a, 1) of U(diag ε) into the unitary group of the concatenated
-signs (ε, η). -/
-@[simps! apply_coe_val]
-noncomputable def New.U.inl {n m : Type*} [Fintype n] [DecidableEq n] [Fintype m] [DecidableEq m]
-    (ε : n → ℤˣ) (η : m → ℤˣ) :
-    U (signMatrix ε) →* U (signMatrix (Sum.elim ε η)) :=
-  (sum (signMatrix_sum ε η)).comp (MonoidHom.inl (U (signMatrix ε)) (U (signMatrix η)))
-
-/-!
-## Properness of block embeddings
--/
-
-section BlockEmbeddingNorm
-
-open Matrix Norms.L2Operator
-
-variable {n m : Type*} [Fintype n] [DecidableEq n] [Fintype m] [DecidableEq m] {ε : n → ℤˣ}
-  {ε' : m → ℤˣ}
-
-/-- For families of signs ε and ε', the embedding a ↦ diag(a, 1) of U(diag ε) into
-U(diag(ε, ε')) is a proper map. -/
-@[fun_prop]
-theorem New.DiscreteSeries.isProperMap_inl : IsProperMap (U.inl ε ε') := by
-  -- Followed by the continuous map "upper left block", `U.inl` is the closed embedding of the
-  -- unitary group in the matrices.
-  have h_val (g : U (signMatrix ε)) : (U.inl ε ε' g).val.val = fromBlocks g.val.val 0 0 1 := by
-    simp
-  have h_cont : Continuous (U.inl ε ε') := by
-    simp only [continuous_U_iff_matrix, h_val]
-    fun_prop
-  exact isProperMap_of_comp_of_t2 h_cont (g := fun g ↦ g.val.val.submatrix .inl .inl)
-    (by fun_prop) isClosedEmbedding_U.isProperMap
-
-end BlockEmbeddingNorm
 
 end

@@ -268,6 +268,11 @@ lemma hasCommonLift_of_gal_trivial (h_triv : ∀ σ : Gal(k'/k), σ = 1)
   have h_desc_k' : DescendsTo (F'.evalGL ∘ π) F' := by simp_all [π, DescendsTo, DescendsOnCoset]
   exact ⟨F'.evalGL ∘ π, comp_mem_virtualChars h π, h_desc_k, h_desc_k'⟩
 
+/-- The zero class function lifts to itself through the zero virtual character. -/
+lemma Lift.zero : Lift (k := k) (k' := k') Z 0 0 := by
+  intro m
+  refine ⟨0, zero_mem _, ?_, ?_⟩ <;> simp [DescendsTo, DescendsOnCoset, evalGL]
+
 /-- If one Z-combination Φ of characters of GL_m(k')⋊Gal(k'/k) descends (`New.DescendsTo`) to F over
 k and to F' over k', then the dimension m parts of F and F' form a lift over Z in all ranks. -/
 lemma Lift.rankPart_of_hasCommonLift {m : ℕ} (h : HasCommonLift Z F F' (Fin m)) :
@@ -277,7 +282,8 @@ lemma Lift.rankPart_of_hasCommonLift {m : ℕ} (h : HasCommonLift Z F F' (Fin m)
   · -- In dimension `n` the two parts are `F` and `F'` themselves.
     simpa [HasCommonLift, DescendsTo, DescendsOnCoset, evalGL]
   · -- Both parts vanish in dimension `n`, and so does the zero function.
-    refine ⟨0, zero_mem _, ?_, ?_⟩ <;> simp [hn, DescendsTo, DescendsOnCoset, evalGL]
+    simpa [HasCommonLift, DescendsTo, DescendsOnCoset, evalGL, hn] using
+      Lift.zero (k := k) (k' := k') (Z := Z) n
 
 /-- The constant function 1 lifts to itself, through the trivial character. -/
 lemma Lift.lift_constOne : Lift Z (constOne : Hall k) (constOne : Hall k') := by
@@ -425,7 +431,7 @@ lemma Lift.mulMoebius (h : Lift R F F') : Lift R F.mulMoebius F'.mulMoebius := b
   -- in dimension `< N`, where `(1 - constOne) ^ N` vanishes.
   have hJ (N : ℕ) : Lift (k := k) (k' := k') R (moebius + (1 - constOne) ^ N * -moebius)
       (moebius + (1 - constOne) ^ N * -moebius) :=
-    Nat.rec (by simpa using one.sub one) (fun _ ih ↦ by
+    Nat.rec (by simpa using Lift.zero (k := k) (k' := k') (Z := R)) (fun _ ih ↦ by
       simp only [moebius_add_one_sub_constOne_pow_succ_mul]
       exact ih.sub ((lift_constOne.mul ih).sub one)) N
   -- `F.mulMoebius` is the pointwise product of `F` and `moebius`, so `Φ * Ψ` descends to it.
@@ -449,10 +455,9 @@ lemma Lift.rankPart_mulMoebius_mul_constOne {m : ℕ} (h : Lift R F F') :
   have h_part : Lift R (rankPart m (F.mulMoebius * constOne))
       (rankPart m (F'.mulMoebius * constOne)) :=
     rankPart_of_hasCommonLift (h.mulMoebius.mul lift_constOne m)
-  -- Lifts are closed under negation, since `-X = X - X - X`.
   obtain h_even | h_odd := m.even_or_odd
   · simpa [h_even] using h_part
-  · simpa [h_odd] using (h_part.sub h_part).sub h_part
+  · simpa [h_odd] using Lift.zero.sub h_part
 
 omit [Finite k] in
 /-- Let S be a finite monoid, α an action of Gal(k'/k) on its unit group Sˣ, and ν : S → ℂ a monoid
@@ -616,7 +621,7 @@ private lemma descendsTo_induceClassFn_greenCuspidal_mulMoebius [Finite k] (hran
   -- `μ` is real, so it moves to the other side of the inner product
   have h_rank_eq : rankInner m (greenCuspidal k θ).mulMoebius Y =
       rankInner (finrank k L) (greenCuspidal k θ) Y.mulMoebius := by
-    simp [← hrank, rankInner.eq_1, mul_right_comm, mul_assoc]
+    rw [← hrank, rankInner_mulMoebius_left]
   -- the latter is a mean over `Lˣ` (`rankInner_greenCuspidal_mulMoebius`)
   rw [classInner_evalGL, Fintype.card_fin, h_rank_eq,
     rankInner_greenCuspidal_mulMoebius θ ((AlgHom.liftEquiv k k' L K).symm φ) Y]
