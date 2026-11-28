@@ -94,8 +94,8 @@ Consider the Selmer groups of locally constant cocycles for `ρ` that are unrami
 obey the relations `L`. If the group with coefficients in `QuotSpan a = O / a` has length less than
 `v(a)`, then the group with coefficients in `DivisibleQuot O = Frac(O) / O` has the same length,
 because `a` kills the second group. -/
-lemma length_selmerModule_divisibleQuot_eq_of_lt (ρ : Gal(Ω/E) → Matrix n n O) (S : Set (FinPlace E))
-    (L : Set (Gal(Ω/E) →₀ Matrix n n O)) {a : O} (ha : a ≠ 0)
+lemma length_selmerModule_divisibleQuot_eq_of_lt (ρ : Gal(Ω/E) → Matrix n n O)
+    (S : Set (FinPlace E)) (L : Set (Gal(Ω/E) →₀ Matrix n n O)) {a : O} (ha : a ≠ 0)
     (h_lt : length O (selmerModule ρ S L (QuotSpan a)) < addVal O a) :
     length O (selmerModule ρ S L (DivisibleQuot O)) =
       length O (selmerModule ρ S L (QuotSpan a)) := by
