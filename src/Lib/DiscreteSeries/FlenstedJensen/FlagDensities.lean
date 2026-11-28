@@ -333,7 +333,7 @@ lemma hasFDerivAt_unitary_factor_of_mem_openOrbit (ho : o.Injective) (ε : n →
       (L.hasFDerivAt.comp 1 ψ_deriv)
   exact ((exp_deriv.comp y A.hasFDerivAt).const_mul (Φ y)).congr_of_eventuallyEq near
 
-/-- The orbit `openOrbit ε o` is an open subset in the flag variety topology. -/
+/-- The set `openOrbit ε o` of products `g * b` is open in the space of complex matrices. -/
 lemma isOpen_openOrbit (ε : n → ℤˣ) (o : n → ℤ) : IsOpen (openOrbit ε o) :=
   isOpen_iff_mem_nhds.2 fun _ hy ↦ openOrbit_mem_nhds ε hy
 
