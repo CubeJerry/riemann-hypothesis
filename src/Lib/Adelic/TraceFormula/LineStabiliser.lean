@@ -89,7 +89,7 @@ lemma asAlgebraHom_doubleCosetSum
   ext y
   simp [doubleCosetSum_eq_sum h_fin, heckeCoset, heckeFun_eq_sum_toFinset h_fin]
 
-/-- Evaluating a level space automorphic form at a group element translated by `J`. -/
+/-- Every element of `J` fixes every vector of `levelSpace ρ J`. -/
 lemma apply_of_mem_levelSpace (hy : y ∈ levelSpace ρ J) {g : G} (hg : g ∈ J) : ρ g y = y := by
   simpa using mem_levelSpace.1 hy ⟨g, hg⟩
 
@@ -188,12 +188,12 @@ lemma isHeckeFunction_indicator_doubleCoset (t : GL n (LocField w)) :
       (lineStabilizer w i)).indicator (1 : GL n (LocField w) → ℂ)) :=
   isHeckeFunction_doubleCoset (isOpen_lineStabilizer w i) t
 
-/-- Coercion of a line stabilizer element to an explicit matrix. -/
+/-- The matrix of `lineElement w i` is `diag (ϖ, 1, …, 1)` with `ϖ` at `i`. -/
 lemma coe_lineElement :
     (lineElement w i).val = diagonal fun j : n ↦ if j = i then (uniformizer w).val else 1 := by
   simp [lineElement, apply_ite Units.val]
 
-/-- The matrix inverse of a line stabilizer element. -/
+/-- The matrix of the inverse of `lineElement w i` is `diag (ϖ⁻¹, 1, …, 1)` with `ϖ⁻¹` at `i`. -/
 lemma coe_lineElement_inv :
     (lineElement w i)⁻¹.val = diagonal fun j : n ↦ if j = i then (uniformizer w).val⁻¹ else 1 := by
   simp [lineElement, ← map_inv, apply_ite Units.val, apply_ite Inv.inv]
